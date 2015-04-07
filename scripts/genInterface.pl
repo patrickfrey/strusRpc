@@ -394,36 +394,6 @@ sub getClassEnumSource
 	return $rt;
 }
 
-sub getMethodEnumSource
-{
-	my $rt = "\nenum CallId\n{";
-	my $ii = 0;
-	my $classcnt = 0;
-
-	foreach (@interfaceClasses)
-	{
-		my @mth = split('%');
-		my $classname = shift( @mth);
-		$classcnt = $classcnt + 100;
-		my $callcnt = $classcnt;
-		my $mm;
-		foreach $mm(@mth)
-		{
-			my $callname = getMethodName( $mm);
-			++$callcnt;
-			my $id = "CallId_" . $classname . "_" . $callname . " = $callcnt";
-			if ($ii > 0)
-			{
-				$rt .= ",";
-			}
-			$rt .= "\n\t$id";
-			++$ii;
-		}
-	}
-	$rt .= "\n};\n";
-	return $rt;
-}
-
 sub getMethodParamDeclarationSource
 {
 	my ($param) = @_;
@@ -511,16 +481,62 @@ sub getMethodDeclarationSource
 		{
 			$paramlist .= ", ";
 		}
+		++$pi;
 		$paramlist .= getMethodParamDeclarationSource( $pp) . " p" . $pi;
 	}
 	my $rt = "virtual "
 			. getMethodParamDeclarationSource( $retval) . " "
-			. $methodname . "("
+			. $methodname . "( "
 			. $paramlist . ")";
 	if ($isconst)
 	{
 		$rt .= " const";
 	}
+	return $rt;
+}
+
+sub getClassHeaderSource
+{
+	my $rt = "";
+	my $ii = 0;
+	
+	foreach (@interfaceClasses)
+	{
+		my $interfacename = getInterfaceName($_);
+		my $classname = $interfacename;
+		$classname =~ s/Interface$//;
+		$classname .= "Impl";
+		$rt .= "\nclass $classname\n\t\t:public RcpInterfaceStub\n\t\t,public strus::$interfacename\n{\npublic:";
+
+		my @mth = split('%');
+		shift( @mth);
+		my $mm;
+		my $mi = 0;
+		$rt .= "\n\tenum MethodId\n\t{";
+		foreach $mm( @mth)
+		{
+			my $callname = getMethodName( $mm);
+			if ($mi++ > 0)
+			{
+				$rt .= ",\n\t\t";
+			}
+			else
+			{
+				$rt .= "\n\t\t";
+			}
+			$rt .= "Method_" . $callname;
+		}
+		$rt .= "\n\t};\n";
+		$rt .= "\n\tvirtual ~$classname(){}\n";
+		$rt .= "\n\t$classname()\n\t\t:RcpInterfaceStub(" . getInterfaceEnumName($interfacename) ."){}\n";
+		foreach $mm( @mth)
+		{
+			$rt .= "\n\t" . getMethodDeclarationSource( $mm) .";";
+		}
+		$rt .= "\n};\n";
+		++$ii;
+	}
+	$rt .= "\n};\n";
 	return $rt;
 }
 
@@ -535,12 +551,29 @@ sub getClassImplementationSource
 		my $classname = $interfacename;
 		$classname =~ s/Interface$//;
 		$classname .= "Impl";
-		$rt .= "\nclass $classname\n\t\t:public RcpInterfaceStub\n\t\t,public strus:$interfacename\n{\npublic:";
+		$rt .= "\nclass $classname\n\t\t:public RcpInterfaceStub\n\t\t,public strus::$interfacename\n{\npublic:";
+
+		my @mth = split('%');
+		shift( @mth);
+		my $mm;
+		my $mi = 0;
+		$rt .= "\n\tenum MethodId\n\t{";
+		foreach $mm( @mth)
+		{
+			my $callname = getMethodName( $mm);
+			if ($mi++ > 0)
+			{
+				$rt .= ",\n\t\t";
+			}
+			else
+			{
+				$rt .= "\n\t\t";
+			}
+			$rt .= "Method_" . $callname;
+		}
+		$rt .= "\n\t};\n";
 		$rt .= "\n\tvirtual ~$classname(){}\n";
 		$rt .= "\n\t$classname()\n\t\t:RcpInterfaceStub(" . getInterfaceEnumName($interfacename) ."){}\n";
-		my @mth = split('%');
-		$classname = shift( @mth);
-		my $mm;
 		foreach $mm( @mth)
 		{
 			$rt .= "\n\t" . getMethodDeclarationSource( $mm) .";";
@@ -551,6 +584,7 @@ sub getClassImplementationSource
 	$rt .= "\n};\n";
 	return $rt;
 }
+
 
 my $interfacefile = "include/strus/rpcObjects.hpp";
 open( CLASSFILE, ">$interfacefile") or die "Couldn't open file $interfacefile, $!";
@@ -586,13 +620,69 @@ print CLASSFILE <<EOF;
 */
 #ifndef _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #define _STRUS_RPC_OBJECTS_HPP_INCLUDED
-
-namespace strus {
-namespace rpc {
+#include "strus/rpcInterfaceStub.hpp"
 EOF
+foreach $inputfile( @inputfiles)
+{
+	if ($inputfile =~ m/[\/]([a-zA-z0-9_]+[\.]hpp)$/)
+	{
+		print CLASSFILE "#include \"strus/" . $1 ."\"\n";
+	}
+	else
+	{
+		die "input file has unknown name pattern: $inputfile";
+	}
+}
+print CLASSFILE "\n";
+print CLASSFILE "namespace strus {\n";
+print CLASSFILE "namespace rpc {\n";
 
 print CLASSFILE getClassEnumSource();
-print CLASSFILE getMethodEnumSource();
+print CLASSFILE getClassHeaderSource();
+
+print CLASSFILE <<EOF;
+}} //namespace
+#endif
+EOF
+
+my $sourcefile = "strus/rpcObjects.cpp";
+open( CLASSFILE, ">$sourcefile") or die "Couldn't open file $sourcefile, $!";
+
+print CLASSFILE <<EOF;
+/*
+---------------------------------------------------------------------
+    The C++ library strus implements basic operations to build
+    a search engine for structured search on unstructured data.
+
+    Copyright (C) 2013,2014 Patrick Frey
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+--------------------------------------------------------------------
+
+	The latest version of strus can be found at 'http://github.com/patrickfrey/strus'
+	For documentation see 'http://patrickfrey.github.com/strus'
+
+--------------------------------------------------------------------
+*/
+#include "strus/rpcObjects.hpp"
+
+using namespace strus;
+using namespace strus::rpc;
+EOF
+
 print CLASSFILE getClassImplementationSource();
 
 print CLASSFILE <<EOF;
@@ -600,5 +690,5 @@ print CLASSFILE <<EOF;
 #endif
 EOF
 
-printParsedDump();
+#printParsedDump();
 

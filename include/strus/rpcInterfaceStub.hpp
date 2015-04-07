@@ -28,6 +28,8 @@
 */
 #ifndef _STRUS_RPC_INTERFACE_STUB_HPP_INCLUDED
 #define _STRUS_RPC_INTERFACE_STUB_HPP_INCLUDED
+#include <string>
+#include "strus/index.hpp"
 
 namespace strus {
 namespace rpc {
@@ -35,19 +37,72 @@ namespace rpc {
 class RcpInterfaceStub
 {
 public:
+	class RemoteEndPoint
+	{
+	public:
+		RemoteEndPoint();
+		RemoteEndPoint( const char* config);
+		RemoteEndPoint( const RemoteEndPoint& o);
+	};
+
+	class Message
+	{
+	public:
+		Message(){}
+		Message( const Message& o)
+			:m_content(o.m_content){}
+		Message( unsigned char classId_, unsigned int objId_);
+
+		void packObject( unsigned char classId_, unsigned int objId_);
+		void packString( const std::string& str);
+		void packCharp( const char* buf);
+		void packBuffer( const char* buf, std::size_t size);
+		void packBool( bool val);
+		void packIndex( const Index& index);
+		void packGlobalCounter( const GlobalCounter& index);
+		void packUint( unsigned int val);
+		void packInt( unsigned int val);
+		void packFloat( float val);
+		void packSize( std::size_t size);
+
+		unsigned int unpackObject( std::size_t& itr, unsigned char& classId_);
+		std::string unpackString( std::size_t& itr);
+		const char* unpackCharp( std::size_t& itr);
+		const char* unpackBuffer( std::size_t& itr, std::size_t& size);
+		bool unpackBool( std::size_t& itr);
+		Index unpackIndex( std::size_t& itr);
+		GlobalCounter unpackGlobalCounter( std::size_t& itr);
+		unsigned int unpackUint( std::size_t& itr);
+		int unpackInt( std::size_t& itr);
+		float unpackFloat( std::size_t& itr);
+		std::size_t unpackSize( std::size_t& itr);
+
+		const std::string& content() const
+		{
+			return m_content;
+		}
+
+	private:
+		std::string m_content;
+	};
+
+public:
 	virtual ~RcpInterfaceStub(){}
 
-	explicit RcpInterfaceStub( unsigned short objectId);
+	RcpInterfaceStub( unsigned char classId_, const RemoteEndPoint& endpoint_);
 	RcpInterfaceStub( const RcpInterfaceStub& o);
 	RcpInterfaceStub();
 
-	unsigned short objectId() const			{return m_objectId;}
-	unsigned int ptrId() const			{return m_ptrId;}
+	unsigned char classId() const			{return m_classId;}
+	unsigned int objId() const			{return m_objId;}
+
+	void sendMessage( const std::string& msg);
 
 private:
-	static unsigned int m_ptrIdCnt;
-	unsigned short m_objectId;
-	unsigned int m_ptrId;
+	static unsigned int m_objIdCnt;
+	unsigned char m_classId;
+	unsigned int m_objId;
+	RemoteEndPoint m_endpoint;
 };
 
 }}//namespace
