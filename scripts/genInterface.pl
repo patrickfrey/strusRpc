@@ -206,9 +206,16 @@ sub parseType
 	return joinIdent( $prefix, $typeprefix . $type . $typepostfix);
 }
 
-sub parseInterface
+sub interfaceImplementationClassName
 {
 	my ($classname) = @_;
+	$classname =~ s/Interface$//;
+	return $classname . "Impl";
+}
+
+sub parseInterface
+{
+	my ($interfacename) = @_;
 	my @methodlist = ();
 	my $bcnt = 1;
 	nextToken();
@@ -285,17 +292,19 @@ sub parseInterface
 				}
 			}
 		}
-		elsif ($bcnt == 1 && ($tok eq "class" || $tok eq "struct"))
+		elsif ($bcnt == 1 && ($tok eq "class" || $tok eq "struct" || $tok eq "enum"))
 		{
 			my $subClassName = nextToken();
-			$typeRewriteMap{ $subClassName } = "$classname" . "::" . $subClassName;
+			my $subClassNameComplete = "$interfacename" . "::" . $subClassName;
+			$typeRewriteMap{ $subClassName } = $subClassNameComplete;
+			$typeRewriteMap{ interfaceImplementationClassName( $interfacename) . "::" . $subClassName } = $subClassNameComplete;
 		}
 		else
 		{
 			nextToken();
 		}
 	}
-	push( @interfaceClasses, $classname . "%" . join( "%", @methodlist));
+	push( @interfaceClasses, $interfacename . "%" . join( "%", @methodlist));
 	hasToken() or die "unexpected end of source parsing interface";
 }
 
@@ -340,12 +349,12 @@ foreach $inputfile( @inputfiles)
 		my $tok = currToken();
 		if ($tok eq "class")
 		{
-			my $classname = nextToken();
+			my $interfacename = nextToken();
 			if (nextToken() eq "{")
 			{
-				if ($classname =~ m/Interface$/)
+				if ($interfacename =~ m/Interface$/)
 				{
-					parseInterface( $classname);
+					parseInterface( $interfacename);
 				}
 				else
 				{
@@ -418,7 +427,7 @@ sub getClassEnumSource
 
 sub getParamProperties
 {
-	my ($param) = @_;
+	my ($classname,$param) = @_;
 	my $isarray = 0;
 	if ($param =~ m/\[\]$/)
 	{
@@ -448,7 +457,11 @@ sub getParamProperties
 	my @parampartlist = split( ' ', $param);
 	my $gg;
 	my $paramname = shift( @parampartlist);
-	if ($typeRewriteMap{$paramname})
+	if ($typeRewriteMap{ $classname . "::" . $paramname})
+	{
+		$paramname = $typeRewriteMap{$classname . "::" . $paramname};
+	}
+	elsif ($typeRewriteMap{$paramname})
 	{
 		$paramname = $typeRewriteMap{$paramname};
 	}
@@ -472,8 +485,8 @@ sub getParamProperties
 
 sub getMethodParamDeclarationSource
 {
-	my ($param) = @_;
-	my ($paramname, $isconst, $isarray, $indirection, $passbyref) = getParamProperties( $param);
+	my ($classname, $param) = @_;
+	my ($paramname, $isconst, $isarray, $indirection, $passbyref) = getParamProperties( $classname, $param);
 	if ($isarray)
 	{
 		$paramname = "std::vector<" . $paramname . ">";
@@ -496,7 +509,7 @@ sub getMethodParamDeclarationSource
 
 sub getMethodDeclarationHeader
 {
-	my ($method) = @_;
+	my ($classname, $method) = @_;
 	my @param = split( '!', $method);
 	my $methodname = shift( @param);
 	my $isconst = 0;
@@ -516,10 +529,10 @@ sub getMethodDeclarationHeader
 			$paramlist .= ", ";
 		}
 		++$pi;
-		$paramlist .= getMethodParamDeclarationSource( $pp) . " p" . $pi;
+		$paramlist .= getMethodParamDeclarationSource( $classname, $pp) . " p" . $pi;
 	}
 	my $rt = "virtual "
-			. getMethodParamDeclarationSource( $retval) . " "
+			. getMethodParamDeclarationSource( $classname, $retval) . " "
 			. $methodname . "( "
 			. $paramlist . ")";
 	if ($isconst)
@@ -579,6 +592,19 @@ sub packParameter
 	{
 		$rt .= "msg.packString( " . $id . ");";
 	}
+
+#	PACK_UNKNOWN( "DatabaseOptions");
+#	PACK_UNKNOWN( "DatabaseInterface::ConfigType");
+#	PACK_UNKNOWN( "StorageInterface::ConfigType");
+#	PACK_UNKNOWN( "TokenizerConfig");
+#	PACK_UNKNOWN( "NormalizerConfig");
+#	PACK_UNKNOWN( "DocumentAnalyzerInterface::FeatureOptions");
+#	PACK_UNKNOWN( "Reference<PostingIteratorInterface>");
+#	PACK_UNKNOWN( "SummarizerConfig");
+#	PACK_UNKNOWN( "WeightingConfig");
+#	PACK_UNKNOWN( "QueryInterface::CompareOperator");
+#	PACK_UNKNOWN( "SummarizerFunctionInterface::FeatureParameter");
+
 	else
 	{
 		$rt .= "PACK_UNKNOWN( \"$type\" $id);";
@@ -589,8 +615,8 @@ sub packParameter
 sub inputParameterPackFunctionCall
 {
 	my $rt = "";
-	my ($param, $idx) = @_;
-	my ($paramtype, $isconst, $isarray, $indirection, $passbyref) = getParamProperties( $param);
+	my ($classname, $param, $idx) = @_;
+	my ($paramtype, $isconst, $isarray, $indirection, $passbyref) = getParamProperties( $classname, $param);
 	if ($passbyref && ($isconst == 0 || $indirection > 0))
 	{
 		return "";
@@ -641,9 +667,9 @@ sub getMethodDeclarationSource
 			$paramlist .= ", ";
 		}
 		++$pi;
-		$paramlist .= getMethodParamDeclarationSource( $pp) . " p" . $pi;
+		$paramlist .= getMethodParamDeclarationSource( $classname, $pp) . " p" . $pi;
 	}
-	my $rt = getMethodParamDeclarationSource( $retval) . " "
+	my $rt = getMethodParamDeclarationSource( $classname, $retval) . " "
 			. $classname . "::" . $methodname . "( "
 			. $paramlist . ")";
 	if ($isconst)
@@ -665,7 +691,7 @@ sub getMethodDeclarationSource
 		}
 		else
 		{
-			$rt .= inputParameterPackFunctionCall( $param[$pi], $pi+1);
+			$rt .= inputParameterPackFunctionCall( $classname, $param[$pi], $pi+1);
 		}
 	}
 	$rt .= "\tmsg.packCrc32();\n";
@@ -681,9 +707,7 @@ sub getClassHeaderSource
 	foreach (@interfaceClasses)
 	{
 		my $interfacename = getInterfaceName($_);
-		my $classname = $interfacename;
-		$classname =~ s/Interface$//;
-		$classname .= "Impl";
+		my $classname = interfaceImplementationClassName( $interfacename);
 		$rt .= "\nclass $classname\n\t\t:public RcpInterfaceStub\n\t\t,public strus::$interfacename\n{\npublic:";
 
 		my @mth = split('%');
@@ -709,7 +733,7 @@ sub getClassHeaderSource
 		$rt .= "\n\t$classname( const RcpRemoteEndPoint& endpoint_)\n\t\t:RcpInterfaceStub(" . getInterfaceEnumName($interfacename) .", endpoint_){}\n";
 		foreach $mm( @mth)
 		{
-			$rt .= "\n\t" . getMethodDeclarationHeader( $mm) .";";
+			$rt .= "\n\t" . getMethodDeclarationHeader( $classname, $mm) .";";
 		}
 		$rt .= "\n};\n";
 		++$ii;
@@ -726,9 +750,7 @@ sub getClassImplementationSource
 	foreach (@interfaceClasses)
 	{
 		my $interfacename = getInterfaceName($_);
-		my $classname = $interfacename;
-		$classname =~ s/Interface$//;
-		$classname .= "Impl";
+		my $classname = interfaceImplementationClassName( $interfacename);
 
 		my @mth = split('%');
 		shift( @mth);

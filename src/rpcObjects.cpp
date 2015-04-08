@@ -226,21 +226,21 @@ void DatabaseImpl::destroyDatabase( const std::string& p1) const
 	msg.packCrc32();
 }
 
-const char* DatabaseImpl::getConfigDescription( ConfigType p1) const
+const char* DatabaseImpl::getConfigDescription( DatabaseInterface::ConfigType p1) const
 {
 	RcpMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigDescription);
-	PACK_UNKNOWN( "ConfigType" p1);
+	PACK_UNKNOWN( "DatabaseInterface::ConfigType" p1);
 	msg.packCrc32();
 }
 
-const char** DatabaseImpl::getConfigParameters( ConfigType p1) const
+const char** DatabaseImpl::getConfigParameters( DatabaseInterface::ConfigType p1) const
 {
 	RcpMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigParameters);
-	PACK_UNKNOWN( "ConfigType" p1);
+	PACK_UNKNOWN( "DatabaseInterface::ConfigType" p1);
 	msg.packCrc32();
 }
 
@@ -806,12 +806,12 @@ void QueryImpl::defineFeature( const std::string& p1, float p2)
 	msg.packCrc32();
 }
 
-void QueryImpl::defineMetaDataRestriction( CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
+void QueryImpl::defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
 {
 	RcpMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineMetaDataRestriction);
-	PACK_UNKNOWN( "CompareOperator" p1);
+	PACK_UNKNOWN( "QueryInterface::CompareOperator" p1);
 	msg.packString( p2);
 	msg.packArithmeticVariant( p3);
 	msg.packBool( p4);
@@ -1297,21 +1297,21 @@ StorageAlterMetaDataTableInterface* StorageImpl::createAlterMetaDataTable( Datab
 	msg.packCrc32();
 }
 
-const char* StorageImpl::getConfigDescription( ConfigType p1) const
+const char* StorageImpl::getConfigDescription( StorageInterface::ConfigType p1) const
 {
 	RcpMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigDescription);
-	PACK_UNKNOWN( "ConfigType" p1);
+	PACK_UNKNOWN( "StorageInterface::ConfigType" p1);
 	msg.packCrc32();
 }
 
-const char** StorageImpl::getConfigParameters( ConfigType p1) const
+const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) const
 {
 	RcpMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigParameters);
-	PACK_UNKNOWN( "ConfigType" p1);
+	PACK_UNKNOWN( "StorageInterface::ConfigType" p1);
 	msg.packCrc32();
 }
 

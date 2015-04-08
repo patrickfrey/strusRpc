@@ -240,8 +240,8 @@ public:
 	virtual void createDatabase( const std::string& p1) const;
 	virtual void restoreDatabase( const std::string& p1, DatabaseBackupCursorInterface* p2) const;
 	virtual void destroyDatabase( const std::string& p1) const;
-	virtual const char* getConfigDescription( ConfigType p1) const;
-	virtual const char** getConfigParameters( ConfigType p1) const;
+	virtual const char* getConfigDescription( DatabaseInterface::ConfigType p1) const;
+	virtual const char** getConfigParameters( DatabaseInterface::ConfigType p1) const;
 };
 
 class DatabaseTransactionImpl
@@ -617,7 +617,7 @@ public:
 	virtual void pushDuplicate( );
 	virtual void attachVariable( const std::string& p1);
 	virtual void defineFeature( const std::string& p1, float p2);
-	virtual void defineMetaDataRestriction( CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
+	virtual void defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
 	virtual void setMaxNofRanks( std::size_t p1);
 	virtual void setMinRank( std::size_t p1);
 	virtual void setUserName( const std::string& p1);
@@ -846,8 +846,8 @@ public:
 	virtual StorageClientInterface* createClient( const std::string& p1, DatabaseClientInterface* p2) const;
 	virtual void createStorage( const std::string& p1, DatabaseClientInterface* p2) const;
 	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( DatabaseClientInterface* p1) const;
-	virtual const char* getConfigDescription( ConfigType p1) const;
-	virtual const char** getConfigParameters( ConfigType p1) const;
+	virtual const char* getConfigDescription( StorageInterface::ConfigType p1) const;
+	virtual const char** getConfigParameters( StorageInterface::ConfigType p1) const;
 };
 
 class StoragePeerImpl
