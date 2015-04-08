@@ -36,9 +36,21 @@
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp> 
+#include <boost/crc.hpp>
 
 namespace strus {
 namespace utils {
+
+class Crc32
+{
+public:
+	static uint32_t calc( const char* blk, std::size_t blksize)
+	{
+		boost::crc_32_type result;
+		result.process_bytes( blk, blksize);
+		return result.checksum();
+	}
+};
 
 template <class X>
 class SharedPtr

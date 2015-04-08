@@ -129,28 +129,44 @@ sub joinIdent
 # <method>	= <methodname>!<paramtype>!...
 # <paramtype>	= STRING
 my @interfaceClasses = ();
+my %typeRewriteMap = ();
+$typeRewriteMap{"unsigned_int"} = "unsigned int";
+$typeRewriteMap{"unsigned_char"} = "unsigned char";
 
 sub parseType
 {
 	my $prefix = "";
 	my $type = nextToken();
-	while ($type eq "const" || $type eq "unsigned")
+	my $typeprefix = "";
+	while ($type eq "const")
 	{
 		$prefix = joinIdent( $prefix, $type);
 		$type = nextToken();
 	}
+	while ($type eq "unsigned")
+	{
+		$typeprefix = $type . '_';
+		$type = nextToken();
+	}
+	my $bcnt = 0;
+	my $typepostfix = "";
 	if ($type eq "std::vector")
 	{
+		$typepostfix = "[]";
 		$type = "";
-		if (nextToken() ne "<")
-		{
-			die "unexpected token after std::vector";
-		}
-		my $bcnt = 1;
+	}
+	my $tok = nextToken();
+	if ($tok eq "<")
+	{
+		$bcnt = 1;
 		while (hasToken() && $bcnt > 0)
 		{
-			my $tok = nextToken();
-			if ($tok eq "<")
+			$tok = nextToken();
+			if ($tok eq "unsigned")
+			{
+				$typeprefix = $typeprefix . $tok . '_';
+			}
+			elsif ($tok eq "<")
 			{
 				++$bcnt;
 			}
@@ -160,20 +176,20 @@ sub parseType
 			}
 			elsif ($tok =~ m/[;=\{\}\(\)]/)
 			{
-				die "expected '>' after std::vector template argument";
+				die "expected '>' closing template";
 			}
 			else
 			{
-				$type = joinIdent( $type, $tok);
-			}			
+				$type = joinIdent( $type, $typeprefix . $tok);
+				$typeprefix = "";
+			}
 		}
 		if (!hasToken())
 		{
 			die "unexpected end of file in std::vector template argument";
 		}
-		$type = $type . "[]";
+		$tok = nextToken();
 	}
-	my $tok = nextToken();
 	while ($tok eq "*")
 	{
 		$prefix = $prefix . '^';
@@ -187,7 +203,7 @@ sub parseType
 	{
 		prevToken();
 	}
-	return joinIdent( $prefix, $type);
+	return joinIdent( $prefix, $typeprefix . $type . $typepostfix);
 }
 
 sub parseInterface
@@ -216,12 +232,13 @@ sub parseInterface
 			{
 				prevToken();
 				my $returntype = parseType();
+				
 				my $methodname = nextToken();
 				my @paramlist = ();
 
 				if (nextToken() ne "(")
 				{
-					die "syntax error parsing method: oval bracket '(', start of argument list expected";
+					die "syntax error parsing method: start of argument list expected";
 				}
 				while (nextToken() ne ")")
 				{
@@ -267,6 +284,11 @@ sub parseInterface
 					push( @methodlist, $methodname . "!" . $returntype);
 				}
 			}
+		}
+		elsif ($bcnt == 1 && ($tok eq "class" || $tok eq "struct"))
+		{
+			my $subClassName = nextToken();
+			$typeRewriteMap{ $subClassName } = "$classname" . "::" . $subClassName;
 		}
 		else
 		{
@@ -394,7 +416,7 @@ sub getClassEnumSource
 	return $rt;
 }
 
-sub getMethodParamDeclarationSource
+sub getParamProperties
 {
 	my ($param) = @_;
 	my $isarray = 0;
@@ -422,45 +444,57 @@ sub getMethodParamDeclarationSource
 		$passbyref = 1;
 		$param =~ s/^[\&]//;
 	}
-	print "2>>'$param'\n";
 	my $paramlist = "";
-	if ($isconst)
-	{
-		$paramlist .= "const ";
-	}
 	my @parampartlist = split( ' ', $param);
 	my $gg;
 	my $paramname = shift( @parampartlist);
-	
+	if ($typeRewriteMap{$paramname})
+	{
+		$paramname = $typeRewriteMap{$paramname};
+	}
 	foreach $gg(@parampartlist)
 	{
-		$paramname .= "<" . $gg;
+		if ($typeRewriteMap{$gg})
+		{
+			$paramname .= "<" . $typeRewriteMap{$gg};
+		}
+		else
+		{
+			$paramname .= "<" . $gg;
+		}
 	}
 	foreach $gg(@parampartlist)
 	{
 		$paramname .= "> ";
 	}
+	return ($paramname, $isconst, $isarray, $indirection, $passbyref);
+}
+
+sub getMethodParamDeclarationSource
+{
+	my ($param) = @_;
+	my ($paramname, $isconst, $isarray, $indirection, $passbyref) = getParamProperties( $param);
 	if ($isarray)
 	{
-		$paramlist .= "std::vector<" . $paramname . ">";
+		$paramname = "std::vector<" . $paramname . ">";
 	}
-	else
+	if ($isconst)
 	{
-		$paramlist .= $paramname;
+		$paramname = "const " . $paramname;
 	}
 	my $ii;
 	for ($ii=0; $ii<$indirection; ++$ii)
 	{
-		$paramlist .= "*";
+		$paramname .= "*";
 	}
 	if ($passbyref)
 	{
-		$paramlist .= "&";
+		$paramname .= "&";
 	}
-	return $paramlist;
+	return $paramname;
 }
 
-sub getMethodDeclarationSource
+sub getMethodDeclarationHeader
 {
 	my ($method) = @_;
 	my @param = split( '!', $method);
@@ -492,6 +526,150 @@ sub getMethodDeclarationSource
 	{
 		$rt .= " const";
 	}
+	return $rt;
+}
+
+sub packParameter
+{
+	my ($type, $id) = @_;
+	my $rt = "";
+	if ($type =~ m/(.*)Interface$/)
+	{
+		$rt .= "const $1" . "Impl* impl_$id = dynamic_cast<const $1" . "Impl*>($id);";
+		$rt .= "\n\tif (!impl_$id) throw std::runtime_error( \"passing non RPC interface object in RPC call\");";
+		$rt .= "\n\tmsg.packObject( impl_" . $id . "->classId(), impl_" . $id . "->objId());";
+	}
+	elsif ($type eq "ArithmeticVariant")
+	{
+		$rt .= "msg.packArithmeticVariant( " . $id . ");";
+	}
+	elsif ($type eq "Index")
+	{
+		$rt .= "msg.packIndex( " . $id . ");";
+	}
+	elsif ($type eq "GlobalCounter")
+	{
+		$rt .= "msg.packGlobalCounter( " . $id . ");";
+	}
+	elsif ($type eq "int")
+	{
+		$rt .= "msg.packInt( " . $id . ");";
+	}
+	elsif ($type eq "unsigned int")
+	{
+		$rt .= "msg.packUint( " . $id . ");";
+	}
+	elsif ($type eq "float")
+	{
+		$rt .= "msg.packFloat( " . $id . ");";
+	}
+	elsif ($type eq "bool")
+	{
+		$rt .= "msg.packBool( " . $id . ");";
+	}
+	elsif ($type eq "std::size_t")
+	{
+		$rt .= "msg.packSize( " . $id . ");";
+	}
+	elsif ($type eq "char*")
+	{
+		$rt .= "msg.packCharp( " . $id . ");";
+	}
+	elsif ($type eq "std::string")
+	{
+		$rt .= "msg.packString( " . $id . ");";
+	}
+	else
+	{
+		$rt .= "PACK_UNKNOWN( \"$type\" $id);";
+	}
+	return $rt;
+}
+
+sub inputParameterPackFunctionCall
+{
+	my $rt = "";
+	my ($param, $idx) = @_;
+	my ($paramtype, $isconst, $isarray, $indirection, $passbyref) = getParamProperties( $param);
+	if ($passbyref && ($isconst == 0 || $indirection > 0))
+	{
+		return "";
+	}
+	if ($indirection == 2)
+	{
+		$rt .= "\tfor (unsigned int ii=0; p$idx" . "[ii]; ++ii);\n";
+		$rt .= "\tpackUint( ii);\n";
+		$rt .= "\tfor (unsigned int ii=0; p$idx" . "[ii]; ++ii) {\n";
+		$rt .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii]") . "\n\t}\n";
+	}
+	elsif ($isarray)
+	{
+		$rt .= "\tpackSize( p$idx" . ".size());\n";
+		$rt .= "\tfor (unsigned int ii=0; ii < p$idx" . ".size(); ++ii) {\n";
+		$rt .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii]") . "\n\t}\n";
+	}
+	elsif ($indirection == 1 && $paramtype eq 'char' && $passbyref == 0)
+	{
+		$rt .= "\t" . packParameter( "$paramtype*", "p$idx") . "\n";
+	}
+	else
+	{
+		$rt .= "\t" . packParameter( $paramtype, "p$idx") . "\n";
+	}
+	return $rt;
+}
+
+sub getMethodDeclarationSource
+{
+	my ($classname, $method) = @_;
+	my @param = split( '!', $method);
+	my $methodname = shift( @param);
+	my $isconst = 0;
+	if ($methodname =~ m/^const /)
+	{
+		$isconst = 1;
+		$methodname =~ s/^const //;
+	}
+	my $paramlist = "";
+	my $retval = shift( @param);
+	my $pi = 0;
+	my $pp;
+	foreach $pp( @param)
+	{
+		if ($paramlist ne "")
+		{
+			$paramlist .= ", ";
+		}
+		++$pi;
+		$paramlist .= getMethodParamDeclarationSource( $pp) . " p" . $pi;
+	}
+	my $rt = getMethodParamDeclarationSource( $retval) . " "
+			. $classname . "::" . $methodname . "( "
+			. $paramlist . ")";
+	if ($isconst)
+	{
+		$rt .= " const";
+	}
+	$rt .= "\n{\n\tRcpMessage msg;\n";
+	$rt .= "\tmsg.packObject( classId(), objId());\n";
+	$rt .= "\tmsg.packByte( Method_" . $methodname . ");\n";
+
+	$pi = 0;
+	for (; $pi <= $#param; ++$pi)
+	{
+		if ($pi+1 <= $#param && $param[$pi] eq "const^ char" && $param[$pi+1] eq "std::size_t")
+		{
+			# ... exception for buffer( size, len):
+			$rt .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+			++$pi;
+		}
+		else
+		{
+			$rt .= inputParameterPackFunctionCall( $param[$pi], $pi+1);
+		}
+	}
+	$rt .= "\tmsg.packCrc32();\n";
+	$rt .= "}\n";
 	return $rt;
 }
 
@@ -528,10 +706,10 @@ sub getClassHeaderSource
 		}
 		$rt .= "\n\t};\n";
 		$rt .= "\n\tvirtual ~$classname(){}\n";
-		$rt .= "\n\t$classname()\n\t\t:RcpInterfaceStub(" . getInterfaceEnumName($interfacename) ."){}\n";
+		$rt .= "\n\t$classname( const RcpRemoteEndPoint& endpoint_)\n\t\t:RcpInterfaceStub(" . getInterfaceEnumName($interfacename) .", endpoint_){}\n";
 		foreach $mm( @mth)
 		{
-			$rt .= "\n\t" . getMethodDeclarationSource( $mm) .";";
+			$rt .= "\n\t" . getMethodDeclarationHeader( $mm) .";";
 		}
 		$rt .= "\n};\n";
 		++$ii;
@@ -551,45 +729,25 @@ sub getClassImplementationSource
 		my $classname = $interfacename;
 		$classname =~ s/Interface$//;
 		$classname .= "Impl";
-		$rt .= "\nclass $classname\n\t\t:public RcpInterfaceStub\n\t\t,public strus::$interfacename\n{\npublic:";
 
 		my @mth = split('%');
 		shift( @mth);
 		my $mm;
 		my $mi = 0;
-		$rt .= "\n\tenum MethodId\n\t{";
 		foreach $mm( @mth)
 		{
-			my $callname = getMethodName( $mm);
-			if ($mi++ > 0)
-			{
-				$rt .= ",\n\t\t";
-			}
-			else
-			{
-				$rt .= "\n\t\t";
-			}
-			$rt .= "Method_" . $callname;
+			$rt .= "\n" . getMethodDeclarationSource( $classname, $mm);
 		}
-		$rt .= "\n\t};\n";
-		$rt .= "\n\tvirtual ~$classname(){}\n";
-		$rt .= "\n\t$classname()\n\t\t:RcpInterfaceStub(" . getInterfaceEnumName($interfacename) ."){}\n";
-		foreach $mm( @mth)
-		{
-			$rt .= "\n\t" . getMethodDeclarationSource( $mm) .";";
-		}
-		$rt .= "\n};\n";
 		++$ii;
 	}
-	$rt .= "\n};\n";
 	return $rt;
 }
 
 
-my $interfacefile = "include/strus/rpcObjects.hpp";
-open( CLASSFILE, ">$interfacefile") or die "Couldn't open file $interfacefile, $!";
+my $interfacefile = "src/rpcObjects.hpp";
+open( HDRFILE, ">$interfacefile") or die "Couldn't open file $interfacefile, $!";
 
-print CLASSFILE <<EOF;
+print HDRFILE <<EOF;
 /*
 ---------------------------------------------------------------------
     The C++ library strus implements basic operations to build
@@ -620,35 +778,35 @@ print CLASSFILE <<EOF;
 */
 #ifndef _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #define _STRUS_RPC_OBJECTS_HPP_INCLUDED
-#include "strus/rpcInterfaceStub.hpp"
+#include "rpcInterfaceStub.hpp"
 EOF
 foreach $inputfile( @inputfiles)
 {
 	if ($inputfile =~ m/[\/]([a-zA-z0-9_]+[\.]hpp)$/)
 	{
-		print CLASSFILE "#include \"strus/" . $1 ."\"\n";
+		print HDRFILE "#include \"strus/" . $1 ."\"\n";
 	}
 	else
 	{
 		die "input file has unknown name pattern: $inputfile";
 	}
 }
-print CLASSFILE "\n";
-print CLASSFILE "namespace strus {\n";
-print CLASSFILE "namespace rpc {\n";
+print HDRFILE "\n";
+print HDRFILE "namespace strus {\n";
 
-print CLASSFILE getClassEnumSource();
-print CLASSFILE getClassHeaderSource();
+print HDRFILE getClassEnumSource();
+print HDRFILE getClassHeaderSource();
 
-print CLASSFILE <<EOF;
-}} //namespace
+print HDRFILE <<EOF;
+} //namespace
 #endif
 EOF
+close HDRFILE;
 
-my $sourcefile = "strus/rpcObjects.cpp";
-open( CLASSFILE, ">$sourcefile") or die "Couldn't open file $sourcefile, $!";
+my $sourcefile = "src/rpcObjects.cpp";
+open( SRCFILE, ">$sourcefile") or die "Couldn't open file $sourcefile, $!";
 
-print CLASSFILE <<EOF;
+print SRCFILE <<EOF;
 /*
 ---------------------------------------------------------------------
     The C++ library strus implements basic operations to build
@@ -677,18 +835,17 @@ print CLASSFILE <<EOF;
 
 --------------------------------------------------------------------
 */
-#include "strus/rpcObjects.hpp"
+#include "rpcObjects.hpp"
 
 using namespace strus;
-using namespace strus::rpc;
 EOF
 
-print CLASSFILE getClassImplementationSource();
+print SRCFILE getClassImplementationSource();
 
-print CLASSFILE <<EOF;
-}} //namespace
-#endif
+print SRCFILE <<EOF;
+
 EOF
+close SRCFILE;
 
 #printParsedDump();
 

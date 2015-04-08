@@ -26,32 +26,9 @@
 
 --------------------------------------------------------------------
 */
-#include "private/utils.hpp"
-#include "rpcInterfaceStub.hpp"
-#include <stdexcept>
-#include <limits>
+#include "rpcRemoteEndPoint.hpp"
 
 using namespace strus;
-
-static utils::Mutex g_mutex_objIdCnt;
-int unsigned RcpInterfaceStub::m_objIdCnt = 0;
-
-RcpInterfaceStub::RcpInterfaceStub( unsigned char classId_, const RcpRemoteEndPoint& endpoint_)
-	:m_classId(classId_),m_objId(0),m_endpoint(endpoint_)
-{
-	if (RcpInterfaceStub::m_objIdCnt >= std::numeric_limits<uint32_t>::max())
-	{
-		throw std::runtime_error("too many remote objects created (RPC)");
-	}
-	utils::ScopedLock lock( g_mutex_objIdCnt);
-	m_objId = ++RcpInterfaceStub::m_objIdCnt;
-}
-
-RcpInterfaceStub::RcpInterfaceStub( const RcpInterfaceStub& o)
-	:m_classId(o.m_classId),m_objId(o.m_objId),m_endpoint(o.m_endpoint){}
-
-RcpInterfaceStub::RcpInterfaceStub()
-	:m_classId(0),m_objId(0),m_endpoint(){}
 
 
 

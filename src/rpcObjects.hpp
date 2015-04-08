@@ -28,7 +28,7 @@
 */
 #ifndef _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #define _STRUS_RPC_OBJECTS_HPP_INCLUDED
-#include "strus/rpcInterfaceStub.hpp"
+#include "rpcInterfaceStub.hpp"
 #include "strus/databaseBackupCursorInterface.hpp"
 #include "strus/queryEvalInterface.hpp"
 #include "strus/storageTransactionInterface.hpp"
@@ -57,17 +57,20 @@
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/postingJoinOperatorInterface.hpp"
 #include "strus/storageDocumentInterface.hpp"
+#include "strus/tokenizerInstanceInterface.hpp"
 #include "strus/segmenterInstanceInterface.hpp"
 #include "strus/tokenizerInterface.hpp"
+#include "strus/normalizerConstructorInterface.hpp"
 #include "strus/documentAnalyzerInstanceInterface.hpp"
 #include "strus/segmenterInterface.hpp"
+#include "strus/tokenizerConstructorInterface.hpp"
+#include "strus/normalizerInstanceInterface.hpp"
 #include "strus/queryAnalyzerInterface.hpp"
 #include "strus/textProcessorInterface.hpp"
 #include "strus/normalizerInterface.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 
 namespace strus {
-namespace rpc {
 
 enum ClassId
 {
@@ -83,6 +86,8 @@ enum ClassId
 	ClassId_ForwardIterator,
 	ClassId_InvAclIterator,
 	ClassId_MetaDataReader,
+	ClassId_NormalizerConstructor,
+	ClassId_NormalizerInstance,
 	ClassId_Normalizer,
 	ClassId_PeerStorageTransaction,
 	ClassId_PostingIterator,
@@ -104,6 +109,8 @@ enum ClassId
 	ClassId_SummarizerClosure,
 	ClassId_SummarizerFunction,
 	ClassId_TextProcessor,
+	ClassId_TokenizerConstructor,
+	ClassId_TokenizerInstance,
 	ClassId_Tokenizer,
 	ClassId_WeightingClosure,
 	ClassId_WeightingFunction
@@ -123,8 +130,8 @@ public:
 
 	virtual ~AttributeReaderImpl(){}
 
-	AttributeReaderImpl()
-		:RcpInterfaceStub(ClassId_AttributeReader){}
+	AttributeReaderImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_AttributeReader, endpoint_){}
 
 	virtual Index elementHandle( const char* p1) const;
 	virtual void skipDoc( const Index& p1);
@@ -143,8 +150,8 @@ public:
 
 	virtual ~DatabaseBackupCursorImpl(){}
 
-	DatabaseBackupCursorImpl()
-		:RcpInterfaceStub(ClassId_DatabaseBackupCursor){}
+	DatabaseBackupCursorImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_DatabaseBackupCursor, endpoint_){}
 
 	virtual bool fetch( const char*& p1, std::size_t& p2, const char*& p3, std::size_t& p4);
 };
@@ -167,8 +174,8 @@ public:
 
 	virtual ~DatabaseClientImpl(){}
 
-	DatabaseClientImpl()
-		:RcpInterfaceStub(ClassId_DatabaseClient){}
+	DatabaseClientImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_DatabaseClient, endpoint_){}
 
 	virtual void close( );
 	virtual DatabaseTransactionInterface* createTransaction( );
@@ -197,16 +204,16 @@ public:
 
 	virtual ~DatabaseCursorImpl(){}
 
-	DatabaseCursorImpl()
-		:RcpInterfaceStub(ClassId_DatabaseCursor){}
+	DatabaseCursorImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_DatabaseCursor, endpoint_){}
 
-	virtual Slice seekUpperBound( const char* p1, std::size_t p2, std::size_t p3);
-	virtual Slice seekFirst( const char* p1, std::size_t p2);
-	virtual Slice seekLast( const char* p1, std::size_t p2);
-	virtual Slice seekNext( );
-	virtual Slice seekPrev( );
-	virtual Slice key( ) const;
-	virtual Slice value( ) const;
+	virtual DatabaseCursorInterface::Slice seekUpperBound( const char* p1, std::size_t p2, std::size_t p3);
+	virtual DatabaseCursorInterface::Slice seekFirst( const char* p1, std::size_t p2);
+	virtual DatabaseCursorInterface::Slice seekLast( const char* p1, std::size_t p2);
+	virtual DatabaseCursorInterface::Slice seekNext( );
+	virtual DatabaseCursorInterface::Slice seekPrev( );
+	virtual DatabaseCursorInterface::Slice key( ) const;
+	virtual DatabaseCursorInterface::Slice value( ) const;
 };
 
 class DatabaseImpl
@@ -226,8 +233,8 @@ public:
 
 	virtual ~DatabaseImpl(){}
 
-	DatabaseImpl()
-		:RcpInterfaceStub(ClassId_Database){}
+	DatabaseImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_Database, endpoint_){}
 
 	virtual DatabaseClientInterface* createClient( const std::string& p1) const;
 	virtual void createDatabase( const std::string& p1) const;
@@ -254,8 +261,8 @@ public:
 
 	virtual ~DatabaseTransactionImpl(){}
 
-	DatabaseTransactionImpl()
-		:RcpInterfaceStub(ClassId_DatabaseTransaction){}
+	DatabaseTransactionImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_DatabaseTransaction, endpoint_){}
 
 	virtual DatabaseCursorInterface* createCursor( const DatabaseOptions& p1) const;
 	virtual void write( const char* p1, std::size_t p2, const char* p3, std::size_t p4);
@@ -278,8 +285,8 @@ public:
 
 	virtual ~DocnoRangeAllocatorImpl(){}
 
-	DocnoRangeAllocatorImpl()
-		:RcpInterfaceStub(ClassId_DocnoRangeAllocator){}
+	DocnoRangeAllocatorImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_DocnoRangeAllocator, endpoint_){}
 
 	virtual Index allocDocnoRange( const Index& p1);
 	virtual bool deallocDocnoRange( const Index& p1, const Index& p2);
@@ -298,8 +305,8 @@ public:
 
 	virtual ~DocumentAnalyzerInstanceImpl(){}
 
-	DocumentAnalyzerInstanceImpl()
-		:RcpInterfaceStub(ClassId_DocumentAnalyzerInstance){}
+	DocumentAnalyzerInstanceImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_DocumentAnalyzerInstance, endpoint_){}
 
 	virtual void putInput( const char* p1, std::size_t p2, bool p3);
 	virtual bool analyzeNext( analyzer::Document& p1);
@@ -323,11 +330,11 @@ public:
 
 	virtual ~DocumentAnalyzerImpl(){}
 
-	DocumentAnalyzerImpl()
-		:RcpInterfaceStub(ClassId_DocumentAnalyzer){}
+	DocumentAnalyzerImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_DocumentAnalyzer, endpoint_){}
 
-	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const FeatureOptions& p5);
-	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const FeatureOptions& p5);
+	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
+	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
 	virtual void defineMetaData( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4);
 	virtual void defineAttribute( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4);
 	virtual void defineSubDocument( const std::string& p1, const std::string& p2);
@@ -349,8 +356,8 @@ public:
 
 	virtual ~ForwardIteratorImpl(){}
 
-	ForwardIteratorImpl()
-		:RcpInterfaceStub(ClassId_ForwardIterator){}
+	ForwardIteratorImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_ForwardIterator, endpoint_){}
 
 	virtual void skipDoc( const Index& p1);
 	virtual Index skipPos( const Index& p1);
@@ -369,8 +376,8 @@ public:
 
 	virtual ~InvAclIteratorImpl(){}
 
-	InvAclIteratorImpl()
-		:RcpInterfaceStub(ClassId_InvAclIterator){}
+	InvAclIteratorImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_InvAclIterator, endpoint_){}
 
 	virtual Index skipDoc( const Index& p1);
 };
@@ -393,8 +400,8 @@ public:
 
 	virtual ~MetaDataReaderImpl(){}
 
-	MetaDataReaderImpl()
-		:RcpInterfaceStub(ClassId_MetaDataReader){}
+	MetaDataReaderImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_MetaDataReader, endpoint_){}
 
 	virtual bool hasElement( const std::string& p1) const;
 	virtual Index elementHandle( const std::string& p1) const;
@@ -405,6 +412,42 @@ public:
 	virtual const char* getName( const Index& p1) const;
 };
 
+class NormalizerConstructorImpl
+		:public RcpInterfaceStub
+		,public strus::NormalizerConstructorInterface
+{
+public:
+	enum MethodId
+	{
+		Method_create
+	};
+
+	virtual ~NormalizerConstructorImpl(){}
+
+	NormalizerConstructorImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_NormalizerConstructor, endpoint_){}
+
+	virtual NormalizerInterface* create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
+};
+
+class NormalizerInstanceImpl
+		:public RcpInterfaceStub
+		,public strus::NormalizerInstanceInterface
+{
+public:
+	enum MethodId
+	{
+		Method_normalize
+	};
+
+	virtual ~NormalizerInstanceImpl(){}
+
+	NormalizerInstanceImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_NormalizerInstance, endpoint_){}
+
+	virtual std::string normalize( const char* p1, std::size_t p2);
+};
+
 class NormalizerImpl
 		:public RcpInterfaceStub
 		,public strus::NormalizerInterface
@@ -412,19 +455,15 @@ class NormalizerImpl
 public:
 	enum MethodId
 	{
-		Method_createArgument,
-		Method_createContext,
-		Method_normalize
+		Method_createInstance
 	};
 
 	virtual ~NormalizerImpl(){}
 
-	NormalizerImpl()
-		:RcpInterfaceStub(ClassId_Normalizer){}
+	NormalizerImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_Normalizer, endpoint_){}
 
-	virtual Argument* createArgument( const TextProcessorInterface* p1, const std::vector<std::string>& p2) const;
-	virtual Context* createContext( const Argument* p1) const;
-	virtual std::string normalize( Context* p1, const char* p2, std::size_t p3) const;
+	virtual NormalizerInstanceInterface* createInstance( ) const;
 };
 
 class PeerStorageTransactionImpl
@@ -442,8 +481,8 @@ public:
 
 	virtual ~PeerStorageTransactionImpl(){}
 
-	PeerStorageTransactionImpl()
-		:RcpInterfaceStub(ClassId_PeerStorageTransaction){}
+	PeerStorageTransactionImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_PeerStorageTransaction, endpoint_){}
 
 	virtual void updateNofDocumentsInsertedChange( const GlobalCounter& p1);
 	virtual void updateDocumentFrequencyChange( const char* p1, const char* p2, const GlobalCounter& p3);
@@ -470,15 +509,15 @@ public:
 
 	virtual ~PostingIteratorImpl(){}
 
-	PostingIteratorImpl()
-		:RcpInterfaceStub(ClassId_PostingIterator){}
+	PostingIteratorImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_PostingIterator, endpoint_){}
 
 	virtual Index skipDoc( const Index& p1);
 	virtual Index skipPos( const Index& p1);
 	virtual const char* featureid( ) const;
 	virtual const std::vector<PostingIteratorInterface<*> > subExpressions( bool p1) const;
 	virtual GlobalCounter documentFrequency( ) const;
-	virtual unsigned<int>  frequency( );
+	virtual unsigned int frequency( );
 	virtual Index docno( ) const;
 	virtual Index posno( ) const;
 };
@@ -495,8 +534,8 @@ public:
 
 	virtual ~PostingJoinOperatorImpl(){}
 
-	PostingJoinOperatorImpl()
-		:RcpInterfaceStub(ClassId_PostingJoinOperator){}
+	PostingJoinOperatorImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_PostingJoinOperator, endpoint_){}
 
 	virtual PostingIteratorInterface* createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2) const;
 };
@@ -514,8 +553,8 @@ public:
 
 	virtual ~QueryAnalyzerImpl(){}
 
-	QueryAnalyzerImpl()
-		:RcpInterfaceStub(ClassId_QueryAnalyzer){}
+	QueryAnalyzerImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_QueryAnalyzer, endpoint_){}
 
 	virtual void definePhraseType( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4);
 	virtual std::vector<analyzer::Term> analyzePhrase( const std::string& p1, const std::string& p2) const;
@@ -538,8 +577,8 @@ public:
 
 	virtual ~QueryEvalImpl(){}
 
-	QueryEvalImpl()
-		:RcpInterfaceStub(ClassId_QueryEval){}
+	QueryEvalImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_QueryEval, endpoint_){}
 
 	virtual void addTerm( const std::string& p1, const std::string& p2, const std::string& p3);
 	virtual void addSelectionFeature( const std::string& p1);
@@ -570,8 +609,8 @@ public:
 
 	virtual ~QueryImpl(){}
 
-	QueryImpl()
-		:RcpInterfaceStub(ClassId_Query){}
+	QueryImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_Query, endpoint_){}
 
 	virtual void pushTerm( const std::string& p1, const std::string& p2);
 	virtual void pushExpression( const std::string& p1, std::size_t p2, int p3);
@@ -602,8 +641,8 @@ public:
 
 	virtual ~QueryProcessorImpl(){}
 
-	QueryProcessorImpl()
-		:RcpInterfaceStub(ClassId_QueryProcessor){}
+	QueryProcessorImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_QueryProcessor, endpoint_){}
 
 	virtual void definePostingJoinOperator( const std::string& p1, PostingJoinOperatorInterface* p2);
 	virtual const PostingJoinOperatorInterface* getPostingJoinOperator( const std::string& p1) const;
@@ -626,8 +665,8 @@ public:
 
 	virtual ~SegmenterInstanceImpl(){}
 
-	SegmenterInstanceImpl()
-		:RcpInterfaceStub(ClassId_SegmenterInstance){}
+	SegmenterInstanceImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_SegmenterInstance, endpoint_){}
 
 	virtual void putInput( const char* p1, std::size_t p2, bool p3);
 	virtual bool getNext( int& p1, SegmenterPosition& p2, const char*& p3, std::size_t& p4);
@@ -647,8 +686,8 @@ public:
 
 	virtual ~SegmenterImpl(){}
 
-	SegmenterImpl()
-		:RcpInterfaceStub(ClassId_Segmenter){}
+	SegmenterImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_Segmenter, endpoint_){}
 
 	virtual void defineSelectorExpression( int p1, const std::string& p2);
 	virtual void defineSubSection( int p1, int p2, const std::string& p3);
@@ -673,8 +712,8 @@ public:
 
 	virtual ~StorageAlterMetaDataTableImpl(){}
 
-	StorageAlterMetaDataTableImpl()
-		:RcpInterfaceStub(ClassId_StorageAlterMetaDataTable){}
+	StorageAlterMetaDataTableImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_StorageAlterMetaDataTable, endpoint_){}
 
 	virtual void addElement( const std::string& p1, const std::string& p2);
 	virtual void alterElement( const std::string& p1, const std::string& p2, const std::string& p3);
@@ -715,8 +754,8 @@ public:
 
 	virtual ~StorageClientImpl(){}
 
-	StorageClientImpl()
-		:RcpInterfaceStub(ClassId_StorageClient){}
+	StorageClientImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_StorageClient, endpoint_){}
 
 	virtual void close( );
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2) const;
@@ -756,8 +795,8 @@ public:
 
 	virtual ~StorageDocumentImpl(){}
 
-	StorageDocumentImpl()
-		:RcpInterfaceStub(ClassId_StorageDocument){}
+	StorageDocumentImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_StorageDocument, endpoint_){}
 
 	virtual void addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
 	virtual void addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
@@ -779,8 +818,8 @@ public:
 
 	virtual ~StorageDumpImpl(){}
 
-	StorageDumpImpl()
-		:RcpInterfaceStub(ClassId_StorageDump){}
+	StorageDumpImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_StorageDump, endpoint_){}
 
 	virtual bool nextChunk( const char*& p1, std::size_t& p2);
 };
@@ -801,8 +840,8 @@ public:
 
 	virtual ~StorageImpl(){}
 
-	StorageImpl()
-		:RcpInterfaceStub(ClassId_Storage){}
+	StorageImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_Storage, endpoint_){}
 
 	virtual StorageClientInterface* createClient( const std::string& p1, DatabaseClientInterface* p2) const;
 	virtual void createStorage( const std::string& p1, DatabaseClientInterface* p2) const;
@@ -823,8 +862,8 @@ public:
 
 	virtual ~StoragePeerImpl(){}
 
-	StoragePeerImpl()
-		:RcpInterfaceStub(ClassId_StoragePeer){}
+	StoragePeerImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_StoragePeer, endpoint_){}
 
 	virtual StoragePeerTransactionInterface* createTransaction( ) const;
 };
@@ -845,8 +884,8 @@ public:
 
 	virtual ~StoragePeerTransactionImpl(){}
 
-	StoragePeerTransactionImpl()
-		:RcpInterfaceStub(ClassId_StoragePeerTransaction){}
+	StoragePeerTransactionImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_StoragePeerTransaction, endpoint_){}
 
 	virtual void populateNofDocumentsInsertedChange( int p1);
 	virtual void populateDocumentFrequencyChange( const char* p1, const char* p2, int p3, bool p4);
@@ -871,8 +910,8 @@ public:
 
 	virtual ~StorageTransactionImpl(){}
 
-	StorageTransactionImpl()
-		:RcpInterfaceStub(ClassId_StorageTransaction){}
+	StorageTransactionImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_StorageTransaction, endpoint_){}
 
 	virtual StorageDocumentInterface* createDocument( const std::string& p1, const Index& p2);
 	virtual void deleteDocument( const std::string& p1);
@@ -893,10 +932,10 @@ public:
 
 	virtual ~SummarizerClosureImpl(){}
 
-	SummarizerClosureImpl()
-		:RcpInterfaceStub(ClassId_SummarizerClosure){}
+	SummarizerClosureImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_SummarizerClosure, endpoint_){}
 
-	virtual std::vector<SummaryElement> getSummary( const Index& p1);
+	virtual std::vector<SummarizerClosureInterface::SummaryElement> getSummary( const Index& p1);
 };
 
 class SummarizerFunctionImpl
@@ -914,13 +953,13 @@ public:
 
 	virtual ~SummarizerFunctionImpl(){}
 
-	SummarizerFunctionImpl()
-		:RcpInterfaceStub(ClassId_SummarizerFunction){}
+	SummarizerFunctionImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_SummarizerFunction, endpoint_){}
 
 	virtual const char** numericParameterNames( ) const;
 	virtual const char** textualParameterNames( ) const;
 	virtual const char** featureParameterClassNames( ) const;
-	virtual SummarizerClosureInterface* createClosure( const StorageClientInterface* p1, const QueryProcessorInterface* p2, MetaDataReaderInterface* p3, const std::vector<FeatureParameter>& p4, const std::vector<std::string>& p5, const std::vector<ArithmeticVariant>& p6) const;
+	virtual SummarizerClosureInterface* createClosure( const StorageClientInterface* p1, const QueryProcessorInterface* p2, MetaDataReaderInterface* p3, const std::vector<SummarizerFunctionInterface::FeatureParameter>& p4, const std::vector<std::string>& p5, const std::vector<ArithmeticVariant>& p6) const;
 };
 
 class TextProcessorImpl
@@ -940,15 +979,51 @@ public:
 
 	virtual ~TextProcessorImpl(){}
 
-	TextProcessorImpl()
-		:RcpInterfaceStub(ClassId_TextProcessor){}
+	TextProcessorImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_TextProcessor, endpoint_){}
 
 	virtual void addResourcePath( const std::string& p1);
 	virtual std::string getResourcePath( const std::string& p1) const;
-	virtual const TokenizerInterface* getTokenizer( const std::string& p1) const;
-	virtual const NormalizerInterface* getNormalizer( const std::string& p1) const;
-	virtual void defineTokenizer( const std::string& p1, const TokenizerInterface* p2);
-	virtual void defineNormalizer( const std::string& p1, const NormalizerInterface* p2);
+	virtual const TokenizerConstructorInterface* getTokenizer( const std::string& p1) const;
+	virtual const NormalizerConstructorInterface* getNormalizer( const std::string& p1) const;
+	virtual void defineTokenizer( const std::string& p1, const TokenizerConstructorInterface* p2);
+	virtual void defineNormalizer( const std::string& p1, const NormalizerConstructorInterface* p2);
+};
+
+class TokenizerConstructorImpl
+		:public RcpInterfaceStub
+		,public strus::TokenizerConstructorInterface
+{
+public:
+	enum MethodId
+	{
+		Method_create
+	};
+
+	virtual ~TokenizerConstructorImpl(){}
+
+	TokenizerConstructorImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_TokenizerConstructor, endpoint_){}
+
+	virtual TokenizerInterface* create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
+};
+
+class TokenizerInstanceImpl
+		:public RcpInterfaceStub
+		,public strus::TokenizerInstanceInterface
+{
+public:
+	enum MethodId
+	{
+		Method_tokenize
+	};
+
+	virtual ~TokenizerInstanceImpl(){}
+
+	TokenizerInstanceImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_TokenizerInstance, endpoint_){}
+
+	virtual std::vector<analyzer::Token> tokenize( const char* p1, std::size_t p2);
 };
 
 class TokenizerImpl
@@ -958,21 +1033,17 @@ class TokenizerImpl
 public:
 	enum MethodId
 	{
-		Method_createArgument,
-		Method_createContext,
 		Method_concatBeforeTokenize,
-		Method_tokenize
+		Method_createInstance
 	};
 
 	virtual ~TokenizerImpl(){}
 
-	TokenizerImpl()
-		:RcpInterfaceStub(ClassId_Tokenizer){}
+	TokenizerImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_Tokenizer, endpoint_){}
 
-	virtual Argument* createArgument( const std::vector<std::string>& p1) const;
-	virtual Context* createContext( const Argument* p1) const;
 	virtual bool concatBeforeTokenize( ) const;
-	virtual std::vector<analyzer::Token> tokenize( Context* p1, const char* p2, std::size_t p3) const;
+	virtual TokenizerInstanceInterface* createInstance( ) const;
 };
 
 class WeightingClosureImpl
@@ -987,8 +1058,8 @@ public:
 
 	virtual ~WeightingClosureImpl(){}
 
-	WeightingClosureImpl()
-		:RcpInterfaceStub(ClassId_WeightingClosure){}
+	WeightingClosureImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_WeightingClosure, endpoint_){}
 
 	virtual float call( const Index& p1);
 };
@@ -1006,13 +1077,13 @@ public:
 
 	virtual ~WeightingFunctionImpl(){}
 
-	WeightingFunctionImpl()
-		:RcpInterfaceStub(ClassId_WeightingFunction){}
+	WeightingFunctionImpl( const RcpRemoteEndPoint& endpoint_)
+		:RcpInterfaceStub(ClassId_WeightingFunction, endpoint_){}
 
 	virtual const char** numericParameterNames( ) const;
 	virtual WeightingClosureInterface* createClosure( const StorageClientInterface* p1, PostingIteratorInterface* p2, MetaDataReaderInterface* p3, const std::vector<ArithmeticVariant>& p4) const;
 };
 
 };
-}} //namespace
+} //namespace
 #endif
