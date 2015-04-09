@@ -32,7 +32,7 @@ using namespace strus;
 
 Index AttributeReaderImpl::elementHandle( const char* p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_elementHandle);
 	msg.packCharp( p1);
@@ -41,7 +41,7 @@ Index AttributeReaderImpl::elementHandle( const char* p1) const
 
 void AttributeReaderImpl::skipDoc( const Index& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
@@ -50,7 +50,7 @@ void AttributeReaderImpl::skipDoc( const Index& p1)
 
 std::string AttributeReaderImpl::getValue( const Index& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getValue);
 	msg.packIndex( p1);
@@ -59,7 +59,7 @@ std::string AttributeReaderImpl::getValue( const Index& p1) const
 
 bool DatabaseBackupCursorImpl::fetch( const char*& p1, std::size_t& p2, const char*& p3, std::size_t& p4)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_fetch);
 	msg.packCrc32();
@@ -67,7 +67,7 @@ bool DatabaseBackupCursorImpl::fetch( const char*& p1, std::size_t& p2, const ch
 
 void DatabaseClientImpl::close( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_close);
 	msg.packCrc32();
@@ -75,7 +75,7 @@ void DatabaseClientImpl::close( )
 
 DatabaseTransactionInterface* DatabaseClientImpl::createTransaction( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createTransaction);
 	msg.packCrc32();
@@ -83,7 +83,7 @@ DatabaseTransactionInterface* DatabaseClientImpl::createTransaction( )
 
 DatabaseCursorInterface* DatabaseClientImpl::createCursor( const DatabaseOptions& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createCursor);
 	PACK_UNKNOWN( "DatabaseOptions" p1);
@@ -92,7 +92,7 @@ DatabaseCursorInterface* DatabaseClientImpl::createCursor( const DatabaseOptions
 
 DatabaseBackupCursorInterface* DatabaseClientImpl::createBackupCursor( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createBackupCursor);
 	msg.packCrc32();
@@ -100,7 +100,7 @@ DatabaseBackupCursorInterface* DatabaseClientImpl::createBackupCursor( ) const
 
 void DatabaseClientImpl::writeImm( const char* p1, std::size_t p2, const char* p3, std::size_t p4)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_writeImm);
 	msg.packBuffer( p1, p2);
@@ -110,7 +110,7 @@ void DatabaseClientImpl::writeImm( const char* p1, std::size_t p2, const char* p
 
 void DatabaseClientImpl::removeImm( const char* p1, std::size_t p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_removeImm);
 	msg.packBuffer( p1, p2);
@@ -119,7 +119,7 @@ void DatabaseClientImpl::removeImm( const char* p1, std::size_t p2)
 
 bool DatabaseClientImpl::readValue( const char* p1, std::size_t p2, std::string& p3, const DatabaseOptions& p4) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_readValue);
 	msg.packBuffer( p1, p2);
@@ -129,7 +129,7 @@ bool DatabaseClientImpl::readValue( const char* p1, std::size_t p2, std::string&
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekUpperBound( const char* p1, std::size_t p2, std::size_t p3)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekUpperBound);
 	msg.packBuffer( p1, p2);
@@ -139,7 +139,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekUpperBound( const char* p
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekFirst( const char* p1, std::size_t p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekFirst);
 	msg.packBuffer( p1, p2);
@@ -148,7 +148,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekFirst( const char* p1, st
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekLast( const char* p1, std::size_t p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekLast);
 	msg.packBuffer( p1, p2);
@@ -157,7 +157,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekLast( const char* p1, std
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekNext( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekNext);
 	msg.packCrc32();
@@ -165,7 +165,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekNext( )
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekPrev( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekPrev);
 	msg.packCrc32();
@@ -173,7 +173,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekPrev( )
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::key( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_key);
 	msg.packCrc32();
@@ -181,7 +181,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::key( ) const
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::value( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_value);
 	msg.packCrc32();
@@ -189,7 +189,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::value( ) const
 
 DatabaseClientInterface* DatabaseImpl::createClient( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClient);
 	msg.packString( p1);
@@ -198,7 +198,7 @@ DatabaseClientInterface* DatabaseImpl::createClient( const std::string& p1) cons
 
 void DatabaseImpl::createDatabase( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDatabase);
 	msg.packString( p1);
@@ -207,7 +207,7 @@ void DatabaseImpl::createDatabase( const std::string& p1) const
 
 void DatabaseImpl::restoreDatabase( const std::string& p1, DatabaseBackupCursorInterface* p2) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_restoreDatabase);
 	msg.packString( p1);
@@ -219,7 +219,7 @@ void DatabaseImpl::restoreDatabase( const std::string& p1, DatabaseBackupCursorI
 
 void DatabaseImpl::destroyDatabase( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_destroyDatabase);
 	msg.packString( p1);
@@ -228,7 +228,7 @@ void DatabaseImpl::destroyDatabase( const std::string& p1) const
 
 const char* DatabaseImpl::getConfigDescription( DatabaseInterface::ConfigType p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigDescription);
 	PACK_UNKNOWN( "DatabaseInterface::ConfigType" p1);
@@ -237,7 +237,7 @@ const char* DatabaseImpl::getConfigDescription( DatabaseInterface::ConfigType p1
 
 const char** DatabaseImpl::getConfigParameters( DatabaseInterface::ConfigType p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigParameters);
 	PACK_UNKNOWN( "DatabaseInterface::ConfigType" p1);
@@ -246,7 +246,7 @@ const char** DatabaseImpl::getConfigParameters( DatabaseInterface::ConfigType p1
 
 DatabaseCursorInterface* DatabaseTransactionImpl::createCursor( const DatabaseOptions& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createCursor);
 	PACK_UNKNOWN( "DatabaseOptions" p1);
@@ -255,7 +255,7 @@ DatabaseCursorInterface* DatabaseTransactionImpl::createCursor( const DatabaseOp
 
 void DatabaseTransactionImpl::write( const char* p1, std::size_t p2, const char* p3, std::size_t p4)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_write);
 	msg.packBuffer( p1, p2);
@@ -265,7 +265,7 @@ void DatabaseTransactionImpl::write( const char* p1, std::size_t p2, const char*
 
 void DatabaseTransactionImpl::remove( const char* p1, std::size_t p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_remove);
 	msg.packBuffer( p1, p2);
@@ -274,7 +274,7 @@ void DatabaseTransactionImpl::remove( const char* p1, std::size_t p2)
 
 void DatabaseTransactionImpl::removeSubTree( const char* p1, std::size_t p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_removeSubTree);
 	msg.packBuffer( p1, p2);
@@ -283,7 +283,7 @@ void DatabaseTransactionImpl::removeSubTree( const char* p1, std::size_t p2)
 
 void DatabaseTransactionImpl::commit( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_commit);
 	msg.packCrc32();
@@ -291,7 +291,7 @@ void DatabaseTransactionImpl::commit( )
 
 void DatabaseTransactionImpl::rollback( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
 	msg.packCrc32();
@@ -299,7 +299,7 @@ void DatabaseTransactionImpl::rollback( )
 
 Index DocnoRangeAllocatorImpl::allocDocnoRange( const Index& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_allocDocnoRange);
 	msg.packIndex( p1);
@@ -308,7 +308,7 @@ Index DocnoRangeAllocatorImpl::allocDocnoRange( const Index& p1)
 
 bool DocnoRangeAllocatorImpl::deallocDocnoRange( const Index& p1, const Index& p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deallocDocnoRange);
 	msg.packIndex( p1);
@@ -318,7 +318,7 @@ bool DocnoRangeAllocatorImpl::deallocDocnoRange( const Index& p1, const Index& p
 
 void DocumentAnalyzerInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_putInput);
 	msg.packBuffer( p1, p2);
@@ -328,7 +328,7 @@ void DocumentAnalyzerInstanceImpl::putInput( const char* p1, std::size_t p2, boo
 
 bool DocumentAnalyzerInstanceImpl::analyzeNext( analyzer::Document& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_analyzeNext);
 	msg.packCrc32();
@@ -336,7 +336,7 @@ bool DocumentAnalyzerInstanceImpl::analyzeNext( analyzer::Document& p1)
 
 void DocumentAnalyzerImpl::addSearchIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSearchIndexFeature);
 	msg.packString( p1);
@@ -352,7 +352,7 @@ void DocumentAnalyzerImpl::addSearchIndexFeature( const std::string& p1, const s
 
 void DocumentAnalyzerImpl::addForwardIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addForwardIndexFeature);
 	msg.packString( p1);
@@ -368,7 +368,7 @@ void DocumentAnalyzerImpl::addForwardIndexFeature( const std::string& p1, const 
 
 void DocumentAnalyzerImpl::defineMetaData( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineMetaData);
 	msg.packString( p1);
@@ -383,7 +383,7 @@ void DocumentAnalyzerImpl::defineMetaData( const std::string& p1, const std::str
 
 void DocumentAnalyzerImpl::defineAttribute( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineAttribute);
 	msg.packString( p1);
@@ -398,7 +398,7 @@ void DocumentAnalyzerImpl::defineAttribute( const std::string& p1, const std::st
 
 void DocumentAnalyzerImpl::defineSubDocument( const std::string& p1, const std::string& p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSubDocument);
 	msg.packString( p1);
@@ -408,7 +408,7 @@ void DocumentAnalyzerImpl::defineSubDocument( const std::string& p1, const std::
 
 analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_analyze);
 	msg.packString( p1);
@@ -417,7 +417,7 @@ analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1) const
 
 DocumentAnalyzerInstanceInterface* DocumentAnalyzerImpl::createInstance( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
 	msg.packCrc32();
@@ -425,7 +425,7 @@ DocumentAnalyzerInstanceInterface* DocumentAnalyzerImpl::createInstance( ) const
 
 void ForwardIteratorImpl::skipDoc( const Index& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
@@ -434,7 +434,7 @@ void ForwardIteratorImpl::skipDoc( const Index& p1)
 
 Index ForwardIteratorImpl::skipPos( const Index& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipPos);
 	msg.packIndex( p1);
@@ -443,7 +443,7 @@ Index ForwardIteratorImpl::skipPos( const Index& p1)
 
 std::string ForwardIteratorImpl::fetch( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_fetch);
 	msg.packCrc32();
@@ -451,7 +451,7 @@ std::string ForwardIteratorImpl::fetch( )
 
 Index InvAclIteratorImpl::skipDoc( const Index& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
@@ -460,7 +460,7 @@ Index InvAclIteratorImpl::skipDoc( const Index& p1)
 
 bool MetaDataReaderImpl::hasElement( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_hasElement);
 	msg.packString( p1);
@@ -469,7 +469,7 @@ bool MetaDataReaderImpl::hasElement( const std::string& p1) const
 
 Index MetaDataReaderImpl::elementHandle( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_elementHandle);
 	msg.packString( p1);
@@ -478,7 +478,7 @@ Index MetaDataReaderImpl::elementHandle( const std::string& p1) const
 
 Index MetaDataReaderImpl::nofElements( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_nofElements);
 	msg.packCrc32();
@@ -486,7 +486,7 @@ Index MetaDataReaderImpl::nofElements( ) const
 
 void MetaDataReaderImpl::skipDoc( const Index& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
@@ -495,7 +495,7 @@ void MetaDataReaderImpl::skipDoc( const Index& p1)
 
 ArithmeticVariant MetaDataReaderImpl::getValue( const Index& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getValue);
 	msg.packIndex( p1);
@@ -504,7 +504,7 @@ ArithmeticVariant MetaDataReaderImpl::getValue( const Index& p1) const
 
 const char* MetaDataReaderImpl::getType( const Index& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getType);
 	msg.packIndex( p1);
@@ -513,7 +513,7 @@ const char* MetaDataReaderImpl::getType( const Index& p1) const
 
 const char* MetaDataReaderImpl::getName( const Index& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getName);
 	msg.packIndex( p1);
@@ -522,7 +522,7 @@ const char* MetaDataReaderImpl::getName( const Index& p1) const
 
 NormalizerInterface* NormalizerConstructorImpl::create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_create);
 	packSize( p1.size());
@@ -537,7 +537,7 @@ NormalizerInterface* NormalizerConstructorImpl::create( const std::vector<std::s
 
 std::string NormalizerInstanceImpl::normalize( const char* p1, std::size_t p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_normalize);
 	msg.packBuffer( p1, p2);
@@ -546,7 +546,7 @@ std::string NormalizerInstanceImpl::normalize( const char* p1, std::size_t p2)
 
 NormalizerInstanceInterface* NormalizerImpl::createInstance( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
 	msg.packCrc32();
@@ -554,7 +554,7 @@ NormalizerInstanceInterface* NormalizerImpl::createInstance( ) const
 
 void PeerStorageTransactionImpl::updateNofDocumentsInsertedChange( const GlobalCounter& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_updateNofDocumentsInsertedChange);
 	msg.packGlobalCounter( p1);
@@ -563,7 +563,7 @@ void PeerStorageTransactionImpl::updateNofDocumentsInsertedChange( const GlobalC
 
 void PeerStorageTransactionImpl::updateDocumentFrequencyChange( const char* p1, const char* p2, const GlobalCounter& p3)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_updateDocumentFrequencyChange);
 	msg.packCharp( p1);
@@ -574,7 +574,7 @@ void PeerStorageTransactionImpl::updateDocumentFrequencyChange( const char* p1, 
 
 void PeerStorageTransactionImpl::commit( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_commit);
 	msg.packCrc32();
@@ -582,7 +582,7 @@ void PeerStorageTransactionImpl::commit( )
 
 void PeerStorageTransactionImpl::rollback( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
 	msg.packCrc32();
@@ -590,7 +590,7 @@ void PeerStorageTransactionImpl::rollback( )
 
 Index PostingIteratorImpl::skipDoc( const Index& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
@@ -599,7 +599,7 @@ Index PostingIteratorImpl::skipDoc( const Index& p1)
 
 Index PostingIteratorImpl::skipPos( const Index& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipPos);
 	msg.packIndex( p1);
@@ -608,15 +608,15 @@ Index PostingIteratorImpl::skipPos( const Index& p1)
 
 const char* PostingIteratorImpl::featureid( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_featureid);
 	msg.packCrc32();
 }
 
-const std::vector<PostingIteratorInterface<*> > PostingIteratorImpl::subExpressions( bool p1) const
+const std::vector<PostingIteratorInterface*> PostingIteratorImpl::subExpressions( bool p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_subExpressions);
 	msg.packBool( p1);
@@ -625,7 +625,7 @@ const std::vector<PostingIteratorInterface<*> > PostingIteratorImpl::subExpressi
 
 GlobalCounter PostingIteratorImpl::documentFrequency( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_documentFrequency);
 	msg.packCrc32();
@@ -633,7 +633,7 @@ GlobalCounter PostingIteratorImpl::documentFrequency( ) const
 
 unsigned int PostingIteratorImpl::frequency( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_frequency);
 	msg.packCrc32();
@@ -641,7 +641,7 @@ unsigned int PostingIteratorImpl::frequency( )
 
 Index PostingIteratorImpl::docno( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_docno);
 	msg.packCrc32();
@@ -649,7 +649,7 @@ Index PostingIteratorImpl::docno( ) const
 
 Index PostingIteratorImpl::posno( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_posno);
 	msg.packCrc32();
@@ -657,7 +657,7 @@ Index PostingIteratorImpl::posno( ) const
 
 PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createResultIterator);
 	packSize( p1.size());
@@ -670,7 +670,7 @@ PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const s
 
 void QueryAnalyzerImpl::definePhraseType( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_definePhraseType);
 	msg.packString( p1);
@@ -685,7 +685,7 @@ void QueryAnalyzerImpl::definePhraseType( const std::string& p1, const std::stri
 
 std::vector<analyzer::Term> QueryAnalyzerImpl::analyzePhrase( const std::string& p1, const std::string& p2) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_analyzePhrase);
 	msg.packString( p1);
@@ -695,7 +695,7 @@ std::vector<analyzer::Term> QueryAnalyzerImpl::analyzePhrase( const std::string&
 
 void QueryEvalImpl::addTerm( const std::string& p1, const std::string& p2, const std::string& p3)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addTerm);
 	msg.packString( p1);
@@ -706,7 +706,7 @@ void QueryEvalImpl::addTerm( const std::string& p1, const std::string& p2, const
 
 void QueryEvalImpl::addSelectionFeature( const std::string& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSelectionFeature);
 	msg.packString( p1);
@@ -715,7 +715,7 @@ void QueryEvalImpl::addSelectionFeature( const std::string& p1)
 
 void QueryEvalImpl::addRestrictionFeature( const std::string& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addRestrictionFeature);
 	msg.packString( p1);
@@ -724,7 +724,7 @@ void QueryEvalImpl::addRestrictionFeature( const std::string& p1)
 
 void QueryEvalImpl::addSummarizer( const std::string& p1, const std::string& p2, const SummarizerConfig& p3)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSummarizer);
 	msg.packString( p1);
@@ -735,7 +735,7 @@ void QueryEvalImpl::addSummarizer( const std::string& p1, const std::string& p2,
 
 void QueryEvalImpl::addWeightingFunction( const std::string& p1, const WeightingConfig& p2, const std::vector<std::string>& p3)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addWeightingFunction);
 	msg.packString( p1);
@@ -749,7 +749,7 @@ void QueryEvalImpl::addWeightingFunction( const std::string& p1, const Weighting
 
 QueryInterface* QueryEvalImpl::createQuery( const StorageClientInterface* p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createQuery);
 	const StorageClientImpl* impl_p1 = dynamic_cast<const StorageClientImpl*>(p1);
@@ -760,7 +760,7 @@ QueryInterface* QueryEvalImpl::createQuery( const StorageClientInterface* p1) co
 
 void QueryImpl::pushTerm( const std::string& p1, const std::string& p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushTerm);
 	msg.packString( p1);
@@ -770,7 +770,7 @@ void QueryImpl::pushTerm( const std::string& p1, const std::string& p2)
 
 void QueryImpl::pushExpression( const std::string& p1, std::size_t p2, int p3)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushExpression);
 	msg.packString( p1);
@@ -781,7 +781,7 @@ void QueryImpl::pushExpression( const std::string& p1, std::size_t p2, int p3)
 
 void QueryImpl::pushDuplicate( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushDuplicate);
 	msg.packCrc32();
@@ -789,7 +789,7 @@ void QueryImpl::pushDuplicate( )
 
 void QueryImpl::attachVariable( const std::string& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_attachVariable);
 	msg.packString( p1);
@@ -798,7 +798,7 @@ void QueryImpl::attachVariable( const std::string& p1)
 
 void QueryImpl::defineFeature( const std::string& p1, float p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineFeature);
 	msg.packString( p1);
@@ -808,7 +808,7 @@ void QueryImpl::defineFeature( const std::string& p1, float p2)
 
 void QueryImpl::defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineMetaDataRestriction);
 	PACK_UNKNOWN( "QueryInterface::CompareOperator" p1);
@@ -820,7 +820,7 @@ void QueryImpl::defineMetaDataRestriction( QueryInterface::CompareOperator p1, c
 
 void QueryImpl::setMaxNofRanks( std::size_t p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMaxNofRanks);
 	msg.packSize( p1);
@@ -829,7 +829,7 @@ void QueryImpl::setMaxNofRanks( std::size_t p1)
 
 void QueryImpl::setMinRank( std::size_t p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMinRank);
 	msg.packSize( p1);
@@ -838,7 +838,7 @@ void QueryImpl::setMinRank( std::size_t p1)
 
 void QueryImpl::setUserName( const std::string& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setUserName);
 	msg.packString( p1);
@@ -847,7 +847,7 @@ void QueryImpl::setUserName( const std::string& p1)
 
 std::vector<ResultDocument> QueryImpl::evaluate( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_evaluate);
 	msg.packCrc32();
@@ -855,7 +855,7 @@ std::vector<ResultDocument> QueryImpl::evaluate( )
 
 void QueryProcessorImpl::definePostingJoinOperator( const std::string& p1, PostingJoinOperatorInterface* p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_definePostingJoinOperator);
 	msg.packString( p1);
@@ -867,7 +867,7 @@ void QueryProcessorImpl::definePostingJoinOperator( const std::string& p1, Posti
 
 const PostingJoinOperatorInterface* QueryProcessorImpl::getPostingJoinOperator( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getPostingJoinOperator);
 	msg.packString( p1);
@@ -876,7 +876,7 @@ const PostingJoinOperatorInterface* QueryProcessorImpl::getPostingJoinOperator( 
 
 void QueryProcessorImpl::defineWeightingFunction( const std::string& p1, WeightingFunctionInterface* p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineWeightingFunction);
 	msg.packString( p1);
@@ -888,7 +888,7 @@ void QueryProcessorImpl::defineWeightingFunction( const std::string& p1, Weighti
 
 const WeightingFunctionInterface* QueryProcessorImpl::getWeightingFunction( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getWeightingFunction);
 	msg.packString( p1);
@@ -897,7 +897,7 @@ const WeightingFunctionInterface* QueryProcessorImpl::getWeightingFunction( cons
 
 void QueryProcessorImpl::defineSummarizerFunction( const std::string& p1, SummarizerFunctionInterface* p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSummarizerFunction);
 	msg.packString( p1);
@@ -909,7 +909,7 @@ void QueryProcessorImpl::defineSummarizerFunction( const std::string& p1, Summar
 
 const SummarizerFunctionInterface* QueryProcessorImpl::getSummarizerFunction( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getSummarizerFunction);
 	msg.packString( p1);
@@ -918,7 +918,7 @@ const SummarizerFunctionInterface* QueryProcessorImpl::getSummarizerFunction( co
 
 void SegmenterInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_putInput);
 	msg.packBuffer( p1, p2);
@@ -928,7 +928,7 @@ void SegmenterInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
 
 bool SegmenterInstanceImpl::getNext( int& p1, SegmenterPosition& p2, const char*& p3, std::size_t& p4)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getNext);
 	msg.packCrc32();
@@ -936,7 +936,7 @@ bool SegmenterInstanceImpl::getNext( int& p1, SegmenterPosition& p2, const char*
 
 void SegmenterImpl::defineSelectorExpression( int p1, const std::string& p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSelectorExpression);
 	msg.packInt( p1);
@@ -946,7 +946,7 @@ void SegmenterImpl::defineSelectorExpression( int p1, const std::string& p2)
 
 void SegmenterImpl::defineSubSection( int p1, int p2, const std::string& p3)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSubSection);
 	msg.packInt( p1);
@@ -957,7 +957,7 @@ void SegmenterImpl::defineSubSection( int p1, int p2, const std::string& p3)
 
 SegmenterInstanceInterface* SegmenterImpl::createInstance( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
 	msg.packCrc32();
@@ -965,7 +965,7 @@ SegmenterInstanceInterface* SegmenterImpl::createInstance( ) const
 
 void StorageAlterMetaDataTableImpl::addElement( const std::string& p1, const std::string& p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addElement);
 	msg.packString( p1);
@@ -975,7 +975,7 @@ void StorageAlterMetaDataTableImpl::addElement( const std::string& p1, const std
 
 void StorageAlterMetaDataTableImpl::alterElement( const std::string& p1, const std::string& p2, const std::string& p3)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_alterElement);
 	msg.packString( p1);
@@ -986,7 +986,7 @@ void StorageAlterMetaDataTableImpl::alterElement( const std::string& p1, const s
 
 void StorageAlterMetaDataTableImpl::renameElement( const std::string& p1, const std::string& p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_renameElement);
 	msg.packString( p1);
@@ -996,7 +996,7 @@ void StorageAlterMetaDataTableImpl::renameElement( const std::string& p1, const 
 
 void StorageAlterMetaDataTableImpl::deleteElement( const std::string& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deleteElement);
 	msg.packString( p1);
@@ -1005,7 +1005,7 @@ void StorageAlterMetaDataTableImpl::deleteElement( const std::string& p1)
 
 void StorageAlterMetaDataTableImpl::clearElement( const std::string& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_clearElement);
 	msg.packString( p1);
@@ -1014,7 +1014,7 @@ void StorageAlterMetaDataTableImpl::clearElement( const std::string& p1)
 
 void StorageAlterMetaDataTableImpl::commit( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_commit);
 	msg.packCrc32();
@@ -1022,7 +1022,7 @@ void StorageAlterMetaDataTableImpl::commit( )
 
 void StorageAlterMetaDataTableImpl::rollback( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
 	msg.packCrc32();
@@ -1030,7 +1030,7 @@ void StorageAlterMetaDataTableImpl::rollback( )
 
 void StorageClientImpl::close( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_close);
 	msg.packCrc32();
@@ -1038,7 +1038,7 @@ void StorageClientImpl::close( )
 
 PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const std::string& p1, const std::string& p2) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createTermPostingIterator);
 	msg.packString( p1);
@@ -1048,7 +1048,7 @@ PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const st
 
 ForwardIteratorInterface* StorageClientImpl::createForwardIterator( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createForwardIterator);
 	msg.packString( p1);
@@ -1057,7 +1057,7 @@ ForwardIteratorInterface* StorageClientImpl::createForwardIterator( const std::s
 
 InvAclIteratorInterface* StorageClientImpl::createInvAclIterator( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInvAclIterator);
 	msg.packString( p1);
@@ -1066,7 +1066,7 @@ InvAclIteratorInterface* StorageClientImpl::createInvAclIterator( const std::str
 
 GlobalCounter StorageClientImpl::globalNofDocumentsInserted( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_globalNofDocumentsInserted);
 	msg.packCrc32();
@@ -1074,7 +1074,7 @@ GlobalCounter StorageClientImpl::globalNofDocumentsInserted( ) const
 
 Index StorageClientImpl::localNofDocumentsInserted( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_localNofDocumentsInserted);
 	msg.packCrc32();
@@ -1082,7 +1082,7 @@ Index StorageClientImpl::localNofDocumentsInserted( ) const
 
 GlobalCounter StorageClientImpl::globalDocumentFrequency( const std::string& p1, const std::string& p2) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_globalDocumentFrequency);
 	msg.packString( p1);
@@ -1092,7 +1092,7 @@ GlobalCounter StorageClientImpl::globalDocumentFrequency( const std::string& p1,
 
 Index StorageClientImpl::localDocumentFrequency( const std::string& p1, const std::string& p2) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_localDocumentFrequency);
 	msg.packString( p1);
@@ -1102,7 +1102,7 @@ Index StorageClientImpl::localDocumentFrequency( const std::string& p1, const st
 
 Index StorageClientImpl::maxDocumentNumber( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_maxDocumentNumber);
 	msg.packCrc32();
@@ -1110,7 +1110,7 @@ Index StorageClientImpl::maxDocumentNumber( ) const
 
 Index StorageClientImpl::documentNumber( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_documentNumber);
 	msg.packString( p1);
@@ -1119,7 +1119,7 @@ Index StorageClientImpl::documentNumber( const std::string& p1) const
 
 MetaDataReaderInterface* StorageClientImpl::createMetaDataReader( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createMetaDataReader);
 	msg.packCrc32();
@@ -1127,7 +1127,7 @@ MetaDataReaderInterface* StorageClientImpl::createMetaDataReader( ) const
 
 AttributeReaderInterface* StorageClientImpl::createAttributeReader( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createAttributeReader);
 	msg.packCrc32();
@@ -1135,7 +1135,7 @@ AttributeReaderInterface* StorageClientImpl::createAttributeReader( ) const
 
 DocnoRangeAllocatorInterface* StorageClientImpl::createDocnoRangeAllocator( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDocnoRangeAllocator);
 	msg.packCrc32();
@@ -1143,7 +1143,7 @@ DocnoRangeAllocatorInterface* StorageClientImpl::createDocnoRangeAllocator( )
 
 StorageTransactionInterface* StorageClientImpl::createTransaction( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createTransaction);
 	msg.packCrc32();
@@ -1151,7 +1151,7 @@ StorageTransactionInterface* StorageClientImpl::createTransaction( )
 
 PeerStorageTransactionInterface* StorageClientImpl::createPeerStorageTransaction( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createPeerStorageTransaction);
 	msg.packCrc32();
@@ -1159,7 +1159,7 @@ PeerStorageTransactionInterface* StorageClientImpl::createPeerStorageTransaction
 
 void StorageClientImpl::defineStoragePeerInterface( const StoragePeerInterface* p1, bool p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineStoragePeerInterface);
 	const StoragePeerImpl* impl_p1 = dynamic_cast<const StoragePeerImpl*>(p1);
@@ -1171,7 +1171,7 @@ void StorageClientImpl::defineStoragePeerInterface( const StoragePeerInterface* 
 
 StorageDocumentInterface* StorageClientImpl::createDocumentChecker( const std::string& p1, const std::string& p2) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDocumentChecker);
 	msg.packString( p1);
@@ -1181,7 +1181,7 @@ StorageDocumentInterface* StorageClientImpl::createDocumentChecker( const std::s
 
 void StorageClientImpl::checkStorage( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_checkStorage);
 	msg.packCrc32();
@@ -1189,7 +1189,7 @@ void StorageClientImpl::checkStorage( ) const
 
 StorageDumpInterface* StorageClientImpl::createDump( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDump);
 	msg.packCrc32();
@@ -1197,7 +1197,7 @@ StorageDumpInterface* StorageClientImpl::createDump( ) const
 
 void StorageDocumentImpl::addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSearchIndexTerm);
 	msg.packString( p1);
@@ -1208,7 +1208,7 @@ void StorageDocumentImpl::addSearchIndexTerm( const std::string& p1, const std::
 
 void StorageDocumentImpl::addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addForwardIndexTerm);
 	msg.packString( p1);
@@ -1219,7 +1219,7 @@ void StorageDocumentImpl::addForwardIndexTerm( const std::string& p1, const std:
 
 void StorageDocumentImpl::setMetaData( const std::string& p1, const ArithmeticVariant& p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMetaData);
 	msg.packString( p1);
@@ -1229,7 +1229,7 @@ void StorageDocumentImpl::setMetaData( const std::string& p1, const ArithmeticVa
 
 void StorageDocumentImpl::setAttribute( const std::string& p1, const std::string& p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setAttribute);
 	msg.packString( p1);
@@ -1239,7 +1239,7 @@ void StorageDocumentImpl::setAttribute( const std::string& p1, const std::string
 
 void StorageDocumentImpl::setUserAccessRight( const std::string& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setUserAccessRight);
 	msg.packString( p1);
@@ -1248,7 +1248,7 @@ void StorageDocumentImpl::setUserAccessRight( const std::string& p1)
 
 void StorageDocumentImpl::done( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_done);
 	msg.packCrc32();
@@ -1256,7 +1256,7 @@ void StorageDocumentImpl::done( )
 
 bool StorageDumpImpl::nextChunk( const char*& p1, std::size_t& p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_nextChunk);
 	msg.packCrc32();
@@ -1264,7 +1264,7 @@ bool StorageDumpImpl::nextChunk( const char*& p1, std::size_t& p2)
 
 StorageClientInterface* StorageImpl::createClient( const std::string& p1, DatabaseClientInterface* p2) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClient);
 	msg.packString( p1);
@@ -1276,7 +1276,7 @@ StorageClientInterface* StorageImpl::createClient( const std::string& p1, Databa
 
 void StorageImpl::createStorage( const std::string& p1, DatabaseClientInterface* p2) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createStorage);
 	msg.packString( p1);
@@ -1288,7 +1288,7 @@ void StorageImpl::createStorage( const std::string& p1, DatabaseClientInterface*
 
 StorageAlterMetaDataTableInterface* StorageImpl::createAlterMetaDataTable( DatabaseClientInterface* p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createAlterMetaDataTable);
 	const DatabaseClientImpl* impl_p1 = dynamic_cast<const DatabaseClientImpl*>(p1);
@@ -1299,7 +1299,7 @@ StorageAlterMetaDataTableInterface* StorageImpl::createAlterMetaDataTable( Datab
 
 const char* StorageImpl::getConfigDescription( StorageInterface::ConfigType p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigDescription);
 	PACK_UNKNOWN( "StorageInterface::ConfigType" p1);
@@ -1308,7 +1308,7 @@ const char* StorageImpl::getConfigDescription( StorageInterface::ConfigType p1) 
 
 const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigParameters);
 	PACK_UNKNOWN( "StorageInterface::ConfigType" p1);
@@ -1317,7 +1317,7 @@ const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) 
 
 StoragePeerTransactionInterface* StoragePeerImpl::createTransaction( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createTransaction);
 	msg.packCrc32();
@@ -1325,7 +1325,7 @@ StoragePeerTransactionInterface* StoragePeerImpl::createTransaction( ) const
 
 void StoragePeerTransactionImpl::populateNofDocumentsInsertedChange( int p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_populateNofDocumentsInsertedChange);
 	msg.packInt( p1);
@@ -1334,7 +1334,7 @@ void StoragePeerTransactionImpl::populateNofDocumentsInsertedChange( int p1)
 
 void StoragePeerTransactionImpl::populateDocumentFrequencyChange( const char* p1, const char* p2, int p3, bool p4)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_populateDocumentFrequencyChange);
 	msg.packCharp( p1);
@@ -1346,7 +1346,7 @@ void StoragePeerTransactionImpl::populateDocumentFrequencyChange( const char* p1
 
 void StoragePeerTransactionImpl::try_commit( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_try_commit);
 	msg.packCrc32();
@@ -1354,7 +1354,7 @@ void StoragePeerTransactionImpl::try_commit( )
 
 void StoragePeerTransactionImpl::final_commit( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_final_commit);
 	msg.packCrc32();
@@ -1362,7 +1362,7 @@ void StoragePeerTransactionImpl::final_commit( )
 
 void StoragePeerTransactionImpl::rollback( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
 	msg.packCrc32();
@@ -1370,7 +1370,7 @@ void StoragePeerTransactionImpl::rollback( )
 
 StorageDocumentInterface* StorageTransactionImpl::createDocument( const std::string& p1, const Index& p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDocument);
 	msg.packString( p1);
@@ -1380,7 +1380,7 @@ StorageDocumentInterface* StorageTransactionImpl::createDocument( const std::str
 
 void StorageTransactionImpl::deleteDocument( const std::string& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deleteDocument);
 	msg.packString( p1);
@@ -1389,7 +1389,7 @@ void StorageTransactionImpl::deleteDocument( const std::string& p1)
 
 void StorageTransactionImpl::deleteUserAccessRights( const std::string& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deleteUserAccessRights);
 	msg.packString( p1);
@@ -1398,7 +1398,7 @@ void StorageTransactionImpl::deleteUserAccessRights( const std::string& p1)
 
 void StorageTransactionImpl::commit( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_commit);
 	msg.packCrc32();
@@ -1406,7 +1406,7 @@ void StorageTransactionImpl::commit( )
 
 void StorageTransactionImpl::rollback( )
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
 	msg.packCrc32();
@@ -1414,7 +1414,7 @@ void StorageTransactionImpl::rollback( )
 
 std::vector<SummarizerClosureInterface::SummaryElement> SummarizerClosureImpl::getSummary( const Index& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getSummary);
 	msg.packIndex( p1);
@@ -1423,7 +1423,7 @@ std::vector<SummarizerClosureInterface::SummaryElement> SummarizerClosureImpl::g
 
 const char** SummarizerFunctionImpl::numericParameterNames( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_numericParameterNames);
 	msg.packCrc32();
@@ -1431,7 +1431,7 @@ const char** SummarizerFunctionImpl::numericParameterNames( ) const
 
 const char** SummarizerFunctionImpl::textualParameterNames( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_textualParameterNames);
 	msg.packCrc32();
@@ -1439,7 +1439,7 @@ const char** SummarizerFunctionImpl::textualParameterNames( ) const
 
 const char** SummarizerFunctionImpl::featureParameterClassNames( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_featureParameterClassNames);
 	msg.packCrc32();
@@ -1447,7 +1447,7 @@ const char** SummarizerFunctionImpl::featureParameterClassNames( ) const
 
 SummarizerClosureInterface* SummarizerFunctionImpl::createClosure( const StorageClientInterface* p1, const QueryProcessorInterface* p2, MetaDataReaderInterface* p3, const std::vector<SummarizerFunctionInterface::FeatureParameter>& p4, const std::vector<std::string>& p5, const std::vector<ArithmeticVariant>& p6) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClosure);
 	const StorageClientImpl* impl_p1 = dynamic_cast<const StorageClientImpl*>(p1);
@@ -1476,7 +1476,7 @@ SummarizerClosureInterface* SummarizerFunctionImpl::createClosure( const Storage
 
 void TextProcessorImpl::addResourcePath( const std::string& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addResourcePath);
 	msg.packString( p1);
@@ -1485,7 +1485,7 @@ void TextProcessorImpl::addResourcePath( const std::string& p1)
 
 std::string TextProcessorImpl::getResourcePath( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getResourcePath);
 	msg.packString( p1);
@@ -1494,7 +1494,7 @@ std::string TextProcessorImpl::getResourcePath( const std::string& p1) const
 
 const TokenizerConstructorInterface* TextProcessorImpl::getTokenizer( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getTokenizer);
 	msg.packString( p1);
@@ -1503,7 +1503,7 @@ const TokenizerConstructorInterface* TextProcessorImpl::getTokenizer( const std:
 
 const NormalizerConstructorInterface* TextProcessorImpl::getNormalizer( const std::string& p1) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getNormalizer);
 	msg.packString( p1);
@@ -1512,7 +1512,7 @@ const NormalizerConstructorInterface* TextProcessorImpl::getNormalizer( const st
 
 void TextProcessorImpl::defineTokenizer( const std::string& p1, const TokenizerConstructorInterface* p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineTokenizer);
 	msg.packString( p1);
@@ -1524,7 +1524,7 @@ void TextProcessorImpl::defineTokenizer( const std::string& p1, const TokenizerC
 
 void TextProcessorImpl::defineNormalizer( const std::string& p1, const NormalizerConstructorInterface* p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineNormalizer);
 	msg.packString( p1);
@@ -1536,7 +1536,7 @@ void TextProcessorImpl::defineNormalizer( const std::string& p1, const Normalize
 
 TokenizerInterface* TokenizerConstructorImpl::create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_create);
 	packSize( p1.size());
@@ -1551,7 +1551,7 @@ TokenizerInterface* TokenizerConstructorImpl::create( const std::vector<std::str
 
 std::vector<analyzer::Token> TokenizerInstanceImpl::tokenize( const char* p1, std::size_t p2)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_tokenize);
 	msg.packBuffer( p1, p2);
@@ -1560,7 +1560,7 @@ std::vector<analyzer::Token> TokenizerInstanceImpl::tokenize( const char* p1, st
 
 bool TokenizerImpl::concatBeforeTokenize( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_concatBeforeTokenize);
 	msg.packCrc32();
@@ -1568,7 +1568,7 @@ bool TokenizerImpl::concatBeforeTokenize( ) const
 
 TokenizerInstanceInterface* TokenizerImpl::createInstance( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
 	msg.packCrc32();
@@ -1576,7 +1576,7 @@ TokenizerInstanceInterface* TokenizerImpl::createInstance( ) const
 
 float WeightingClosureImpl::call( const Index& p1)
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_call);
 	msg.packIndex( p1);
@@ -1585,7 +1585,7 @@ float WeightingClosureImpl::call( const Index& p1)
 
 const char** WeightingFunctionImpl::numericParameterNames( ) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_numericParameterNames);
 	msg.packCrc32();
@@ -1593,7 +1593,7 @@ const char** WeightingFunctionImpl::numericParameterNames( ) const
 
 WeightingClosureInterface* WeightingFunctionImpl::createClosure( const StorageClientInterface* p1, PostingIteratorInterface* p2, MetaDataReaderInterface* p3, const std::vector<ArithmeticVariant>& p4) const
 {
-	RcpMessage msg;
+	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClosure);
 	const StorageClientImpl* impl_p1 = dynamic_cast<const StorageClientImpl*>(p1);

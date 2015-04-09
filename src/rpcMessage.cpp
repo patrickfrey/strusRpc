@@ -41,7 +41,7 @@ namespace {
 template <int>
 static void pack( std::string& buf, const void* ptr);
 template <int>
-static void unpack( char const*& itr, void* ptr);
+static void unpack( char const*& itr, const char* end, void* ptr);
 
 template <>
 void pack<1>( std::string& buf, const void* ptr)
@@ -49,8 +49,9 @@ void pack<1>( std::string& buf, const void* ptr)
 	buf.push_back( ((const char*)ptr)[0]);
 }
 template <>
-void unpack<1>( char const*& itr, void* ptr)
+void unpack<1>( char const*& itr, const char* end, void* ptr)
 {
+	if (itr+1 > end) throw std::runtime_error( "message to small to encode next byte");
 	*(char*)ptr = *itr++;
 }
 
@@ -61,8 +62,9 @@ void pack<2>( std::string& buf, const void* ptr)
 	buf.append( (const char*)&vv, 2);
 }
 template <>
-void unpack<2>( char const*& itr, void* ptr)
+void unpack<2>( char const*& itr, const char* end, void* ptr)
 {
+	if (itr+2 > end) throw std::runtime_error( "message to small to encode next word");
 	uint16_t val;
 	std::memcpy( &val, itr, 2);
 	itr += 2;
@@ -76,8 +78,9 @@ void pack<4>( std::string& buf, const void* ptr)
 	buf.append( (const char*)&vv, 4);
 }
 template <>
-void unpack<4>( char const*& itr, void* ptr)
+void unpack<4>( char const*& itr, const char* end, void* ptr)
 {
+	if (itr+4 > end) throw std::runtime_error( "message to small to encode next dword");
 	uint32_t val;
 	std::memcpy( &val, itr, 4);
 	itr += 4;
@@ -94,12 +97,13 @@ void pack<8>( std::string& buf, const void* ptr)
 	buf.append( (const char*)&vlo, 4);
 }
 template <>
-void unpack<8>( char const*& itr, void* ptr)
+void unpack<8>( char const*& itr, const char* end, void* ptr)
 {
+	if (itr+8 > end) throw std::runtime_error( "message to small to encode next qword");
 	uint32_t vlo;
 	uint32_t vhi;
-	unpack<4>( itr, &vhi);
-	unpack<4>( itr, &vlo);
+	unpack<4>( itr, end, &vhi);
+	unpack<4>( itr, end, &vlo);
 	*(uint64_t*)ptr = ((uint64_t)vhi << 32) + vlo;
 }
 
@@ -111,19 +115,12 @@ void packScalar( std::string& buf, const SCALAR& val)
 	pack<sizeof(SCALAR)>( buf, &val);
 }
 template <typename SCALAR>
-SCALAR unpackScalar( char const*& itr)
+SCALAR unpackScalar( char const*& itr, const char* end)
 {
 	SCALAR val;
-	unpack<sizeof(SCALAR)>( itr, &val);
+	unpack<sizeof(SCALAR)>( itr, end, &val);
 	return val;
 }
-}
-
-RcpMessage::RcpMessage( unsigned char classId_, unsigned int objId_)
-{
-	if (objId_ > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "object id out of range");
-	packScalar( m_content, classId_);
-	packScalar( m_content, (uint32_t)objId_);
 }
 
 void RcpMessage::packObject( unsigned char classId_, unsigned int objId_)
@@ -210,99 +207,298 @@ void RcpMessage::packArithmeticVariant( const ArithmeticVariant& val)
 	}
 }
 
+void RcpMessage::packDatabaseOptions( const DatabaseOptions& val)
+{
+	packUint( val.opt());
+}
+
+void RcpMessage::packDatabaseConfigType( const DatabaseInterface::ConfigType& val)
+{
+	packByte( (unsigned char)val);
+}
+
+void RcpMessage::packStorageConfigType( const StorageInterface::ConfigType& val)
+{
+	packByte( (unsigned char)val);
+}
+
+void RcpMessage::packTokenizerConfig( const TokenizerConfig& val)
+{
+	packString( val.name());
+	packSize( val.arguments().size());
+	std::vector<std::string>::const_iterator
+		ai = val.arguments().begin(),
+		ae = val.arguments().end();
+	for (; ai != ae; ++ai)
+	{
+		packString( *ai);
+	}
+}
+
+void RcpMessage::packNormalizerConfig( const NormalizerConfig& val)
+{
+	packString( val.name());
+	packSize( val.arguments().size());
+	std::vector<std::string>::const_iterator
+		ai = val.arguments().begin(),
+		ae = val.arguments().end();
+	for (; ai != ae; ++ai)
+	{
+		packString( *ai);
+	}
+}
+
+void RcpMessage::packSummarizerConfig( const SummarizerConfig& val)
+{
+	std::map<std::string,ArithmeticVariant>::const_iterator
+		ni = val.numericParameters().begin(), ne = val.numericParameters().end();
+	packSize( val.numericParameters().size());
+	for (; ni != ne; ++ni)
+	{
+		packString( ni->first);
+		packArithmeticVariant( ni->second);
+	}
+	std::map<std::string,std::string>::const_iterator
+		ti = val.textualParameters().begin(), te = val.textualParameters().end();
+	packSize( val.textualParameters().size());
+	for (; ti != te; ++ti)
+	{
+		packString( ti->first);
+		packString( ti->second);
+	}
+	std::map<std::string,std::string>::const_iterator
+		fi = val.featureParameters().begin(), fe = val.featureParameters().end();
+	packSize( val.featureParameters().size());
+	for (; fi != fe; ++fi)
+	{
+		packString( fi->first);
+		packString( fi->second);
+	}
+}
+
+void RcpMessage::packWeightingConfig( const WeightingConfig& val)
+{
+	std::map<std::string,ArithmeticVariant>::const_iterator
+		ni = val.numericParameters().begin(), ne = val.numericParameters().end();
+	packSize( val.numericParameters().size());
+	for (; ni != ne; ++ni)
+	{
+		packString( ni->first);
+		packArithmeticVariant( ni->second);
+	}
+}
+
+void RcpMessage::packCompareOperator( const QueryInterface::CompareOperator& val)
+{
+	packByte( (unsigned char)val);
+}
+
+void RcpMessage::packFeatureParameter( const SummarizerFunctionInterface::FeatureParameter& val)
+{
+	packUint( val.classidx());
+	const RpcInterfaceStub* obj = dynamic_cast<const RpcInterfaceStub*>( val.feature().postingIterator());
+	if (!obj) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	packObject( obj->classId(), obj->objId());
+	packSize( val.feature().variables().size());
+	std::vector<SummarizationVariable>::const_iterator
+		vi = val.feature().variables().begin(),
+		ve = val.feature().variables().end();
+	for (; vi != ve; ++vi)
+	{
+		packString( vi->name());
+		const RpcInterfaceStub* so = dynamic_cast<const RpcInterfaceStub*>( vi->itr());
+		if (!so) throw std::runtime_error( "passing non RPC interface object in RPC call");
+		packObject( so->classId(), so->objId());
+	}
+}
+
 void RcpMessage::packCrc32()
 {
 	packScalar( m_content, utils::Crc32::calc( m_content.c_str(), m_content.size()));
 }
 
-unsigned int RcpMessage::unpackObject( char const*& itr, unsigned char& classId_)
+unsigned int RcpMessage::unpackObject( char const*& itr, const char* end, unsigned char& classId_)
 {
-	classId_ = unpackScalar<char>( itr);
-	return unpackScalar<uint32_t>( itr);
+	classId_ = unpackScalar<char>( itr, end);
+	return unpackScalar<uint32_t>( itr, end);
 }
 
-std::string RcpMessage::unpackString( char const*& itr)
+std::string RcpMessage::unpackString( char const*& itr, const char* end)
 {
 	std::string rt;
-	uint32_t size = unpackScalar<uint32_t>( itr);
+	uint32_t size = unpackScalar<uint32_t>( itr, end);
+	if (itr+size > end) throw std::runtime_error( "message to small to encode next string");
 	rt.append( itr, size);
 	itr += size;
 	return rt;
 }
 
-const char* RcpMessage::unpackCharp( char const*& itr)
+const char* RcpMessage::unpackCharp( char const*& itr, const char* end)
 {
 	const char* start = itr;
-	while (*itr) ++itr;
+	while (itr < end && *itr) ++itr;
+	if (itr == end)
+	{
+		throw std::runtime_error( "message to small to encode next C string");
+	}
 	++itr;
 	return start;
 }
 
-const char* RcpMessage::unpackBuffer( char const*& itr, std::size_t& size)
+const char* RcpMessage::unpackBuffer( char const*& itr, const char* end, std::size_t& size)
 {
-	size = unpackScalar<uint32_t>( itr);
+	size = unpackScalar<uint32_t>( itr, end);
 	const char* rt = itr;
 	itr += size;
 	return rt;
 }
 
-bool RcpMessage::unpackBool( char const*& itr)
+bool RcpMessage::unpackBool( char const*& itr, const char* end)
 {
 	return (*itr++ != 0)?true:false;
 }
 
-unsigned char RcpMessage::unpackByte( char const*& itr)
+unsigned char RcpMessage::unpackByte( char const*& itr, const char* end)
 {
 	return *itr++;
 }
 
-Index RcpMessage::unpackIndex( char const*& itr)
+Index RcpMessage::unpackIndex( char const*& itr, const char* end)
 {
-	return unpackScalar<Index>( itr);
+	return unpackScalar<Index>( itr, end);
 }
 
-GlobalCounter RcpMessage::unpackGlobalCounter( char const*& itr)
+GlobalCounter RcpMessage::unpackGlobalCounter( char const*& itr, const char* end)
 {
-	return unpackScalar<GlobalCounter>( itr);
+	return unpackScalar<GlobalCounter>( itr, end);
 }
 
-unsigned int RcpMessage::unpackUint( char const*& itr)
+unsigned int RcpMessage::unpackUint( char const*& itr, const char* end)
 {
-	return unpackScalar<uint32_t>( itr);
+	return unpackScalar<uint32_t>( itr, end);
 }
 
-int RcpMessage::unpackInt( char const*& itr)
+int RcpMessage::unpackInt( char const*& itr, const char* end)
 {
-	return unpackScalar<uint32_t>( itr);
+	return unpackScalar<uint32_t>( itr, end);
 }
 
-float RcpMessage::unpackFloat( char const*& itr)
+float RcpMessage::unpackFloat( char const*& itr, const char* end)
 {
-	return unpackScalar<float>( itr);
+	return unpackScalar<float>( itr, end);
 }
 
-std::size_t RcpMessage::unpackSize( char const*& itr)
+std::size_t RcpMessage::unpackSize( char const*& itr, const char* end)
 {
-	return unpackScalar<uint32_t>( itr);
+	return unpackScalar<uint32_t>( itr, end);
 }
 
-ArithmeticVariant RcpMessage::unpackArithmeticVariant( char const*& itr)
+ArithmeticVariant RcpMessage::unpackArithmeticVariant( char const*& itr, const char* end)
 {
-	ArithmeticVariant::Type type = (ArithmeticVariant::Type)unpackByte( itr);
-	switch (val.type)
+	ArithmeticVariant::Type type = (ArithmeticVariant::Type)unpackByte( itr, end);
+	switch (type)
 	{
 		case ArithmeticVariant::Null: return ArithmeticVariant();
-		case ArithmeticVariant::Int: return ArithmeticVariant( unpackInt(itr));
-		case ArithmeticVariant::UInt: return ArithmeticVariant( unpackUint(itr));
-		case ArithmeticVariant::Float: return ArithmeticVariant( unpackFloat(itr));
+		case ArithmeticVariant::Int: return ArithmeticVariant( unpackInt(itr,end));
+		case ArithmeticVariant::UInt: return ArithmeticVariant( unpackUint(itr,end));
+		case ArithmeticVariant::Float: return ArithmeticVariant( unpackFloat(itr,end));
 	}
 	throw std::runtime_error( "unknown type of arithmetic variant");
 }
 
-bool RcpMessage::unpackCrc32( char const*& itr)
+bool RcpMessage::unpackCrc32( char const*& itr, const char* end)
 {
 	uint32_t crc = utils::Crc32::calc( m_content.c_str(), itr - m_content.c_str());
-	return crc == unpackScalar<uint32_t>( itr);
+	return crc == unpackScalar<uint32_t>( itr, end);
 }
+
+DatabaseOptions RcpMessage::unpackDatabaseOptions( char const*& itr, const char* end)
+{
+	return DatabaseOptions( unpackUint( itr, end));
+}
+
+DatabaseInterface::ConfigType RcpMessage::unpackDatabaseConfigType( char const*& itr, const char* end)
+{
+	return DatabaseInterface::ConfigType( unpackByte( itr, end));
+}
+
+StorageInterface::ConfigType RcpMessage::unpackStorageConfigType( char const*& itr, const char* end)
+{
+	return StorageInterface::ConfigType( unpackByte( itr, end));
+}
+
+TokenizerConfig RcpMessage::unpackTokenizerConfig( char const*& itr, const char* end)
+{
+	std::string name = unpackString( itr, end);
+	std::size_t ii=0,size = unpackSize( itr, end);
+	std::vector<std::string> arguments;
+	for (; ii<size; ++ii)
+	{
+		arguments.push_back( unpackString( itr, end));
+	}
+	return TokenizerConfig( name, arguments);
+}
+
+NormalizerConfig RcpMessage::unpackNormalizerConfig( char const*& itr, const char* end)
+{
+	std::string name = unpackString( itr, end);
+	std::size_t ii=0,size = unpackSize( itr, end);
+	std::vector<std::string> arguments;
+	for (; ii<size; ++ii)
+	{
+		arguments.push_back( unpackString( itr, end));
+	}
+	return NormalizerConfig( name, arguments);
+}
+
+SummarizerConfig RcpMessage::unpackSummarizerConfig( char const*& itr, const char* end)
+{
+	SummarizerConfig rt;
+	{
+		std::size_t ii=0,size = unpackSize( itr, end);
+		for (; ii<size; ++ii)
+		{
+			rt.defineNumericParameter( 
+				unpackString( itr, end), unpackArithmeticVariant( itr, end));
+		}
+	}
+	{
+		std::size_t ii=0,size = unpackSize( itr, end);
+		for (; ii<size; ++ii)
+		{
+			rt.defineTextualParameter( 
+				unpackString( itr, end), unpackString( itr, end));
+		}
+	}
+	{
+		std::size_t ii=0,size = unpackSize( itr, end);
+		for (; ii<size; ++ii)
+		{
+			rt.defineFeatureParameter( 
+				unpackString( itr, end), unpackString( itr, end));
+		}
+	}
+	return rt;
+}
+
+WeightingConfig RcpMessage::unpackWeightingConfig( char const*& itr, const char* end)
+{
+	WeightingConfig rt;
+	{
+		std::size_t ii=0,size = unpackSize( itr, end);
+		for (; ii<size; ++ii)
+		{
+			rt.defineNumericParameter( 
+				unpackString( itr, end), unpackArithmeticVariant( itr, end));
+		}
+	}
+	return rt;
+}
+
+QueryInterface::CompareOperator RcpMessage::unpackCompareOperator( char const*& itr, const char* end)
+{
+	return QueryInterface::CompareOperator( unpackByte( itr, end));
+}
+
 
 

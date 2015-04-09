@@ -38,7 +38,8 @@ class RpcInterfaceStub
 public:
 	virtual ~RpcInterfaceStub(){}
 
-	RpcInterfaceStub( unsigned char classId_, const RcpRemoteEndPoint& endpoint_);
+	RpcInterfaceStub( unsigned char classId_, const RpcRemoteEndPoint* endpoint_);
+	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcRemoteEndPoint* endpoint_);
 	RpcInterfaceStub( const RpcInterfaceStub& o);
 	RpcInterfaceStub();
 
@@ -51,7 +52,7 @@ private:
 	static unsigned int m_objIdCnt;
 	unsigned char m_classId;
 	unsigned int m_objId;
-	RcpRemoteEndPoint m_endpoint;
+	const RpcRemoteEndPoint* m_endpoint;
 };
 
 }//namespace

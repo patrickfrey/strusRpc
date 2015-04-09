@@ -34,23 +34,27 @@
 using namespace strus;
 
 static utils::Mutex g_mutex_objIdCnt;
-int unsigned RcpInterfaceStub::m_objIdCnt = 0;
+int unsigned RpcInterfaceStub::m_objIdCnt = 0;
 
-RcpInterfaceStub::RcpInterfaceStub( unsigned char classId_, const RcpRemoteEndPoint& endpoint_)
+RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcRemoteEndPoint& endpoint_)
+	:m_classId(classId_),m_objId(objId_),m_endpoint(endpoint_)
+{}
+
+RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, const RpcRemoteEndPoint& endpoint_)
 	:m_classId(classId_),m_objId(0),m_endpoint(endpoint_)
 {
-	if (RcpInterfaceStub::m_objIdCnt >= std::numeric_limits<uint32_t>::max())
+	utils::ScopedLock lock( g_mutex_objIdCnt);
+	if (RpcInterfaceStub::m_objIdCnt >= std::numeric_limits<uint32_t>::max())
 	{
 		throw std::runtime_error("too many remote objects created (RPC)");
 	}
-	utils::ScopedLock lock( g_mutex_objIdCnt);
-	m_objId = ++RcpInterfaceStub::m_objIdCnt;
+	m_objId = ++RpcInterfaceStub::m_objIdCnt;
 }
 
-RcpInterfaceStub::RcpInterfaceStub( const RcpInterfaceStub& o)
+RpcInterfaceStub::RpcInterfaceStub( const RpcInterfaceStub& o)
 	:m_classId(o.m_classId),m_objId(o.m_objId),m_endpoint(o.m_endpoint){}
 
-RcpInterfaceStub::RcpInterfaceStub()
+RpcInterfaceStub::RpcInterfaceStub()
 	:m_classId(0),m_objId(0),m_endpoint(){}
 
 

@@ -166,6 +166,10 @@ sub parseType
 			{
 				$typeprefix = $typeprefix . $tok . '_';
 			}
+			elsif ($tok eq "*")
+			{
+				$type .= $tok;
+			}
 			elsif ($tok eq "<")
 			{
 				++$bcnt;
@@ -676,7 +680,7 @@ sub getMethodDeclarationSource
 	{
 		$rt .= " const";
 	}
-	$rt .= "\n{\n\tRcpMessage msg;\n";
+	$rt .= "\n{\n\tRpcMessage msg;\n";
 	$rt .= "\tmsg.packObject( classId(), objId());\n";
 	$rt .= "\tmsg.packByte( Method_" . $methodname . ");\n";
 
@@ -708,7 +712,7 @@ sub getClassHeaderSource
 	{
 		my $interfacename = getInterfaceName($_);
 		my $classname = interfaceImplementationClassName( $interfacename);
-		$rt .= "\nclass $classname\n\t\t:public RcpInterfaceStub\n\t\t,public strus::$interfacename\n{\npublic:";
+		$rt .= "\nclass $classname\n\t\t:public RpcInterfaceStub\n\t\t,public strus::$interfacename\n{\npublic:";
 
 		my @mth = split('%');
 		shift( @mth);
@@ -730,7 +734,7 @@ sub getClassHeaderSource
 		}
 		$rt .= "\n\t};\n";
 		$rt .= "\n\tvirtual ~$classname(){}\n";
-		$rt .= "\n\t$classname( const RcpRemoteEndPoint& endpoint_)\n\t\t:RcpInterfaceStub(" . getInterfaceEnumName($interfacename) .", endpoint_){}\n";
+		$rt .= "\n\t$classname( const RpcRemoteEndPoint* endpoint_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", endpoint_){}\n";
 		foreach $mm( @mth)
 		{
 			$rt .= "\n\t" . getMethodDeclarationHeader( $classname, $mm) .";";

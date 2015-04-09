@@ -32,12 +32,12 @@
 
 namespace strus {
 
-class RcpRemoteEndPoint
+class RpcRemoteEndPoint
 {
 public:
-	RcpRemoteEndPoint();
-	RcpRemoteEndPoint( const char* config);
-	RcpRemoteEndPoint( const RcpRemoteEndPoint& o);
+	RpcRemoteEndPoint();
+	RpcRemoteEndPoint( const char* config);
+	RpcRemoteEndPoint( const RpcRemoteEndPoint& o);
 };
 
 }//namespace

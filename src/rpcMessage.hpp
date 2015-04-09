@@ -31,6 +31,17 @@
 #include <string>
 #include "rpcInterfaceStub.hpp"
 #include "strus/index.hpp"
+#include "strus/arithmeticVariant.hpp"
+#include "strus/postingIteratorInterface.hpp"
+#include "strus/databaseOptions.hpp"
+#include "strus/databaseInterface.hpp"
+#include "strus/storageInterface.hpp"
+#include "strus/tokenizerConfig.hpp"
+#include "strus/normalizerConfig.hpp"
+#include "strus/summarizerConfig.hpp"
+#include "strus/summarizerFunctionInterface.hpp"
+#include "strus/weightingConfig.hpp"
+#include "strus/queryInterface.hpp"
 
 namespace strus {
 
@@ -55,22 +66,41 @@ public:
 	void packFloat( float val);
 	void packSize( std::size_t size);
 	void packArithmeticVariant( const ArithmeticVariant& val);
+
+	void packDatabaseOptions( const DatabaseOptions& val);
+	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
+	void packStorageConfigType( const StorageInterface::ConfigType& val);
+	void packTokenizerConfig( const TokenizerConfig& val);
+	void packNormalizerConfig( const NormalizerConfig& val);
+	void packSummarizerConfig( const SummarizerConfig& val);
+	void packWeightingConfig( const WeightingConfig& val);
+	void packCompareOperator( const QueryInterface::CompareOperator& val);
+	void packFeatureParameter( const SummarizerFunctionInterface::FeatureParameter& val);
 	void packCrc32();
 
-	unsigned int unpackObject( char const*& itr, unsigned char& classId_);
-	std::string unpackString( char const*& itr);
-	const char* unpackCharp( char const*& itr);
-	const char* unpackBuffer( char const*& itr, std::size_t& size);
-	bool unpackBool( char const*& itr);
-	unsigned char unpackByte( char const*& itr);
-	Index unpackIndex( char const*& itr);
-	GlobalCounter unpackGlobalCounter( char const*& itr);
-	unsigned int unpackUint( char const*& itr);
-	int unpackInt( char const*& itr);
-	float unpackFloat( char const*& itr);
-	std::size_t unpackSize( char const*& itr);
-	ArithmeticVariant unpackArithmeticVariant( char const*& itr);
-	bool unpackCrc32( char const*& itr);
+	unsigned int unpackObject( char const*& itr, const char* end, unsigned char& classId_);
+	std::string unpackString( char const*& itr, const char* end);
+	const char* unpackCharp( char const*& itr, const char* end);
+	const char* unpackBuffer( char const*& itr, const char* end, std::size_t& size);
+	bool unpackBool( char const*& itr, const char* end);
+	unsigned char unpackByte( char const*& itr, const char* end);
+	Index unpackIndex( char const*& itr, const char* end);
+	GlobalCounter unpackGlobalCounter( char const*& itr, const char* end);
+	unsigned int unpackUint( char const*& itr, const char* end);
+	int unpackInt( char const*& itr, const char* end);
+	float unpackFloat( char const*& itr, const char* end);
+	std::size_t unpackSize( char const*& itr, const char* end);
+	ArithmeticVariant unpackArithmeticVariant( char const*& itr, const char* end);
+
+	DatabaseOptions unpackDatabaseOptions( char const*& itr, const char* end);
+	DatabaseInterface::ConfigType unpackDatabaseConfigType( char const*& itr, const char* end);
+	StorageInterface::ConfigType unpackStorageConfigType( char const*& itr, const char* end);
+	TokenizerConfig unpackTokenizerConfig( char const*& itr, const char* end);
+	NormalizerConfig unpackNormalizerConfig( char const*& itr, const char* end);
+	SummarizerConfig unpackSummarizerConfig( char const*& itr, const char* end);
+	WeightingConfig unpackWeightingConfig( char const*& itr, const char* end);
+	QueryInterface::CompareOperator unpackCompareOperator( char const*& itr, const char* end);
+	bool unpackCrc32( char const*& itr, const char* end);
 
 	const std::string& content() const
 	{
