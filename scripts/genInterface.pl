@@ -893,42 +893,40 @@ sub inputParameterPackFunctionCall
 	{
 		return "";
 	}
-	if ($indirection == 2)
-	{
-		$sender_code .= "\tfor (unsigned int ii=0; p$idx" . "[ii]; ++ii);\n";
-		$sender_code .= "\tmsg.packSize( ii);\n";
-		$sender_code .= "\tfor (unsigned int ii=0; p$idx" . "[ii]; ++ii) {\n";
-		if ($isreference)
-		{
-			$sender_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii].get()", $isconst, 1) . "\n\t}\n";
-		}
-		else
-		{
-			$sender_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii]", $isconst, 1) . "\n\t}\n";
-		}
-	}
 	elsif ($isarray)
 	{
 		$sender_code .= "\tmsg.packSize( p$idx" . ".size());\n";
 		$sender_code .= "\tfor (unsigned int ii=0; ii < p$idx" . ".size(); ++ii) {\n";
 		if ($isreference)
 		{
-			$sender_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii].get()", $isconst, $indirection) . "\n\t}\n";
+			$sender_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii].get()", $isconst, $indirection+1) . "\n";
 		}
 		else
 		{
-			$sender_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii]", $isconst, $indirection) . "\n\t}\n";
+			$sender_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii]", $isconst, $indirection) . "\n";
 		}
+		$sender_code .= "\t}\n";
+
+		$receiver_code .= "\tstd::size_t n$idx = ansert.unpackSize();\n";
+		$receiver_code .= "\tfor (unsigned int ii=0; ii < n$idx; ++ii) {\n";
+		$receiver_code .= "\t\t" . unpackParameter( $paramtype, "$paramtype* ee", $isconst, $indirection+1) . "\n";
+		$receiver_code .= "\t\tp$idx" . ".push_back( ee);\n";
+		$receiver_code .= "\t}\n";
 	}
 	else
 	{
 		if ($isreference)
 		{
 			$sender_code .= "\t" . packParameter( $paramtype, "p$idx.get()", $isconst, $indirection) . "\n";
+
+			$receiver_code .= "\t" . unpackParameter( $paramtype, "$paramtype* e$idx", $isconst, $indirection+1) . "\n";
+			$receiver_code .= "p$idx = Reference<$paramtype>( e$idx);\n";
 		}
 		else
 		{
 			$sender_code .= "\t" . packParameter( $paramtype, "p$idx", $isconst, $indirection) . "\n";
+
+			$receiver_code .= "\t" . unpackParameter( $paramtype, "p$idx", $isconst, $indirection) . "\n";
 		}
 	}
 	return ($sender_code,$receiver_code);
@@ -946,15 +944,28 @@ sub outputParameterPackFunctionCall
 		}
 		elsif ($isarray)
 		{
-			$sender_code .= "\tstd::size_t size_p$idx = answer.unpackSize();\n";
-			$sender_code .= "\tfor (unsigned int ii=0; ii < size_p$idx; ++ii) {\n";
-			$sender_code .= "\t\t" . unpackParameter( $paramtype, "$paramtype elem_p$idx", $isconst, $indirection) . ";\n";
+			$sender_code .= "\tstd::size_t n$idx = answer.unpackSize();\n";
+			$sender_code .= "\tfor (unsigned int ii=0; ii < n$idx; ++ii) {\n";
+			$sender_code .= "\t\t" . unpackParameter( $paramtype, "$paramtype elem_p$idx", $isconst, $indirection+1) . ";\n";
 			$sender_code .= "\t\tp$idx.push_back( elem_p$idx);\n";
 			$sender_code .= "\n\t}\n";
+
+			$receiver_code .= "\tmsg.packSize( p$idx" . ".size());\n";
+			$receiver_code .= "\tfor (unsigned int ii=0; ii < p$idx" . ".size(); ++ii) {\n";
+			if ($isreference)
+			{
+				$receiver_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii].get()", $isconst, $indirection+1) . "\n\t}\n";
+			}
+			else
+			{
+				$receiver_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii]", $isconst, $indirection) . "\n\t}\n";
+			}
 		}
 		else
 		{
-			$sender_code .= "\t" . unpackParameter( $paramtype, "p$idx", $isconst, $indirection) . ";\n";
+			$sender_code .= "\t" . unpackParameter( $paramtype, "p$idx", $isconst, $indirection) . "\n";
+
+			$receiver_code .= "\t" . packParameter( $paramtype, "p$idx", $isconst, $indirection) . "\n";
 		}
 	}
 	return ($sender_code,$receiver_code);
@@ -962,6 +973,7 @@ sub outputParameterPackFunctionCall
 
 sub getMethodDeclarationSource
 {
+	my ($sender_code,$receiver_code) = ("","");
 	my ($classname, $method) = @_;
 	my @param = split( '!', $method);
 	my $methodname = shift( @param);
@@ -984,23 +996,23 @@ sub getMethodDeclarationSource
 		++$pi;
 		$paramlist .= getMethodParamDeclarationSource( $classname, $pp) . " p" . $pi;
 	}
-	my $rt = getMethodParamDeclarationSource( $classname, $retval) . " "
+	$sender_code = getMethodParamDeclarationSource( $classname, $retval) . " "
 			. $classname . "::" . $methodname . "( "
 			. $paramlist . ")";
 	if ($isconst)
 	{
-		$rt .= " const";
+		$sender_code .= " const";
 	}
-	$rt .= "\n{\n";
+	$sender_code .= "\n{\n";
 	if ($notImplMethods{$methodname})
 	{
-		$rt .= "\tthrow std::runtime_error(\"the method '$methodname' is not implemented for RPC\");\n";
+		$sender_code .= "\tthrow std::runtime_error(\"the method '$methodname' is not implemented for RPC\");\n";
 	}
 	else
 	{
-		$rt .= "\tRpcMessage msg;\n";
-		$rt .= "\tmsg.packObject( classId(), objId());\n";
-		$rt .= "\tmsg.packByte( Method_" . $methodname . ");\n";
+		$sender_code .= "\tRpcMessage msg;\n";
+		$sender_code .= "\tmsg.packObject( classId(), objId());\n";
+		$sender_code .= "\tmsg.packByte( Method_" . $methodname . ");\n";
 	
 		$pi = 0;
 		for (; $pi <= $#param; ++$pi)
@@ -1008,17 +1020,17 @@ sub getMethodDeclarationSource
 			if ($pi+1 <= $#param && $param[$pi] eq "const^ char" && $param[$pi+1] eq "std::size_t")
 			{
 				# ... exception for buffer( size, len):
-				$rt .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				$sender_code .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				++$pi;
 			}
 			else
 			{
-				my ($sender_code,$receiver_code) = inputParameterPackFunctionCall( $classname, $param[$pi], $pi+1);
-				$rt .= $sender_code;
+				my ($snd,$rcv) = inputParameterPackFunctionCall( $classname, $param[$pi], $pi+1);
+				$sender_code .= $snd;
 			}
 		}
-		$rt .= "\tmsg.packCrc32();\n";
-		$rt .= "\trpc_send( msg.content());\n";
+		$sender_code .= "\tmsg.packCrc32();\n";
+		$sender_code .= "\trpc_send( msg.content());\n";
 		my $output = "";
 		if ($retval ne "void")
 		{
@@ -1041,11 +1053,11 @@ sub getMethodDeclarationSource
 			elsif ($isarray)
 			{
 				$output .= "\tstd::vector<$retvaltype> p0;\n";
-				$output .= "\tstd::size_t size_p0 = answer.unpackSize();\n";
-				$output .= "\tfor (unsigned int ii=0; ii < size_p0; ++ii) {\n";
-				$output .= "\t\t" . unpackParameter( $retvaltype, "$retvaltype elem_p0", $isconst, $indirection) . ";\n";
+				$output .= "\tstd::size_t n0 = answer.unpackSize();\n";
+				$output .= "\tfor (unsigned int ii=0; ii < n0; ++ii) {\n";
+				$output .= "\t\t" . unpackParameter( $retvaltype, "$retvaltype elem_p0", $isconst, $indirection) . "\n";
 				$output .= "\t\tp0.push_back( elem_p0);\n";
-				$output .= "\n\t}\n";
+				$output .= "\t}\n";
 				$retvaltype = "std::vector<$retvaltype>";
 			}
 			else
@@ -1083,21 +1095,21 @@ sub getMethodDeclarationSource
 		}
 		if ($output ne "")
 		{
-			$rt .= "\tenter();\n";
-			$rt .= "\tRpcAnswer answer( constConstructor(), rpc_recv());\n";
-			$rt .= $output;
+			$sender_code .= "\tenter();\n";
+			$sender_code .= "\tRpcAnswer answer( constConstructor(), rpc_recv());\n";
+			$sender_code .= $output;
 		}
 		elsif ($syncMethods{$methodname})
 		{
-			$rt .= "\trpc_waitAnswer();\n";
+			$sender_code .= "\trpc_waitAnswer();\n";
 		}
 		if ($retval ne "void")
 		{
-			$rt .= "\treturn p0;\n";
+			$sender_code .= "\treturn p0;\n";
 		}
 	}
-	$rt .= "}\n";
-	return $rt;
+	$sender_code .= "}\n";
+	return ($sender_code,$receiver_code);
 }
 
 sub getClassHeaderSource
@@ -1122,7 +1134,7 @@ sub getClassHeaderSource
 			$rt .= ",\n\t\tMethod_" . $callname;
 		}
 		$rt .= "\n\t};\n";
-		$rt .= "\n\tvirtual ~$classname(){}\n";
+		$rt .= "\n\tvirtual ~$classname();\n";
 		$rt .= "\n\texplicit $classname( const RpcRemoteEndPoint* endpoint_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", endpoint_){}\n";
 		$rt .= "\n\t$classname( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, endpoint_){}\n";
 		foreach $mm( @mth)
@@ -1145,13 +1157,22 @@ sub getClassImplementationSource
 		my $interfacename = getInterfaceName($_);
 		my $classname = interfaceImplementationClassName( $interfacename);
 
+		$rt .= "\n$classname" . "::~$classname()\n";
+		$rt .= "{\n";
+		$rt .= "\tRpcMessage msg;\n";
+		$rt .= "\tmsg.packObject( classId(), objId());\n";
+		$rt .= "\tmsg.packByte( Method_Destructor);\n";
+		$rt .= "\tmsg.packCrc32();\n";
+		$rt .= "\trpc_send( msg.content());\n";
+		$rt .= "}\n";
 		my @mth = split('%');
 		shift( @mth);
 		my $mm;
 		my $mi = 0;
 		foreach $mm( @mth)
 		{
-			$rt .= "\n" . getMethodDeclarationSource( $classname, $mm);
+			my ($sender_code,$receiver_code) = getMethodDeclarationSource( $classname, $mm);
+			$rt .= "\n" . $sender_code;
 		}
 		++$ii;
 	}

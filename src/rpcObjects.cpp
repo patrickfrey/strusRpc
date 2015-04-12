@@ -31,6 +31,15 @@
 
 using namespace strus;
 
+AttributeReaderImpl::~AttributeReaderImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 Index AttributeReaderImpl::elementHandle( const char* p1) const
 {
 	RpcMessage msg;
@@ -69,6 +78,15 @@ std::string AttributeReaderImpl::getValue( const Index& p1) const
 	return p0;
 }
 
+DatabaseBackupCursorImpl::~DatabaseBackupCursorImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 bool DatabaseBackupCursorImpl::fetch( const char*& p1, std::size_t& p2, const char*& p3, std::size_t& p4)
 {
 	RpcMessage msg;
@@ -82,6 +100,15 @@ bool DatabaseBackupCursorImpl::fetch( const char*& p1, std::size_t& p2, const ch
 	answer.unpackBuffer( p1, p2);
 	answer.unpackBuffer( p3, p4);
 	return p0;
+}
+
+DatabaseClientImpl::~DatabaseClientImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 void DatabaseClientImpl::close( )
@@ -175,8 +202,17 @@ bool DatabaseClientImpl::readValue( const char* p1, std::size_t p2, std::string&
 	enter();
 	RpcAnswer answer( constConstructor(), rpc_recv());
 	bool p0 = answer.unpackBool();;
-	p3 = answer.unpackString();;
+	p3 = answer.unpackString();
 	return p0;
+}
+
+DatabaseCursorImpl::~DatabaseCursorImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekUpperBound( const char* p1, std::size_t p2, std::size_t p3)
@@ -274,6 +310,15 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::value( ) const
 	return p0;
 }
 
+DatabaseImpl::~DatabaseImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 DatabaseClientInterface* DatabaseImpl::createClient( const std::string& p1) const
 {
 	RpcMessage msg;
@@ -352,6 +397,15 @@ const char** DatabaseImpl::getConfigParameters( DatabaseInterface::ConfigType p1
 	return p0;
 }
 
+DatabaseTransactionImpl::~DatabaseTransactionImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 DatabaseCursorInterface* DatabaseTransactionImpl::createCursor( const DatabaseOptions& p1) const
 {
 	RpcMessage msg;
@@ -419,6 +473,15 @@ void DatabaseTransactionImpl::rollback( )
 	rpc_send( msg.content());
 }
 
+DocnoRangeAllocatorImpl::~DocnoRangeAllocatorImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 Index DocnoRangeAllocatorImpl::allocDocnoRange( const Index& p1)
 {
 	RpcMessage msg;
@@ -448,6 +511,15 @@ bool DocnoRangeAllocatorImpl::deallocDocnoRange( const Index& p1, const Index& p
 	return p0;
 }
 
+DocumentAnalyzerInstanceImpl::~DocumentAnalyzerInstanceImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 void DocumentAnalyzerInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
 {
 	RpcMessage msg;
@@ -469,8 +541,17 @@ bool DocumentAnalyzerInstanceImpl::analyzeNext( analyzer::Document& p1)
 	enter();
 	RpcAnswer answer( constConstructor(), rpc_recv());
 	bool p0 = answer.unpackBool();;
-	p1 = answer.unpackAnalyzerDocument();;
+	p1 = answer.unpackAnalyzerDocument();
 	return p0;
+}
+
+DocumentAnalyzerImpl::~DocumentAnalyzerImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 void DocumentAnalyzerImpl::addSearchIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5)
@@ -580,6 +661,15 @@ DocumentAnalyzerInstanceInterface* DocumentAnalyzerImpl::createInstance( ) const
 	return p0;
 }
 
+ForwardIteratorImpl::~ForwardIteratorImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 void ForwardIteratorImpl::skipDoc( const Index& p1)
 {
 	RpcMessage msg;
@@ -617,6 +707,15 @@ std::string ForwardIteratorImpl::fetch( )
 	return p0;
 }
 
+InvAclIteratorImpl::~InvAclIteratorImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 Index InvAclIteratorImpl::skipDoc( const Index& p1)
 {
 	RpcMessage msg;
@@ -629,6 +728,15 @@ Index InvAclIteratorImpl::skipDoc( const Index& p1)
 	RpcAnswer answer( constConstructor(), rpc_recv());
 	Index p0 = answer.unpackIndex();;
 	return p0;
+}
+
+MetaDataReaderImpl::~MetaDataReaderImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 bool MetaDataReaderImpl::hasElement( const std::string& p1) const
@@ -724,6 +832,15 @@ const char* MetaDataReaderImpl::getName( const Index& p1) const
 	return p0;
 }
 
+NormalizerConstructorImpl::~NormalizerConstructorImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 NormalizerInterface* NormalizerConstructorImpl::create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const
 {
 	RpcMessage msg;
@@ -747,6 +864,15 @@ NormalizerInterface* NormalizerConstructorImpl::create( const std::vector<std::s
 	return p0;
 }
 
+NormalizerInstanceImpl::~NormalizerInstanceImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 std::string NormalizerInstanceImpl::normalize( const char* p1, std::size_t p2)
 {
 	RpcMessage msg;
@@ -759,6 +885,15 @@ std::string NormalizerInstanceImpl::normalize( const char* p1, std::size_t p2)
 	RpcAnswer answer( constConstructor(), rpc_recv());
 	std::string p0 = answer.unpackString();;
 	return p0;
+}
+
+NormalizerImpl::~NormalizerImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 NormalizerInstanceInterface* NormalizerImpl::createInstance( ) const
@@ -775,6 +910,15 @@ NormalizerInstanceInterface* NormalizerImpl::createInstance( ) const
 	if (classId_p0 != ClassId_NormalizerInstance) throw std::runtime_error("error in RPC answer: return object type mismatch");
 	NormalizerInstanceImpl* p0 = new NormalizerInstanceImpl( objId_p0, endpoint());
 	return p0;
+}
+
+PeerStorageTransactionImpl::~PeerStorageTransactionImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 void PeerStorageTransactionImpl::updateNofDocumentsInsertedChange( const GlobalCounter& p1)
@@ -814,6 +958,15 @@ void PeerStorageTransactionImpl::rollback( )
 	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
+PostingIteratorImpl::~PostingIteratorImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
 	msg.packCrc32();
 	rpc_send( msg.content());
 }
@@ -916,6 +1069,15 @@ Index PostingIteratorImpl::posno( ) const
 	return p0;
 }
 
+PostingJoinOperatorImpl::~PostingJoinOperatorImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2) const
 {
 	RpcMessage msg;
@@ -937,6 +1099,15 @@ PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const s
 	if (classId_p0 != ClassId_PostingIterator) throw std::runtime_error("error in RPC answer: return object type mismatch");
 	PostingIteratorImpl* p0 = new PostingIteratorImpl( objId_p0, endpoint());
 	return p0;
+}
+
+QueryAnalyzerImpl::~QueryAnalyzerImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 void QueryAnalyzerImpl::definePhraseType( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4)
@@ -967,13 +1138,21 @@ std::vector<analyzer::Term> QueryAnalyzerImpl::analyzePhrase( const std::string&
 	enter();
 	RpcAnswer answer( constConstructor(), rpc_recv());
 	std::vector<analyzer::Term> p0;
-	std::size_t size_p0 = answer.unpackSize();
-	for (unsigned int ii=0; ii < size_p0; ++ii) {
-		analyzer::Term elem_p0 = answer.unpackAnalyzerTerm();;
+	std::size_t n0 = answer.unpackSize();
+	for (unsigned int ii=0; ii < n0; ++ii) {
+		analyzer::Term elem_p0 = answer.unpackAnalyzerTerm();
 		p0.push_back( elem_p0);
-
 	}
 	return p0;
+}
+
+QueryEvalImpl::~QueryEvalImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 void QueryEvalImpl::addTerm( const std::string& p1, const std::string& p2, const std::string& p3)
@@ -1052,6 +1231,15 @@ QueryInterface* QueryEvalImpl::createQuery( const StorageClientInterface* p1) co
 	if (classId_p0 != ClassId_Query) throw std::runtime_error("error in RPC answer: return object type mismatch");
 	QueryImpl* p0 = new QueryImpl( objId_p0, endpoint());
 	return p0;
+}
+
+QueryImpl::~QueryImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 void QueryImpl::pushTerm( const std::string& p1, const std::string& p2)
@@ -1160,13 +1348,21 @@ std::vector<ResultDocument> QueryImpl::evaluate( )
 	enter();
 	RpcAnswer answer( constConstructor(), rpc_recv());
 	std::vector<ResultDocument> p0;
-	std::size_t size_p0 = answer.unpackSize();
-	for (unsigned int ii=0; ii < size_p0; ++ii) {
-		ResultDocument elem_p0 = answer.unpackResultDocument();;
+	std::size_t n0 = answer.unpackSize();
+	for (unsigned int ii=0; ii < n0; ++ii) {
+		ResultDocument elem_p0 = answer.unpackResultDocument();
 		p0.push_back( elem_p0);
-
 	}
 	return p0;
+}
+
+QueryProcessorImpl::~QueryProcessorImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 void QueryProcessorImpl::definePostingJoinOperator( const std::string& p1, PostingJoinOperatorInterface* p2)
@@ -1259,6 +1455,15 @@ const SummarizerFunctionInterface* QueryProcessorImpl::getSummarizerFunction( co
 	return p0;
 }
 
+SegmenterInstanceImpl::~SegmenterInstanceImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 void SegmenterInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
 {
 	RpcMessage msg;
@@ -1280,10 +1485,19 @@ bool SegmenterInstanceImpl::getNext( int& p1, SegmenterPosition& p2, const char*
 	enter();
 	RpcAnswer answer( constConstructor(), rpc_recv());
 	bool p0 = answer.unpackBool();;
-	p1 = answer.unpackInt();;
-	p2 = answer.unpackGlobalCounter();;
+	p1 = answer.unpackInt();
+	p2 = answer.unpackGlobalCounter();
 	answer.unpackBuffer( p3, p4);
 	return p0;
+}
+
+SegmenterImpl::~SegmenterImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 void SegmenterImpl::defineSelectorExpression( int p1, const std::string& p2)
@@ -1323,6 +1537,15 @@ SegmenterInstanceInterface* SegmenterImpl::createInstance( ) const
 	if (classId_p0 != ClassId_SegmenterInstance) throw std::runtime_error("error in RPC answer: return object type mismatch");
 	SegmenterInstanceImpl* p0 = new SegmenterInstanceImpl( objId_p0, endpoint());
 	return p0;
+}
+
+StorageAlterMetaDataTableImpl::~StorageAlterMetaDataTableImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 void StorageAlterMetaDataTableImpl::addElement( const std::string& p1, const std::string& p2)
@@ -1394,6 +1617,15 @@ void StorageAlterMetaDataTableImpl::rollback( )
 	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
+StorageClientImpl::~StorageClientImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
 	msg.packCrc32();
 	rpc_send( msg.content());
 }
@@ -1674,6 +1906,15 @@ StorageDumpInterface* StorageClientImpl::createDump( ) const
 	return p0;
 }
 
+StorageDocumentImpl::~StorageDocumentImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 void StorageDocumentImpl::addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3)
 {
 	RpcMessage msg;
@@ -1740,6 +1981,15 @@ void StorageDocumentImpl::done( )
 	rpc_waitAnswer();
 }
 
+StorageDumpImpl::~StorageDumpImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 bool StorageDumpImpl::nextChunk( const char*& p1, std::size_t& p2)
 {
 	RpcMessage msg;
@@ -1752,6 +2002,15 @@ bool StorageDumpImpl::nextChunk( const char*& p1, std::size_t& p2)
 	bool p0 = answer.unpackBool();;
 	answer.unpackBuffer( p1, p2);
 	return p0;
+}
+
+StorageImpl::~StorageImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 StorageClientInterface* StorageImpl::createClient( const std::string& p1, DatabaseClientInterface* p2) const
@@ -1834,6 +2093,15 @@ const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) 
 	return p0;
 }
 
+StoragePeerImpl::~StoragePeerImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 StoragePeerTransactionInterface* StoragePeerImpl::createTransaction( ) const
 {
 	RpcMessage msg;
@@ -1848,6 +2116,15 @@ StoragePeerTransactionInterface* StoragePeerImpl::createTransaction( ) const
 	if (classId_p0 != ClassId_StoragePeerTransaction) throw std::runtime_error("error in RPC answer: return object type mismatch");
 	StoragePeerTransactionImpl* p0 = new StoragePeerTransactionImpl( objId_p0, endpoint());
 	return p0;
+}
+
+StoragePeerTransactionImpl::~StoragePeerTransactionImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 void StoragePeerTransactionImpl::populateNofDocumentsInsertedChange( int p1)
@@ -1896,6 +2173,15 @@ void StoragePeerTransactionImpl::rollback( )
 	RpcMessage msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
+StorageTransactionImpl::~StorageTransactionImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
 	msg.packCrc32();
 	rpc_send( msg.content());
 }
@@ -1957,6 +2243,15 @@ void StorageTransactionImpl::rollback( )
 	rpc_send( msg.content());
 }
 
+SummarizerClosureImpl::~SummarizerClosureImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 std::vector<SummarizerClosureInterface::SummaryElement> SummarizerClosureImpl::getSummary( const Index& p1)
 {
 	RpcMessage msg;
@@ -1968,13 +2263,21 @@ std::vector<SummarizerClosureInterface::SummaryElement> SummarizerClosureImpl::g
 	enter();
 	RpcAnswer answer( constConstructor(), rpc_recv());
 	std::vector<SummarizerClosureInterface::SummaryElement> p0;
-	std::size_t size_p0 = answer.unpackSize();
-	for (unsigned int ii=0; ii < size_p0; ++ii) {
-		SummarizerClosureInterface::SummaryElement elem_p0 = answer.unpackSummaryElement();;
+	std::size_t n0 = answer.unpackSize();
+	for (unsigned int ii=0; ii < n0; ++ii) {
+		SummarizerClosureInterface::SummaryElement elem_p0 = answer.unpackSummaryElement();
 		p0.push_back( elem_p0);
-
 	}
 	return p0;
+}
+
+SummarizerFunctionImpl::~SummarizerFunctionImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 const char** SummarizerFunctionImpl::numericParameterNames( ) const
@@ -2051,6 +2354,15 @@ SummarizerClosureInterface* SummarizerFunctionImpl::createClosure( const Storage
 	if (classId_p0 != ClassId_SummarizerClosure) throw std::runtime_error("error in RPC answer: return object type mismatch");
 	SummarizerClosureImpl* p0 = new SummarizerClosureImpl( objId_p0, endpoint());
 	return p0;
+}
+
+TextProcessorImpl::~TextProcessorImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 void TextProcessorImpl::addResourcePath( const std::string& p1)
@@ -2137,6 +2449,15 @@ void TextProcessorImpl::defineNormalizer( const std::string& p1, const Normalize
 	rpc_send( msg.content());
 }
 
+TokenizerConstructorImpl::~TokenizerConstructorImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 TokenizerInterface* TokenizerConstructorImpl::create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const
 {
 	RpcMessage msg;
@@ -2160,6 +2481,15 @@ TokenizerInterface* TokenizerConstructorImpl::create( const std::vector<std::str
 	return p0;
 }
 
+TokenizerInstanceImpl::~TokenizerInstanceImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 std::vector<analyzer::Token> TokenizerInstanceImpl::tokenize( const char* p1, std::size_t p2)
 {
 	RpcMessage msg;
@@ -2171,13 +2501,21 @@ std::vector<analyzer::Token> TokenizerInstanceImpl::tokenize( const char* p1, st
 	enter();
 	RpcAnswer answer( constConstructor(), rpc_recv());
 	std::vector<analyzer::Token> p0;
-	std::size_t size_p0 = answer.unpackSize();
-	for (unsigned int ii=0; ii < size_p0; ++ii) {
-		analyzer::Token elem_p0 = answer.unpackAnalyzerToken();;
+	std::size_t n0 = answer.unpackSize();
+	for (unsigned int ii=0; ii < n0; ++ii) {
+		analyzer::Token elem_p0 = answer.unpackAnalyzerToken();
 		p0.push_back( elem_p0);
-
 	}
 	return p0;
+}
+
+TokenizerImpl::~TokenizerImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 bool TokenizerImpl::concatBeforeTokenize( ) const
@@ -2209,6 +2547,15 @@ TokenizerInstanceInterface* TokenizerImpl::createInstance( ) const
 	return p0;
 }
 
+WeightingClosureImpl::~WeightingClosureImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
 float WeightingClosureImpl::call( const Index& p1)
 {
 	RpcMessage msg;
@@ -2221,6 +2568,15 @@ float WeightingClosureImpl::call( const Index& p1)
 	RpcAnswer answer( constConstructor(), rpc_recv());
 	float p0 = answer.unpackFloat();;
 	return p0;
+}
+
+WeightingFunctionImpl::~WeightingFunctionImpl()
+{
+	RpcMessage msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
 }
 
 const char** WeightingFunctionImpl::numericParameterNames( ) const

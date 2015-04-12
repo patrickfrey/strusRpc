@@ -129,7 +129,7 @@ public:
 		Method_getValue
 	};
 
-	virtual ~AttributeReaderImpl(){}
+	virtual ~AttributeReaderImpl();
 
 	explicit AttributeReaderImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_AttributeReader, endpoint_){}
@@ -153,7 +153,7 @@ public:
 		Method_fetch
 	};
 
-	virtual ~DatabaseBackupCursorImpl(){}
+	virtual ~DatabaseBackupCursorImpl();
 
 	explicit DatabaseBackupCursorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseBackupCursor, endpoint_){}
@@ -181,7 +181,7 @@ public:
 		Method_readValue
 	};
 
-	virtual ~DatabaseClientImpl(){}
+	virtual ~DatabaseClientImpl();
 
 	explicit DatabaseClientImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseClient, endpoint_){}
@@ -215,7 +215,7 @@ public:
 		Method_value
 	};
 
-	virtual ~DatabaseCursorImpl(){}
+	virtual ~DatabaseCursorImpl();
 
 	explicit DatabaseCursorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseCursor, endpoint_){}
@@ -248,7 +248,7 @@ public:
 		Method_getConfigParameters
 	};
 
-	virtual ~DatabaseImpl(){}
+	virtual ~DatabaseImpl();
 
 	explicit DatabaseImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Database, endpoint_){}
@@ -280,7 +280,7 @@ public:
 		Method_rollback
 	};
 
-	virtual ~DatabaseTransactionImpl(){}
+	virtual ~DatabaseTransactionImpl();
 
 	explicit DatabaseTransactionImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseTransaction, endpoint_){}
@@ -308,7 +308,7 @@ public:
 		Method_deallocDocnoRange
 	};
 
-	virtual ~DocnoRangeAllocatorImpl(){}
+	virtual ~DocnoRangeAllocatorImpl();
 
 	explicit DocnoRangeAllocatorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocnoRangeAllocator, endpoint_){}
@@ -332,7 +332,7 @@ public:
 		Method_analyzeNext
 	};
 
-	virtual ~DocumentAnalyzerInstanceImpl(){}
+	virtual ~DocumentAnalyzerInstanceImpl();
 
 	explicit DocumentAnalyzerInstanceImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzerInstance, endpoint_){}
@@ -361,7 +361,7 @@ public:
 		Method_createInstance
 	};
 
-	virtual ~DocumentAnalyzerImpl(){}
+	virtual ~DocumentAnalyzerImpl();
 
 	explicit DocumentAnalyzerImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzer, endpoint_){}
@@ -391,7 +391,7 @@ public:
 		Method_fetch
 	};
 
-	virtual ~ForwardIteratorImpl(){}
+	virtual ~ForwardIteratorImpl();
 
 	explicit ForwardIteratorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_ForwardIterator, endpoint_){}
@@ -415,7 +415,7 @@ public:
 		Method_skipDoc
 	};
 
-	virtual ~InvAclIteratorImpl(){}
+	virtual ~InvAclIteratorImpl();
 
 	explicit InvAclIteratorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_InvAclIterator, endpoint_){}
@@ -443,7 +443,7 @@ public:
 		Method_getName
 	};
 
-	virtual ~MetaDataReaderImpl(){}
+	virtual ~MetaDataReaderImpl();
 
 	explicit MetaDataReaderImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataReader, endpoint_){}
@@ -471,7 +471,7 @@ public:
 		Method_create
 	};
 
-	virtual ~NormalizerConstructorImpl(){}
+	virtual ~NormalizerConstructorImpl();
 
 	explicit NormalizerConstructorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerConstructor, endpoint_){}
@@ -493,7 +493,7 @@ public:
 		Method_normalize
 	};
 
-	virtual ~NormalizerInstanceImpl(){}
+	virtual ~NormalizerInstanceImpl();
 
 	explicit NormalizerInstanceImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerInstance, endpoint_){}
@@ -515,7 +515,7 @@ public:
 		Method_createInstance
 	};
 
-	virtual ~NormalizerImpl(){}
+	virtual ~NormalizerImpl();
 
 	explicit NormalizerImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Normalizer, endpoint_){}
@@ -540,7 +540,7 @@ public:
 		Method_rollback
 	};
 
-	virtual ~PeerStorageTransactionImpl(){}
+	virtual ~PeerStorageTransactionImpl();
 
 	explicit PeerStorageTransactionImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PeerStorageTransaction, endpoint_){}
@@ -572,7 +572,7 @@ public:
 		Method_posno
 	};
 
-	virtual ~PostingIteratorImpl(){}
+	virtual ~PostingIteratorImpl();
 
 	explicit PostingIteratorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PostingIterator, endpoint_){}
@@ -601,7 +601,7 @@ public:
 		Method_createResultIterator
 	};
 
-	virtual ~PostingJoinOperatorImpl(){}
+	virtual ~PostingJoinOperatorImpl();
 
 	explicit PostingJoinOperatorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PostingJoinOperator, endpoint_){}
@@ -624,7 +624,7 @@ public:
 		Method_analyzePhrase
 	};
 
-	virtual ~QueryAnalyzerImpl(){}
+	virtual ~QueryAnalyzerImpl();
 
 	explicit QueryAnalyzerImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzer, endpoint_){}
@@ -652,7 +652,7 @@ public:
 		Method_createQuery
 	};
 
-	virtual ~QueryEvalImpl(){}
+	virtual ~QueryEvalImpl();
 
 	explicit QueryEvalImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryEval, endpoint_){}
@@ -688,7 +688,7 @@ public:
 		Method_evaluate
 	};
 
-	virtual ~QueryImpl(){}
+	virtual ~QueryImpl();
 
 	explicit QueryImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Query, endpoint_){}
@@ -724,7 +724,7 @@ public:
 		Method_getSummarizerFunction
 	};
 
-	virtual ~QueryProcessorImpl(){}
+	virtual ~QueryProcessorImpl();
 
 	explicit QueryProcessorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryProcessor, endpoint_){}
@@ -752,7 +752,7 @@ public:
 		Method_getNext
 	};
 
-	virtual ~SegmenterInstanceImpl(){}
+	virtual ~SegmenterInstanceImpl();
 
 	explicit SegmenterInstanceImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SegmenterInstance, endpoint_){}
@@ -777,7 +777,7 @@ public:
 		Method_createInstance
 	};
 
-	virtual ~SegmenterImpl(){}
+	virtual ~SegmenterImpl();
 
 	explicit SegmenterImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Segmenter, endpoint_){}
@@ -807,7 +807,7 @@ public:
 		Method_rollback
 	};
 
-	virtual ~StorageAlterMetaDataTableImpl(){}
+	virtual ~StorageAlterMetaDataTableImpl();
 
 	explicit StorageAlterMetaDataTableImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageAlterMetaDataTable, endpoint_){}
@@ -853,7 +853,7 @@ public:
 		Method_createDump
 	};
 
-	virtual ~StorageClientImpl(){}
+	virtual ~StorageClientImpl();
 
 	explicit StorageClientImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageClient, endpoint_){}
@@ -898,7 +898,7 @@ public:
 		Method_done
 	};
 
-	virtual ~StorageDocumentImpl(){}
+	virtual ~StorageDocumentImpl();
 
 	explicit StorageDocumentImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocument, endpoint_){}
@@ -925,7 +925,7 @@ public:
 		Method_nextChunk
 	};
 
-	virtual ~StorageDumpImpl(){}
+	virtual ~StorageDumpImpl();
 
 	explicit StorageDumpImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDump, endpoint_){}
@@ -951,7 +951,7 @@ public:
 		Method_getConfigParameters
 	};
 
-	virtual ~StorageImpl(){}
+	virtual ~StorageImpl();
 
 	explicit StorageImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Storage, endpoint_){}
@@ -977,7 +977,7 @@ public:
 		Method_createTransaction
 	};
 
-	virtual ~StoragePeerImpl(){}
+	virtual ~StoragePeerImpl();
 
 	explicit StoragePeerImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StoragePeer, endpoint_){}
@@ -1003,7 +1003,7 @@ public:
 		Method_rollback
 	};
 
-	virtual ~StoragePeerTransactionImpl(){}
+	virtual ~StoragePeerTransactionImpl();
 
 	explicit StoragePeerTransactionImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StoragePeerTransaction, endpoint_){}
@@ -1033,7 +1033,7 @@ public:
 		Method_rollback
 	};
 
-	virtual ~StorageTransactionImpl(){}
+	virtual ~StorageTransactionImpl();
 
 	explicit StorageTransactionImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageTransaction, endpoint_){}
@@ -1059,7 +1059,7 @@ public:
 		Method_getSummary
 	};
 
-	virtual ~SummarizerClosureImpl(){}
+	virtual ~SummarizerClosureImpl();
 
 	explicit SummarizerClosureImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerClosure, endpoint_){}
@@ -1084,7 +1084,7 @@ public:
 		Method_createClosure
 	};
 
-	virtual ~SummarizerFunctionImpl(){}
+	virtual ~SummarizerFunctionImpl();
 
 	explicit SummarizerFunctionImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunction, endpoint_){}
@@ -1114,7 +1114,7 @@ public:
 		Method_defineNormalizer
 	};
 
-	virtual ~TextProcessorImpl(){}
+	virtual ~TextProcessorImpl();
 
 	explicit TextProcessorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TextProcessor, endpoint_){}
@@ -1141,7 +1141,7 @@ public:
 		Method_create
 	};
 
-	virtual ~TokenizerConstructorImpl(){}
+	virtual ~TokenizerConstructorImpl();
 
 	explicit TokenizerConstructorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerConstructor, endpoint_){}
@@ -1163,7 +1163,7 @@ public:
 		Method_tokenize
 	};
 
-	virtual ~TokenizerInstanceImpl(){}
+	virtual ~TokenizerInstanceImpl();
 
 	explicit TokenizerInstanceImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerInstance, endpoint_){}
@@ -1186,7 +1186,7 @@ public:
 		Method_createInstance
 	};
 
-	virtual ~TokenizerImpl(){}
+	virtual ~TokenizerImpl();
 
 	explicit TokenizerImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Tokenizer, endpoint_){}
@@ -1209,7 +1209,7 @@ public:
 		Method_call
 	};
 
-	virtual ~WeightingClosureImpl(){}
+	virtual ~WeightingClosureImpl();
 
 	explicit WeightingClosureImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingClosure, endpoint_){}
@@ -1232,7 +1232,7 @@ public:
 		Method_createClosure
 	};
 
-	virtual ~WeightingFunctionImpl(){}
+	virtual ~WeightingFunctionImpl();
 
 	explicit WeightingFunctionImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunction, endpoint_){}
