@@ -41,7 +41,7 @@ namespace {
 template <int>
 static void pack( std::string& buf, const void* ptr);
 template <int>
-static void unpack( char const*& itr, const char* end, void* ptr);
+static void unpack( char const*&, const char*, void* ptr);
 
 template <>
 void pack<1>( std::string& buf, const void* ptr)
@@ -123,14 +123,14 @@ SCALAR unpackScalar( char const*& itr, const char* end)
 }
 }
 
-void RcpMessage::packObject( unsigned char classId_, unsigned int objId_)
+void RpcMessage::packObject( unsigned char classId_, unsigned int objId_)
 {
 	if (objId_ > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "object id out of range");
 	packScalar( m_content, classId_);
 	packScalar( m_content, (uint32_t)objId_);
 }
 
-void RcpMessage::packString( const std::string& str)
+void RpcMessage::packString( const std::string& str)
 {
 	if (str.size() > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "string size out of range");
 	packScalar( m_content, (uint32_t)str.size());
@@ -138,64 +138,76 @@ void RcpMessage::packString( const std::string& str)
 	
 }
 
-void RcpMessage::packCharp( const char* buf)
+void RpcMessage::packCharp( const char* buf)
 {
 	m_content.append( buf);
 	m_content.push_back( '\0');
 }
 
-void RcpMessage::packBuffer( const char* buf, std::size_t size)
+void RpcMessage::packCharpp( const char** buf)
+{
+	char const** bi = buf;
+	for (; *bi; ++bi){}
+	packSize( bi - buf);
+	const char** be = bi;
+	for (bi = buf; bi != be; ++bi)
+	{
+		packCharp( *bi);
+	}
+}
+
+void RpcMessage::packBuffer( const char* buf, std::size_t size)
 {
 	if (size > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "buffer size out of range");
 	packScalar( m_content, (uint32_t)size);
 	m_content.append( buf, size);
 }
 
-void RcpMessage::packBool( bool val)
+void RpcMessage::packBool( bool val)
 {
 	m_content.push_back( val?1:0);
 }
 
-void RcpMessage::packByte( unsigned char val)
+void RpcMessage::packByte( unsigned char val)
 {
 	m_content.push_back( val);
 }
 
-void RcpMessage::packIndex( const Index& index)
+void RpcMessage::packIndex( const Index& index)
 {
 	packScalar( m_content, index);
 }
 
-void RcpMessage::packGlobalCounter( const GlobalCounter& index)
+void RpcMessage::packGlobalCounter( const GlobalCounter& index)
 {
 	packScalar( m_content, index);
 }
 
-void RcpMessage::packUint( unsigned int val)
+void RpcMessage::packUint( unsigned int val)
 {
 	if (val > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "packed uint out of range");
 	packScalar( m_content, (uint32_t)val);
 }
 
-void RcpMessage::packInt( int val)
+void RpcMessage::packInt( int val)
 {
 	if (val > std::numeric_limits<int32_t>::max()
 	||  val < std::numeric_limits<int32_t>::min()) throw std::runtime_error( "packed int out of range");
 	packScalar( m_content, (int32_t)val);
 }
 
-void RcpMessage::packFloat( float val)
+void RpcMessage::packFloat( float val)
 {
 	pack<sizeof(float)>( m_content, &val);
 }
 
-void RcpMessage::packSize( std::size_t size)
+void RpcMessage::packSize( std::size_t size)
 {
 	if (size > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "packed size out of range");
 	packScalar( m_content, (uint32_t)size);
 }
 
-void RcpMessage::packArithmeticVariant( const ArithmeticVariant& val)
+void RpcMessage::packArithmeticVariant( const ArithmeticVariant& val)
 {
 	packByte( (unsigned char)val.type);
 	switch (val.type)
@@ -207,22 +219,22 @@ void RcpMessage::packArithmeticVariant( const ArithmeticVariant& val)
 	}
 }
 
-void RcpMessage::packDatabaseOptions( const DatabaseOptions& val)
+void RpcMessage::packDatabaseOptions( const DatabaseOptions& val)
 {
 	packUint( val.opt());
 }
 
-void RcpMessage::packDatabaseConfigType( const DatabaseInterface::ConfigType& val)
+void RpcMessage::packDatabaseConfigType( const DatabaseInterface::ConfigType& val)
 {
 	packByte( (unsigned char)val);
 }
 
-void RcpMessage::packStorageConfigType( const StorageInterface::ConfigType& val)
+void RpcMessage::packStorageConfigType( const StorageInterface::ConfigType& val)
 {
 	packByte( (unsigned char)val);
 }
 
-void RcpMessage::packTokenizerConfig( const TokenizerConfig& val)
+void RpcMessage::packTokenizerConfig( const TokenizerConfig& val)
 {
 	packString( val.name());
 	packSize( val.arguments().size());
@@ -235,7 +247,7 @@ void RcpMessage::packTokenizerConfig( const TokenizerConfig& val)
 	}
 }
 
-void RcpMessage::packNormalizerConfig( const NormalizerConfig& val)
+void RpcMessage::packNormalizerConfig( const NormalizerConfig& val)
 {
 	packString( val.name());
 	packSize( val.arguments().size());
@@ -248,7 +260,12 @@ void RcpMessage::packNormalizerConfig( const NormalizerConfig& val)
 	}
 }
 
-void RcpMessage::packSummarizerConfig( const SummarizerConfig& val)
+void RpcMessage::packFeatureOptions( const DocumentAnalyzerInterface::FeatureOptions& val)
+{
+	packUint( val.opt());
+}
+
+void RpcMessage::packSummarizerConfig( const SummarizerConfig& val)
 {
 	std::map<std::string,ArithmeticVariant>::const_iterator
 		ni = val.numericParameters().begin(), ne = val.numericParameters().end();
@@ -276,7 +293,13 @@ void RcpMessage::packSummarizerConfig( const SummarizerConfig& val)
 	}
 }
 
-void RcpMessage::packWeightingConfig( const WeightingConfig& val)
+void RpcMessage::packSummaryElement( const SummarizerClosureInterface::SummaryElement& val)
+{
+	packString( val.text());
+	packFloat( val.weight());
+}
+
+void RpcMessage::packWeightingConfig( const WeightingConfig& val)
 {
 	std::map<std::string,ArithmeticVariant>::const_iterator
 		ni = val.numericParameters().begin(), ne = val.numericParameters().end();
@@ -288,12 +311,12 @@ void RcpMessage::packWeightingConfig( const WeightingConfig& val)
 	}
 }
 
-void RcpMessage::packCompareOperator( const QueryInterface::CompareOperator& val)
+void RpcMessage::packCompareOperator( const QueryInterface::CompareOperator& val)
 {
 	packByte( (unsigned char)val);
 }
 
-void RcpMessage::packFeatureParameter( const SummarizerFunctionInterface::FeatureParameter& val)
+void RpcMessage::packFeatureParameter( const SummarizerFunctionInterface::FeatureParameter& val)
 {
 	packUint( val.classidx());
 	const RpcInterfaceStub* obj = dynamic_cast<const RpcInterfaceStub*>( val.feature().postingIterator());
@@ -312,193 +335,361 @@ void RcpMessage::packFeatureParameter( const SummarizerFunctionInterface::Featur
 	}
 }
 
-void RcpMessage::packCrc32()
+void RpcMessage::packSlice( DatabaseCursorInterface::Slice& val)
+{
+	packBuffer( val.ptr(), val.size());
+}
+
+void RpcMessage::packAnalyzerDocument( const analyzer::Document& val)
+{
+	packString( val.subDocumentTypeName());
+	std::vector<analyzer::Attribute>::const_iterator ai = val.attributes().begin(), ae = val.attributes().end();
+	packSize( ae-ai);
+	for (; ai != ae; ++ai)
+	{
+		packAnalyzerAttribute( *ai);
+	}
+	std::vector<analyzer::MetaData>::const_iterator mi = val.metadata().begin(), me = val.metadata().end();
+	packSize( me-mi);
+	for (; mi != me; ++mi)
+	{
+		packAnalyzerMetaData( *mi);
+	}
+	std::vector<analyzer::Term>::const_iterator si = val.searchIndexTerms().begin(), se = val.searchIndexTerms().end();
+	packSize( se-si);
+	for (; si != se; ++si)
+	{
+		packAnalyzerTerm( *si);
+	}
+	std::vector<analyzer::Term>::const_iterator fi = val.forwardIndexTerms().begin(), fe = val.forwardIndexTerms().end();
+	packSize( fe-fi);
+	for (; fi != fe; ++fi)
+	{
+		packAnalyzerTerm( *fi);
+	}
+}
+
+void RpcMessage::packAnalyzerAttribute( const analyzer::Attribute& val)
+{
+	packString( val.name());
+	packString( val.value());
+}
+
+void RpcMessage::packAnalyzerMetaData( const analyzer::MetaData& val)
+{
+	packString( val.name());
+	packString( val.value());
+}
+
+void RpcMessage::packAnalyzerTerm( const analyzer::Term& val)
+{
+	packString( val.type());
+	packString( val.value());
+	packUint( val.pos());
+}
+
+void RpcMessage::packAnalyzerToken( const analyzer::Token& val)
+{
+	packUint( val.docpos);
+	packUint( val.strpos);
+	packUint( val.strsize);
+}
+
+void RpcMessage::packWeightedDocument( const WeightedDocument& val)
+{
+	packIndex( val.docno());
+	packFloat( val.weight());
+}
+
+void RpcMessage::packResultDocument( const ResultDocument& val)
+{
+	packWeightedDocument( val);
+	std::vector<ResultDocument::Attribute>::const_iterator
+		ai = val.attributes().begin(), ae = val.attributes().end();
+	packSize( ae-ai);
+	for (; ai != ae; ++ai)
+	{
+		packString( ai->name());
+		packString( ai->value());
+		packFloat( ai->weight());
+	}
+}
+
+void RpcMessage::packCrc32()
 {
 	packScalar( m_content, utils::Crc32::calc( m_content.c_str(), m_content.size()));
 }
 
-unsigned int RcpMessage::unpackObject( char const*& itr, const char* end, unsigned char& classId_)
+void RpcAnswer::unpackObject( unsigned char& classId_, unsigned int& objId_)
 {
-	classId_ = unpackScalar<char>( itr, end);
-	return unpackScalar<uint32_t>( itr, end);
+	classId_ = unpackScalar<char>( m_itr, m_end);
+	objId_ = unpackScalar<uint32_t>( m_itr, m_end);
 }
 
-std::string RcpMessage::unpackString( char const*& itr, const char* end)
+std::string RpcAnswer::unpackString()
 {
 	std::string rt;
-	uint32_t size = unpackScalar<uint32_t>( itr, end);
-	if (itr+size > end) throw std::runtime_error( "message to small to encode next string");
-	rt.append( itr, size);
-	itr += size;
+	uint32_t size = unpackScalar<uint32_t>( m_itr, m_end);
+	if (m_itr+size > m_end) throw std::runtime_error( "message to small to encode next string");
+	rt.append( m_itr, size);
+	m_itr += size;
 	return rt;
 }
 
-const char* RcpMessage::unpackCharp( char const*& itr, const char* end)
+const char* RpcAnswer::unpackConstCharp()
 {
-	const char* start = itr;
-	while (itr < end && *itr) ++itr;
-	if (itr == end)
+	const char* start = m_itr;
+	while (m_itr < m_end && *m_itr) ++m_itr;
+	if (m_itr == m_end)
 	{
 		throw std::runtime_error( "message to small to encode next C string");
 	}
-	++itr;
-	return start;
+	++m_itr;
+	return (const char*)m_constConstructor->get( start, m_itr-start);
 }
 
-const char* RcpMessage::unpackBuffer( char const*& itr, const char* end, std::size_t& size)
+const char** RpcAnswer::unpackConstCharpp()
 {
-	size = unpackScalar<uint32_t>( itr, end);
-	const char* rt = itr;
-	itr += size;
-	return rt;
+	std::size_t ii=0,size = unpackSize();
+	std::vector<const char*> ar;
+	ar.reserve( size);
+	for (; ii<size; ++ii)
+	{
+		ar.push_back( unpackConstCharp());
+	}
+	return (const char**)m_constConstructor->get( ar.data(), size * sizeof(const char*));
 }
 
-bool RcpMessage::unpackBool( char const*& itr, const char* end)
+void RpcAnswer::unpackBuffer( const char*& buf, std::size_t& size)
 {
-	return (*itr++ != 0)?true:false;
+	size = unpackScalar<uint32_t>( m_itr, m_end);
+	buf = m_itr;
+	m_itr += size;
 }
 
-unsigned char RcpMessage::unpackByte( char const*& itr, const char* end)
+bool RpcAnswer::unpackBool()
 {
-	return *itr++;
+	return (*m_itr++ != 0)?true:false;
 }
 
-Index RcpMessage::unpackIndex( char const*& itr, const char* end)
+unsigned char RpcAnswer::unpackByte()
 {
-	return unpackScalar<Index>( itr, end);
+	return *m_itr++;
 }
 
-GlobalCounter RcpMessage::unpackGlobalCounter( char const*& itr, const char* end)
+Index RpcAnswer::unpackIndex()
 {
-	return unpackScalar<GlobalCounter>( itr, end);
+	return unpackScalar<Index>( m_itr, m_end);
 }
 
-unsigned int RcpMessage::unpackUint( char const*& itr, const char* end)
+GlobalCounter RpcAnswer::unpackGlobalCounter()
 {
-	return unpackScalar<uint32_t>( itr, end);
+	return unpackScalar<GlobalCounter>( m_itr, m_end);
 }
 
-int RcpMessage::unpackInt( char const*& itr, const char* end)
+unsigned int RpcAnswer::unpackUint()
 {
-	return unpackScalar<uint32_t>( itr, end);
+	return unpackScalar<uint32_t>( m_itr, m_end);
 }
 
-float RcpMessage::unpackFloat( char const*& itr, const char* end)
+int RpcAnswer::unpackInt()
 {
-	return unpackScalar<float>( itr, end);
+	return unpackScalar<uint32_t>( m_itr, m_end);
 }
 
-std::size_t RcpMessage::unpackSize( char const*& itr, const char* end)
+float RpcAnswer::unpackFloat()
 {
-	return unpackScalar<uint32_t>( itr, end);
+	return unpackScalar<float>( m_itr, m_end);
 }
 
-ArithmeticVariant RcpMessage::unpackArithmeticVariant( char const*& itr, const char* end)
+std::size_t RpcAnswer::unpackSize()
 {
-	ArithmeticVariant::Type type = (ArithmeticVariant::Type)unpackByte( itr, end);
+	return unpackScalar<uint32_t>( m_itr, m_end);
+}
+
+ArithmeticVariant RpcAnswer::unpackArithmeticVariant()
+{
+	ArithmeticVariant::Type type = (ArithmeticVariant::Type)unpackByte();
 	switch (type)
 	{
 		case ArithmeticVariant::Null: return ArithmeticVariant();
-		case ArithmeticVariant::Int: return ArithmeticVariant( unpackInt(itr,end));
-		case ArithmeticVariant::UInt: return ArithmeticVariant( unpackUint(itr,end));
-		case ArithmeticVariant::Float: return ArithmeticVariant( unpackFloat(itr,end));
+		case ArithmeticVariant::Int: return ArithmeticVariant( unpackInt());
+		case ArithmeticVariant::UInt: return ArithmeticVariant( unpackUint());
+		case ArithmeticVariant::Float: return ArithmeticVariant( unpackFloat());
 	}
 	throw std::runtime_error( "unknown type of arithmetic variant");
 }
 
-bool RcpMessage::unpackCrc32( char const*& itr, const char* end)
+bool RpcAnswer::unpackCrc32()
 {
-	uint32_t crc = utils::Crc32::calc( m_content.c_str(), itr - m_content.c_str());
-	return crc == unpackScalar<uint32_t>( itr, end);
+	uint32_t crc = utils::Crc32::calc( m_content.c_str(), m_itr - m_content.c_str());
+	return crc == unpackScalar<uint32_t>( m_itr, m_end);
 }
 
-DatabaseOptions RcpMessage::unpackDatabaseOptions( char const*& itr, const char* end)
+DatabaseOptions RpcAnswer::unpackDatabaseOptions()
 {
-	return DatabaseOptions( unpackUint( itr, end));
+	return DatabaseOptions( unpackUint());
 }
 
-DatabaseInterface::ConfigType RcpMessage::unpackDatabaseConfigType( char const*& itr, const char* end)
+DatabaseInterface::ConfigType RpcAnswer::unpackDatabaseConfigType()
 {
-	return DatabaseInterface::ConfigType( unpackByte( itr, end));
+	return DatabaseInterface::ConfigType( unpackByte());
 }
 
-StorageInterface::ConfigType RcpMessage::unpackStorageConfigType( char const*& itr, const char* end)
+StorageInterface::ConfigType RpcAnswer::unpackStorageConfigType()
 {
-	return StorageInterface::ConfigType( unpackByte( itr, end));
+	return StorageInterface::ConfigType( unpackByte());
 }
 
-TokenizerConfig RcpMessage::unpackTokenizerConfig( char const*& itr, const char* end)
+TokenizerConfig RpcAnswer::unpackTokenizerConfig()
 {
-	std::string name = unpackString( itr, end);
-	std::size_t ii=0,size = unpackSize( itr, end);
+	std::string name = unpackString();
+	std::size_t ii=0,size = unpackSize();
 	std::vector<std::string> arguments;
 	for (; ii<size; ++ii)
 	{
-		arguments.push_back( unpackString( itr, end));
+		arguments.push_back( unpackString());
 	}
 	return TokenizerConfig( name, arguments);
 }
 
-NormalizerConfig RcpMessage::unpackNormalizerConfig( char const*& itr, const char* end)
+NormalizerConfig RpcAnswer::unpackNormalizerConfig()
 {
-	std::string name = unpackString( itr, end);
-	std::size_t ii=0,size = unpackSize( itr, end);
+	std::string name = unpackString();
+	std::size_t ii=0,size = unpackSize();
 	std::vector<std::string> arguments;
 	for (; ii<size; ++ii)
 	{
-		arguments.push_back( unpackString( itr, end));
+		arguments.push_back( unpackString());
 	}
 	return NormalizerConfig( name, arguments);
 }
 
-SummarizerConfig RcpMessage::unpackSummarizerConfig( char const*& itr, const char* end)
+DocumentAnalyzerInterface::FeatureOptions RpcAnswer::unpackFeatureOptions()
+{
+	return DocumentAnalyzerInterface::FeatureOptions( unpackUint());
+}
+
+SummarizerConfig RpcAnswer::unpackSummarizerConfig()
 {
 	SummarizerConfig rt;
 	{
-		std::size_t ii=0,size = unpackSize( itr, end);
+		std::size_t ii=0,size = unpackSize();
 		for (; ii<size; ++ii)
 		{
 			rt.defineNumericParameter( 
-				unpackString( itr, end), unpackArithmeticVariant( itr, end));
+				unpackString(), unpackArithmeticVariant());
 		}
 	}
 	{
-		std::size_t ii=0,size = unpackSize( itr, end);
+		std::size_t ii=0,size = unpackSize();
 		for (; ii<size; ++ii)
 		{
 			rt.defineTextualParameter( 
-				unpackString( itr, end), unpackString( itr, end));
+				unpackString(), unpackString());
 		}
 	}
 	{
-		std::size_t ii=0,size = unpackSize( itr, end);
+		std::size_t ii=0,size = unpackSize();
 		for (; ii<size; ++ii)
 		{
 			rt.defineFeatureParameter( 
-				unpackString( itr, end), unpackString( itr, end));
+				unpackString(), unpackString());
 		}
 	}
 	return rt;
 }
 
-WeightingConfig RcpMessage::unpackWeightingConfig( char const*& itr, const char* end)
+SummarizerClosureInterface::SummaryElement RpcAnswer::unpackSummaryElement()
+{
+	return SummarizerClosureInterface::SummaryElement( unpackString(), unpackFloat());
+}
+
+WeightingConfig RpcAnswer::unpackWeightingConfig()
 {
 	WeightingConfig rt;
 	{
-		std::size_t ii=0,size = unpackSize( itr, end);
+		std::size_t ii=0,size = unpackSize();
 		for (; ii<size; ++ii)
 		{
 			rt.defineNumericParameter( 
-				unpackString( itr, end), unpackArithmeticVariant( itr, end));
+				unpackString(), unpackArithmeticVariant());
 		}
 	}
 	return rt;
 }
 
-QueryInterface::CompareOperator RcpMessage::unpackCompareOperator( char const*& itr, const char* end)
+QueryInterface::CompareOperator RpcAnswer::unpackCompareOperator()
 {
-	return QueryInterface::CompareOperator( unpackByte( itr, end));
+	return QueryInterface::CompareOperator( unpackByte());
 }
 
+DatabaseCursorInterface::Slice RpcAnswer::unpackSlice()
+{
+	const char* buf;
+	std::size_t size;
+	unpackBuffer( buf, size);
+	DatabaseCursorInterface::Slice rt( (const char*)m_constConstructor->get( buf, size), size);
+	return rt;
+}
 
+analyzer::Document RpcAnswer::unpackAnalyzerDocument()
+{
+	analyzer::Document rt;
+	rt.setSubDocumentTypeName( unpackString());
+	std::size_t ii=0,size=unpackSize();
+	for (; ii<size; ++ii)
+	{
+		rt.setAttribute( unpackString(), unpackString());
+	}
+	for (ii=0,size=unpackSize(); ii<size; ++ii)
+	{
+		rt.setMetaData( unpackString(), unpackString());
+	}
+	for (ii=0,size=unpackSize(); ii<size; ++ii)
+	{
+		rt.addSearchIndexTerm( unpackString(), unpackString(), unpackUint());
+	}
+	for (ii=0,size=unpackSize(); ii<size; ++ii)
+	{
+		rt.addForwardIndexTerm( unpackString(), unpackString(), unpackUint());
+	}
+	return rt;
+}
+
+analyzer::Attribute RpcAnswer::unpackAnalyzerAttribute()
+{
+	return analyzer::Attribute( unpackString(), unpackString());
+}
+
+analyzer::MetaData RpcAnswer::unpackAnalyzerMetaData()
+{
+	return analyzer::MetaData( unpackString(), unpackString());
+}
+
+analyzer::Term RpcAnswer::unpackAnalyzerTerm()
+{
+	return analyzer::Term( unpackString(), unpackString(), unpackUint());
+}
+
+analyzer::Token RpcAnswer::unpackAnalyzerToken()
+{
+	return analyzer::Token( unpackUint(), unpackUint(), unpackUint());
+}
+
+WeightedDocument RpcAnswer::unpackWeightedDocument()
+{
+	return WeightedDocument( unpackIndex(), unpackFloat());
+}
+
+ResultDocument RpcAnswer::unpackResultDocument()
+{
+	ResultDocument rt( unpackWeightedDocument());
+	std::size_t ii=0,size=unpackSize();
+	for (; ii<size; ++ii)
+	{
+		rt.addAttribute( unpackString(), unpackString(), unpackFloat());
+	}
+	return rt;
+}
 

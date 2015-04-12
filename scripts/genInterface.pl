@@ -132,6 +132,13 @@ my @interfaceClasses = ();
 my %typeRewriteMap = ();
 $typeRewriteMap{"unsigned_int"} = "unsigned int";
 $typeRewriteMap{"unsigned_char"} = "unsigned char";
+$typeRewriteMap{"const_PostingIteratorInterface*"} = "const PostingIteratorInterface*";
+my %syncMethods = ();
+$syncMethods{"done"} = 1;
+$syncMethods{"commit"} = 1;
+my %notImplMethods = ();
+$notImplMethods{"subExpressions"} = 1;
+$notImplMethods{"checkStorage"} = 1;
 
 sub parseType
 {
@@ -162,7 +169,7 @@ sub parseType
 		while (hasToken() && $bcnt > 0)
 		{
 			$tok = nextToken();
-			if ($tok eq "unsigned")
+			if ($tok eq "unsigned" || $tok eq "const")
 			{
 				$typeprefix = $typeprefix . $tok . '_';
 			}
@@ -450,12 +457,18 @@ sub getParamProperties
 		$indirection = length( $1);
 		$param =~ s/^[\^]+([^\^]*)$/$1/;
 	}
-	$param =~ s/^[ ][ ]*//g;
 	my $passbyref = 0;
 	if ($param =~ m/^[\&]/)
 	{
 		$passbyref = 1;
 		$param =~ s/^[\&]//;
+	}
+	$param =~ s/^[ ][ ]*//g;
+	my $isreference = 0;
+	if ($param =~ m/^Reference[ ]+/)
+	{
+		$isreference = 1;
+		$param =~ s/^Reference[ ]+//;
 	}
 	my $paramlist = "";
 	my @parampartlist = split( ' ', $param);
@@ -484,17 +497,22 @@ sub getParamProperties
 	{
 		$paramname .= "> ";
 	}
-	return ($paramname, $isconst, $isarray, $indirection, $passbyref);
+	return ($paramname, $isconst, $isarray, $indirection, $passbyref, $isreference);
 }
 
 sub getMethodParamDeclarationSource
 {
 	my ($classname, $param) = @_;
-	my ($paramname, $isconst, $isarray, $indirection, $passbyref) = getParamProperties( $classname, $param);
+	my ($paramname, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $param);
+	if ($isreference)
+	{
+		$paramname = "Reference<" . $paramname . ">";
+	}
 	if ($isarray)
 	{
 		$paramname = "std::vector<" . $paramname . ">";
 	}
+	$paramname =~ s/[\>][\>]/> >/g;
 	if ($isconst)
 	{
 		$paramname = "const " . $paramname;
@@ -548,13 +566,15 @@ sub getMethodDeclarationHeader
 
 sub packParameter
 {
-	my ($type, $id) = @_;
+	my ($type, $id, $isconst, $indirection) = @_;
 	my $rt = "";
 	if ($type =~ m/(.*)Interface$/)
 	{
-		$rt .= "const $1" . "Impl* impl_$id = dynamic_cast<const $1" . "Impl*>($id);";
-		$rt .= "\n\tif (!impl_$id) throw std::runtime_error( \"passing non RPC interface object in RPC call\");";
-		$rt .= "\n\tmsg.packObject( impl_" . $id . "->classId(), impl_" . $id . "->objId());";
+		my $idx = $id;
+		$idx =~ s/[^0-9]//g;
+		$rt .= "const RpcInterfaceStub* impl_$idx = dynamic_cast<const RpcInterfaceStub*>($id);";
+		$rt .= "\n\tif (!impl_$idx) throw std::runtime_error( \"passing non RPC interface object in RPC call\");";
+		$rt .= "\n\tmsg.packObject( impl_" . $idx . "->classId(), impl_" . $idx . "->objId());";
 	}
 	elsif ($type eq "ArithmeticVariant")
 	{
@@ -588,27 +608,105 @@ sub packParameter
 	{
 		$rt .= "msg.packSize( " . $id . ");";
 	}
-	elsif ($type eq "char*")
+	elsif ($type eq "char")
 	{
-		$rt .= "msg.packCharp( " . $id . ");";
+		if ($indirection == 1)
+		{
+			$rt .= "msg.packCharp( " . $id . ");";
+		}
+		elsif ($indirection == 0)
+		{
+			$rt .= "msg.packByte( " . $id . ");";
+		}
+		else
+		{
+			$rt .= "PACK_UNKNOWN( \"$type\" $id);";
+		}
 	}
 	elsif ($type eq "std::string")
 	{
 		$rt .= "msg.packString( " . $id . ");";
 	}
-
-#	PACK_UNKNOWN( "DatabaseOptions");
-#	PACK_UNKNOWN( "DatabaseInterface::ConfigType");
-#	PACK_UNKNOWN( "StorageInterface::ConfigType");
-#	PACK_UNKNOWN( "TokenizerConfig");
-#	PACK_UNKNOWN( "NormalizerConfig");
-#	PACK_UNKNOWN( "DocumentAnalyzerInterface::FeatureOptions");
-#	PACK_UNKNOWN( "Reference<PostingIteratorInterface>");
-#	PACK_UNKNOWN( "SummarizerConfig");
-#	PACK_UNKNOWN( "WeightingConfig");
-#	PACK_UNKNOWN( "QueryInterface::CompareOperator");
-#	PACK_UNKNOWN( "SummarizerFunctionInterface::FeatureParameter");
-
+	elsif ($type eq "DatabaseOptions")
+	{
+		$rt .= "msg.packDatabaseOptions( " . $id . ");";
+	}
+	elsif ($type eq "DatabaseInterface::ConfigType")
+	{
+		$rt .= "msg.packDatabaseConfigType( " . $id . ");";
+	}
+	elsif ($type eq "StorageInterface::ConfigType")
+	{
+		$rt .= "msg.packStorageConfigType( " . $id . ");";
+	}
+	elsif ($type eq "TokenizerConfig")
+	{
+		$rt .= "msg.packTokenizerConfig( " . $id . ");";
+	}
+	elsif ($type eq "NormalizerConfig")
+	{
+		$rt .= "msg.packNormalizerConfig( " . $id . ");";
+	}
+	elsif ($type eq "SegmenterPosition")
+	{
+		$rt .= "msg.packGlobalCounter( " . $id . ");";
+	}
+	elsif ($type eq "DocumentAnalyzerInterface::FeatureOptions")
+	{
+		$rt .= "msg.packFeatureOptions( " . $id . ");";
+	}
+	elsif ($type eq "SummarizerConfig")
+	{
+		$rt .= "msg.packSummarizerConfig( " . $id . ");";
+	}
+	elsif ($type eq "WeightingConfig")
+	{
+		$rt .= "msg.packWeightingConfig( " . $id . ");";
+	}
+	elsif ($type eq "QueryInterface::CompareOperator")
+	{
+		$rt .= "msg.packCompareOperator( " . $id . ");";
+	}
+	elsif ($type eq "SummarizerFunctionInterface::FeatureParameter")
+	{
+		$rt .= "msg.packFeatureParameter( " . $id . ");";
+	}
+	elsif ($type eq "SummarizerClosureInterface::SummaryElement")
+	{
+		$rt .= "msg.packSummaryElement( " . $id . ");";
+	}
+	elsif ($type eq "DatabaseCursorInterface::Slice")
+	{
+		$rt .= "msg.packSlice( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::Document")
+	{
+		$rt .= "msg.packAnalyzerDocument( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::Attribute")
+	{
+		$rt .= "msg.packAnalyzerAttribute( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::MetaData")
+	{
+		$rt .= "msg.packAnalyzerMetaData( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::Term")
+	{
+		$rt .= "msg.packAnalyzerTerm( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::Token")
+	{
+		$rt .= "msg.packAnalyzerToken( " . $id . ");";
+	}
+	elsif ($type eq "WeightedDocument")
+	{
+		$rt .= "msg.packWeightedDocument( " . $id . ");";
+	}
+	elsif ($type eq "ResultDocument")
+	{
+		$rt .= "msg.packResultDocument( " . $id . ");";
+	}
 	else
 	{
 		$rt .= "PACK_UNKNOWN( \"$type\" $id);";
@@ -616,37 +714,250 @@ sub packParameter
 	return $rt;
 }
 
+sub unpackParameter
+{
+	my ($type, $id, $isconst, $indirection) = @_;
+	my $rt = "";
+	if ($type =~ m/(.*)Interface$/)
+	{
+		my $idx = $id;
+		$idx =~ s/[^0-9]//g;
+		$rt .= "unsigned char classId_$idx; unsigned int objId_$idx;";
+		$rt .= "\n\tanswer.unpackObject( classId_$idx, objId_$idx);";
+		my $implname = interfaceImplementationClassName( $type);
+		$rt .= "\tif (classId_$idx != " . getInterfaceEnumName( $type) .") throw std::runtime_error(\"error in RPC answer: output parameter object type mismatch\");";
+		$rt .= "\n\t$id = new $implname( objId_$idx, endpoint());\n";
+	}
+	elsif ($type eq "ArithmeticVariant")
+	{
+		$rt .= "$id = answer.unpackArithmeticVariant();";
+	}
+	elsif ($type eq "Index")
+	{
+		$rt .= "$id = answer.unpackIndex();";
+	}
+	elsif ($type eq "GlobalCounter")
+	{
+		$rt .= "$id = answer.unpackGlobalCounter();";
+	}
+	elsif ($type eq "int")
+	{
+		$rt .= "$id = answer.unpackInt();";
+	}
+	elsif ($type eq "unsigned int")
+	{
+		$rt .= "$id = answer.unpackUint();";
+	}
+	elsif ($type eq "float")
+	{
+		$rt .= "$id = answer.unpackFloat();";
+	}
+	elsif ($type eq "bool")
+	{
+		$rt .= "$id = answer.unpackBool();";
+	}
+	elsif ($type eq "std::size_t")
+	{
+		$rt .= "$id = answer.unpackSize();";
+	}
+	elsif ($type eq "char")
+	{
+		if ($indirection == 1)
+		{
+			if ($isconst)
+			{
+				$rt .= "$id = answer.unpackConstCharp();";
+			}
+			else
+			{
+				$rt .= "UNPACK_UNKNOWN( \"$type\" $id);";
+			}
+		}
+		elsif ($indirection == 2)
+		{
+			if ($isconst)
+			{
+				$rt .= "$id = answer.unpackConstCharpp();";
+			}
+			else
+			{
+				$rt .= "UNPACK_UNKNOWN( \"$type\" $id);";
+			}
+		}
+		elsif ($indirection == 0)
+		{
+			$rt .= "$id = answer.unpackByte();";
+		}
+		else
+		{
+			$rt .= "PACK_UNKNOWN( \"$type\" $id);";
+		}
+	}
+	elsif ($type eq "std::string")
+	{
+		$rt .= "$id = answer.unpackString();";
+	}
+	elsif ($type eq "DatabaseOptions")
+	{
+		$rt .= "$id = answer.unpackDatabaseOptions();";
+	}
+	elsif ($type eq "DatabaseInterface::ConfigType")
+	{
+		$rt .= "$id = answer.unpackDatabaseConfigType();";
+	}
+	elsif ($type eq "StorageInterface::ConfigType")
+	{
+		$rt .= "$id = answer.unpackStorageConfigType();";
+	}
+	elsif ($type eq "TokenizerConfig")
+	{
+		$rt .= "$id = answer.unpackTokenizerConfig();";
+	}
+	elsif ($type eq "NormalizerConfig")
+	{
+		$rt .= "$id = answer.unpackNormalizerConfig();";
+	}
+	elsif ($type eq "SegmenterPosition")
+	{
+		$rt .= "$id = answer.unpackGlobalCounter();";
+	}
+	elsif ($type eq "DocumentAnalyzerInterface::FeatureOptions")
+	{
+		$rt .= "$id = answer.unpackFeatureOptions();";
+	}
+	elsif ($type eq "SummarizerConfig")
+	{
+		$rt .= "$id = answer.unpackSummarizerConfig();";
+	}
+	elsif ($type eq "WeightingConfig")
+	{
+		$rt .= "$id = answer.unpackWeightingConfig();";
+	}
+	elsif ($type eq "QueryInterface::CompareOperator")
+	{
+		$rt .= "$id = answer.unpackCompareOperator();";
+	}
+	elsif ($type eq "SummarizerFunctionInterface::FeatureParameter")
+	{
+		$rt .= "$id = answer.unpackFeatureParameter();";
+	}
+	elsif ($type eq "SummarizerClosureInterface::SummaryElement")
+	{
+		$rt .= "$id = answer.unpackSummaryElement();";
+	}
+	elsif ($type eq "DatabaseCursorInterface::Slice")
+	{
+		$rt .= "$id = answer.unpackSlice();";
+	}
+	elsif ($type eq "analyzer::Document")
+	{
+		$rt .= "$id = answer.unpackAnalyzerDocument();";
+	}
+	elsif ($type eq "analyzer::Attribute")
+	{
+		$rt .= "$id = answer.unpackAnalyzerAttribute();";
+	}
+	elsif ($type eq "analyzer::MetaData")
+	{
+		$rt .= "$id = answer.unpackAnalyzerMetaData();";
+	}
+	elsif ($type eq "analyzer::Token")
+	{
+		$rt .= "$id = answer.unpackAnalyzerToken();";
+	}
+	elsif ($type eq "analyzer::Term")
+	{
+		$rt .= "$id = answer.unpackAnalyzerTerm();";
+	}
+	elsif ($type eq "WeightedDocument")
+	{
+		$rt .= "$id = answer.unpackWeightedDocument();";
+	}
+	elsif ($type eq "ResultDocument")
+	{
+		$rt .= "$id = answer.unpackResultDocument();";
+	}
+	else
+	{
+		$rt .= "UNPACK_UNKNOWN( \"$type\" $id);";
+	}
+	return $rt;
+}
+
 sub inputParameterPackFunctionCall
 {
-	my $rt = "";
+	my ($sender_code,$receiver_code) = ("","");
 	my ($classname, $param, $idx) = @_;
-	my ($paramtype, $isconst, $isarray, $indirection, $passbyref) = getParamProperties( $classname, $param);
+	my ($paramtype, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $param);
 	if ($passbyref && ($isconst == 0 || $indirection > 0))
 	{
 		return "";
 	}
 	if ($indirection == 2)
 	{
-		$rt .= "\tfor (unsigned int ii=0; p$idx" . "[ii]; ++ii);\n";
-		$rt .= "\tpackUint( ii);\n";
-		$rt .= "\tfor (unsigned int ii=0; p$idx" . "[ii]; ++ii) {\n";
-		$rt .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii]") . "\n\t}\n";
+		$sender_code .= "\tfor (unsigned int ii=0; p$idx" . "[ii]; ++ii);\n";
+		$sender_code .= "\tmsg.packSize( ii);\n";
+		$sender_code .= "\tfor (unsigned int ii=0; p$idx" . "[ii]; ++ii) {\n";
+		if ($isreference)
+		{
+			$sender_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii].get()", $isconst, 1) . "\n\t}\n";
+		}
+		else
+		{
+			$sender_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii]", $isconst, 1) . "\n\t}\n";
+		}
 	}
 	elsif ($isarray)
 	{
-		$rt .= "\tpackSize( p$idx" . ".size());\n";
-		$rt .= "\tfor (unsigned int ii=0; ii < p$idx" . ".size(); ++ii) {\n";
-		$rt .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii]") . "\n\t}\n";
-	}
-	elsif ($indirection == 1 && $paramtype eq 'char' && $passbyref == 0)
-	{
-		$rt .= "\t" . packParameter( "$paramtype*", "p$idx") . "\n";
+		$sender_code .= "\tmsg.packSize( p$idx" . ".size());\n";
+		$sender_code .= "\tfor (unsigned int ii=0; ii < p$idx" . ".size(); ++ii) {\n";
+		if ($isreference)
+		{
+			$sender_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii].get()", $isconst, $indirection) . "\n\t}\n";
+		}
+		else
+		{
+			$sender_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii]", $isconst, $indirection) . "\n\t}\n";
+		}
 	}
 	else
 	{
-		$rt .= "\t" . packParameter( $paramtype, "p$idx") . "\n";
+		if ($isreference)
+		{
+			$sender_code .= "\t" . packParameter( $paramtype, "p$idx.get()", $isconst, $indirection) . "\n";
+		}
+		else
+		{
+			$sender_code .= "\t" . packParameter( $paramtype, "p$idx", $isconst, $indirection) . "\n";
+		}
 	}
-	return $rt;
+	return ($sender_code,$receiver_code);
+}
+
+sub outputParameterPackFunctionCall
+{
+	my ($sender_code,$receiver_code) = ("","");
+	my ($classname, $param, $idx) = @_;
+	my ($paramtype, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $param);
+	if ($passbyref)
+	{
+		if ($isconst)
+		{
+		}
+		elsif ($isarray)
+		{
+			$sender_code .= "\tstd::size_t size_p$idx = answer.unpackSize();\n";
+			$sender_code .= "\tfor (unsigned int ii=0; ii < size_p$idx; ++ii) {\n";
+			$sender_code .= "\t\t" . unpackParameter( $paramtype, "$paramtype elem_p$idx", $isconst, $indirection) . ";\n";
+			$sender_code .= "\t\tp$idx.push_back( elem_p$idx);\n";
+			$sender_code .= "\n\t}\n";
+		}
+		else
+		{
+			$sender_code .= "\t" . unpackParameter( $paramtype, "p$idx", $isconst, $indirection) . ";\n";
+		}
+	}
+	return ($sender_code,$receiver_code);
 }
 
 sub getMethodDeclarationSource
@@ -680,25 +991,111 @@ sub getMethodDeclarationSource
 	{
 		$rt .= " const";
 	}
-	$rt .= "\n{\n\tRpcMessage msg;\n";
-	$rt .= "\tmsg.packObject( classId(), objId());\n";
-	$rt .= "\tmsg.packByte( Method_" . $methodname . ");\n";
-
-	$pi = 0;
-	for (; $pi <= $#param; ++$pi)
+	$rt .= "\n{\n";
+	if ($notImplMethods{$methodname})
 	{
-		if ($pi+1 <= $#param && $param[$pi] eq "const^ char" && $param[$pi+1] eq "std::size_t")
+		$rt .= "\tthrow std::runtime_error(\"the method '$methodname' is not implemented for RPC\");\n";
+	}
+	else
+	{
+		$rt .= "\tRpcMessage msg;\n";
+		$rt .= "\tmsg.packObject( classId(), objId());\n";
+		$rt .= "\tmsg.packByte( Method_" . $methodname . ");\n";
+	
+		$pi = 0;
+		for (; $pi <= $#param; ++$pi)
 		{
-			# ... exception for buffer( size, len):
-			$rt .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
-			++$pi;
+			if ($pi+1 <= $#param && $param[$pi] eq "const^ char" && $param[$pi+1] eq "std::size_t")
+			{
+				# ... exception for buffer( size, len):
+				$rt .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				++$pi;
+			}
+			else
+			{
+				my ($sender_code,$receiver_code) = inputParameterPackFunctionCall( $classname, $param[$pi], $pi+1);
+				$rt .= $sender_code;
+			}
 		}
-		else
+		$rt .= "\tmsg.packCrc32();\n";
+		$rt .= "\trpc_send( msg.content());\n";
+		my $output = "";
+		if ($retval ne "void")
 		{
-			$rt .= inputParameterPackFunctionCall( $classname, $param[$pi], $pi+1);
+			my ($retvaltype, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $retval);
+			if ($retvaltype =~ m/Interface$/)
+			{
+				if ($indirection == 1)
+				{
+					$output .= "\tunsigned char classId_p0; unsigned int objId_p0;\n";
+					$output .= "\tanswer.unpackObject( classId_p0, objId_p0);\n";
+					my $implname = interfaceImplementationClassName( $retvaltype);
+					$output .= "\tif (classId_p0 != " . getInterfaceEnumName( $retvaltype) .") throw std::runtime_error(\"error in RPC answer: return object type mismatch\");";
+					$output .= "\n\t$implname* p0 = new $implname( objId_p0, endpoint());\n";
+				}
+				else
+				{
+					$output .= "UNKNOWN RETURN VALUE TYPE\n";
+				}
+			}
+			elsif ($isarray)
+			{
+				$output .= "\tstd::vector<$retvaltype> p0;\n";
+				$output .= "\tstd::size_t size_p0 = answer.unpackSize();\n";
+				$output .= "\tfor (unsigned int ii=0; ii < size_p0; ++ii) {\n";
+				$output .= "\t\t" . unpackParameter( $retvaltype, "$retvaltype elem_p0", $isconst, $indirection) . ";\n";
+				$output .= "\t\tp0.push_back( elem_p0);\n";
+				$output .= "\n\t}\n";
+				$retvaltype = "std::vector<$retvaltype>";
+			}
+			else
+			{
+				my $retvaltype_decl = $retvaltype;
+				if ($isconst)
+				{
+					$retvaltype_decl = "const $retvaltype";
+				}
+				if ($indirection == 1)
+				{
+					$retvaltype_decl .= "*";
+				}
+				elsif ($indirection == 2)
+				{
+					$retvaltype_decl .= "**";
+				}
+				$output .= "\t" . unpackParameter( $retvaltype, "$retvaltype_decl p0", $isconst, $indirection) . ";\n";
+			}
+		}
+		$pi = 0;
+		for (; $pi <= $#param; ++$pi)
+		{
+			if ($pi+1 <= $#param && $param[$pi] eq "const^& char" && $param[$pi+1] eq "& std::size_t")
+			{
+				# ... exception for buffer( size, len):
+				$output .= "\tanswer.unpackBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				++$pi;
+			}
+			else
+			{
+				my ($sender_code,$receiver_code) = outputParameterPackFunctionCall( $classname, $param[$pi], $pi+1);
+				$output .= $sender_code;
+			}
+		}
+		if ($output ne "")
+		{
+			$rt .= "\tenter();\n";
+			$rt .= "\tRpcAnswer answer( constConstructor(), rpc_recv());\n";
+			$rt .= $output;
+		}
+		elsif ($syncMethods{$methodname})
+		{
+			$rt .= "\trpc_waitAnswer();\n";
+		}
+		if ($retval ne "void")
+		{
+			$rt .= "\treturn p0;\n";
 		}
 	}
-	$rt .= "\tmsg.packCrc32();\n";
 	$rt .= "}\n";
 	return $rt;
 }
@@ -717,24 +1114,17 @@ sub getClassHeaderSource
 		my @mth = split('%');
 		shift( @mth);
 		my $mm;
-		my $mi = 0;
 		$rt .= "\n\tenum MethodId\n\t{";
+		$rt .= "\n\t\tMethod_Destructor";
 		foreach $mm( @mth)
 		{
 			my $callname = getMethodName( $mm);
-			if ($mi++ > 0)
-			{
-				$rt .= ",\n\t\t";
-			}
-			else
-			{
-				$rt .= "\n\t\t";
-			}
-			$rt .= "Method_" . $callname;
+			$rt .= ",\n\t\tMethod_" . $callname;
 		}
 		$rt .= "\n\t};\n";
 		$rt .= "\n\tvirtual ~$classname(){}\n";
-		$rt .= "\n\t$classname( const RpcRemoteEndPoint* endpoint_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", endpoint_){}\n";
+		$rt .= "\n\texplicit $classname( const RpcRemoteEndPoint* endpoint_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", endpoint_){}\n";
+		$rt .= "\n\t$classname( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, endpoint_){}\n";
 		foreach $mm( @mth)
 		{
 			$rt .= "\n\t" . getMethodDeclarationHeader( $classname, $mm) .";";
@@ -742,7 +1132,6 @@ sub getClassHeaderSource
 		$rt .= "\n};\n";
 		++$ii;
 	}
-	$rt .= "\n};\n";
 	return $rt;
 }
 
@@ -862,6 +1251,7 @@ print SRCFILE <<EOF;
 --------------------------------------------------------------------
 */
 #include "rpcObjects.hpp"
+#include "rpcMessage.hpp"
 
 using namespace strus;
 EOF

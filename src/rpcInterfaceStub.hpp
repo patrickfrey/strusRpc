@@ -29,6 +29,7 @@
 #ifndef _STRUS_RPC_INTERFACE_STUB_HPP_INCLUDED
 #define _STRUS_RPC_INTERFACE_STUB_HPP_INCLUDED
 #include "rpcRemoteEndPoint.hpp"
+#include "constConstructor.hpp"
 #include <string>
 
 namespace strus {
@@ -43,16 +44,23 @@ public:
 	RpcInterfaceStub( const RpcInterfaceStub& o);
 	RpcInterfaceStub();
 
-	unsigned char classId() const			{return m_classId;}
-	unsigned int objId() const			{return m_objId;}
+	unsigned char classId() const					{return m_classId;}
+	unsigned int objId() const					{return m_objId;}
 
-	void sendMessage( const std::string& msg);
+	void enter() const;
+	const ConstConstructor* constConstructor() const		{return &m_constConstructor;}
+
+	void rpc_send( const std::string& msg) const;
+	std::string rpc_recv() const;
+	void rpc_waitAnswer() const;
+	const RpcRemoteEndPoint* endpoint() const			{return m_endpoint;}
 
 private:
 	static unsigned int m_objIdCnt;
 	unsigned char m_classId;
 	unsigned int m_objId;
 	const RpcRemoteEndPoint* m_endpoint;
+	ConstConstructor m_constConstructor;
 };
 
 }//namespace

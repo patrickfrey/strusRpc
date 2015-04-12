@@ -123,6 +123,7 @@ class AttributeReaderImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_elementHandle,
 		Method_skipDoc,
 		Method_getValue
@@ -130,8 +131,11 @@ public:
 
 	virtual ~AttributeReaderImpl(){}
 
-	AttributeReaderImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit AttributeReaderImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_AttributeReader, endpoint_){}
+
+	AttributeReaderImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_AttributeReader, objId_, endpoint_){}
 
 	virtual Index elementHandle( const char* p1) const;
 	virtual void skipDoc( const Index& p1);
@@ -145,13 +149,17 @@ class DatabaseBackupCursorImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_fetch
 	};
 
 	virtual ~DatabaseBackupCursorImpl(){}
 
-	DatabaseBackupCursorImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit DatabaseBackupCursorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseBackupCursor, endpoint_){}
+
+	DatabaseBackupCursorImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseBackupCursor, objId_, endpoint_){}
 
 	virtual bool fetch( const char*& p1, std::size_t& p2, const char*& p3, std::size_t& p4);
 };
@@ -163,6 +171,7 @@ class DatabaseClientImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_close,
 		Method_createTransaction,
 		Method_createCursor,
@@ -174,8 +183,11 @@ public:
 
 	virtual ~DatabaseClientImpl(){}
 
-	DatabaseClientImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit DatabaseClientImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseClient, endpoint_){}
+
+	DatabaseClientImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseClient, objId_, endpoint_){}
 
 	virtual void close( );
 	virtual DatabaseTransactionInterface* createTransaction( );
@@ -193,6 +205,7 @@ class DatabaseCursorImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_seekUpperBound,
 		Method_seekFirst,
 		Method_seekLast,
@@ -204,8 +217,11 @@ public:
 
 	virtual ~DatabaseCursorImpl(){}
 
-	DatabaseCursorImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit DatabaseCursorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseCursor, endpoint_){}
+
+	DatabaseCursorImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseCursor, objId_, endpoint_){}
 
 	virtual DatabaseCursorInterface::Slice seekUpperBound( const char* p1, std::size_t p2, std::size_t p3);
 	virtual DatabaseCursorInterface::Slice seekFirst( const char* p1, std::size_t p2);
@@ -223,6 +239,7 @@ class DatabaseImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_createClient,
 		Method_createDatabase,
 		Method_restoreDatabase,
@@ -233,8 +250,11 @@ public:
 
 	virtual ~DatabaseImpl(){}
 
-	DatabaseImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit DatabaseImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Database, endpoint_){}
+
+	DatabaseImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_Database, objId_, endpoint_){}
 
 	virtual DatabaseClientInterface* createClient( const std::string& p1) const;
 	virtual void createDatabase( const std::string& p1) const;
@@ -251,6 +271,7 @@ class DatabaseTransactionImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_createCursor,
 		Method_write,
 		Method_remove,
@@ -261,8 +282,11 @@ public:
 
 	virtual ~DatabaseTransactionImpl(){}
 
-	DatabaseTransactionImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit DatabaseTransactionImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseTransaction, endpoint_){}
+
+	DatabaseTransactionImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseTransaction, objId_, endpoint_){}
 
 	virtual DatabaseCursorInterface* createCursor( const DatabaseOptions& p1) const;
 	virtual void write( const char* p1, std::size_t p2, const char* p3, std::size_t p4);
@@ -279,14 +303,18 @@ class DocnoRangeAllocatorImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_allocDocnoRange,
 		Method_deallocDocnoRange
 	};
 
 	virtual ~DocnoRangeAllocatorImpl(){}
 
-	DocnoRangeAllocatorImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit DocnoRangeAllocatorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocnoRangeAllocator, endpoint_){}
+
+	DocnoRangeAllocatorImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocnoRangeAllocator, objId_, endpoint_){}
 
 	virtual Index allocDocnoRange( const Index& p1);
 	virtual bool deallocDocnoRange( const Index& p1, const Index& p2);
@@ -299,14 +327,18 @@ class DocumentAnalyzerInstanceImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_putInput,
 		Method_analyzeNext
 	};
 
 	virtual ~DocumentAnalyzerInstanceImpl(){}
 
-	DocumentAnalyzerInstanceImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit DocumentAnalyzerInstanceImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzerInstance, endpoint_){}
+
+	DocumentAnalyzerInstanceImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzerInstance, objId_, endpoint_){}
 
 	virtual void putInput( const char* p1, std::size_t p2, bool p3);
 	virtual bool analyzeNext( analyzer::Document& p1);
@@ -319,6 +351,7 @@ class DocumentAnalyzerImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_addSearchIndexFeature,
 		Method_addForwardIndexFeature,
 		Method_defineMetaData,
@@ -330,8 +363,11 @@ public:
 
 	virtual ~DocumentAnalyzerImpl(){}
 
-	DocumentAnalyzerImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit DocumentAnalyzerImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzer, endpoint_){}
+
+	DocumentAnalyzerImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzer, objId_, endpoint_){}
 
 	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
 	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
@@ -349,6 +385,7 @@ class ForwardIteratorImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_skipDoc,
 		Method_skipPos,
 		Method_fetch
@@ -356,8 +393,11 @@ public:
 
 	virtual ~ForwardIteratorImpl(){}
 
-	ForwardIteratorImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit ForwardIteratorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_ForwardIterator, endpoint_){}
+
+	ForwardIteratorImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_ForwardIterator, objId_, endpoint_){}
 
 	virtual void skipDoc( const Index& p1);
 	virtual Index skipPos( const Index& p1);
@@ -371,13 +411,17 @@ class InvAclIteratorImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_skipDoc
 	};
 
 	virtual ~InvAclIteratorImpl(){}
 
-	InvAclIteratorImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit InvAclIteratorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_InvAclIterator, endpoint_){}
+
+	InvAclIteratorImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_InvAclIterator, objId_, endpoint_){}
 
 	virtual Index skipDoc( const Index& p1);
 };
@@ -389,6 +433,7 @@ class MetaDataReaderImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_hasElement,
 		Method_elementHandle,
 		Method_nofElements,
@@ -400,8 +445,11 @@ public:
 
 	virtual ~MetaDataReaderImpl(){}
 
-	MetaDataReaderImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit MetaDataReaderImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataReader, endpoint_){}
+
+	MetaDataReaderImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataReader, objId_, endpoint_){}
 
 	virtual bool hasElement( const std::string& p1) const;
 	virtual Index elementHandle( const std::string& p1) const;
@@ -419,13 +467,17 @@ class NormalizerConstructorImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_create
 	};
 
 	virtual ~NormalizerConstructorImpl(){}
 
-	NormalizerConstructorImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit NormalizerConstructorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerConstructor, endpoint_){}
+
+	NormalizerConstructorImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerConstructor, objId_, endpoint_){}
 
 	virtual NormalizerInterface* create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
 };
@@ -437,13 +489,17 @@ class NormalizerInstanceImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_normalize
 	};
 
 	virtual ~NormalizerInstanceImpl(){}
 
-	NormalizerInstanceImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit NormalizerInstanceImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerInstance, endpoint_){}
+
+	NormalizerInstanceImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerInstance, objId_, endpoint_){}
 
 	virtual std::string normalize( const char* p1, std::size_t p2);
 };
@@ -455,13 +511,17 @@ class NormalizerImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_createInstance
 	};
 
 	virtual ~NormalizerImpl(){}
 
-	NormalizerImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit NormalizerImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Normalizer, endpoint_){}
+
+	NormalizerImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_Normalizer, objId_, endpoint_){}
 
 	virtual NormalizerInstanceInterface* createInstance( ) const;
 };
@@ -473,6 +533,7 @@ class PeerStorageTransactionImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_updateNofDocumentsInsertedChange,
 		Method_updateDocumentFrequencyChange,
 		Method_commit,
@@ -481,8 +542,11 @@ public:
 
 	virtual ~PeerStorageTransactionImpl(){}
 
-	PeerStorageTransactionImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit PeerStorageTransactionImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PeerStorageTransaction, endpoint_){}
+
+	PeerStorageTransactionImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PeerStorageTransaction, objId_, endpoint_){}
 
 	virtual void updateNofDocumentsInsertedChange( const GlobalCounter& p1);
 	virtual void updateDocumentFrequencyChange( const char* p1, const char* p2, const GlobalCounter& p3);
@@ -497,6 +561,7 @@ class PostingIteratorImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_skipDoc,
 		Method_skipPos,
 		Method_featureid,
@@ -509,13 +574,16 @@ public:
 
 	virtual ~PostingIteratorImpl(){}
 
-	PostingIteratorImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit PostingIteratorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PostingIterator, endpoint_){}
+
+	PostingIteratorImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PostingIterator, objId_, endpoint_){}
 
 	virtual Index skipDoc( const Index& p1);
 	virtual Index skipPos( const Index& p1);
 	virtual const char* featureid( ) const;
-	virtual const std::vector<PostingIteratorInterface*> subExpressions( bool p1) const;
+	virtual std::vector<const PostingIteratorInterface*> subExpressions( bool p1) const;
 	virtual GlobalCounter documentFrequency( ) const;
 	virtual unsigned int frequency( );
 	virtual Index docno( ) const;
@@ -529,13 +597,17 @@ class PostingJoinOperatorImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_createResultIterator
 	};
 
 	virtual ~PostingJoinOperatorImpl(){}
 
-	PostingJoinOperatorImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit PostingJoinOperatorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PostingJoinOperator, endpoint_){}
+
+	PostingJoinOperatorImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PostingJoinOperator, objId_, endpoint_){}
 
 	virtual PostingIteratorInterface* createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2) const;
 };
@@ -547,14 +619,18 @@ class QueryAnalyzerImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_definePhraseType,
 		Method_analyzePhrase
 	};
 
 	virtual ~QueryAnalyzerImpl(){}
 
-	QueryAnalyzerImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit QueryAnalyzerImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzer, endpoint_){}
+
+	QueryAnalyzerImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzer, objId_, endpoint_){}
 
 	virtual void definePhraseType( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4);
 	virtual std::vector<analyzer::Term> analyzePhrase( const std::string& p1, const std::string& p2) const;
@@ -567,6 +643,7 @@ class QueryEvalImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_addTerm,
 		Method_addSelectionFeature,
 		Method_addRestrictionFeature,
@@ -577,8 +654,11 @@ public:
 
 	virtual ~QueryEvalImpl(){}
 
-	QueryEvalImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit QueryEvalImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryEval, endpoint_){}
+
+	QueryEvalImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_QueryEval, objId_, endpoint_){}
 
 	virtual void addTerm( const std::string& p1, const std::string& p2, const std::string& p3);
 	virtual void addSelectionFeature( const std::string& p1);
@@ -595,6 +675,7 @@ class QueryImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_pushTerm,
 		Method_pushExpression,
 		Method_pushDuplicate,
@@ -609,8 +690,11 @@ public:
 
 	virtual ~QueryImpl(){}
 
-	QueryImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit QueryImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Query, endpoint_){}
+
+	QueryImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_Query, objId_, endpoint_){}
 
 	virtual void pushTerm( const std::string& p1, const std::string& p2);
 	virtual void pushExpression( const std::string& p1, std::size_t p2, int p3);
@@ -631,6 +715,7 @@ class QueryProcessorImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_definePostingJoinOperator,
 		Method_getPostingJoinOperator,
 		Method_defineWeightingFunction,
@@ -641,8 +726,11 @@ public:
 
 	virtual ~QueryProcessorImpl(){}
 
-	QueryProcessorImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit QueryProcessorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryProcessor, endpoint_){}
+
+	QueryProcessorImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_QueryProcessor, objId_, endpoint_){}
 
 	virtual void definePostingJoinOperator( const std::string& p1, PostingJoinOperatorInterface* p2);
 	virtual const PostingJoinOperatorInterface* getPostingJoinOperator( const std::string& p1) const;
@@ -659,14 +747,18 @@ class SegmenterInstanceImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_putInput,
 		Method_getNext
 	};
 
 	virtual ~SegmenterInstanceImpl(){}
 
-	SegmenterInstanceImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit SegmenterInstanceImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SegmenterInstance, endpoint_){}
+
+	SegmenterInstanceImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SegmenterInstance, objId_, endpoint_){}
 
 	virtual void putInput( const char* p1, std::size_t p2, bool p3);
 	virtual bool getNext( int& p1, SegmenterPosition& p2, const char*& p3, std::size_t& p4);
@@ -679,6 +771,7 @@ class SegmenterImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_defineSelectorExpression,
 		Method_defineSubSection,
 		Method_createInstance
@@ -686,8 +779,11 @@ public:
 
 	virtual ~SegmenterImpl(){}
 
-	SegmenterImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit SegmenterImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Segmenter, endpoint_){}
+
+	SegmenterImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_Segmenter, objId_, endpoint_){}
 
 	virtual void defineSelectorExpression( int p1, const std::string& p2);
 	virtual void defineSubSection( int p1, int p2, const std::string& p3);
@@ -701,6 +797,7 @@ class StorageAlterMetaDataTableImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_addElement,
 		Method_alterElement,
 		Method_renameElement,
@@ -712,8 +809,11 @@ public:
 
 	virtual ~StorageAlterMetaDataTableImpl(){}
 
-	StorageAlterMetaDataTableImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit StorageAlterMetaDataTableImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageAlterMetaDataTable, endpoint_){}
+
+	StorageAlterMetaDataTableImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageAlterMetaDataTable, objId_, endpoint_){}
 
 	virtual void addElement( const std::string& p1, const std::string& p2);
 	virtual void alterElement( const std::string& p1, const std::string& p2, const std::string& p3);
@@ -731,6 +831,7 @@ class StorageClientImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_close,
 		Method_createTermPostingIterator,
 		Method_createForwardIterator,
@@ -754,8 +855,11 @@ public:
 
 	virtual ~StorageClientImpl(){}
 
-	StorageClientImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit StorageClientImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageClient, endpoint_){}
+
+	StorageClientImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageClient, objId_, endpoint_){}
 
 	virtual void close( );
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2) const;
@@ -774,7 +878,7 @@ public:
 	virtual PeerStorageTransactionInterface* createPeerStorageTransaction( );
 	virtual void defineStoragePeerInterface( const StoragePeerInterface* p1, bool p2);
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
-	virtual void checkStorage( ) const;
+	virtual void checkStorage( std::ostream& p1) const;
 	virtual StorageDumpInterface* createDump( ) const;
 };
 
@@ -785,6 +889,7 @@ class StorageDocumentImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_addSearchIndexTerm,
 		Method_addForwardIndexTerm,
 		Method_setMetaData,
@@ -795,8 +900,11 @@ public:
 
 	virtual ~StorageDocumentImpl(){}
 
-	StorageDocumentImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit StorageDocumentImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocument, endpoint_){}
+
+	StorageDocumentImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocument, objId_, endpoint_){}
 
 	virtual void addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
 	virtual void addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
@@ -813,13 +921,17 @@ class StorageDumpImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_nextChunk
 	};
 
 	virtual ~StorageDumpImpl(){}
 
-	StorageDumpImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit StorageDumpImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDump, endpoint_){}
+
+	StorageDumpImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageDump, objId_, endpoint_){}
 
 	virtual bool nextChunk( const char*& p1, std::size_t& p2);
 };
@@ -831,6 +943,7 @@ class StorageImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_createClient,
 		Method_createStorage,
 		Method_createAlterMetaDataTable,
@@ -840,8 +953,11 @@ public:
 
 	virtual ~StorageImpl(){}
 
-	StorageImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit StorageImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Storage, endpoint_){}
+
+	StorageImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_Storage, objId_, endpoint_){}
 
 	virtual StorageClientInterface* createClient( const std::string& p1, DatabaseClientInterface* p2) const;
 	virtual void createStorage( const std::string& p1, DatabaseClientInterface* p2) const;
@@ -857,13 +973,17 @@ class StoragePeerImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_createTransaction
 	};
 
 	virtual ~StoragePeerImpl(){}
 
-	StoragePeerImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit StoragePeerImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StoragePeer, endpoint_){}
+
+	StoragePeerImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StoragePeer, objId_, endpoint_){}
 
 	virtual StoragePeerTransactionInterface* createTransaction( ) const;
 };
@@ -875,6 +995,7 @@ class StoragePeerTransactionImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_populateNofDocumentsInsertedChange,
 		Method_populateDocumentFrequencyChange,
 		Method_try_commit,
@@ -884,8 +1005,11 @@ public:
 
 	virtual ~StoragePeerTransactionImpl(){}
 
-	StoragePeerTransactionImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit StoragePeerTransactionImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StoragePeerTransaction, endpoint_){}
+
+	StoragePeerTransactionImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StoragePeerTransaction, objId_, endpoint_){}
 
 	virtual void populateNofDocumentsInsertedChange( int p1);
 	virtual void populateDocumentFrequencyChange( const char* p1, const char* p2, int p3, bool p4);
@@ -901,6 +1025,7 @@ class StorageTransactionImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_createDocument,
 		Method_deleteDocument,
 		Method_deleteUserAccessRights,
@@ -910,8 +1035,11 @@ public:
 
 	virtual ~StorageTransactionImpl(){}
 
-	StorageTransactionImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit StorageTransactionImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageTransaction, endpoint_){}
+
+	StorageTransactionImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageTransaction, objId_, endpoint_){}
 
 	virtual StorageDocumentInterface* createDocument( const std::string& p1, const Index& p2);
 	virtual void deleteDocument( const std::string& p1);
@@ -927,13 +1055,17 @@ class SummarizerClosureImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_getSummary
 	};
 
 	virtual ~SummarizerClosureImpl(){}
 
-	SummarizerClosureImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit SummarizerClosureImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerClosure, endpoint_){}
+
+	SummarizerClosureImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerClosure, objId_, endpoint_){}
 
 	virtual std::vector<SummarizerClosureInterface::SummaryElement> getSummary( const Index& p1);
 };
@@ -945,6 +1077,7 @@ class SummarizerFunctionImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_numericParameterNames,
 		Method_textualParameterNames,
 		Method_featureParameterClassNames,
@@ -953,8 +1086,11 @@ public:
 
 	virtual ~SummarizerFunctionImpl(){}
 
-	SummarizerFunctionImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit SummarizerFunctionImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunction, endpoint_){}
+
+	SummarizerFunctionImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunction, objId_, endpoint_){}
 
 	virtual const char** numericParameterNames( ) const;
 	virtual const char** textualParameterNames( ) const;
@@ -969,6 +1105,7 @@ class TextProcessorImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_addResourcePath,
 		Method_getResourcePath,
 		Method_getTokenizer,
@@ -979,8 +1116,11 @@ public:
 
 	virtual ~TextProcessorImpl(){}
 
-	TextProcessorImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit TextProcessorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TextProcessor, endpoint_){}
+
+	TextProcessorImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_TextProcessor, objId_, endpoint_){}
 
 	virtual void addResourcePath( const std::string& p1);
 	virtual std::string getResourcePath( const std::string& p1) const;
@@ -997,13 +1137,17 @@ class TokenizerConstructorImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_create
 	};
 
 	virtual ~TokenizerConstructorImpl(){}
 
-	TokenizerConstructorImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit TokenizerConstructorImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerConstructor, endpoint_){}
+
+	TokenizerConstructorImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerConstructor, objId_, endpoint_){}
 
 	virtual TokenizerInterface* create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
 };
@@ -1015,13 +1159,17 @@ class TokenizerInstanceImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_tokenize
 	};
 
 	virtual ~TokenizerInstanceImpl(){}
 
-	TokenizerInstanceImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit TokenizerInstanceImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerInstance, endpoint_){}
+
+	TokenizerInstanceImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerInstance, objId_, endpoint_){}
 
 	virtual std::vector<analyzer::Token> tokenize( const char* p1, std::size_t p2);
 };
@@ -1033,14 +1181,18 @@ class TokenizerImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_concatBeforeTokenize,
 		Method_createInstance
 	};
 
 	virtual ~TokenizerImpl(){}
 
-	TokenizerImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit TokenizerImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Tokenizer, endpoint_){}
+
+	TokenizerImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_Tokenizer, objId_, endpoint_){}
 
 	virtual bool concatBeforeTokenize( ) const;
 	virtual TokenizerInstanceInterface* createInstance( ) const;
@@ -1053,13 +1205,17 @@ class WeightingClosureImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_call
 	};
 
 	virtual ~WeightingClosureImpl(){}
 
-	WeightingClosureImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit WeightingClosureImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingClosure, endpoint_){}
+
+	WeightingClosureImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_WeightingClosure, objId_, endpoint_){}
 
 	virtual float call( const Index& p1);
 };
@@ -1071,19 +1227,21 @@ class WeightingFunctionImpl
 public:
 	enum MethodId
 	{
+		Method_Destructor,
 		Method_numericParameterNames,
 		Method_createClosure
 	};
 
 	virtual ~WeightingFunctionImpl(){}
 
-	WeightingFunctionImpl( const RpcRemoteEndPoint* endpoint_)
+	explicit WeightingFunctionImpl( const RpcRemoteEndPoint* endpoint_)
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunction, endpoint_){}
+
+	WeightingFunctionImpl( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
+		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunction, objId_, endpoint_){}
 
 	virtual const char** numericParameterNames( ) const;
 	virtual WeightingClosureInterface* createClosure( const StorageClientInterface* p1, PostingIteratorInterface* p2, MetaDataReaderInterface* p3, const std::vector<ArithmeticVariant>& p4) const;
-};
-
 };
 } //namespace
 #endif

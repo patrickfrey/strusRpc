@@ -26,56 +26,60 @@
 
 --------------------------------------------------------------------
 */
-#include "private/utils.hpp"
-#include "rpcInterfaceStub.hpp"
+#ifndef _STRUS_RPC_CONST_CONSTRUCTOR_HPP_INCLUDED
+#define _STRUS_RPC_CONST_CONSTRUCTOR_HPP_INCLUDED
+#include <cstdlib>
+#include <cstring>
+#include <vector>
 #include <stdexcept>
-#include <limits>
 
-using namespace strus;
+namespace strus {
 
-static utils::Mutex g_mutex_objIdCnt;
-int unsigned RpcInterfaceStub::m_objIdCnt = 0;
-
-RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
-	:m_classId(classId_),m_objId(objId_),m_endpoint(endpoint_)
-{}
-
-RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, const RpcRemoteEndPoint* endpoint_)
-	:m_classId(classId_),m_objId(0),m_endpoint(endpoint_)
+class ConstConstructor
 {
-	utils::ScopedLock lock( g_mutex_objIdCnt);
-	if (RpcInterfaceStub::m_objIdCnt >= std::numeric_limits<uint32_t>::max())
+public:
+	ConstConstructor();
+	ConstConstructor( const ConstConstructor& o);
+
+	void reset() const
 	{
-		throw std::runtime_error("too many remote objects created (RPC)");
+		m_ar.clear();
 	}
-	m_objId = ++RpcInterfaceStub::m_objIdCnt;
-}
 
-RpcInterfaceStub::RpcInterfaceStub( const RpcInterfaceStub& o)
-	:m_classId(o.m_classId),m_objId(o.m_objId),m_endpoint(o.m_endpoint){}
+	const void* get( const void* ptr, std::size_t size) const
+	{
+		Value val( ptr, size);
+		const void* rt = val.value;
+		m_ar.push_back( val);
+		return rt;
+	}
 
-RpcInterfaceStub::RpcInterfaceStub()
-	:m_classId(0),m_objId(0),m_endpoint(){}
+private:
+	struct Value
+	{
+		void* value;
+		std::size_t size;
 
+		~Value()
+		{
+			if (value) std::free( value);
+		}
 
-void RpcInterfaceStub::enter() const
-{
-	m_constConstructor.reset();
-}
+		Value()
+			:value(0),size(0){}
+		Value( const Value& o)
+			:value(o.value),size(o.size){}
+		Value( const void* value_, std::size_t size_)
+			:value(0),size(size_)
+		{
+			value = std::malloc(size_);
+			if (!value) throw std::bad_alloc();
+			std::memcpy( value, value_, size);
+		}
+	};
 
-void RpcInterfaceStub::rpc_send( const std::string& msg) const
-{
-	
-}
+	mutable std::vector<Value> m_ar;
+};
 
-std::string RpcInterfaceStub::rpc_recv() const
-{
-	
-}
-
-void RpcInterfaceStub::rpc_waitAnswer() const
-{
-	
-}
-
-
+}//namespace
+#endif

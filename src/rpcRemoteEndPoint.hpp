@@ -28,6 +28,7 @@
 */
 #ifndef _STRUS_RPC_REMOTE_END_POINT_HPP_INCLUDED
 #define _STRUS_RPC_REMOTE_END_POINT_HPP_INCLUDED
+#include "constConstructor.hpp"
 #include <string>
 
 namespace strus {

@@ -30,32 +30,44 @@
 #define _STRUS_RPC_MESSAGE_STUB_HPP_INCLUDED
 #include <string>
 #include "rpcInterfaceStub.hpp"
+#include "rpcRemoteEndPoint.hpp"
 #include "strus/index.hpp"
+#include "strus/documentAnalyzerInterface.hpp"
 #include "strus/arithmeticVariant.hpp"
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/databaseOptions.hpp"
 #include "strus/databaseInterface.hpp"
+#include "strus/databaseCursorInterface.hpp"
 #include "strus/storageInterface.hpp"
 #include "strus/tokenizerConfig.hpp"
 #include "strus/normalizerConfig.hpp"
 #include "strus/summarizerConfig.hpp"
 #include "strus/summarizerFunctionInterface.hpp"
+#include "strus/summarizerClosureInterface.hpp"
 #include "strus/weightingConfig.hpp"
 #include "strus/queryInterface.hpp"
+#include "strus/weightedDocument.hpp"
+#include "strus/resultDocument.hpp"
+#include "strus/analyzer/token.hpp"
+#include "strus/analyzer/term.hpp"
+#include "strus/analyzer/metaData.hpp"
+#include "strus/analyzer/attribute.hpp"
+#include "strus/analyzer/document.hpp"
 
 namespace strus {
 
-class RcpMessage
+class RpcMessage
 {
 public:
-	RcpMessage(){}
-	RcpMessage( const RcpMessage& o)
+	RpcMessage(){}
+	RpcMessage( const RpcMessage& o)
 		:m_content(o.m_content){}
-	RcpMessage( unsigned char classId_, unsigned int objId_);
+	RpcMessage( unsigned char classId_, unsigned int objId_);
 
 	void packObject( unsigned char classId_, unsigned int objId_);
 	void packString( const std::string& str);
 	void packCharp( const char* buf);
+	void packCharpp( const char** buf);
 	void packBuffer( const char* buf, std::size_t size);
 	void packBool( bool val);
 	void packByte( unsigned char val);
@@ -72,35 +84,22 @@ public:
 	void packStorageConfigType( const StorageInterface::ConfigType& val);
 	void packTokenizerConfig( const TokenizerConfig& val);
 	void packNormalizerConfig( const NormalizerConfig& val);
+	void packFeatureOptions( const DocumentAnalyzerInterface::FeatureOptions& val);
 	void packSummarizerConfig( const SummarizerConfig& val);
+	void packSummaryElement( const SummarizerClosureInterface::SummaryElement& val);
 	void packWeightingConfig( const WeightingConfig& val);
 	void packCompareOperator( const QueryInterface::CompareOperator& val);
 	void packFeatureParameter( const SummarizerFunctionInterface::FeatureParameter& val);
+	void packSlice( DatabaseCursorInterface::Slice& val);
+	void packAnalyzerDocument( const analyzer::Document& val);
+	void packAnalyzerAttribute( const analyzer::Attribute& val);
+	void packAnalyzerMetaData( const analyzer::MetaData& val);
+	void packAnalyzerTerm( const analyzer::Term& val);
+	void packAnalyzerToken( const analyzer::Token& val);
+	void packWeightedDocument( const WeightedDocument& val);
+	void packResultDocument( const ResultDocument& val);
+	
 	void packCrc32();
-
-	unsigned int unpackObject( char const*& itr, const char* end, unsigned char& classId_);
-	std::string unpackString( char const*& itr, const char* end);
-	const char* unpackCharp( char const*& itr, const char* end);
-	const char* unpackBuffer( char const*& itr, const char* end, std::size_t& size);
-	bool unpackBool( char const*& itr, const char* end);
-	unsigned char unpackByte( char const*& itr, const char* end);
-	Index unpackIndex( char const*& itr, const char* end);
-	GlobalCounter unpackGlobalCounter( char const*& itr, const char* end);
-	unsigned int unpackUint( char const*& itr, const char* end);
-	int unpackInt( char const*& itr, const char* end);
-	float unpackFloat( char const*& itr, const char* end);
-	std::size_t unpackSize( char const*& itr, const char* end);
-	ArithmeticVariant unpackArithmeticVariant( char const*& itr, const char* end);
-
-	DatabaseOptions unpackDatabaseOptions( char const*& itr, const char* end);
-	DatabaseInterface::ConfigType unpackDatabaseConfigType( char const*& itr, const char* end);
-	StorageInterface::ConfigType unpackStorageConfigType( char const*& itr, const char* end);
-	TokenizerConfig unpackTokenizerConfig( char const*& itr, const char* end);
-	NormalizerConfig unpackNormalizerConfig( char const*& itr, const char* end);
-	SummarizerConfig unpackSummarizerConfig( char const*& itr, const char* end);
-	WeightingConfig unpackWeightingConfig( char const*& itr, const char* end);
-	QueryInterface::CompareOperator unpackCompareOperator( char const*& itr, const char* end);
-	bool unpackCrc32( char const*& itr, const char* end);
 
 	const std::string& content() const
 	{
@@ -108,6 +107,66 @@ public:
 	}
 
 private:
+	char const* m_itr;
+	const char* m_end;
+	std::string m_content;
+};
+
+
+class RpcAnswer
+{
+public:
+	RpcAnswer( const ConstConstructor* constConstructor_, const std::string& content_)
+		:m_constConstructor(constConstructor_),m_content(content_)
+	{
+		m_itr = m_content.c_str();
+		m_end = m_content.c_str() + m_content.size();
+	}
+
+	void unpackObject( unsigned char& classId_, unsigned int& objId_);
+	std::string unpackString();
+	const char* unpackConstCharp();
+	const char** unpackConstCharpp();
+	void unpackBuffer( const char*& buf, std::size_t& size);
+	bool unpackBool();
+	unsigned char unpackByte();
+	Index unpackIndex();
+	GlobalCounter unpackGlobalCounter();
+	unsigned int unpackUint();
+	int unpackInt();
+	float unpackFloat();
+	std::size_t unpackSize();
+	ArithmeticVariant unpackArithmeticVariant();
+
+	DatabaseOptions unpackDatabaseOptions();
+	DatabaseInterface::ConfigType unpackDatabaseConfigType();
+	StorageInterface::ConfigType unpackStorageConfigType();
+	TokenizerConfig unpackTokenizerConfig();
+	NormalizerConfig unpackNormalizerConfig();
+	DocumentAnalyzerInterface::FeatureOptions unpackFeatureOptions();
+	SummarizerConfig unpackSummarizerConfig();
+	SummarizerClosureInterface::SummaryElement unpackSummaryElement();
+	WeightingConfig unpackWeightingConfig();
+	QueryInterface::CompareOperator unpackCompareOperator();
+	DatabaseCursorInterface::Slice unpackSlice();
+	analyzer::Document unpackAnalyzerDocument();
+	analyzer::Attribute unpackAnalyzerAttribute();
+	analyzer::MetaData unpackAnalyzerMetaData();
+	analyzer::Term unpackAnalyzerTerm();
+	analyzer::Token unpackAnalyzerToken();
+	WeightedDocument unpackWeightedDocument();
+	ResultDocument unpackResultDocument();
+	bool unpackCrc32();
+
+	const std::string& content() const
+	{
+		return m_content;
+	}
+
+private:
+	const ConstConstructor* m_constConstructor;
+	char const* m_itr;
+	const char* m_end;
 	std::string m_content;
 };
 
