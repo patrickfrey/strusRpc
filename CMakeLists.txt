@@ -76,6 +76,7 @@ configure_file( "${PROJECT_SOURCE_DIR}/src/versionRpc.hpp.in"  "${PROJECT_SOURCE
 enable_testing()
 
 # Subdirectories:
+add_subdirectory( 3rdParty )
 add_subdirectory( src )
   
 # Message:
