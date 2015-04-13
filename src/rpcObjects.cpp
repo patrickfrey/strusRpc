@@ -27,13 +27,13 @@
 --------------------------------------------------------------------
 */
 #include "rpcObjects.hpp"
-#include "rpcMessage.hpp"
+#include "rpcSerializer.hpp"
 
 using namespace strus;
 
 AttributeReaderImpl::~AttributeReaderImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -42,21 +42,22 @@ AttributeReaderImpl::~AttributeReaderImpl()
 
 Index AttributeReaderImpl::elementHandle( const char* p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_elementHandle);
 	msg.packCharp( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 void AttributeReaderImpl::skipDoc( const Index& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
@@ -66,21 +67,22 @@ void AttributeReaderImpl::skipDoc( const Index& p1)
 
 std::string AttributeReaderImpl::getValue( const Index& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getValue);
 	msg.packIndex( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	std::string p0 = answer.unpackString();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 }
 
 DatabaseBackupCursorImpl::~DatabaseBackupCursorImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -89,22 +91,27 @@ DatabaseBackupCursorImpl::~DatabaseBackupCursorImpl()
 
 bool DatabaseBackupCursorImpl::fetch( const char*& p1, std::size_t& p2, const char*& p3, std::size_t& p4)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_fetch);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	bool p0 = answer.unpackBool();;
-	answer.unpackBuffer( p1, p2);
-	answer.unpackBuffer( p3, p4);
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	const char* bp1;
+	serializedMsg.unpackBuffer( bp1, p2);
+	p1 = (const char*)constConstructor()->get( bp1, p2);
+	const char* bp3;
+	serializedMsg.unpackBuffer( bp3, p4);
+	p3 = (const char*)constConstructor()->get( bp3, p4);
 	return p0;
 }
 
 DatabaseClientImpl::~DatabaseClientImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -113,7 +120,7 @@ DatabaseClientImpl::~DatabaseClientImpl()
 
 void DatabaseClientImpl::close( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_close);
 	msg.packCrc32();
@@ -122,56 +129,59 @@ void DatabaseClientImpl::close( )
 
 DatabaseTransactionInterface* DatabaseClientImpl::createTransaction( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createTransaction);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_DatabaseTransaction) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	DatabaseTransactionImpl* p0 = new DatabaseTransactionImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_DatabaseTransaction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	DatabaseTransactionInterface* p0 = new DatabaseTransactionImpl( objId_0, endpoint());
 	return p0;
 }
 
 DatabaseCursorInterface* DatabaseClientImpl::createCursor( const DatabaseOptions& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createCursor);
 	msg.packDatabaseOptions( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_DatabaseCursor) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	DatabaseCursorImpl* p0 = new DatabaseCursorImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_DatabaseCursor) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	DatabaseCursorInterface* p0 = new DatabaseCursorImpl( objId_0, endpoint());
 	return p0;
 }
 
 DatabaseBackupCursorInterface* DatabaseClientImpl::createBackupCursor( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createBackupCursor);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_DatabaseBackupCursor) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	DatabaseBackupCursorImpl* p0 = new DatabaseBackupCursorImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_DatabaseBackupCursor) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	DatabaseBackupCursorInterface* p0 = new DatabaseBackupCursorImpl( objId_0, endpoint());
 	return p0;
 }
 
 void DatabaseClientImpl::writeImm( const char* p1, std::size_t p2, const char* p3, std::size_t p4)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_writeImm);
 	msg.packBuffer( p1, p2);
@@ -182,7 +192,7 @@ void DatabaseClientImpl::writeImm( const char* p1, std::size_t p2, const char* p
 
 void DatabaseClientImpl::removeImm( const char* p1, std::size_t p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_removeImm);
 	msg.packBuffer( p1, p2);
@@ -192,7 +202,7 @@ void DatabaseClientImpl::removeImm( const char* p1, std::size_t p2)
 
 bool DatabaseClientImpl::readValue( const char* p1, std::size_t p2, std::string& p3, const DatabaseOptions& p4) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_readValue);
 	msg.packBuffer( p1, p2);
@@ -200,15 +210,16 @@ bool DatabaseClientImpl::readValue( const char* p1, std::size_t p2, std::string&
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	bool p0 = answer.unpackBool();;
-	p3 = answer.unpackString();
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	p3 = serializedMsg.unpackString();
 	return p0;
 }
 
 DatabaseCursorImpl::~DatabaseCursorImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -217,7 +228,7 @@ DatabaseCursorImpl::~DatabaseCursorImpl()
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekUpperBound( const char* p1, std::size_t p2, std::size_t p3)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekUpperBound);
 	msg.packBuffer( p1, p2);
@@ -225,94 +236,108 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekUpperBound( const char* p
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	DatabaseCursorInterface::Slice p0 = answer.unpackSlice();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekFirst( const char* p1, std::size_t p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekFirst);
 	msg.packBuffer( p1, p2);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	DatabaseCursorInterface::Slice p0 = answer.unpackSlice();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekLast( const char* p1, std::size_t p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekLast);
 	msg.packBuffer( p1, p2);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	DatabaseCursorInterface::Slice p0 = answer.unpackSlice();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekNext( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekNext);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	DatabaseCursorInterface::Slice p0 = answer.unpackSlice();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekPrev( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekPrev);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	DatabaseCursorInterface::Slice p0 = answer.unpackSlice();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::key( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_key);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	DatabaseCursorInterface::Slice p0 = answer.unpackSlice();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::value( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_value);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	DatabaseCursorInterface::Slice p0 = answer.unpackSlice();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
 DatabaseImpl::~DatabaseImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -321,24 +346,25 @@ DatabaseImpl::~DatabaseImpl()
 
 DatabaseClientInterface* DatabaseImpl::createClient( const std::string& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClient);
 	msg.packString( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_DatabaseClient) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	DatabaseClientImpl* p0 = new DatabaseClientImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_DatabaseClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	DatabaseClientInterface* p0 = new DatabaseClientImpl( objId_0, endpoint());
 	return p0;
 }
 
 void DatabaseImpl::createDatabase( const std::string& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDatabase);
 	msg.packString( p1);
@@ -348,11 +374,11 @@ void DatabaseImpl::createDatabase( const std::string& p1) const
 
 void DatabaseImpl::restoreDatabase( const std::string& p1, DatabaseBackupCursorInterface* p2) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_restoreDatabase);
 	msg.packString( p1);
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -361,7 +387,7 @@ void DatabaseImpl::restoreDatabase( const std::string& p1, DatabaseBackupCursorI
 
 void DatabaseImpl::destroyDatabase( const std::string& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_destroyDatabase);
 	msg.packString( p1);
@@ -371,35 +397,37 @@ void DatabaseImpl::destroyDatabase( const std::string& p1) const
 
 const char* DatabaseImpl::getConfigDescription( DatabaseInterface::ConfigType p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigDescription);
 	msg.packDatabaseConfigType( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	const char* p0 = answer.unpackConstCharp();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	const char* p0 = constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 }
 
 const char** DatabaseImpl::getConfigParameters( DatabaseInterface::ConfigType p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigParameters);
 	msg.packDatabaseConfigType( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	const char** p0 = answer.unpackConstCharpp();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	const char** p0 = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
 	return p0;
 }
 
 DatabaseTransactionImpl::~DatabaseTransactionImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -408,24 +436,25 @@ DatabaseTransactionImpl::~DatabaseTransactionImpl()
 
 DatabaseCursorInterface* DatabaseTransactionImpl::createCursor( const DatabaseOptions& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createCursor);
 	msg.packDatabaseOptions( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_DatabaseCursor) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	DatabaseCursorImpl* p0 = new DatabaseCursorImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_DatabaseCursor) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	DatabaseCursorInterface* p0 = new DatabaseCursorImpl( objId_0, endpoint());
 	return p0;
 }
 
 void DatabaseTransactionImpl::write( const char* p1, std::size_t p2, const char* p3, std::size_t p4)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_write);
 	msg.packBuffer( p1, p2);
@@ -436,7 +465,7 @@ void DatabaseTransactionImpl::write( const char* p1, std::size_t p2, const char*
 
 void DatabaseTransactionImpl::remove( const char* p1, std::size_t p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_remove);
 	msg.packBuffer( p1, p2);
@@ -446,7 +475,7 @@ void DatabaseTransactionImpl::remove( const char* p1, std::size_t p2)
 
 void DatabaseTransactionImpl::removeSubTree( const char* p1, std::size_t p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_removeSubTree);
 	msg.packBuffer( p1, p2);
@@ -456,7 +485,7 @@ void DatabaseTransactionImpl::removeSubTree( const char* p1, std::size_t p2)
 
 void DatabaseTransactionImpl::commit( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_commit);
 	msg.packCrc32();
@@ -466,7 +495,7 @@ void DatabaseTransactionImpl::commit( )
 
 void DatabaseTransactionImpl::rollback( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
 	msg.packCrc32();
@@ -475,7 +504,7 @@ void DatabaseTransactionImpl::rollback( )
 
 DocnoRangeAllocatorImpl::~DocnoRangeAllocatorImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -484,21 +513,22 @@ DocnoRangeAllocatorImpl::~DocnoRangeAllocatorImpl()
 
 Index DocnoRangeAllocatorImpl::allocDocnoRange( const Index& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_allocDocnoRange);
 	msg.packIndex( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 bool DocnoRangeAllocatorImpl::deallocDocnoRange( const Index& p1, const Index& p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deallocDocnoRange);
 	msg.packIndex( p1);
@@ -506,14 +536,15 @@ bool DocnoRangeAllocatorImpl::deallocDocnoRange( const Index& p1, const Index& p
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	bool p0 = answer.unpackBool();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 }
 
 DocumentAnalyzerInstanceImpl::~DocumentAnalyzerInstanceImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -522,7 +553,7 @@ DocumentAnalyzerInstanceImpl::~DocumentAnalyzerInstanceImpl()
 
 void DocumentAnalyzerInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_putInput);
 	msg.packBuffer( p1, p2);
@@ -533,21 +564,22 @@ void DocumentAnalyzerInstanceImpl::putInput( const char* p1, std::size_t p2, boo
 
 bool DocumentAnalyzerInstanceImpl::analyzeNext( analyzer::Document& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_analyzeNext);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	bool p0 = answer.unpackBool();;
-	p1 = answer.unpackAnalyzerDocument();
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	p1 = serializedMsg.unpackAnalyzerDocument();
 	return p0;
 }
 
 DocumentAnalyzerImpl::~DocumentAnalyzerImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -556,7 +588,7 @@ DocumentAnalyzerImpl::~DocumentAnalyzerImpl()
 
 void DocumentAnalyzerImpl::addSearchIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSearchIndexFeature);
 	msg.packString( p1);
@@ -573,7 +605,7 @@ void DocumentAnalyzerImpl::addSearchIndexFeature( const std::string& p1, const s
 
 void DocumentAnalyzerImpl::addForwardIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addForwardIndexFeature);
 	msg.packString( p1);
@@ -590,7 +622,7 @@ void DocumentAnalyzerImpl::addForwardIndexFeature( const std::string& p1, const 
 
 void DocumentAnalyzerImpl::defineMetaData( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineMetaData);
 	msg.packString( p1);
@@ -606,7 +638,7 @@ void DocumentAnalyzerImpl::defineMetaData( const std::string& p1, const std::str
 
 void DocumentAnalyzerImpl::defineAttribute( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineAttribute);
 	msg.packString( p1);
@@ -622,7 +654,7 @@ void DocumentAnalyzerImpl::defineAttribute( const std::string& p1, const std::st
 
 void DocumentAnalyzerImpl::defineSubDocument( const std::string& p1, const std::string& p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSubDocument);
 	msg.packString( p1);
@@ -633,37 +665,39 @@ void DocumentAnalyzerImpl::defineSubDocument( const std::string& p1, const std::
 
 analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_analyze);
 	msg.packString( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	analyzer::Document p0 = answer.unpackAnalyzerDocument();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	analyzer::Document p0 = serializedMsg.unpackAnalyzerDocument();;
 	return p0;
 }
 
 DocumentAnalyzerInstanceInterface* DocumentAnalyzerImpl::createInstance( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_DocumentAnalyzerInstance) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	DocumentAnalyzerInstanceImpl* p0 = new DocumentAnalyzerInstanceImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_DocumentAnalyzerInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	DocumentAnalyzerInstanceInterface* p0 = new DocumentAnalyzerInstanceImpl( objId_0, endpoint());
 	return p0;
 }
 
 ForwardIteratorImpl::~ForwardIteratorImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -672,7 +706,7 @@ ForwardIteratorImpl::~ForwardIteratorImpl()
 
 void ForwardIteratorImpl::skipDoc( const Index& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
@@ -682,34 +716,36 @@ void ForwardIteratorImpl::skipDoc( const Index& p1)
 
 Index ForwardIteratorImpl::skipPos( const Index& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipPos);
 	msg.packIndex( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 std::string ForwardIteratorImpl::fetch( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_fetch);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	std::string p0 = answer.unpackString();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 }
 
 InvAclIteratorImpl::~InvAclIteratorImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -718,21 +754,22 @@ InvAclIteratorImpl::~InvAclIteratorImpl()
 
 Index InvAclIteratorImpl::skipDoc( const Index& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 MetaDataReaderImpl::~MetaDataReaderImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -741,48 +778,51 @@ MetaDataReaderImpl::~MetaDataReaderImpl()
 
 bool MetaDataReaderImpl::hasElement( const std::string& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_hasElement);
 	msg.packString( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	bool p0 = answer.unpackBool();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 }
 
 Index MetaDataReaderImpl::elementHandle( const std::string& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_elementHandle);
 	msg.packString( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 Index MetaDataReaderImpl::nofElements( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_nofElements);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 void MetaDataReaderImpl::skipDoc( const Index& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
@@ -792,49 +832,52 @@ void MetaDataReaderImpl::skipDoc( const Index& p1)
 
 ArithmeticVariant MetaDataReaderImpl::getValue( const Index& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getValue);
 	msg.packIndex( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	ArithmeticVariant p0 = answer.unpackArithmeticVariant();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	ArithmeticVariant p0 = serializedMsg.unpackArithmeticVariant();;
 	return p0;
 }
 
 const char* MetaDataReaderImpl::getType( const Index& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getType);
 	msg.packIndex( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	const char* p0 = answer.unpackConstCharp();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	const char* p0 = constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 }
 
 const char* MetaDataReaderImpl::getName( const Index& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getName);
 	msg.packIndex( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	const char* p0 = answer.unpackConstCharp();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	const char* p0 = constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 }
 
 NormalizerConstructorImpl::~NormalizerConstructorImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -843,30 +886,31 @@ NormalizerConstructorImpl::~NormalizerConstructorImpl()
 
 NormalizerInterface* NormalizerConstructorImpl::create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_create);
 	msg.packSize( p1.size());
 	for (unsigned int ii=0; ii < p1.size(); ++ii) {
 		msg.packString( p1[ii]);
 	}
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_Normalizer) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	NormalizerImpl* p0 = new NormalizerImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_Normalizer) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	NormalizerInterface* p0 = new NormalizerImpl( objId_0, endpoint());
 	return p0;
 }
 
 NormalizerInstanceImpl::~NormalizerInstanceImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -875,21 +919,22 @@ NormalizerInstanceImpl::~NormalizerInstanceImpl()
 
 std::string NormalizerInstanceImpl::normalize( const char* p1, std::size_t p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_normalize);
 	msg.packBuffer( p1, p2);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	std::string p0 = answer.unpackString();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 }
 
 NormalizerImpl::~NormalizerImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -898,23 +943,24 @@ NormalizerImpl::~NormalizerImpl()
 
 NormalizerInstanceInterface* NormalizerImpl::createInstance( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_NormalizerInstance) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	NormalizerInstanceImpl* p0 = new NormalizerInstanceImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_NormalizerInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	NormalizerInstanceInterface* p0 = new NormalizerInstanceImpl( objId_0, endpoint());
 	return p0;
 }
 
 PeerStorageTransactionImpl::~PeerStorageTransactionImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -923,7 +969,7 @@ PeerStorageTransactionImpl::~PeerStorageTransactionImpl()
 
 void PeerStorageTransactionImpl::updateNofDocumentsInsertedChange( const GlobalCounter& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_updateNofDocumentsInsertedChange);
 	msg.packGlobalCounter( p1);
@@ -933,7 +979,7 @@ void PeerStorageTransactionImpl::updateNofDocumentsInsertedChange( const GlobalC
 
 void PeerStorageTransactionImpl::updateDocumentFrequencyChange( const char* p1, const char* p2, const GlobalCounter& p3)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_updateDocumentFrequencyChange);
 	msg.packCharp( p1);
@@ -945,7 +991,7 @@ void PeerStorageTransactionImpl::updateDocumentFrequencyChange( const char* p1, 
 
 void PeerStorageTransactionImpl::commit( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_commit);
 	msg.packCrc32();
@@ -955,7 +1001,7 @@ void PeerStorageTransactionImpl::commit( )
 
 void PeerStorageTransactionImpl::rollback( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
 	msg.packCrc32();
@@ -964,7 +1010,7 @@ void PeerStorageTransactionImpl::rollback( )
 
 PostingIteratorImpl::~PostingIteratorImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -973,42 +1019,45 @@ PostingIteratorImpl::~PostingIteratorImpl()
 
 Index PostingIteratorImpl::skipDoc( const Index& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 Index PostingIteratorImpl::skipPos( const Index& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipPos);
 	msg.packIndex( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 const char* PostingIteratorImpl::featureid( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_featureid);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	const char* p0 = answer.unpackConstCharp();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	const char* p0 = constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 }
 
@@ -1019,59 +1068,63 @@ std::vector<const PostingIteratorInterface*> PostingIteratorImpl::subExpressions
 
 GlobalCounter PostingIteratorImpl::documentFrequency( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_documentFrequency);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	GlobalCounter p0 = answer.unpackGlobalCounter();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	GlobalCounter p0 = serializedMsg.unpackGlobalCounter();;
 	return p0;
 }
 
 unsigned int PostingIteratorImpl::frequency( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_frequency);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned int p0 = answer.unpackUint();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned int p0 = serializedMsg.unpackUint();;
 	return p0;
 }
 
 Index PostingIteratorImpl::docno( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_docno);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 Index PostingIteratorImpl::posno( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_posno);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 PostingJoinOperatorImpl::~PostingJoinOperatorImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -1080,12 +1133,12 @@ PostingJoinOperatorImpl::~PostingJoinOperatorImpl()
 
 PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createResultIterator);
 	msg.packSize( p1.size());
 	for (unsigned int ii=0; ii < p1.size(); ++ii) {
-		const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1[ii].get());
+			const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1[ii].get());
 	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	}
@@ -1093,17 +1146,18 @@ PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const s
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_PostingIterator) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	PostingIteratorImpl* p0 = new PostingIteratorImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_PostingIterator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, endpoint());
 	return p0;
 }
 
 QueryAnalyzerImpl::~QueryAnalyzerImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -1112,7 +1166,7 @@ QueryAnalyzerImpl::~QueryAnalyzerImpl()
 
 void QueryAnalyzerImpl::definePhraseType( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_definePhraseType);
 	msg.packString( p1);
@@ -1128,7 +1182,7 @@ void QueryAnalyzerImpl::definePhraseType( const std::string& p1, const std::stri
 
 std::vector<analyzer::Term> QueryAnalyzerImpl::analyzePhrase( const std::string& p1, const std::string& p2) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_analyzePhrase);
 	msg.packString( p1);
@@ -1136,11 +1190,12 @@ std::vector<analyzer::Term> QueryAnalyzerImpl::analyzePhrase( const std::string&
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
 	std::vector<analyzer::Term> p0;
-	std::size_t n0 = answer.unpackSize();
-	for (unsigned int ii=0; ii < n0; ++ii) {
-		analyzer::Term elem_p0 = answer.unpackAnalyzerTerm();
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		analyzer::Term elem_p0 = serializedMsg.unpackAnalyzerTerm();
 		p0.push_back( elem_p0);
 	}
 	return p0;
@@ -1148,7 +1203,7 @@ std::vector<analyzer::Term> QueryAnalyzerImpl::analyzePhrase( const std::string&
 
 QueryEvalImpl::~QueryEvalImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -1157,7 +1212,7 @@ QueryEvalImpl::~QueryEvalImpl()
 
 void QueryEvalImpl::addTerm( const std::string& p1, const std::string& p2, const std::string& p3)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addTerm);
 	msg.packString( p1);
@@ -1169,7 +1224,7 @@ void QueryEvalImpl::addTerm( const std::string& p1, const std::string& p2, const
 
 void QueryEvalImpl::addSelectionFeature( const std::string& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSelectionFeature);
 	msg.packString( p1);
@@ -1179,7 +1234,7 @@ void QueryEvalImpl::addSelectionFeature( const std::string& p1)
 
 void QueryEvalImpl::addRestrictionFeature( const std::string& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addRestrictionFeature);
 	msg.packString( p1);
@@ -1189,7 +1244,7 @@ void QueryEvalImpl::addRestrictionFeature( const std::string& p1)
 
 void QueryEvalImpl::addSummarizer( const std::string& p1, const std::string& p2, const SummarizerConfig& p3)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSummarizer);
 	msg.packString( p1);
@@ -1201,7 +1256,7 @@ void QueryEvalImpl::addSummarizer( const std::string& p1, const std::string& p2,
 
 void QueryEvalImpl::addWeightingFunction( const std::string& p1, const WeightingConfig& p2, const std::vector<std::string>& p3)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addWeightingFunction);
 	msg.packString( p1);
@@ -1216,26 +1271,27 @@ void QueryEvalImpl::addWeightingFunction( const std::string& p1, const Weighting
 
 QueryInterface* QueryEvalImpl::createQuery( const StorageClientInterface* p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createQuery);
-	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+		const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_Query) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	QueryImpl* p0 = new QueryImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_Query) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	QueryInterface* p0 = new QueryImpl( objId_0, endpoint());
 	return p0;
 }
 
 QueryImpl::~QueryImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -1244,7 +1300,7 @@ QueryImpl::~QueryImpl()
 
 void QueryImpl::pushTerm( const std::string& p1, const std::string& p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushTerm);
 	msg.packString( p1);
@@ -1255,7 +1311,7 @@ void QueryImpl::pushTerm( const std::string& p1, const std::string& p2)
 
 void QueryImpl::pushExpression( const std::string& p1, std::size_t p2, int p3)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushExpression);
 	msg.packString( p1);
@@ -1267,7 +1323,7 @@ void QueryImpl::pushExpression( const std::string& p1, std::size_t p2, int p3)
 
 void QueryImpl::pushDuplicate( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushDuplicate);
 	msg.packCrc32();
@@ -1276,7 +1332,7 @@ void QueryImpl::pushDuplicate( )
 
 void QueryImpl::attachVariable( const std::string& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_attachVariable);
 	msg.packString( p1);
@@ -1286,7 +1342,7 @@ void QueryImpl::attachVariable( const std::string& p1)
 
 void QueryImpl::defineFeature( const std::string& p1, float p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineFeature);
 	msg.packString( p1);
@@ -1297,7 +1353,7 @@ void QueryImpl::defineFeature( const std::string& p1, float p2)
 
 void QueryImpl::defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineMetaDataRestriction);
 	msg.packCompareOperator( p1);
@@ -1310,7 +1366,7 @@ void QueryImpl::defineMetaDataRestriction( QueryInterface::CompareOperator p1, c
 
 void QueryImpl::setMaxNofRanks( std::size_t p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMaxNofRanks);
 	msg.packSize( p1);
@@ -1320,7 +1376,7 @@ void QueryImpl::setMaxNofRanks( std::size_t p1)
 
 void QueryImpl::setMinRank( std::size_t p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMinRank);
 	msg.packSize( p1);
@@ -1330,7 +1386,7 @@ void QueryImpl::setMinRank( std::size_t p1)
 
 void QueryImpl::setUserName( const std::string& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setUserName);
 	msg.packString( p1);
@@ -1340,17 +1396,18 @@ void QueryImpl::setUserName( const std::string& p1)
 
 std::vector<ResultDocument> QueryImpl::evaluate( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_evaluate);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
 	std::vector<ResultDocument> p0;
-	std::size_t n0 = answer.unpackSize();
-	for (unsigned int ii=0; ii < n0; ++ii) {
-		ResultDocument elem_p0 = answer.unpackResultDocument();
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		ResultDocument elem_p0 = serializedMsg.unpackResultDocument();
 		p0.push_back( elem_p0);
 	}
 	return p0;
@@ -1358,7 +1415,7 @@ std::vector<ResultDocument> QueryImpl::evaluate( )
 
 QueryProcessorImpl::~QueryProcessorImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -1367,11 +1424,11 @@ QueryProcessorImpl::~QueryProcessorImpl()
 
 void QueryProcessorImpl::definePostingJoinOperator( const std::string& p1, PostingJoinOperatorInterface* p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_definePostingJoinOperator);
 	msg.packString( p1);
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -1380,28 +1437,16 @@ void QueryProcessorImpl::definePostingJoinOperator( const std::string& p1, Posti
 
 const PostingJoinOperatorInterface* QueryProcessorImpl::getPostingJoinOperator( const std::string& p1) const
 {
-	RpcMessage msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_getPostingJoinOperator);
-	msg.packString( p1);
-	msg.packCrc32();
-	rpc_send( msg.content());
-	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_PostingJoinOperator) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	PostingJoinOperatorImpl* p0 = new PostingJoinOperatorImpl( objId_p0, endpoint());
-	return p0;
+	throw std::runtime_error("the method 'getPostingJoinOperator' is not implemented for RPC");
 }
 
 void QueryProcessorImpl::defineWeightingFunction( const std::string& p1, WeightingFunctionInterface* p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineWeightingFunction);
 	msg.packString( p1);
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -1410,28 +1455,16 @@ void QueryProcessorImpl::defineWeightingFunction( const std::string& p1, Weighti
 
 const WeightingFunctionInterface* QueryProcessorImpl::getWeightingFunction( const std::string& p1) const
 {
-	RpcMessage msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_getWeightingFunction);
-	msg.packString( p1);
-	msg.packCrc32();
-	rpc_send( msg.content());
-	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_WeightingFunction) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	WeightingFunctionImpl* p0 = new WeightingFunctionImpl( objId_p0, endpoint());
-	return p0;
+	throw std::runtime_error("the method 'getWeightingFunction' is not implemented for RPC");
 }
 
 void QueryProcessorImpl::defineSummarizerFunction( const std::string& p1, SummarizerFunctionInterface* p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSummarizerFunction);
 	msg.packString( p1);
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -1440,24 +1473,12 @@ void QueryProcessorImpl::defineSummarizerFunction( const std::string& p1, Summar
 
 const SummarizerFunctionInterface* QueryProcessorImpl::getSummarizerFunction( const std::string& p1) const
 {
-	RpcMessage msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_getSummarizerFunction);
-	msg.packString( p1);
-	msg.packCrc32();
-	rpc_send( msg.content());
-	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_SummarizerFunction) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	SummarizerFunctionImpl* p0 = new SummarizerFunctionImpl( objId_p0, endpoint());
-	return p0;
+	throw std::runtime_error("the method 'getSummarizerFunction' is not implemented for RPC");
 }
 
 SegmenterInstanceImpl::~SegmenterInstanceImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -1466,7 +1487,7 @@ SegmenterInstanceImpl::~SegmenterInstanceImpl()
 
 void SegmenterInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_putInput);
 	msg.packBuffer( p1, p2);
@@ -1477,23 +1498,26 @@ void SegmenterInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
 
 bool SegmenterInstanceImpl::getNext( int& p1, SegmenterPosition& p2, const char*& p3, std::size_t& p4)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getNext);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	bool p0 = answer.unpackBool();;
-	p1 = answer.unpackInt();
-	p2 = answer.unpackGlobalCounter();
-	answer.unpackBuffer( p3, p4);
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	p1 = serializedMsg.unpackInt();
+	p2 = serializedMsg.unpackGlobalCounter();
+	const char* bp3;
+	serializedMsg.unpackBuffer( bp3, p4);
+	p3 = (const char*)constConstructor()->get( bp3, p4);
 	return p0;
 }
 
 SegmenterImpl::~SegmenterImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -1502,7 +1526,7 @@ SegmenterImpl::~SegmenterImpl()
 
 void SegmenterImpl::defineSelectorExpression( int p1, const std::string& p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSelectorExpression);
 	msg.packInt( p1);
@@ -1513,7 +1537,7 @@ void SegmenterImpl::defineSelectorExpression( int p1, const std::string& p2)
 
 void SegmenterImpl::defineSubSection( int p1, int p2, const std::string& p3)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSubSection);
 	msg.packInt( p1);
@@ -1525,23 +1549,24 @@ void SegmenterImpl::defineSubSection( int p1, int p2, const std::string& p3)
 
 SegmenterInstanceInterface* SegmenterImpl::createInstance( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_SegmenterInstance) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	SegmenterInstanceImpl* p0 = new SegmenterInstanceImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_SegmenterInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	SegmenterInstanceInterface* p0 = new SegmenterInstanceImpl( objId_0, endpoint());
 	return p0;
 }
 
 StorageAlterMetaDataTableImpl::~StorageAlterMetaDataTableImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -1550,7 +1575,7 @@ StorageAlterMetaDataTableImpl::~StorageAlterMetaDataTableImpl()
 
 void StorageAlterMetaDataTableImpl::addElement( const std::string& p1, const std::string& p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addElement);
 	msg.packString( p1);
@@ -1561,7 +1586,7 @@ void StorageAlterMetaDataTableImpl::addElement( const std::string& p1, const std
 
 void StorageAlterMetaDataTableImpl::alterElement( const std::string& p1, const std::string& p2, const std::string& p3)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_alterElement);
 	msg.packString( p1);
@@ -1573,7 +1598,7 @@ void StorageAlterMetaDataTableImpl::alterElement( const std::string& p1, const s
 
 void StorageAlterMetaDataTableImpl::renameElement( const std::string& p1, const std::string& p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_renameElement);
 	msg.packString( p1);
@@ -1584,7 +1609,7 @@ void StorageAlterMetaDataTableImpl::renameElement( const std::string& p1, const 
 
 void StorageAlterMetaDataTableImpl::deleteElement( const std::string& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deleteElement);
 	msg.packString( p1);
@@ -1594,7 +1619,7 @@ void StorageAlterMetaDataTableImpl::deleteElement( const std::string& p1)
 
 void StorageAlterMetaDataTableImpl::clearElement( const std::string& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_clearElement);
 	msg.packString( p1);
@@ -1604,7 +1629,7 @@ void StorageAlterMetaDataTableImpl::clearElement( const std::string& p1)
 
 void StorageAlterMetaDataTableImpl::commit( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_commit);
 	msg.packCrc32();
@@ -1614,7 +1639,7 @@ void StorageAlterMetaDataTableImpl::commit( )
 
 void StorageAlterMetaDataTableImpl::rollback( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
 	msg.packCrc32();
@@ -1623,7 +1648,7 @@ void StorageAlterMetaDataTableImpl::rollback( )
 
 StorageClientImpl::~StorageClientImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -1632,7 +1657,7 @@ StorageClientImpl::~StorageClientImpl()
 
 void StorageClientImpl::close( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_close);
 	msg.packCrc32();
@@ -1641,7 +1666,7 @@ void StorageClientImpl::close( )
 
 PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const std::string& p1, const std::string& p2) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createTermPostingIterator);
 	msg.packString( p1);
@@ -1649,77 +1674,82 @@ PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const st
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_PostingIterator) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	PostingIteratorImpl* p0 = new PostingIteratorImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_PostingIterator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, endpoint());
 	return p0;
 }
 
 ForwardIteratorInterface* StorageClientImpl::createForwardIterator( const std::string& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createForwardIterator);
 	msg.packString( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_ForwardIterator) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	ForwardIteratorImpl* p0 = new ForwardIteratorImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_ForwardIterator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	ForwardIteratorInterface* p0 = new ForwardIteratorImpl( objId_0, endpoint());
 	return p0;
 }
 
 InvAclIteratorInterface* StorageClientImpl::createInvAclIterator( const std::string& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInvAclIterator);
 	msg.packString( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_InvAclIterator) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	InvAclIteratorImpl* p0 = new InvAclIteratorImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_InvAclIterator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	InvAclIteratorInterface* p0 = new InvAclIteratorImpl( objId_0, endpoint());
 	return p0;
 }
 
 GlobalCounter StorageClientImpl::globalNofDocumentsInserted( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_globalNofDocumentsInserted);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	GlobalCounter p0 = answer.unpackGlobalCounter();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	GlobalCounter p0 = serializedMsg.unpackGlobalCounter();;
 	return p0;
 }
 
 Index StorageClientImpl::localNofDocumentsInserted( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_localNofDocumentsInserted);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 GlobalCounter StorageClientImpl::globalDocumentFrequency( const std::string& p1, const std::string& p2) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_globalDocumentFrequency);
 	msg.packString( p1);
@@ -1727,14 +1757,15 @@ GlobalCounter StorageClientImpl::globalDocumentFrequency( const std::string& p1,
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	GlobalCounter p0 = answer.unpackGlobalCounter();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	GlobalCounter p0 = serializedMsg.unpackGlobalCounter();;
 	return p0;
 }
 
 Index StorageClientImpl::localDocumentFrequency( const std::string& p1, const std::string& p2) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_localDocumentFrequency);
 	msg.packString( p1);
@@ -1742,124 +1773,132 @@ Index StorageClientImpl::localDocumentFrequency( const std::string& p1, const st
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 Index StorageClientImpl::maxDocumentNumber( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_maxDocumentNumber);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 Index StorageClientImpl::documentNumber( const std::string& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_documentNumber);
 	msg.packString( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	Index p0 = answer.unpackIndex();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 }
 
 MetaDataReaderInterface* StorageClientImpl::createMetaDataReader( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createMetaDataReader);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_MetaDataReader) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	MetaDataReaderImpl* p0 = new MetaDataReaderImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_MetaDataReader) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	MetaDataReaderInterface* p0 = new MetaDataReaderImpl( objId_0, endpoint());
 	return p0;
 }
 
 AttributeReaderInterface* StorageClientImpl::createAttributeReader( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createAttributeReader);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_AttributeReader) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	AttributeReaderImpl* p0 = new AttributeReaderImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_AttributeReader) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	AttributeReaderInterface* p0 = new AttributeReaderImpl( objId_0, endpoint());
 	return p0;
 }
 
 DocnoRangeAllocatorInterface* StorageClientImpl::createDocnoRangeAllocator( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDocnoRangeAllocator);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_DocnoRangeAllocator) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	DocnoRangeAllocatorImpl* p0 = new DocnoRangeAllocatorImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_DocnoRangeAllocator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	DocnoRangeAllocatorInterface* p0 = new DocnoRangeAllocatorImpl( objId_0, endpoint());
 	return p0;
 }
 
 StorageTransactionInterface* StorageClientImpl::createTransaction( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createTransaction);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_StorageTransaction) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	StorageTransactionImpl* p0 = new StorageTransactionImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_StorageTransaction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	StorageTransactionInterface* p0 = new StorageTransactionImpl( objId_0, endpoint());
 	return p0;
 }
 
 PeerStorageTransactionInterface* StorageClientImpl::createPeerStorageTransaction( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createPeerStorageTransaction);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_PeerStorageTransaction) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	PeerStorageTransactionImpl* p0 = new PeerStorageTransactionImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_PeerStorageTransaction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	PeerStorageTransactionInterface* p0 = new PeerStorageTransactionImpl( objId_0, endpoint());
 	return p0;
 }
 
 void StorageClientImpl::defineStoragePeerInterface( const StoragePeerInterface* p1, bool p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineStoragePeerInterface);
-	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+		const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	msg.packBool( p2);
@@ -1869,7 +1908,7 @@ void StorageClientImpl::defineStoragePeerInterface( const StoragePeerInterface* 
 
 StorageDocumentInterface* StorageClientImpl::createDocumentChecker( const std::string& p1, const std::string& p2) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDocumentChecker);
 	msg.packString( p1);
@@ -1877,11 +1916,12 @@ StorageDocumentInterface* StorageClientImpl::createDocumentChecker( const std::s
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_StorageDocument) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	StorageDocumentImpl* p0 = new StorageDocumentImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_StorageDocument) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	StorageDocumentInterface* p0 = new StorageDocumentImpl( objId_0, endpoint());
 	return p0;
 }
 
@@ -1892,23 +1932,24 @@ void StorageClientImpl::checkStorage( std::ostream& p1) const
 
 StorageDumpInterface* StorageClientImpl::createDump( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDump);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_StorageDump) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	StorageDumpImpl* p0 = new StorageDumpImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_StorageDump) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	StorageDumpInterface* p0 = new StorageDumpImpl( objId_0, endpoint());
 	return p0;
 }
 
 StorageDocumentImpl::~StorageDocumentImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -1917,7 +1958,7 @@ StorageDocumentImpl::~StorageDocumentImpl()
 
 void StorageDocumentImpl::addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSearchIndexTerm);
 	msg.packString( p1);
@@ -1929,7 +1970,7 @@ void StorageDocumentImpl::addSearchIndexTerm( const std::string& p1, const std::
 
 void StorageDocumentImpl::addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addForwardIndexTerm);
 	msg.packString( p1);
@@ -1941,7 +1982,7 @@ void StorageDocumentImpl::addForwardIndexTerm( const std::string& p1, const std:
 
 void StorageDocumentImpl::setMetaData( const std::string& p1, const ArithmeticVariant& p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMetaData);
 	msg.packString( p1);
@@ -1952,7 +1993,7 @@ void StorageDocumentImpl::setMetaData( const std::string& p1, const ArithmeticVa
 
 void StorageDocumentImpl::setAttribute( const std::string& p1, const std::string& p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setAttribute);
 	msg.packString( p1);
@@ -1963,7 +2004,7 @@ void StorageDocumentImpl::setAttribute( const std::string& p1, const std::string
 
 void StorageDocumentImpl::setUserAccessRight( const std::string& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setUserAccessRight);
 	msg.packString( p1);
@@ -1973,7 +2014,7 @@ void StorageDocumentImpl::setUserAccessRight( const std::string& p1)
 
 void StorageDocumentImpl::done( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_done);
 	msg.packCrc32();
@@ -1983,7 +2024,7 @@ void StorageDocumentImpl::done( )
 
 StorageDumpImpl::~StorageDumpImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -1992,21 +2033,24 @@ StorageDumpImpl::~StorageDumpImpl()
 
 bool StorageDumpImpl::nextChunk( const char*& p1, std::size_t& p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_nextChunk);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	bool p0 = answer.unpackBool();;
-	answer.unpackBuffer( p1, p2);
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	const char* bp1;
+	serializedMsg.unpackBuffer( bp1, p2);
+	p1 = (const char*)constConstructor()->get( bp1, p2);
 	return p0;
 }
 
 StorageImpl::~StorageImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -2015,31 +2059,32 @@ StorageImpl::~StorageImpl()
 
 StorageClientInterface* StorageImpl::createClient( const std::string& p1, DatabaseClientInterface* p2) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClient);
 	msg.packString( p1);
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_StorageClient) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	StorageClientImpl* p0 = new StorageClientImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_StorageClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	StorageClientInterface* p0 = new StorageClientImpl( objId_0, endpoint());
 	return p0;
 }
 
 void StorageImpl::createStorage( const std::string& p1, DatabaseClientInterface* p2) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createStorage);
 	msg.packString( p1);
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -2048,54 +2093,57 @@ void StorageImpl::createStorage( const std::string& p1, DatabaseClientInterface*
 
 StorageAlterMetaDataTableInterface* StorageImpl::createAlterMetaDataTable( DatabaseClientInterface* p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createAlterMetaDataTable);
-	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+		const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_StorageAlterMetaDataTable) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	StorageAlterMetaDataTableImpl* p0 = new StorageAlterMetaDataTableImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_StorageAlterMetaDataTable) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	StorageAlterMetaDataTableInterface* p0 = new StorageAlterMetaDataTableImpl( objId_0, endpoint());
 	return p0;
 }
 
 const char* StorageImpl::getConfigDescription( StorageInterface::ConfigType p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigDescription);
 	msg.packStorageConfigType( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	const char* p0 = answer.unpackConstCharp();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	const char* p0 = constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 }
 
 const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigParameters);
 	msg.packStorageConfigType( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	const char** p0 = answer.unpackConstCharpp();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	const char** p0 = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
 	return p0;
 }
 
 StoragePeerImpl::~StoragePeerImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -2104,23 +2152,24 @@ StoragePeerImpl::~StoragePeerImpl()
 
 StoragePeerTransactionInterface* StoragePeerImpl::createTransaction( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createTransaction);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_StoragePeerTransaction) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	StoragePeerTransactionImpl* p0 = new StoragePeerTransactionImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_StoragePeerTransaction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	StoragePeerTransactionInterface* p0 = new StoragePeerTransactionImpl( objId_0, endpoint());
 	return p0;
 }
 
 StoragePeerTransactionImpl::~StoragePeerTransactionImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -2129,7 +2178,7 @@ StoragePeerTransactionImpl::~StoragePeerTransactionImpl()
 
 void StoragePeerTransactionImpl::populateNofDocumentsInsertedChange( int p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_populateNofDocumentsInsertedChange);
 	msg.packInt( p1);
@@ -2139,7 +2188,7 @@ void StoragePeerTransactionImpl::populateNofDocumentsInsertedChange( int p1)
 
 void StoragePeerTransactionImpl::populateDocumentFrequencyChange( const char* p1, const char* p2, int p3, bool p4)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_populateDocumentFrequencyChange);
 	msg.packCharp( p1);
@@ -2152,7 +2201,7 @@ void StoragePeerTransactionImpl::populateDocumentFrequencyChange( const char* p1
 
 void StoragePeerTransactionImpl::try_commit( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_try_commit);
 	msg.packCrc32();
@@ -2161,7 +2210,7 @@ void StoragePeerTransactionImpl::try_commit( )
 
 void StoragePeerTransactionImpl::final_commit( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_final_commit);
 	msg.packCrc32();
@@ -2170,7 +2219,7 @@ void StoragePeerTransactionImpl::final_commit( )
 
 void StoragePeerTransactionImpl::rollback( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
 	msg.packCrc32();
@@ -2179,7 +2228,7 @@ void StoragePeerTransactionImpl::rollback( )
 
 StorageTransactionImpl::~StorageTransactionImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -2188,7 +2237,7 @@ StorageTransactionImpl::~StorageTransactionImpl()
 
 StorageDocumentInterface* StorageTransactionImpl::createDocument( const std::string& p1, const Index& p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDocument);
 	msg.packString( p1);
@@ -2196,17 +2245,18 @@ StorageDocumentInterface* StorageTransactionImpl::createDocument( const std::str
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_StorageDocument) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	StorageDocumentImpl* p0 = new StorageDocumentImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_StorageDocument) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	StorageDocumentInterface* p0 = new StorageDocumentImpl( objId_0, endpoint());
 	return p0;
 }
 
 void StorageTransactionImpl::deleteDocument( const std::string& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deleteDocument);
 	msg.packString( p1);
@@ -2216,7 +2266,7 @@ void StorageTransactionImpl::deleteDocument( const std::string& p1)
 
 void StorageTransactionImpl::deleteUserAccessRights( const std::string& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deleteUserAccessRights);
 	msg.packString( p1);
@@ -2226,7 +2276,7 @@ void StorageTransactionImpl::deleteUserAccessRights( const std::string& p1)
 
 void StorageTransactionImpl::commit( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_commit);
 	msg.packCrc32();
@@ -2236,7 +2286,7 @@ void StorageTransactionImpl::commit( )
 
 void StorageTransactionImpl::rollback( )
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
 	msg.packCrc32();
@@ -2245,7 +2295,7 @@ void StorageTransactionImpl::rollback( )
 
 SummarizerClosureImpl::~SummarizerClosureImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -2254,18 +2304,19 @@ SummarizerClosureImpl::~SummarizerClosureImpl()
 
 std::vector<SummarizerClosureInterface::SummaryElement> SummarizerClosureImpl::getSummary( const Index& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getSummary);
 	msg.packIndex( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
 	std::vector<SummarizerClosureInterface::SummaryElement> p0;
-	std::size_t n0 = answer.unpackSize();
-	for (unsigned int ii=0; ii < n0; ++ii) {
-		SummarizerClosureInterface::SummaryElement elem_p0 = answer.unpackSummaryElement();
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		SummarizerClosureInterface::SummaryElement elem_p0 = serializedMsg.unpackSummaryElement();
 		p0.push_back( elem_p0);
 	}
 	return p0;
@@ -2273,7 +2324,7 @@ std::vector<SummarizerClosureInterface::SummaryElement> SummarizerClosureImpl::g
 
 SummarizerFunctionImpl::~SummarizerFunctionImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -2282,55 +2333,58 @@ SummarizerFunctionImpl::~SummarizerFunctionImpl()
 
 const char** SummarizerFunctionImpl::numericParameterNames( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_numericParameterNames);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	const char** p0 = answer.unpackConstCharpp();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	const char** p0 = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
 	return p0;
 }
 
 const char** SummarizerFunctionImpl::textualParameterNames( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_textualParameterNames);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	const char** p0 = answer.unpackConstCharpp();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	const char** p0 = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
 	return p0;
 }
 
 const char** SummarizerFunctionImpl::featureParameterClassNames( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_featureParameterClassNames);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	const char** p0 = answer.unpackConstCharpp();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	const char** p0 = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
 	return p0;
 }
 
 SummarizerClosureInterface* SummarizerFunctionImpl::createClosure( const StorageClientInterface* p1, const QueryProcessorInterface* p2, MetaDataReaderInterface* p3, const std::vector<SummarizerFunctionInterface::FeatureParameter>& p4, const std::vector<std::string>& p5, const std::vector<ArithmeticVariant>& p6) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClosure);
-	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+		const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_1->classId(), impl_1->objId());
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
-	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
+		const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
 	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_3->classId(), impl_3->objId());
 	msg.packSize( p4.size());
@@ -2348,17 +2402,18 @@ SummarizerClosureInterface* SummarizerFunctionImpl::createClosure( const Storage
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_SummarizerClosure) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	SummarizerClosureImpl* p0 = new SummarizerClosureImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_SummarizerClosure) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	SummarizerClosureInterface* p0 = new SummarizerClosureImpl( objId_0, endpoint());
 	return p0;
 }
 
 TextProcessorImpl::~TextProcessorImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -2367,7 +2422,7 @@ TextProcessorImpl::~TextProcessorImpl()
 
 void TextProcessorImpl::addResourcePath( const std::string& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addResourcePath);
 	msg.packString( p1);
@@ -2377,59 +2432,36 @@ void TextProcessorImpl::addResourcePath( const std::string& p1)
 
 std::string TextProcessorImpl::getResourcePath( const std::string& p1) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getResourcePath);
 	msg.packString( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	std::string p0 = answer.unpackString();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 }
 
 const TokenizerConstructorInterface* TextProcessorImpl::getTokenizer( const std::string& p1) const
 {
-	RpcMessage msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_getTokenizer);
-	msg.packString( p1);
-	msg.packCrc32();
-	rpc_send( msg.content());
-	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_TokenizerConstructor) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	TokenizerConstructorImpl* p0 = new TokenizerConstructorImpl( objId_p0, endpoint());
-	return p0;
+	throw std::runtime_error("the method 'getTokenizer' is not implemented for RPC");
 }
 
 const NormalizerConstructorInterface* TextProcessorImpl::getNormalizer( const std::string& p1) const
 {
-	RpcMessage msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_getNormalizer);
-	msg.packString( p1);
-	msg.packCrc32();
-	rpc_send( msg.content());
-	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_NormalizerConstructor) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	NormalizerConstructorImpl* p0 = new NormalizerConstructorImpl( objId_p0, endpoint());
-	return p0;
+	throw std::runtime_error("the method 'getNormalizer' is not implemented for RPC");
 }
 
 void TextProcessorImpl::defineTokenizer( const std::string& p1, const TokenizerConstructorInterface* p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineTokenizer);
 	msg.packString( p1);
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -2438,11 +2470,11 @@ void TextProcessorImpl::defineTokenizer( const std::string& p1, const TokenizerC
 
 void TextProcessorImpl::defineNormalizer( const std::string& p1, const NormalizerConstructorInterface* p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineNormalizer);
 	msg.packString( p1);
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -2451,7 +2483,7 @@ void TextProcessorImpl::defineNormalizer( const std::string& p1, const Normalize
 
 TokenizerConstructorImpl::~TokenizerConstructorImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -2460,30 +2492,31 @@ TokenizerConstructorImpl::~TokenizerConstructorImpl()
 
 TokenizerInterface* TokenizerConstructorImpl::create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_create);
 	msg.packSize( p1.size());
 	for (unsigned int ii=0; ii < p1.size(); ++ii) {
 		msg.packString( p1[ii]);
 	}
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_Tokenizer) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	TokenizerImpl* p0 = new TokenizerImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_Tokenizer) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	TokenizerInterface* p0 = new TokenizerImpl( objId_0, endpoint());
 	return p0;
 }
 
 TokenizerInstanceImpl::~TokenizerInstanceImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -2492,18 +2525,19 @@ TokenizerInstanceImpl::~TokenizerInstanceImpl()
 
 std::vector<analyzer::Token> TokenizerInstanceImpl::tokenize( const char* p1, std::size_t p2)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_tokenize);
 	msg.packBuffer( p1, p2);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
 	std::vector<analyzer::Token> p0;
-	std::size_t n0 = answer.unpackSize();
-	for (unsigned int ii=0; ii < n0; ++ii) {
-		analyzer::Token elem_p0 = answer.unpackAnalyzerToken();
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		analyzer::Token elem_p0 = serializedMsg.unpackAnalyzerToken();
 		p0.push_back( elem_p0);
 	}
 	return p0;
@@ -2511,7 +2545,7 @@ std::vector<analyzer::Token> TokenizerInstanceImpl::tokenize( const char* p1, st
 
 TokenizerImpl::~TokenizerImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -2520,36 +2554,38 @@ TokenizerImpl::~TokenizerImpl()
 
 bool TokenizerImpl::concatBeforeTokenize( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_concatBeforeTokenize);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	bool p0 = answer.unpackBool();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 }
 
 TokenizerInstanceInterface* TokenizerImpl::createInstance( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_TokenizerInstance) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	TokenizerInstanceImpl* p0 = new TokenizerInstanceImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_TokenizerInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	TokenizerInstanceInterface* p0 = new TokenizerInstanceImpl( objId_0, endpoint());
 	return p0;
 }
 
 WeightingClosureImpl::~WeightingClosureImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -2558,21 +2594,22 @@ WeightingClosureImpl::~WeightingClosureImpl()
 
 float WeightingClosureImpl::call( const Index& p1)
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_call);
 	msg.packIndex( p1);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	float p0 = answer.unpackFloat();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	float p0 = serializedMsg.unpackFloat();;
 	return p0;
 }
 
 WeightingFunctionImpl::~WeightingFunctionImpl()
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
@@ -2581,29 +2618,30 @@ WeightingFunctionImpl::~WeightingFunctionImpl()
 
 const char** WeightingFunctionImpl::numericParameterNames( ) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_numericParameterNames);
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	const char** p0 = answer.unpackConstCharpp();;
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	const char** p0 = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
 	return p0;
 }
 
 WeightingClosureInterface* WeightingFunctionImpl::createClosure( const StorageClientInterface* p1, PostingIteratorInterface* p2, MetaDataReaderInterface* p3, const std::vector<ArithmeticVariant>& p4) const
 {
-	RpcMessage msg;
+	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClosure);
-	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+		const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_1->classId(), impl_1->objId());
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
-	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
+		const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
 	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_3->classId(), impl_3->objId());
 	msg.packSize( p4.size());
@@ -2613,11 +2651,12 @@ WeightingClosureInterface* WeightingFunctionImpl::createClosure( const StorageCl
 	msg.packCrc32();
 	rpc_send( msg.content());
 	enter();
-	RpcAnswer answer( constConstructor(), rpc_recv());
-	unsigned char classId_p0; unsigned int objId_p0;
-	answer.unpackObject( classId_p0, objId_p0);
-	if (classId_p0 != ClassId_WeightingClosure) throw std::runtime_error("error in RPC answer: return object type mismatch");
-	WeightingClosureImpl* p0 = new WeightingClosureImpl( objId_p0, endpoint());
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_WeightingClosure) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	WeightingClosureInterface* p0 = new WeightingClosureImpl( objId_0, endpoint());
 	return p0;
 }
 

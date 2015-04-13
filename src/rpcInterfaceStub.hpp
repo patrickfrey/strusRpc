@@ -39,7 +39,6 @@ class RpcInterfaceStub
 public:
 	virtual ~RpcInterfaceStub(){}
 
-	RpcInterfaceStub( unsigned char classId_, const RpcRemoteEndPoint* endpoint_);
 	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcRemoteEndPoint* endpoint_);
 	RpcInterfaceStub( const RpcInterfaceStub& o);
 	RpcInterfaceStub();
@@ -53,10 +52,10 @@ public:
 	void rpc_send( const std::string& msg) const;
 	std::string rpc_recv() const;
 	void rpc_waitAnswer() const;
+
 	const RpcRemoteEndPoint* endpoint() const			{return m_endpoint;}
 
 private:
-	static unsigned int m_objIdCnt;
 	unsigned char m_classId;
 	unsigned int m_objId;
 	const RpcRemoteEndPoint* m_endpoint;

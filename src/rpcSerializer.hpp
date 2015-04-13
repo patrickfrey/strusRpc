@@ -56,13 +56,13 @@
 
 namespace strus {
 
-class RpcMessage
+class RpcSerializer
 {
 public:
-	RpcMessage(){}
-	RpcMessage( const RpcMessage& o)
+	RpcSerializer(){}
+	RpcSerializer( const RpcSerializer& o)
 		:m_content(o.m_content){}
-	RpcMessage( unsigned char classId_, unsigned int objId_);
+	RpcSerializer( unsigned char classId_, unsigned int objId_);
 
 	void packObject( unsigned char classId_, unsigned int objId_);
 	void packString( const std::string& str);
@@ -112,12 +112,19 @@ private:
 	std::string m_content;
 };
 
+enum RpcReturnType
+{
+	MsgTypeException_BadAlloc,
+	MsgTypeException_RuntimeError,
+	MsgTypeException_LogicError,
+	MsgTypeAnswer
+};
 
-class RpcAnswer
+class RpcDeserializer
 {
 public:
-	RpcAnswer( const ConstConstructor* constConstructor_, const std::string& content_)
-		:m_constConstructor(constConstructor_),m_content(content_)
+	RpcDeserializer( const std::string& content_)
+		:m_content(content_)
 	{
 		m_itr = m_content.c_str();
 		m_end = m_content.c_str() + m_content.size();
@@ -164,10 +171,10 @@ public:
 	}
 
 private:
-	const ConstConstructor* m_constConstructor;
 	char const* m_itr;
 	const char* m_end;
 	std::string m_content;
+	std::vector<const char*> m_charpp_buf;
 };
 
 }//namespace

@@ -38,12 +38,22 @@ namespace strus {
 class ConstConstructor
 {
 public:
-	ConstConstructor();
-	ConstConstructor( const ConstConstructor& o);
+	ConstConstructor(){}
 
 	void reset() const
 	{
 		m_ar.clear();
+	}
+
+	const char* getCharp( const char* ptr) const
+	{
+		return (const char*)get( ptr, std::strlen(ptr)+1);
+	}
+	const char** getCharpp( const char** ptr) const
+	{
+		char const** pp = ptr;
+		while (*pp)++pp;
+		return (const char**)get( ptr, (pp-ptr)*sizeof(*pp));
 	}
 
 	const void* get( const void* ptr, std::size_t size) const

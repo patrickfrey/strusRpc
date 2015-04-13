@@ -28,28 +28,20 @@
 */
 #include "private/utils.hpp"
 #include "rpcInterfaceStub.hpp"
+#include "rpcSerializer.hpp"
 #include <stdexcept>
 #include <limits>
 
-using namespace strus;
+#define STRUS_RPC_TEST
+#ifdef STRUS_RPC_TEST
+#include "rpcServer.hpp"
+#endif
 
-static utils::Mutex g_mutex_objIdCnt;
-int unsigned RpcInterfaceStub::m_objIdCnt = 0;
+using namespace strus;
 
 RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
 	:m_classId(classId_),m_objId(objId_),m_endpoint(endpoint_)
 {}
-
-RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, const RpcRemoteEndPoint* endpoint_)
-	:m_classId(classId_),m_objId(0),m_endpoint(endpoint_)
-{
-	utils::ScopedLock lock( g_mutex_objIdCnt);
-	if (RpcInterfaceStub::m_objIdCnt >= std::numeric_limits<uint32_t>::max())
-	{
-		throw std::runtime_error("too many remote objects created (RPC)");
-	}
-	m_objId = ++RpcInterfaceStub::m_objIdCnt;
-}
 
 RpcInterfaceStub::RpcInterfaceStub( const RpcInterfaceStub& o)
 	:m_classId(o.m_classId),m_objId(o.m_objId),m_endpoint(o.m_endpoint){}
@@ -63,19 +55,50 @@ void RpcInterfaceStub::enter() const
 	m_constConstructor.reset();
 }
 
+#ifdef STRUS_RPC_TEST
+static RpcServer g_srv;
+static std::string g_answer;
+#endif
+
 void RpcInterfaceStub::rpc_send( const std::string& msg) const
 {
-	
+#ifdef STRUS_RPC_TEST
+	g_answer = g_srv.handleRequest( msg);
+#endif
+}
+
+static void handleResultError( const std::string& msgstr)
+{
+	if (msgstr.empty()) throw std::runtime_error( "got no answer from server");
+	RpcDeserializer msg( msgstr);
+	RpcReturnType returntype = (RpcReturnType)msg.unpackByte();
+	switch (returntype)
+	{
+		case MsgTypeException_BadAlloc:
+			throw std::runtime_error( std::string("method call failed: ") + msg.unpackString());
+		case MsgTypeException_RuntimeError:
+			throw std::runtime_error( std::string("method call failed: ") + msg.unpackString());
+		case MsgTypeException_LogicError:
+			throw std::logic_error( std::string("method call failed: ") + msg.unpackString());
+		case MsgTypeAnswer:
+			break;
+	}
 }
 
 std::string RpcInterfaceStub::rpc_recv() const
 {
-	
+#ifdef STRUS_RPC_TEST
+	handleResultError( g_answer);
+	return g_answer;
+#endif
 }
 
 void RpcInterfaceStub::rpc_waitAnswer() const
 {
-	
+#ifdef STRUS_RPC_TEST
+	if (g_answer.empty()) return;
+	handleResultError( g_answer);
+#endif
 }
 
 
