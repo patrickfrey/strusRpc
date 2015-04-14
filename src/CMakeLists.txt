@@ -13,6 +13,7 @@ set( source_files
 )
 
 include_directories(
+	"${PROJECT_SOURCE_DIR}/3rdParty/nanomsg-0.5-beta/src"
         "${Boost_INCLUDE_DIRS}"
 	"${PROJECT_SOURCE_DIR}/include"
 	"${PROJECT_SOURCE_DIR}/src/serialize"
@@ -22,14 +23,28 @@ include_directories(
 
 link_directories(
 	"${PROJECT_SOURCE_DIR}/src"
+	"${PROJECT_SOURCE_DIR}/3rdParty/nanomsg-0.5-beta/src/"
+	"${strusmodule_LIBRARY_DIRS}"
 )
 
 
 # -------------------------------------------
 # LIBRARY
 # -------------------------------------------
+add_library( strus_rpc_nanomsg SHARED  libstrus_rpc_nanomsg.cpp )
+target_link_libraries( strus_rpc_nanomsg dl nanomsg )
+
 add_library( strus_rpc SHARED ${source_files} )
 target_link_libraries( strus_rpc dl "${strusmodule_LIBRARIES}" )
+
+set_target_properties(
+    strus_rpc_nanomsg
+    PROPERTIES
+    DEBUG_POSTFIX "_d"
+    SOVERSION "${STRUS_MAJOR_VERSION}.${STRUS_MINOR_VERSION}"
+    VERSION ${STRUS_VERSION}
+)
+
 set_target_properties(
     strus_rpc
     PROPERTIES
@@ -41,16 +56,19 @@ set_target_properties(
 # ------------------------------
 # PROGRAMS
 # ------------------------------
-# add_executable( strusRpcServer server/strusRpcServer.cpp )
-# target_link_libraries( strusRpcServer  )
+add_executable( strusRpcServer server/strusRpcServer.cpp )
+target_link_libraries( strusRpcServer  nanomsg strus_module )
 
 # ------------------------------
 # INSTALLATION
 # ------------------------------
-install( TARGETS strus_rpc
-              LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strus )
+install( TARGETS strus_rpc_nanomsg
+           LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strus )
 
-# install( TARGETS strusRpcServer
-# 	   RUNTIME DESTINATION bin )
+install( TARGETS strus_rpc
+           LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strus )
+
+install( TARGETS strusRpcServer
+	   RUNTIME DESTINATION bin )
 
 

@@ -26,37 +26,46 @@
 
 --------------------------------------------------------------------
 */
-/// \brief Exported functions of the strus rpc library
-#ifndef _STRUS_LIB_RPC_HPP_INCLUDED
-#define _STRUS_LIB_RPC_HPP_INCLUDED
+#include "strus/lib/rpc_nanomsg.hpp"
+#include "strus/rpcMessagingInterface.hpp"
+#include "private/dll_tags.hpp"
+#include <nn.h>
+#include <pipeline.h>
 
-namespace strus {
+using namespace strus;
 
-/// \brief Forward declaration
-class StorageObjectBuilderInterface;
-/// \brief Forward declaration
-class AnalyzerObjectBuilderInterface;
-/// \brief Forward declaration
-class RpcClientInterface;
-/// \brief Forward declaration
-class RpcRequestHandlerInterface;
-/// \brief Forward declaration
-class RpcMessagingInterface;
+class RpcMessaging
+	:public RpcMessagingInterface
+{
+public:
+	RpcMessaging( const char* config)
+	{
+		
+	}
 
-/// \brief Creates an RPC Client connection to the server
-/// \param[in] connector interface to use for sending and receiving messages to and from the server
-RpcClientInterface*
-	createRpcClient(
-		RpcMessagingInterface* connector);
+	virtual ~RpcMessaging(){}
 
-/// \brief Creates an RPC request handler object to be used by a server implementation
-/// \param[in] storageBuilder_ storage builder (ownership passed to callee)
-/// \param[in] analyzerBuilder_ analyzer builder reference (ownership passed to callee)
-RpcRequestHandlerInterface*
-	createRpcRequestHandler(
-		StorageObjectBuilderInterface* storageBuilder_,
-		AnalyzerObjectBuilderInterface* analyzerBuilder_);
+	virtual void sendMessage( const std::string& content)
+	{
+		
+	}
 
-}//namespace
-#endif
+	virtual std::string getStatus()
+	{
+	}
+
+	virtual std::string recvMessage()
+	{
+		
+	}
+};
+
+DLL_PUBLIC RpcMessagingInterface*
+	strus::createRpcMessaging(
+		const char* config)
+{
+	return new RpcMessaging( config);
+}
+
+
 
