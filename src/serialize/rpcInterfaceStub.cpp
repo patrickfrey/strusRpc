@@ -32,39 +32,22 @@
 #include <stdexcept>
 #include <limits>
 
-#define STRUS_RPC_TEST
-#ifdef STRUS_RPC_TEST
-#include "rpcServer.hpp"
-#endif
-
 using namespace strus;
 
-RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcRemoteEndPoint* endpoint_)
-	:m_classId(classId_),m_objId(objId_),m_endpoint(endpoint_)
+RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, RpcMessagingInterface* messaging_)
+	:m_classId(classId_),m_objId(objId_),m_messaging(messaging_)
 {}
 
 RpcInterfaceStub::RpcInterfaceStub( const RpcInterfaceStub& o)
-	:m_classId(o.m_classId),m_objId(o.m_objId),m_endpoint(o.m_endpoint){}
+	:m_classId(o.m_classId),m_objId(o.m_objId),m_messaging(o.m_messaging){}
 
 RpcInterfaceStub::RpcInterfaceStub()
-	:m_classId(0),m_objId(0),m_endpoint(){}
+	:m_classId(0),m_objId(0),m_messaging(){}
 
 
 void RpcInterfaceStub::enter() const
 {
 	m_constConstructor.reset();
-}
-
-#ifdef STRUS_RPC_TEST
-static RpcServer g_srv;
-static std::string g_answer;
-#endif
-
-void RpcInterfaceStub::rpc_send( const std::string& msg) const
-{
-#ifdef STRUS_RPC_TEST
-	g_answer = g_srv.handleRequest( msg);
-#endif
 }
 
 static void handleResultError( const std::string& msgstr)
@@ -85,20 +68,27 @@ static void handleResultError( const std::string& msgstr)
 	}
 }
 
+
+void RpcInterfaceStub::rpc_send( const std::string& msg) const
+{
+	m_messaging->sendMessage(msg);
+}
+
 std::string RpcInterfaceStub::rpc_recv() const
 {
-#ifdef STRUS_RPC_TEST
-	handleResultError( g_answer);
-	return g_answer;
-#endif
+	std::string answer = m_messaging->recvMessage();
+	handleResultError( answer);
+	return answer;
 }
 
 void RpcInterfaceStub::rpc_waitAnswer() const
 {
-#ifdef STRUS_RPC_TEST
-	if (g_answer.empty()) return;
-	handleResultError( g_answer);
-#endif
+	std::string answer = m_messaging->getStatus();
+	if (answer.empty()) return;
+	handleResultError( answer);
+	if (!answer.empty()) throw std::runtime_error("expected status message or empty string (no object expected to be returned)");
 }
+
+
 
 

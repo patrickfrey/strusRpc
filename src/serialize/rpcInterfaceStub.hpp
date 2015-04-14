@@ -28,7 +28,7 @@
 */
 #ifndef _STRUS_RPC_INTERFACE_STUB_HPP_INCLUDED
 #define _STRUS_RPC_INTERFACE_STUB_HPP_INCLUDED
-#include "rpcRemoteEndPoint.hpp"
+#include "strus/rpcMessagingInterface.hpp"
 #include "constConstructor.hpp"
 #include <string>
 
@@ -39,7 +39,7 @@ class RpcInterfaceStub
 public:
 	virtual ~RpcInterfaceStub(){}
 
-	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcRemoteEndPoint* endpoint_);
+	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, RpcMessagingInterface* messaging_);
 	RpcInterfaceStub( const RpcInterfaceStub& o);
 	RpcInterfaceStub();
 
@@ -53,12 +53,12 @@ public:
 	std::string rpc_recv() const;
 	void rpc_waitAnswer() const;
 
-	const RpcRemoteEndPoint* endpoint() const			{return m_endpoint;}
+	RpcMessagingInterface* messaging() const			{return m_messaging;}
 
 private:
 	unsigned char m_classId;
 	unsigned int m_objId;
-	const RpcRemoteEndPoint* m_endpoint;
+	mutable RpcMessagingInterface* m_messaging;
 	ConstConstructor m_constConstructor;
 };
 

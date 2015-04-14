@@ -26,26 +26,24 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc.hpp"
-#include "strus/rpcClientInterface.hpp"
-#include "strus/rpcMessagingInterface.hpp"
-#include "strus/rpcRequestHandlerInterface.hpp"
-#include "rpcRequestHandler.hpp"
-#include "rpcClient.hpp"
-#include "private/dll_tags.hpp"
+#ifndef _STRUS_RPC_REQUEST_HANDLER_INTERFACE_HPP_INCLUDED
+#define _STRUS_RPC_REQUEST_HANDLER_INTERFACE_HPP_INCLUDED
+#include <string>
 
-using namespace strus;
-
-DLL_PUBLIC RpcClientInterface* strus::createRpcClient( RpcMessagingInterface* connector)
+namespace strus
 {
-	return new RpcClient( connector);
-}
 
-DLL_PUBLIC RpcRequestHandlerInterface*
-	strus::createRpcRequestHandler(
-		StorageObjectBuilderInterface* storageBuilder_,
-		AnalyzerObjectBuilderInterface* analyzerBuilder_)
+/// \brief RPC server side request handler, executing a serialized request
+class RpcRequestHandlerInterface
 {
-	return new RpcRequestHandler( storageBuilder_, analyzerBuilder_);
-}
+public:
+	/// \brief Destructor
+	virtual ~RpcRequestHandlerInterface(){}
+
+	/// \brief Handle a serialized request
+	virtual std::string handleRequest( const std::string& msg)=0;
+};
+
+}//namespace
+#endif
 

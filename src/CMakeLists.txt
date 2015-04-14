@@ -5,16 +5,17 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR )
 # --------------------------------------
 set( source_files
 	libstrus_rpc.cpp
-	rpcSerializer.cpp
-	rpcServer.cpp
-	rpcObjects.cpp
-	rpcRemoteEndPoint.cpp
-	rpcInterfaceStub.cpp
+	serialize/rpcSerializer.cpp
+	serialize/rpcRequestHandler.cpp
+	serialize/rpcObjects.cpp
+	serialize/rpcInterfaceStub.cpp
+	serialize/rpcClient.cpp
 )
 
 include_directories(
         "${Boost_INCLUDE_DIRS}"
 	"${PROJECT_SOURCE_DIR}/include"
+	"${PROJECT_SOURCE_DIR}/src/serialize"
 	"${strusmodule_INCLUDE_DIRS}"
 	"${strus_INCLUDE_DIRS}"
 	"${strusanalyzer_INCLUDE_DIRS}" )
@@ -37,10 +38,19 @@ set_target_properties(
     VERSION ${STRUS_VERSION}
 )
 
+# ------------------------------
+# PROGRAMS
+# ------------------------------
+# add_executable( strusRpcServer server/strusRpcServer.cpp )
+# target_link_libraries( strusRpcServer  )
 
 # ------------------------------
 # INSTALLATION
 # ------------------------------
 install( TARGETS strus_rpc
-           LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strus )
+              LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strus )
+
+# install( TARGETS strusRpcServer
+# 	   RUNTIME DESTINATION bin )
+
 

@@ -30,7 +30,6 @@
 #define _STRUS_RPC_MESSAGE_STUB_HPP_INCLUDED
 #include <string>
 #include "rpcInterfaceStub.hpp"
-#include "rpcRemoteEndPoint.hpp"
 #include "strus/index.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/arithmeticVariant.hpp"

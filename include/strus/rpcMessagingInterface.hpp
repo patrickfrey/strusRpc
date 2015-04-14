@@ -26,9 +26,32 @@
 
 --------------------------------------------------------------------
 */
-#include "rpcRemoteEndPoint.hpp"
+#ifndef _STRUS_RPC_MESSAGING_INTERFACE_HPP_INCLUDED
+#define _STRUS_RPC_MESSAGING_INTERFACE_HPP_INCLUDED
+#include <string>
 
-using namespace strus;
+namespace strus
+{
 
+/// \brief Interface providing a mechanism to send and receive messages
+class RpcMessagingInterface
+{
+public:
+	/// \brief Destructor
+	virtual ~RpcMessagingInterface(){}
 
+	/// \brief Send a message and do not wait for reply
+	virtual void sendMessage( const std::string& content)=0;
+
+	/// \brief Wait for a reply and return the string indicating an error or and empty string on success
+	virtual std::string getStatus()=0;
+
+	/// \brief Receive a message
+	/// \return the message received
+	/// \remark Throws on error
+	virtual std::string recvMessage()=0;
+};
+
+}//namespace
+#endif
 

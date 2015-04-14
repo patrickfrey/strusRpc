@@ -26,26 +26,36 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc.hpp"
+#ifndef _STRUS_RPC_CLIENT_IMPLEMENTATION_HPP_INCLUDED
+#define _STRUS_RPC_CLIENT_IMPLEMENTATION_HPP_INCLUDED
 #include "strus/rpcClientInterface.hpp"
-#include "strus/rpcMessagingInterface.hpp"
-#include "strus/rpcRequestHandlerInterface.hpp"
-#include "rpcRequestHandler.hpp"
-#include "rpcClient.hpp"
-#include "private/dll_tags.hpp"
 
-using namespace strus;
-
-DLL_PUBLIC RpcClientInterface* strus::createRpcClient( RpcMessagingInterface* connector)
+namespace strus
 {
-	return new RpcClient( connector);
-}
 
-DLL_PUBLIC RpcRequestHandlerInterface*
-	strus::createRpcRequestHandler(
-		StorageObjectBuilderInterface* storageBuilder_,
-		AnalyzerObjectBuilderInterface* analyzerBuilder_)
+/// \brief Forward declaration
+class RpcMessagingInterface;
+
+/// \brief Interface providing a mechanism to create complex objects
+class RpcClient
+	:public RpcClientInterface
 {
-	return new RpcRequestHandler( storageBuilder_, analyzerBuilder_);
-}
+public:
+	RpcClient( RpcMessagingInterface* messaging_)
+		:m_messaging(messaging_),m_objcnt(0){}
+
+	/// \brief Destructor
+	virtual ~RpcClient(){}
+
+	virtual StorageObjectBuilderInterface* createStorageObjectBuilder() const;
+
+	virtual AnalyzerObjectBuilderInterface* createAnalyzerObjectBuilder() const;
+
+private:
+	RpcMessagingInterface* m_messaging;
+	mutable unsigned int m_objcnt;
+};
+
+}//namespace
+#endif
 

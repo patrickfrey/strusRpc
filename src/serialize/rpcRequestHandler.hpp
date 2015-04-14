@@ -26,8 +26,12 @@
 
 --------------------------------------------------------------------
 */
-#ifndef _STRUS_RPC_SERVER_HPP_INCLUDED
-#define _STRUS_RPC_SERVER_HPP_INCLUDED
+#ifndef _STRUS_RPC_REQUEST_HANDLER_IMPLEMENTATION_HPP_INCLUDED
+#define _STRUS_RPC_REQUEST_HANDLER_IMPLEMENTATION_HPP_INCLUDED
+#include "strus/rpcRequestHandlerInterface.hpp"
+#include "strus/analyzerObjectBuilderInterface.hpp"
+#include "strus/storageObjectBuilderInterface.hpp"
+#include "rpcObjects.hpp"
 #include <string>
 #include <map>
 
@@ -44,18 +48,26 @@ public:
 	}
 };
 
-class RpcServer
+class RpcRequestHandler
+	:public RpcRequestHandlerInterface
 {
 public:
-	RpcServer()
-		:m_objIdCnt(0){}
-	~RpcServer()
+	RpcRequestHandler(
+			StorageObjectBuilderInterface* storageBuilder_,
+			AnalyzerObjectBuilderInterface* analyzerBuilder_)
+		:m_objIdCnt(0)
+	{
+		defineObject( ClassId_StorageObjectBuilder, 0, storageBuilder_);
+		defineObject( ClassId_AnalyzerObjectBuilder, 0, analyzerBuilder_);
+	}
+	~RpcRequestHandler()
 	{
 		clear();
 	}
 
-	std::string handleRequest( const std::string& msg);
+	virtual std::string handleRequest( const std::string& msg);
 
+public:
 	template <class Interface>
 	void defineObject( unsigned char classId_, unsigned int objId_, Interface* obj_)
 	{
@@ -91,7 +103,7 @@ public:
 		}
 		else
 		{
-			return NULL;
+			throw std::runtime_error( "accessing non existing object (invalid reference)");
 		}
 	}
 

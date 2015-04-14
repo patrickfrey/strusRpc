@@ -26,21 +26,25 @@
 
 --------------------------------------------------------------------
 */
-#ifndef _STRUS_RPC_REMOTE_END_POINT_HPP_INCLUDED
-#define _STRUS_RPC_REMOTE_END_POINT_HPP_INCLUDED
-#include "constConstructor.hpp"
-#include <string>
+#include "rpcClient.hpp"
+#include "strus/storageObjectBuilderInterface.hpp"
+#include "strus/analyzerObjectBuilderInterface.hpp"
+#include "rpcObjects.hpp"
 
-namespace strus {
+using namespace strus;
 
-class RpcRemoteEndPoint
+StorageObjectBuilderInterface* RpcClient::createStorageObjectBuilder() const
 {
-public:
-	RpcRemoteEndPoint();
-	RpcRemoteEndPoint( const char* config);
-	RpcRemoteEndPoint( const RpcRemoteEndPoint& o);
-};
+	if (m_objcnt) throw std::runtime_error( "tried to build a second instance of a storage object builder");
+	return new StorageObjectBuilderImpl( 0, m_messaging);
+	m_objcnt = 1;
+}
 
-}//namespace
-#endif
+AnalyzerObjectBuilderInterface* RpcClient::createAnalyzerObjectBuilder() const
+{
+	if (m_objcnt) throw std::runtime_error( "tried to build a second instance of an analyzer object builder");
+	return new AnalyzerObjectBuilderImpl( 0, m_messaging);
+	m_objcnt = 1;
+}
+
 

@@ -26,26 +26,33 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc.hpp"
-#include "strus/rpcClientInterface.hpp"
-#include "strus/rpcMessagingInterface.hpp"
-#include "strus/rpcRequestHandlerInterface.hpp"
-#include "rpcRequestHandler.hpp"
-#include "rpcClient.hpp"
-#include "private/dll_tags.hpp"
+/// \brief Exported functions of the strus rpc library
+#ifndef _STRUS_LIB_RPC_HPP_INCLUDED
+#define _STRUS_LIB_RPC_HPP_INCLUDED
 
-using namespace strus;
+namespace strus {
 
-DLL_PUBLIC RpcClientInterface* strus::createRpcClient( RpcMessagingInterface* connector)
-{
-	return new RpcClient( connector);
-}
+/// \brief Forward declaration
+class StorageObjectBuilderInterface;
+/// \brief Forward declaration
+class AnalyzerObjectBuilderInterface;
+/// \brief Forward declaration
+class RpcClientInterface;
+/// \brief Forward declaration
+class RpcRequestHandlerInterface;
+/// \brief Forward declaration
+class RpcMessagingInterface;
 
-DLL_PUBLIC RpcRequestHandlerInterface*
-	strus::createRpcRequestHandler(
+/// \brief Creates an RPC Client connection to the server
+/// \param[in] connector interface to use for sending and receiving messages to and from the server
+RpcClientInterface* createRpcClient( RpcMessagingInterface* connector);
+
+/// \brief Creates an RPC request handler object to be used by a server implementation
+RpcRequestHandlerInterface*
+	createRpcRequestHandler(
 		StorageObjectBuilderInterface* storageBuilder_,
-		AnalyzerObjectBuilderInterface* analyzerBuilder_)
-{
-	return new RpcRequestHandler( storageBuilder_, analyzerBuilder_);
-}
+		AnalyzerObjectBuilderInterface* analyzerBuilder_);
+
+}//namespace
+#endif
 

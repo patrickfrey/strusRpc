@@ -26,13 +26,13 @@
 
 --------------------------------------------------------------------
 */
-#include "rpcServer.hpp"
+#include "rpcRequestHandler.hpp"
 #include "rpcSerializer.hpp"
 #include "rpcObjects.hpp"
 #include <string>
 
 using namespace strus;
-std::string RpcServer::handleRequest( const std::string& msg)
+std::string RpcRequestHandler::handleRequest( const std::string& msg)
 {
 	RpcDeserializer serializedMsg( msg);
 	if (!serializedMsg.unpackCrc32()) throw std::runtime_error("message CRC32 check failed");
@@ -41,6 +41,111 @@ std::string RpcServer::handleRequest( const std::string& msg)
 	methodId = serializedMsg.unpackByte();
 	switch( (ClassId)classId)
 	{
+	case ClassId_AnalyzerObjectBuilder:
+	{
+	AnalyzerObjectBuilderInterface* obj = getObject<AnalyzerObjectBuilderInterface>( classId, objId);
+	switch( (AnalyzerObjectBuilderImpl::MethodId)methodId)
+	{
+		case AnalyzerObjectBuilderImpl::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+		}
+		case AnalyzerObjectBuilderImpl::Method_getTextProcessor:
+		{
+			RpcSerializer msg;
+			msg.packByte( MsgTypeException_RuntimeError);
+			msg.packString( "the method 'getTextProcessor' is not implemented for RPC");
+			return msg.content();
+			break;
+		}
+		case AnalyzerObjectBuilderImpl::Method_createSegmenter:
+		{
+			RpcSerializer msg;
+			SegmenterInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			try {
+				p0 = obj->createSegmenter(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			unsigned char classId_0 = (unsigned char)ClassId_Segmenter;
+			unsigned int objId_0 = createObject( classId_0, p0);
+			msg.packObject( classId_0, objId_0);
+			msg.packCrc32();
+			return msg.content();
+			break;
+		}
+		case AnalyzerObjectBuilderImpl::Method_createDocumentAnalyzer:
+		{
+			RpcSerializer msg;
+			DocumentAnalyzerInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			try {
+				p0 = obj->createDocumentAnalyzer(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzer;
+			unsigned int objId_0 = createObject( classId_0, p0);
+			msg.packObject( classId_0, objId_0);
+			msg.packCrc32();
+			return msg.content();
+			break;
+		}
+		case AnalyzerObjectBuilderImpl::Method_createQueryAnalyzer:
+		{
+			RpcSerializer msg;
+			QueryAnalyzerInterface* p0;
+			try {
+				p0 = obj->createQueryAnalyzer();
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			unsigned char classId_0 = (unsigned char)ClassId_QueryAnalyzer;
+			unsigned int objId_0 = createObject( classId_0, p0);
+			msg.packObject( classId_0, objId_0);
+			msg.packCrc32();
+			return msg.content();
+			break;
+		}
+	}
+	break;
+	}
 	case ClassId_AttributeReader:
 	{
 	AttributeReaderInterface* obj = getObject<AttributeReaderInterface>( classId, objId);
@@ -4020,6 +4125,127 @@ std::string RpcServer::handleRequest( const std::string& msg)
 				return msg.content();
 			}
 			msg.packCharpp( p0);
+			msg.packCrc32();
+			return msg.content();
+			break;
+		}
+	}
+	break;
+	}
+	case ClassId_StorageObjectBuilder:
+	{
+	StorageObjectBuilderInterface* obj = getObject<StorageObjectBuilderInterface>( classId, objId);
+	switch( (StorageObjectBuilderImpl::MethodId)methodId)
+	{
+		case StorageObjectBuilderImpl::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+		}
+		case StorageObjectBuilderImpl::Method_getStorage:
+		{
+			RpcSerializer msg;
+			msg.packByte( MsgTypeException_RuntimeError);
+			msg.packString( "the method 'getStorage' is not implemented for RPC");
+			return msg.content();
+			break;
+		}
+		case StorageObjectBuilderImpl::Method_getDatabase:
+		{
+			RpcSerializer msg;
+			msg.packByte( MsgTypeException_RuntimeError);
+			msg.packString( "the method 'getDatabase' is not implemented for RPC");
+			return msg.content();
+			break;
+		}
+		case StorageObjectBuilderImpl::Method_getQueryProcessor:
+		{
+			RpcSerializer msg;
+			msg.packByte( MsgTypeException_RuntimeError);
+			msg.packString( "the method 'getQueryProcessor' is not implemented for RPC");
+			return msg.content();
+			break;
+		}
+		case StorageObjectBuilderImpl::Method_createStorageClient:
+		{
+			RpcSerializer msg;
+			StorageClientInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			try {
+				p0 = obj->createStorageClient(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			unsigned char classId_0 = (unsigned char)ClassId_StorageClient;
+			unsigned int objId_0 = createObject( classId_0, p0);
+			msg.packObject( classId_0, objId_0);
+			msg.packCrc32();
+			return msg.content();
+			break;
+		}
+		case StorageObjectBuilderImpl::Method_createAlterMetaDataTable:
+		{
+			RpcSerializer msg;
+			StorageAlterMetaDataTableInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			try {
+				p0 = obj->createAlterMetaDataTable(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			unsigned char classId_0 = (unsigned char)ClassId_StorageAlterMetaDataTable;
+			unsigned int objId_0 = createObject( classId_0, p0);
+			msg.packObject( classId_0, objId_0);
+			msg.packCrc32();
+			return msg.content();
+			break;
+		}
+		case StorageObjectBuilderImpl::Method_createQueryEval:
+		{
+			RpcSerializer msg;
+			QueryEvalInterface* p0;
+			try {
+				p0 = obj->createQueryEval();
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			unsigned char classId_0 = (unsigned char)ClassId_QueryEval;
+			unsigned int objId_0 = createObject( classId_0, p0);
+			msg.packObject( classId_0, objId_0);
 			msg.packCrc32();
 			return msg.content();
 			break;

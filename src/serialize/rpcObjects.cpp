@@ -31,6 +31,73 @@
 
 using namespace strus;
 
+AnalyzerObjectBuilderImpl::~AnalyzerObjectBuilderImpl()
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
+const TextProcessorInterface* AnalyzerObjectBuilderImpl::getTextProcessor( ) const
+{
+	throw std::runtime_error("the method 'getTextProcessor' is not implemented for RPC");
+}
+
+SegmenterInterface* AnalyzerObjectBuilderImpl::createSegmenter( const std::string& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createSegmenter);
+	msg.packString( p1);
+	msg.packCrc32();
+	rpc_send( msg.content());
+	enter();
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_Segmenter) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	SegmenterInterface* p0 = new SegmenterImpl( objId_0, messaging());
+	return p0;
+}
+
+DocumentAnalyzerInterface* AnalyzerObjectBuilderImpl::createDocumentAnalyzer( const std::string& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createDocumentAnalyzer);
+	msg.packString( p1);
+	msg.packCrc32();
+	rpc_send( msg.content());
+	enter();
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_DocumentAnalyzer) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	DocumentAnalyzerInterface* p0 = new DocumentAnalyzerImpl( objId_0, messaging());
+	return p0;
+}
+
+QueryAnalyzerInterface* AnalyzerObjectBuilderImpl::createQueryAnalyzer( ) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createQueryAnalyzer);
+	msg.packCrc32();
+	rpc_send( msg.content());
+	enter();
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_QueryAnalyzer) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	QueryAnalyzerInterface* p0 = new QueryAnalyzerImpl( objId_0, messaging());
+	return p0;
+}
+
 AttributeReaderImpl::~AttributeReaderImpl()
 {
 	RpcSerializer msg;
@@ -140,7 +207,7 @@ DatabaseTransactionInterface* DatabaseClientImpl::createTransaction( )
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_DatabaseTransaction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	DatabaseTransactionInterface* p0 = new DatabaseTransactionImpl( objId_0, endpoint());
+	DatabaseTransactionInterface* p0 = new DatabaseTransactionImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -158,7 +225,7 @@ DatabaseCursorInterface* DatabaseClientImpl::createCursor( const DatabaseOptions
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_DatabaseCursor) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	DatabaseCursorInterface* p0 = new DatabaseCursorImpl( objId_0, endpoint());
+	DatabaseCursorInterface* p0 = new DatabaseCursorImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -175,7 +242,7 @@ DatabaseBackupCursorInterface* DatabaseClientImpl::createBackupCursor( ) const
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_DatabaseBackupCursor) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	DatabaseBackupCursorInterface* p0 = new DatabaseBackupCursorImpl( objId_0, endpoint());
+	DatabaseBackupCursorInterface* p0 = new DatabaseBackupCursorImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -358,7 +425,7 @@ DatabaseClientInterface* DatabaseImpl::createClient( const std::string& p1) cons
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_DatabaseClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	DatabaseClientInterface* p0 = new DatabaseClientImpl( objId_0, endpoint());
+	DatabaseClientInterface* p0 = new DatabaseClientImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -448,7 +515,7 @@ DatabaseCursorInterface* DatabaseTransactionImpl::createCursor( const DatabaseOp
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_DatabaseCursor) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	DatabaseCursorInterface* p0 = new DatabaseCursorImpl( objId_0, endpoint());
+	DatabaseCursorInterface* p0 = new DatabaseCursorImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -691,7 +758,7 @@ DocumentAnalyzerInstanceInterface* DocumentAnalyzerImpl::createInstance( ) const
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_DocumentAnalyzerInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	DocumentAnalyzerInstanceInterface* p0 = new DocumentAnalyzerInstanceImpl( objId_0, endpoint());
+	DocumentAnalyzerInstanceInterface* p0 = new DocumentAnalyzerInstanceImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -904,7 +971,7 @@ NormalizerInterface* NormalizerConstructorImpl::create( const std::vector<std::s
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_Normalizer) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	NormalizerInterface* p0 = new NormalizerImpl( objId_0, endpoint());
+	NormalizerInterface* p0 = new NormalizerImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -954,7 +1021,7 @@ NormalizerInstanceInterface* NormalizerImpl::createInstance( ) const
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_NormalizerInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	NormalizerInstanceInterface* p0 = new NormalizerInstanceImpl( objId_0, endpoint());
+	NormalizerInstanceInterface* p0 = new NormalizerInstanceImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1151,7 +1218,7 @@ PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const s
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_PostingIterator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, endpoint());
+	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1285,7 +1352,7 @@ QueryInterface* QueryEvalImpl::createQuery( const StorageClientInterface* p1) co
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_Query) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	QueryInterface* p0 = new QueryImpl( objId_0, endpoint());
+	QueryInterface* p0 = new QueryImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1560,7 +1627,7 @@ SegmenterInstanceInterface* SegmenterImpl::createInstance( ) const
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_SegmenterInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	SegmenterInstanceInterface* p0 = new SegmenterInstanceImpl( objId_0, endpoint());
+	SegmenterInstanceInterface* p0 = new SegmenterInstanceImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1679,7 +1746,7 @@ PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const st
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_PostingIterator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, endpoint());
+	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1697,7 +1764,7 @@ ForwardIteratorInterface* StorageClientImpl::createForwardIterator( const std::s
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_ForwardIterator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	ForwardIteratorInterface* p0 = new ForwardIteratorImpl( objId_0, endpoint());
+	ForwardIteratorInterface* p0 = new ForwardIteratorImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1715,7 +1782,7 @@ InvAclIteratorInterface* StorageClientImpl::createInvAclIterator( const std::str
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_InvAclIterator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	InvAclIteratorInterface* p0 = new InvAclIteratorImpl( objId_0, endpoint());
+	InvAclIteratorInterface* p0 = new InvAclIteratorImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1821,7 +1888,7 @@ MetaDataReaderInterface* StorageClientImpl::createMetaDataReader( ) const
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_MetaDataReader) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	MetaDataReaderInterface* p0 = new MetaDataReaderImpl( objId_0, endpoint());
+	MetaDataReaderInterface* p0 = new MetaDataReaderImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1838,7 +1905,7 @@ AttributeReaderInterface* StorageClientImpl::createAttributeReader( ) const
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_AttributeReader) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	AttributeReaderInterface* p0 = new AttributeReaderImpl( objId_0, endpoint());
+	AttributeReaderInterface* p0 = new AttributeReaderImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1855,7 +1922,7 @@ DocnoRangeAllocatorInterface* StorageClientImpl::createDocnoRangeAllocator( )
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_DocnoRangeAllocator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	DocnoRangeAllocatorInterface* p0 = new DocnoRangeAllocatorImpl( objId_0, endpoint());
+	DocnoRangeAllocatorInterface* p0 = new DocnoRangeAllocatorImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1872,7 +1939,7 @@ StorageTransactionInterface* StorageClientImpl::createTransaction( )
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_StorageTransaction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	StorageTransactionInterface* p0 = new StorageTransactionImpl( objId_0, endpoint());
+	StorageTransactionInterface* p0 = new StorageTransactionImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1889,7 +1956,7 @@ PeerStorageTransactionInterface* StorageClientImpl::createPeerStorageTransaction
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_PeerStorageTransaction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	PeerStorageTransactionInterface* p0 = new PeerStorageTransactionImpl( objId_0, endpoint());
+	PeerStorageTransactionInterface* p0 = new PeerStorageTransactionImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1921,7 +1988,7 @@ StorageDocumentInterface* StorageClientImpl::createDocumentChecker( const std::s
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_StorageDocument) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	StorageDocumentInterface* p0 = new StorageDocumentImpl( objId_0, endpoint());
+	StorageDocumentInterface* p0 = new StorageDocumentImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -1943,7 +2010,7 @@ StorageDumpInterface* StorageClientImpl::createDump( ) const
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_StorageDump) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	StorageDumpInterface* p0 = new StorageDumpImpl( objId_0, endpoint());
+	StorageDumpInterface* p0 = new StorageDumpImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -2074,7 +2141,7 @@ StorageClientInterface* StorageImpl::createClient( const std::string& p1, Databa
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_StorageClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	StorageClientInterface* p0 = new StorageClientImpl( objId_0, endpoint());
+	StorageClientInterface* p0 = new StorageClientImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -2107,7 +2174,7 @@ StorageAlterMetaDataTableInterface* StorageImpl::createAlterMetaDataTable( Datab
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_StorageAlterMetaDataTable) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	StorageAlterMetaDataTableInterface* p0 = new StorageAlterMetaDataTableImpl( objId_0, endpoint());
+	StorageAlterMetaDataTableInterface* p0 = new StorageAlterMetaDataTableImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -2141,6 +2208,83 @@ const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) 
 	return p0;
 }
 
+StorageObjectBuilderImpl::~StorageObjectBuilderImpl()
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	rpc_send( msg.content());
+}
+
+const StorageInterface* StorageObjectBuilderImpl::getStorage( ) const
+{
+	throw std::runtime_error("the method 'getStorage' is not implemented for RPC");
+}
+
+const DatabaseInterface* StorageObjectBuilderImpl::getDatabase( const std::string& p1) const
+{
+	throw std::runtime_error("the method 'getDatabase' is not implemented for RPC");
+}
+
+const QueryProcessorInterface* StorageObjectBuilderImpl::getQueryProcessor( ) const
+{
+	throw std::runtime_error("the method 'getQueryProcessor' is not implemented for RPC");
+}
+
+StorageClientInterface* StorageObjectBuilderImpl::createStorageClient( const std::string& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createStorageClient);
+	msg.packString( p1);
+	msg.packCrc32();
+	rpc_send( msg.content());
+	enter();
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_StorageClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	StorageClientInterface* p0 = new StorageClientImpl( objId_0, messaging());
+	return p0;
+}
+
+StorageAlterMetaDataTableInterface* StorageObjectBuilderImpl::createAlterMetaDataTable( const std::string& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createAlterMetaDataTable);
+	msg.packString( p1);
+	msg.packCrc32();
+	rpc_send( msg.content());
+	enter();
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_StorageAlterMetaDataTable) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	StorageAlterMetaDataTableInterface* p0 = new StorageAlterMetaDataTableImpl( objId_0, messaging());
+	return p0;
+}
+
+QueryEvalInterface* StorageObjectBuilderImpl::createQueryEval( ) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createQueryEval);
+	msg.packCrc32();
+	rpc_send( msg.content());
+	enter();
+	RpcDeserializer serializedMsg( rpc_recv());
+	serializedMsg.unpackByte();
+	unsigned char classId_0; unsigned int objId_0;
+	serializedMsg.unpackObject( classId_0, objId_0);
+	if (classId_0 != ClassId_QueryEval) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+	QueryEvalInterface* p0 = new QueryEvalImpl( objId_0, messaging());
+	return p0;
+}
+
 StoragePeerImpl::~StoragePeerImpl()
 {
 	RpcSerializer msg;
@@ -2163,7 +2307,7 @@ StoragePeerTransactionInterface* StoragePeerImpl::createTransaction( ) const
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_StoragePeerTransaction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	StoragePeerTransactionInterface* p0 = new StoragePeerTransactionImpl( objId_0, endpoint());
+	StoragePeerTransactionInterface* p0 = new StoragePeerTransactionImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -2250,7 +2394,7 @@ StorageDocumentInterface* StorageTransactionImpl::createDocument( const std::str
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_StorageDocument) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	StorageDocumentInterface* p0 = new StorageDocumentImpl( objId_0, endpoint());
+	StorageDocumentInterface* p0 = new StorageDocumentImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -2407,7 +2551,7 @@ SummarizerClosureInterface* SummarizerFunctionImpl::createClosure( const Storage
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_SummarizerClosure) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	SummarizerClosureInterface* p0 = new SummarizerClosureImpl( objId_0, endpoint());
+	SummarizerClosureInterface* p0 = new SummarizerClosureImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -2510,7 +2654,7 @@ TokenizerInterface* TokenizerConstructorImpl::create( const std::vector<std::str
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_Tokenizer) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	TokenizerInterface* p0 = new TokenizerImpl( objId_0, endpoint());
+	TokenizerInterface* p0 = new TokenizerImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -2579,7 +2723,7 @@ TokenizerInstanceInterface* TokenizerImpl::createInstance( ) const
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_TokenizerInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	TokenizerInstanceInterface* p0 = new TokenizerInstanceImpl( objId_0, endpoint());
+	TokenizerInstanceInterface* p0 = new TokenizerInstanceImpl( objId_0, messaging());
 	return p0;
 }
 
@@ -2656,7 +2800,7 @@ WeightingClosureInterface* WeightingFunctionImpl::createClosure( const StorageCl
 	unsigned char classId_0; unsigned int objId_0;
 	serializedMsg.unpackObject( classId_0, objId_0);
 	if (classId_0 != ClassId_WeightingClosure) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-	WeightingClosureInterface* p0 = new WeightingClosureImpl( objId_0, endpoint());
+	WeightingClosureInterface* p0 = new WeightingClosureImpl( objId_0, messaging());
 	return p0;
 }
 

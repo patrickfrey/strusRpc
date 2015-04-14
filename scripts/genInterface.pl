@@ -147,6 +147,10 @@ $notImplMethods{"getWeightingFunction"} = 1;   # ...const Object return can not 
 $notImplMethods{"subExpressions"} = 1;         # ...vector of const Object return can not be handled
 $notImplMethods{"getNormalizer"} = 1;          # ...const Object return can not be handled
 $notImplMethods{"getTokenizer"} = 1;           # ...const Object return can not be handled
+$notImplMethods{"getTextProcessor"} = 1;       # ...const Object return can not be handled
+$notImplMethods{"getStorage"} = 1;             # ...const Object return can not be handled
+$notImplMethods{"getQueryProcessor"} = 1;      # ...const Object return can not be handled
+$notImplMethods{"getDatabase"} = 1;            # ...const Object return can not be handled
 
 my %passOwnershipParams = ();
 $passOwnershipParams{"definePostingJoinOperator"} = 1;
@@ -767,7 +771,7 @@ sub unpackParameter
 		else
 		{
 			my $implname = interfaceImplementationClassName( $type);
-			$rt .= "\t$id = new $implname( objId_$idx, endpoint());";
+			$rt .= "\t$id = new $implname( objId_$idx, messaging());";
 		}
 	}
 	elsif ($type eq "ArithmeticVariant")
@@ -1283,7 +1287,7 @@ sub getClassHeaderSource
 		}
 		$rt .= "\n\t};\n";
 		$rt .= "\n\tvirtual ~$classname();\n";
-		$rt .= "\n\t$classname( unsigned int objId_, const RpcRemoteEndPoint* endpoint_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, endpoint_){}\n";
+		$rt .= "\n\t$classname( unsigned int objId_, RpcMessagingInterface* messaging_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, messaging_){}\n";
 		foreach $mm( @mth)
 		{
 			$rt .= "\n\t" . getMethodDeclarationHeader( $classname, $mm) .";";
@@ -1361,7 +1365,7 @@ sub getClassImplementationSource
 }
 
 
-my $interfacefile = "src/rpcObjects.hpp";
+my $interfacefile = "src/serialize/rpcObjects.hpp";
 open( HDRFILE, ">$interfacefile") or die "Couldn't open file $interfacefile, $!";
 
 print HDRFILE <<EOF;
@@ -1420,7 +1424,7 @@ print HDRFILE <<EOF;
 EOF
 close HDRFILE;
 
-my $sourcefile = "src/rpcObjects.cpp";
+my $sourcefile = "src/serialize/rpcObjects.cpp";
 open( SRCFILE, ">$sourcefile") or die "Couldn't open file $sourcefile, $!";
 
 print SRCFILE <<EOF;
@@ -1467,7 +1471,7 @@ EOF
 close SRCFILE;
 
 
-$sourcefile = "src/rpcServer.cpp";
+$sourcefile = "src/serialize/rpcRequestHandler.cpp";
 open( SRCFILE, ">$sourcefile") or die "Couldn't open file $sourcefile, $!";
 
 print SRCFILE <<EOF;
@@ -1499,13 +1503,13 @@ print SRCFILE <<EOF;
 
 --------------------------------------------------------------------
 */
-#include "rpcServer.hpp"
+#include "rpcRequestHandler.hpp"
 #include "rpcSerializer.hpp"
 #include "rpcObjects.hpp"
 #include <string>
 
 using namespace strus;
-std::string RpcServer::handleRequest( const std::string& msg)
+std::string RpcRequestHandler::handleRequest( const std::string& msg)
 {
 EOF
 

@@ -26,26 +26,34 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc.hpp"
-#include "strus/rpcClientInterface.hpp"
-#include "strus/rpcMessagingInterface.hpp"
-#include "strus/rpcRequestHandlerInterface.hpp"
-#include "rpcRequestHandler.hpp"
-#include "rpcClient.hpp"
-#include "private/dll_tags.hpp"
+#ifndef _STRUS_RPC_CLIENT_INTERFACE_HPP_INCLUDED
+#define _STRUS_RPC_CLIENT_INTERFACE_HPP_INCLUDED
 
-using namespace strus;
-
-DLL_PUBLIC RpcClientInterface* strus::createRpcClient( RpcMessagingInterface* connector)
+namespace strus
 {
-	return new RpcClient( connector);
-}
 
-DLL_PUBLIC RpcRequestHandlerInterface*
-	strus::createRpcRequestHandler(
-		StorageObjectBuilderInterface* storageBuilder_,
-		AnalyzerObjectBuilderInterface* analyzerBuilder_)
+/// \brief Forward declaration
+class AnalyzerObjectBuilderInterface;
+/// \brief Forward declaration
+class StorageObjectBuilderInterface;
+
+
+/// \brief Interface providing a mechanism to create complex objects
+class RpcClientInterface
 {
-	return new RpcRequestHandler( storageBuilder_, analyzerBuilder_);
-}
+public:
+	/// \brief Destructor
+	virtual ~RpcClientInterface(){}
+
+	/// \brief Creates an object builder for using the strus storage and query evaluation to be accessed via RPC calls
+	/// \return the storage object builder(with ownership returned)
+	virtual StorageObjectBuilderInterface* createStorageObjectBuilder() const=0;
+
+	/// \brief Creates an object builder for using the strus analyzer to be accessed via RPC calls
+	/// \return the analyzer object builder(with ownership returned)
+	virtual AnalyzerObjectBuilderInterface* createAnalyzerObjectBuilder() const=0;
+};
+
+}//namespace
+#endif
 
