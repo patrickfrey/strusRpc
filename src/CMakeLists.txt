@@ -31,7 +31,7 @@ link_directories(
 # -------------------------------------------
 # LIBRARY
 # -------------------------------------------
-add_library( strus_rpc_nanomsg SHARED  libstrus_rpc_nanomsg.cpp )
+add_library( strus_rpc_nanomsg SHARED  client/rpcClientMessaging.cpp libstrus_rpc_nanomsg.cpp )
 target_link_libraries( strus_rpc_nanomsg dl nanomsg )
 
 add_library( strus_rpc SHARED ${source_files} )

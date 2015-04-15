@@ -41,7 +41,7 @@ public:
 	virtual ~RpcRequestHandlerInterface(){}
 
 	/// \brief Handle a serialized request
-	virtual std::string handleRequest( const std::string& msg)=0;
+	virtual std::string handleRequest( const char* msg, std::size_t msgsize)=0;
 };
 
 }//namespace

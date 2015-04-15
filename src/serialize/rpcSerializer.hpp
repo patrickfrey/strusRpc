@@ -106,8 +106,6 @@ public:
 	}
 
 private:
-	char const* m_itr;
-	const char* m_end;
 	std::string m_content;
 };
 
@@ -122,12 +120,9 @@ enum RpcReturnType
 class RpcDeserializer
 {
 public:
-	RpcDeserializer( const std::string& content_)
-		:m_content(content_)
-	{
-		m_itr = m_content.c_str();
-		m_end = m_content.c_str() + m_content.size();
-	}
+	RpcDeserializer( const char* start_, const char* end_)
+		:m_start(start_),m_itr(start_),m_end(end_)
+	{}
 
 	void unpackObject( unsigned char& classId_, unsigned int& objId_);
 	std::string unpackString();
@@ -164,15 +159,10 @@ public:
 	ResultDocument unpackResultDocument();
 	bool unpackCrc32();
 
-	const std::string& content() const
-	{
-		return m_content;
-	}
-
 private:
+	const char* m_start;
 	char const* m_itr;
 	const char* m_end;
-	std::string m_content;
 	std::vector<const char*> m_charpp_buf;
 };
 

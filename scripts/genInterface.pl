@@ -1151,8 +1151,6 @@ sub getMethodDeclarationSource
 				$receiver_code .= $rcv;
 			}
 		}
-		$sender_code .= "\tmsg.packCrc32();\n";
-		$sender_code .= "\trpc_send( msg.content());\n";
 		$receiver_code .= "\ttry {\n";
 		$receiver_code .= "\t\t$retvalassigner" . "obj->" . $methodname . "(" . $receiver_paramlist . ");\n";
 		if ($passOwnershipParams{$methodname})
@@ -1243,15 +1241,17 @@ sub getMethodDeclarationSource
 		}
 		if ($sender_output ne "")
 		{
+			$sender_code .= "\tmsg.packCrc32();\n";
 			$sender_code .= "\tenter();\n";
-			$sender_code .= "\tRpcDeserializer serializedMsg( rpc_recv());\n";
+			$sender_code .= "\tRpcDeserializer serializedMsg( rpc_sendRequest( msg.content()));\n";
 			$sender_code .= "\tserializedMsg.unpackByte();\n";
 			$sender_code .= $sender_output;
 			$receiver_code .= $receiver_output;
 		}
 		elsif ($syncMethods{$methodname})
 		{
-			$sender_code .= "\trpc_waitAnswer();\n";
+			$sender_code .= "\tmsg.packCrc32();\n";
+			$sender_code .= "\trpc_sendMessage( msg.content());\n";
 		}
 		if ($retval ne "void")
 		{

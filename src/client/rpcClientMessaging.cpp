@@ -26,19 +26,56 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc_nanomsg.hpp"
-#include "strus/rpcClientMessagingInterface.hpp"
-#include "rpcClientMessaging.hpp"
-#include "private/dll_tags.hpp"
-#include <nn.h>
-#include <pipeline.h>
+#include <netinet/in.h>
+#include <stdint.h>
+using namespace strus;
 
-DLL_PUBLIC RpcClientMessagingInterface*
-	strus::createRpcClientMessaging(
-		const char* config)
+static void packUint( std::string& buf, uint32_t size)
 {
-	return new RpcClientMessaging( config);
+	uint32_t vv = htonl( size);
+	buf.append( (const char*)&vv, 4);
+}
+
+static void unpackUint( char const*& itr, const char* end, void* ptr)
+{
+	if (itr+4 > end) throw std::runtime_error( "message to small to encode next dword");
+	uint32_t val;
+	std::memcpy( &val, itr, 4);
+	itr += 4;
+	*(uint32_t*)ptr = ntohl( val);
 }
 
 
+RpcClientMessaging::RpcClientMessaging( const char* config)
+{
+	m_messageBuffer.push_back( 0xFF);
+}
+
+RpcClientMessaging::~RpcClientMessaging(){}
+
+std::string RpcClientMessaging::sendRequest( const std::string& content)
+{
+	if (m_messageBuffer.size() > 1)
+	{
+		packUint( m_messageBuffer, content.size());
+		m_messageBuffer.append( content);
+	}
+	else
+	{
+		send content as request
+	}
+}
+
+void RpcClientMessaging::sendMessage( const std::string& content)
+{
+	packUint( m_messageBuffer, content.size());
+	m_messageBuffer.append( content);
+}
+
+std::string RpcClientMessaging::synchronize()
+{
+	send m_messageBuffer as request
+	m_messageBuffer.clear();
+	m_messageBuffer.push_back( 0xFF);
+}
 

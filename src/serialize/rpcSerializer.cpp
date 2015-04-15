@@ -522,9 +522,8 @@ ArithmeticVariant RpcDeserializer::unpackArithmeticVariant()
 
 bool RpcDeserializer::unpackCrc32()
 {
-	uint32_t crc = utils::Crc32::calc( m_content.c_str(), m_content.size() - 4);
-	char const* checksumStart = m_content.c_str() + m_content.size() - 4;
-	return crc == unpackScalar<uint32_t>( checksumStart, m_end);
+	uint32_t crc = utils::Crc32::calc( m_start, m_end - 4);
+	return crc == unpackScalar<uint32_t>( m_end-4, m_end);
 }
 
 DatabaseOptions RpcDeserializer::unpackDatabaseOptions()

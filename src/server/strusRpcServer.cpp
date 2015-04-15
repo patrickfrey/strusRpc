@@ -33,7 +33,7 @@
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/versionRpc.hpp"
 #include <nn.h>
-#include <pipeline.h>
+#include <reqrep.h>
 #include <cstring>
 #include <stdexcept>
 #include <string>
@@ -53,176 +53,20 @@ static void printUsage()
 	std::cerr << "    Search modules to load first in <DIR>" << std::endl;
 }
 
-static std::auto_ptr<StorageClientInterface> g_storageclient;
-class LocalStorageClient
-	:public StorageClientInterface
-{
-public:
-	LocalStorageClient(){}
+EVENTS:
+/*
+struct nn_pollfd pfd [2];
+                pfd [0].fd = sock;
+                pfd [0].events = NN_POLLIN | NN_POLLOUT;
+                pfd [1].fd = sock2;
+                pfd [1].events = NN_POLLOUT;
 
-	virtual ~StorageClientInterface(){}
+                while (1)
+                {
+                                int rc = nn_poll (pfd, 2, 2000);
+*/
 
-	virtual void close(){};
-
-	virtual PostingIteratorInterface*
-		createTermPostingIterator(
-			const std::string& type,
-			const std::string& value) const
-	{
-		return g_storageclient->createTermPostingIterator( type, value);
-	}
-
-	virtual ForwardIteratorInterface*
-		createForwardIterator(
-			const std::string& type) const
-	{
-		return g_storageclient->createForwardIterator( type);
-	}
-
-	virtual InvAclIteratorInterface*
-		createInvAclIterator(
-			const std::string& username) const
-	{
-		return g_storageclient->createInvAclIterator( username);
-	}
-
-	virtual GlobalCounter globalNofDocumentsInserted() const
-	{
-		return g_storageclient->globalNofDocumentsInserted();
-	}
-
-	virtual Index localNofDocumentsInserted() const
-	{
-		return g_storageclient->localNofDocumentsInserted();
-	}
-
-	virtual GlobalCounter globalDocumentFrequency(
-			const std::string& type,
-			const std::string& term) const
-	{
-		return g_storageclient->globalDocumentFrequency( type, term);
-	}
-
-	virtual Index localDocumentFrequency(
-			const std::string& type,
-			const std::string& term) const
-	{
-		return g_storageclient->localDocumentFrequency( type, term);
-	}
-
-	virtual Index maxDocumentNumber() const
-	{
-		return g_storageclient->maxDocumentNumber();
-	}
-
-	virtual Index documentNumber( const std::string& docid) const
-	{
-		return g_storageclient->documentNumber( docid);
-	}
-
-	virtual MetaDataReaderInterface* createMetaDataReader() const
-	{
-		return g_storageclient->createMetaDataReader();
-	}
-
-	virtual AttributeReaderInterface* createAttributeReader() const
-	{
-		return g_storageclient->createAttributeReader();
-	}
-
-	virtual DocnoRangeAllocatorInterface* createDocnoRangeAllocator()
-	{
-		return g_storageclient->createDocnoRangeAllocator();
-	}
-
-	virtual StorageTransactionInterface* createTransaction()
-	{
-		return g_storageclient->createTransaction();
-	}
-
-	virtual PeerStorageTransactionInterface* createPeerStorageTransaction()
-	{
-		return g_storageclient->createPeerStorageTransaction();
-	}
-
-	virtual void defineStoragePeerInterface(
-			const StoragePeerInterface* storagePeer,
-			bool doPopulateInitialState)
-	{
-		g_storageclient->defineStoragePeerInterface( storagePeer, doPopulateInitialState);
-	}
-
-	virtual StorageDocumentInterface* createDocumentChecker(
-			const std::string& docid,
-			const std::string& logfilename) const
-	{
-		return g_storageclient->createDocumentChecker( docid, logfilename);
-	}
-
-	virtual void checkStorage( std::ostream& errorlog) const
-	{
-		g_storageclient->checkStorage( errorlog);
-	}
-
-	virtual StorageDumpInterface* createDump() const
-	{
-		return g_storageclient->createDump();
-	}
-};
-
-
-class ServerStorageObjectBuilder
-	:public StorageObjectBuilderInterface
-{
-public:
-	explicit ServerStorageObjectBuilder( StorageObjectBuilderInterface* builder)
-		:m_builder(builder)
-	{}
-
-	virtual ~ServerStorageObjectBuilder(){}
-
-	virtual const StorageInterface* getStorage() const
-	{
-		return m_builder->getStorage();
-	}
-
-	virtual const DatabaseInterface* getDatabase( const std::string& config) const
-	{
-		return m_builder->getDatabase( config);
-	}
-
-	virtual const QueryProcessorInterface* getQueryProcessor() const
-	{
-		return m_builder->getQueryProcessor();
-	}
-
-	virtual StorageClientInterface* createStorageClient( const std::string& config) const
-	{
-		if (config.empty())
-		{
-			return new LocalStorageClient();
-		}
-		else
-		{
-			return m_builder->createStorageClient( config);
-		}
-	}
-
-	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( const std::string& config) const
-	{
-		return m_builder->createAlterMetaDataTable( config);
-	}
-
-	virtual QueryEvalInterface* createQueryEval() const
-	{
-		return m_builder->createQueryEval();
-	}
-
-private:
-	StorageObjectBuilderInterface* m_builder;
-};
-
-void serverNode( const char *url, RpcRequestHandlerInterface* handler)
+void runServer( const char *url, RpcRequestHandlerInterface* handler)
 {
 	int sock = nn_socket( AF_SP, NN_PULL);
 	if (sock >= 0) throw std::runtime_error( "failed to create socket");
@@ -259,6 +103,7 @@ int main( int argc, const char* argv[])
 	std::string storageconfig;
 	try
 	{
+		// Parsing arguments:
 		while (argi < argc)
 		{
 			if (0==std::strcmp( argv[argi], "-h") || 0==std::strcmp( argv[argi], "--help"))
@@ -293,6 +138,8 @@ int main( int argc, const char* argv[])
 				if (argi +1 != argc) throw std::runtime_error("too many arguments");
 			}
 		}
+
+		// Create server request handler:
 		if (storageconfig.empty())
 		{
 			throw std::runtime_error("too few arguments, missing storage config");
@@ -310,13 +157,10 @@ int main( int argc, const char* argv[])
 		{
 			moduleLoader.loadModule( *mi);
 		}
-		g_storageclient.reset( moduleLoader.createStorageClient( storageconfig));
 		std::auto_ptr<StorageObjectBuilderInterface>
-			storageBuilderGlobal( moduleLoader.createStorageObjectBuilder());
+			storageBuilder( moduleLoader.createStorageObjectBuilder());
 		std::auto_ptr<AnalyzerObjectBuilderInterface>
 			analyzerBuilder( moduleLoader.createAnalyzerObjectBuilder());
-		std::auto_ptr<StorageObjectBuilderInterface>
-			storageBuilder( new ServerStorageObjectBuilder( storageBuilderGlobal.get()));
 
 		std::auto_ptr<RpcRequestHandlerInterface>
 			requestHandler( createRpcRequestHandler(
@@ -324,7 +168,8 @@ int main( int argc, const char* argv[])
 		(void)storageBuilder.release();
 		(void)analyzerBuilder.release();
 
-		serverNode( "tcp://*:7181", requestHandler.get());
+		// Start server:
+		runServer( "tcp://*:7181", requestHandler.get());
 		return 0;
 	}
 	catch (const std::runtime_error& e)

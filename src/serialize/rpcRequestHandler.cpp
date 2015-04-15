@@ -32,9 +32,9 @@
 #include <string>
 
 using namespace strus;
-std::string RpcRequestHandler::handleRequest( const std::string& msg)
+std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsize)
 {
-	RpcDeserializer serializedMsg( msg);
+	RpcDeserializer serializedMsg( msg, msg + msgsize);
 	if (!serializedMsg.unpackCrc32()) throw std::runtime_error("message CRC32 check failed");
 	unsigned char classId; unsigned int objId; unsigned char methodId;
 	serializedMsg.unpackObject( classId, objId);

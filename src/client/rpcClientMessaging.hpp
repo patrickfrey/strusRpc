@@ -26,32 +26,19 @@
 
 --------------------------------------------------------------------
 */
-#ifndef _STRUS_RPC_MESSAGING_INTERFACE_HPP_INCLUDED
-#define _STRUS_RPC_MESSAGING_INTERFACE_HPP_INCLUDED
-#include <string>
+using namespace strus;
 
-namespace strus
-{
-
-/// \brief Interface providing a mechanism to send and receive messages
-class RpcMessagingInterface
+class RpcClientMessaging
+	:public RpcMessagingClientInterface
 {
 public:
-	/// \brief Destructor
-	virtual ~RpcMessagingInterface(){}
+	RpcClientMessaging( const char* config);
 
-	/// \brief Send a message and do not wait for reply
+	virtual std::string sendRequest( const std::string& content)=0;
 	virtual void sendMessage( const std::string& content)=0;
+	virtual std::string synchronize()=0;
 
-	/// \brief Wait for a reply and return the string indicating an error or and empty string on success
-	virtual std::string getStatus()=0;
-
-	/// \brief Receive a message
-	/// \return the message received
-	/// \remark Throws on error
-	virtual std::string recvMessage()=0;
+private:
+	std::string m_messageBuffer;
 };
-
-}//namespace
-#endif
 

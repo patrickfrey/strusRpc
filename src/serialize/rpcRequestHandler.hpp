@@ -65,7 +65,7 @@ public:
 		clear();
 	}
 
-	virtual std::string handleRequest( const std::string& msg);
+	virtual std::string handleRequest( const char* msg, std::size_t msgsize);
 
 public:
 	template <class Interface>

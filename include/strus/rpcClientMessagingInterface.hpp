@@ -26,19 +26,33 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc_nanomsg.hpp"
-#include "strus/rpcClientMessagingInterface.hpp"
-#include "rpcClientMessaging.hpp"
-#include "private/dll_tags.hpp"
-#include <nn.h>
-#include <pipeline.h>
+#ifndef _STRUS_RPC_CLIENT_MESSAGING_INTERFACE_HPP_INCLUDED
+#define _STRUS_RPC_CLIENT_MESSAGING_INTERFACE_HPP_INCLUDED
+#include <string>
 
-DLL_PUBLIC RpcClientMessagingInterface*
-	strus::createRpcClientMessaging(
-		const char* config)
+namespace strus
 {
-	return new RpcClientMessaging( config);
-}
 
+/// \brief Interface providing a mechanism for the client to send and receive messages
+class RpcClientMessagingInterface
+{
+public:
+	/// \brief Destructor
+	virtual ~RpcClientMessagingInterface(){}
 
+	/// \brief Send a message (request) and wait for reply
+	/// \param[in] content the content of the message to send
+	/// \return the answer of the request
+	virtual std::string sendRequest( const std::string& content)=0;
+
+	/// \brief Send a message and do not wait for reply
+	/// \param[in] content the content of the message to send
+	virtual void sendMessage( const std::string& content)=0;
+
+	/// \brief Get result of previous sendMessage(const std::string&) calls
+	virtual std::string synchronize()=0;
+};
+
+}//namespace
+#endif
 
