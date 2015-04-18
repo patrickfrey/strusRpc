@@ -26,20 +26,17 @@
 
 --------------------------------------------------------------------
 */
-#ifndef _STRUS_LIB_RPC_NANOMSG_HPP_INCLUDED
-#define _STRUS_LIB_RPC_NANOMSG_HPP_INCLUDED
+#include "strus/lib/rpc_client_nanomsg.hpp"
+#include "strus/rpcClientMessagingInterface.hpp"
+#include "rpcClientMessaging.hpp"
+#include "private/dll_tags.hpp"
 
-namespace strus {
+DLL_PUBLIC RpcClientMessagingInterface*
+	strus::createRpcClientMessaging(
+		const char* config)
+{
+	return new RpcClientMessaging( config);
+}
 
-/// \brief Forward declaration
-class RpcClientMessagingInterface;
 
-/// \brief Create a messaging interface for the strus RPC Client based on nanomsg
-/// \param[in] config configuration string for connecting to the server
-RpcClientMessagingInterface*
-	createRpcClientMessaging(
-		const char* config);
-
-}//namespace
-#endif
 

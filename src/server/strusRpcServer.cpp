@@ -26,19 +26,23 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc.hpp"
+#include "strus/lib/rpc_server.hpp"
 #include "strus/lib/module.hpp"
 #include "strus/rpcRequestHandlerInterface.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
+#include "strus/moduleLoaderInterface.hpp"
 #include "strus/versionRpc.hpp"
-#include <nn.h>
-#include <reqrep.h>
 #include <cstring>
 #include <stdexcept>
 #include <string>
 #include <vector>
 #include <iostream>
+#include <memory>
+#include <nn.h>
+#include <reqrep.h>
+#include <stdint.h>
+#include <netinet/in.h>
 
 static void printUsage()
 {
@@ -54,49 +58,138 @@ static void printUsage()
 	std::cerr << "    Search modules to load first in <DIR>" << std::endl;
 }
 
-/*
-EVENTS:
-struct nn_pollfd pfd [2];
-                pfd [0].fd = sock;
-                pfd [0].events = NN_POLLIN | NN_POLLOUT;
-                pfd [1].fd = sock2;
-                pfd [1].events = NN_POLLOUT;
-
-                while (1)
-                {
-                                int rc = nn_poll (pfd, 2, 2000);
-*/
-
-void runServer( const char *url, strus::RpcRequestHandlerInterface* handler)
+static void unpackUint( char const*& itr, const char* end, void* ptr)
 {
-	int sock = nn_socket( AF_SP, NN_PULL);
-	if (sock >= 0) throw std::runtime_error( "failed to create socket");
-	if (nn_bind( sock, url) < 0) throw std::runtime_error( "failed to bind to socket");
+	if (itr+4 > end) throw std::runtime_error( "message to small to encode next dword");
+	uint32_t val;
+	std::memcpy( &val, itr, 4);
+	itr += 4;
+	*(uint32_t*)ptr = ntohl( val);
+}
+
+static void runServer( const char *config, strus::RpcRequestHandlerInterface* handler)
+{
+	// Startup:
+	int sock = nn_socket( AF_SP, NN_REP);
+	if (sock < 0) switch (errno)
+	{
+		case EAFNOSUPPORT:
+			throw std::runtime_error( "error socket (nanomsg: specified address family is not supported)");
+		case EINVAL:
+			throw std::runtime_error( "error socket (nanomsg: unknown protocol)");
+		case EMFILE:
+			throw std::runtime_error( "error socket (nanomsg: the limit on the total number of open SP sockets or OS limit for file descriptors has been reached");
+		case ETERM:
+			throw std::runtime_error( "error socket (nanomsg: the library is terminating");
+		default:
+			throw std::runtime_error( "error socket (socket create)");
+	}
+	int endpointid = nn_bind( sock, config);
+	if (endpointid < 0) switch (errno)
+	{
+		case EBADF:
+			throw std::runtime_error( "error bind (nanomsg: the provided socket is invalid");
+		case EMFILE:
+			throw std::runtime_error( "error bind (nanomsg: maximum number of active endpoints was reached");
+		case ETERM:
+			throw std::runtime_error( "error bind (nanomsg: the library is terminating");
+		case EINVAL:
+			throw std::runtime_error( "error bind (nanomsg: the syntax of the supplied address is invalid");
+		case ENAMETOOLONG:
+			throw std::runtime_error( "error bind (nanomsg: the supplied address is too long");
+		case EPROTONOSUPPORT:
+			throw std::runtime_error( "error bind (nanomsg: the requested transport protocol is not supported");
+		case EADDRNOTAVAIL:
+			throw std::runtime_error( "error bind (nanomsg: the requested endpoint is not local");
+		case ENODEV:
+			throw std::runtime_error( "error bind (nanomsg: the address specifies a nonexistent interface");
+		case EADDRINUSE:
+			throw std::runtime_error( "error bind (nanomsg: the requested local endpoint is already in use");
+		default:
+			throw std::runtime_error( "error bind (nanomsg: unknown error)");
+	}
+	// Serving requests:
 	for (;;)
 	{
-		char* buf = NULL;
-		int bytes = nn_recv( sock, &buf, NN_MSG, 0);
-		if (bytes < 0)
+		char* msg = NULL;
+		int msgsize = nn_recv( sock, &msg, NN_MSG, 0);
+		if (msgsize < 0) switch (errno)
 		{
-			std::cerr << "Failed to receive message" << std::endl;
-			continue;
+			case EBADF:
+				throw std::runtime_error( "error receive (nanomsg: the provided socket is invalid");
+			case ETERM:
+				throw std::runtime_error( "error receive (nanomsg: the library is terminating");
+			case ENOTSUP:
+				throw std::runtime_error( "error receive (nanomsg: the operation is not supported by this socket type");
+			case EFSM:
+				throw std::runtime_error( "error receive (nanomsg: the operation cannot be performed on this socket at the moment because socket is not in the appropriate state");
+			case EAGAIN:
+				throw std::runtime_error( "error receive (nanomsg: non-blocking mode was requested and there’s no message to receive at the moment");
+			case EINTR:
+				std::cerr << "got EINTR, shutting down...";
+				nn_shutdown( sock, endpointid);
+				nn_close( sock);
+				if (msg) nn_freemsg( msg);
+				msg = 0;
+				return;
+			case ETIMEDOUT:
+				throw std::runtime_error( "error receive (nanomsg: got timeout on socket");
 		}
-		std::string answer = handler->handleRequest( buf);
-		if (answer.size() > 5)
+		try
 		{
-			int bytes = nn_send( sock, answer.c_str(), answer.size(), 0);
-			if (bytes != answer.size())
+			std::string answer = handler->handleRequest( msg, msgsize);
+			if (answer.size() > 5)
 			{
-				std::cerr << "Failed to send message" << std::endl;
-				
+				int bytes = nn_send( sock, answer.c_str(), answer.size(), 0);
+				if ((std::size_t)bytes != answer.size())
+				{
+					const char* errmsg;
+					switch (errno)
+					{
+						case EFAULT:
+							errmsg = "error sending answer to client (nanomsg: buf is NULL or len is NN_MSG and the message pointer (pointed to by buf) is NULL";
+						case EBADF:
+							errmsg = "error sending answer to client (nanomsg: the provided socket is invalid";
+						case ENOTSUP:
+							errmsg = "error sending answer to client (nanomsg: the operation is not supported by this socket type";
+						case EFSM:
+							errmsg = "error sending answer to client (nanomsg: the operation cannot be performed on this socket at the moment because the socket is not in the appropriate state";
+						case EAGAIN:
+							errmsg = "error sending answer to client (nanomsg: non-blocking mode was requested and the message cannot be sent at the moment";
+						case EINTR:
+							errmsg = "error sending answer to client (nanomsg: the operation was interrupted by delivery of a signal before the message was sent";
+						case ETIMEDOUT:
+							errmsg = "error sending answer to client (nanomsg: timeout on socket";
+						case ETERM:
+							errmsg = "error sending answer to client (nanomsg: the library is terminating";
+						default:
+							errmsg = "error sending answer to client (nanomsg: unknown error)";
+					}
+					nn_shutdown( sock, endpointid);
+					nn_close( sock);
+					if (msg) nn_freemsg( msg);
+					msg = 0;
+					throw std::runtime_error( errmsg);
+				}
 			}
 		}
+		catch (std::bad_alloc& err)
+		{
+			nn_shutdown( sock, endpointid);
+			nn_close( sock);
+			if (msg) nn_freemsg( msg);
+			msg = 0;
+			throw err;
+		}
+		nn_shutdown( sock, endpointid);
+		nn_close( sock);
+		if (msg) nn_freemsg( msg);
+		msg = 0;
 	}
 }
 
 int main( int argc, const char* argv[])
 {
-	int rt = 0;
 	bool doExit = false;
 	int argi = 1;
 	std::vector<std::string> moduledirs;
@@ -139,32 +232,36 @@ int main( int argc, const char* argv[])
 				if (argi +1 != argc) throw std::runtime_error("too many arguments");
 			}
 		}
+		if (doExit) return 0;
 
 		// Create server request handler:
 		if (storageconfig.empty())
 		{
 			throw std::runtime_error("too few arguments, missing storage config");
 		}
-		std::auto_ptr<ModuleLoaderInterface> moduleLoader( createModuleLoader());
+		std::auto_ptr<strus::ModuleLoaderInterface>
+			moduleLoader( strus::createModuleLoader());
 
-		std::vector<std::string>::const_iterator di = moduledirs.begin(), de = moduledirs.end();
+		std::vector<std::string>::const_iterator
+			di = moduledirs.begin(), de = moduledirs.end();
 		for (; di != de; ++di)
 		{
-			moduleLoader.addModulePath( *mi);
+			moduleLoader->addModulePath( *di);
 		}
-		moduleLoader.addSystemModulePath();
-		std::vector<std::string>::const_iterator mi = modules.begin(), me = modules.end();
+		moduleLoader->addSystemModulePath();
+		std::vector<std::string>::const_iterator
+			mi = modules.begin(), me = modules.end();
 		for (; mi != me; ++mi)
 		{
-			moduleLoader.loadModule( *mi);
+			moduleLoader->loadModule( *mi);
 		}
-		std::auto_ptr<StorageObjectBuilderInterface>
-			storageBuilder( moduleLoader.createStorageObjectBuilder());
-		std::auto_ptr<AnalyzerObjectBuilderInterface>
-			analyzerBuilder( moduleLoader.createAnalyzerObjectBuilder());
+		std::auto_ptr<strus::StorageObjectBuilderInterface>
+			storageBuilder( moduleLoader->createStorageObjectBuilder());
+		std::auto_ptr<strus::AnalyzerObjectBuilderInterface>
+			analyzerBuilder( moduleLoader->createAnalyzerObjectBuilder());
 
-		std::auto_ptr<RpcRequestHandlerInterface>
-			requestHandler( createRpcRequestHandler(
+		std::auto_ptr<strus::RpcRequestHandlerInterface>
+			requestHandler( strus::createRpcRequestHandler(
 				storageBuilder.get(), analyzerBuilder.get()));
 		(void)storageBuilder.release();
 		(void)analyzerBuilder.release();

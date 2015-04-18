@@ -49,15 +49,15 @@ RpcClientMessaging::RpcClientMessaging( const char* config)
 	if (m_sock < 0) switch (errno)
 	{
 		case EAFNOSUPPORT:
-			throw std::runtime_error( "error connecting to server (nanomsg: specified address family is not supported)");
+			throw std::runtime_error( "error socket (nanomsg: specified address family is not supported)");
 		case EINVAL:
-			throw std::runtime_error( "error connecting to server (nanomsg: unknown protocol)");
+			throw std::runtime_error( "error socket (nanomsg: unknown protocol)");
 		case EMFILE:
-			throw std::runtime_error( "error connecting to server (nanomsg: the limit on the total number of open SP sockets or OS limit for file descriptors has been reached");
+			throw std::runtime_error( "error socket (nanomsg: the limit on the total number of open SP sockets or OS limit for file descriptors has been reached");
 		case ETERM:
-			throw std::runtime_error( "error connecting to server (nanomsg: the library is terminating");
+			throw std::runtime_error( "error socket (nanomsg: the library is terminating");
 		default:
-			throw std::runtime_error( "error connecting to server (socket create)");
+			throw std::runtime_error( "error socket (socket create)");
 	}
 	if (nn_connect( m_sock, config) < 0) switch (errno)
 	{

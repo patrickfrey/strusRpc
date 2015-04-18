@@ -27,8 +27,8 @@
 --------------------------------------------------------------------
 */
 /// \brief Exported functions of the strus rpc library
-#ifndef _STRUS_LIB_RPC_HPP_INCLUDED
-#define _STRUS_LIB_RPC_HPP_INCLUDED
+#ifndef _STRUS_LIB_RPC_SERVER_HPP_INCLUDED
+#define _STRUS_LIB_RPC_SERVER_HPP_INCLUDED
 
 namespace strus {
 
@@ -37,17 +37,7 @@ class StorageObjectBuilderInterface;
 /// \brief Forward declaration
 class AnalyzerObjectBuilderInterface;
 /// \brief Forward declaration
-class RpcClientInterface;
-/// \brief Forward declaration
 class RpcRequestHandlerInterface;
-/// \brief Forward declaration
-class RpcClientMessagingInterface;
-
-/// \brief Creates an RPC Client connection to the server
-/// \param[in] connector interface to use for sending and receiving messages to and from the server
-RpcClientInterface*
-	createRpcClient(
-		RpcClientMessagingInterface* connector);
 
 /// \brief Creates an RPC request handler object to be used by a server implementation
 /// \param[in] storageBuilder_ storage builder (ownership passed to callee)

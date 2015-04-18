@@ -26,19 +26,18 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc_nanomsg.hpp"
-#include "strus/rpcClientMessagingInterface.hpp"
-#include "rpcClientMessaging.hpp"
+#include "strus/lib/rpc_server.hpp"
+#include "strus/rpcRequestHandlerInterface.hpp"
+#include "rpcRequestHandler.hpp"
 #include "private/dll_tags.hpp"
-#include <nn.h>
-#include <pipeline.h>
 
-DLL_PUBLIC RpcClientMessagingInterface*
-	strus::createRpcClientMessaging(
-		const char* config)
+using namespace strus;
+
+DLL_PUBLIC RpcRequestHandlerInterface*
+	strus::createRpcRequestHandler(
+		StorageObjectBuilderInterface* storageBuilder_,
+		AnalyzerObjectBuilderInterface* analyzerBuilder_)
 {
-	return new RpcClientMessaging( config);
+	return new RpcRequestHandler( storageBuilder_, analyzerBuilder_);
 }
-
-
 

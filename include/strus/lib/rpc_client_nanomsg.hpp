@@ -26,26 +26,20 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc.hpp"
-#include "strus/rpcClientInterface.hpp"
-#include "strus/rpcClientMessagingInterface.hpp"
-#include "strus/rpcRequestHandlerInterface.hpp"
-#include "rpcRequestHandler.hpp"
-#include "rpcClient.hpp"
-#include "private/dll_tags.hpp"
+#ifndef _STRUS_LIB_RPC_CLIENT_NANOMSG_HPP_INCLUDED
+#define _STRUS_LIB_RPC_CLIENT_NANOMSG_HPP_INCLUDED
 
-using namespace strus;
+namespace strus {
 
-DLL_PUBLIC RpcClientInterface* strus::createRpcClient( RpcClientMessagingInterface* connector)
-{
-	return new RpcClient( connector);
-}
+/// \brief Forward declaration
+class RpcClientMessagingInterface;
 
-DLL_PUBLIC RpcRequestHandlerInterface*
-	strus::createRpcRequestHandler(
-		StorageObjectBuilderInterface* storageBuilder_,
-		AnalyzerObjectBuilderInterface* analyzerBuilder_)
-{
-	return new RpcRequestHandler( storageBuilder_, analyzerBuilder_);
-}
+/// \brief Create a messaging interface for the strus RPC Client based on nanomsg
+/// \param[in] config configuration string for connecting to the server
+RpcClientMessagingInterface*
+	createRpcClientMessaging(
+		const char* config);
+
+}//namespace
+#endif
 
