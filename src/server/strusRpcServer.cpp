@@ -38,6 +38,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <iostream>
 
 static void printUsage()
 {
@@ -53,8 +54,8 @@ static void printUsage()
 	std::cerr << "    Search modules to load first in <DIR>" << std::endl;
 }
 
-EVENTS:
 /*
+EVENTS:
 struct nn_pollfd pfd [2];
                 pfd [0].fd = sock;
                 pfd [0].events = NN_POLLIN | NN_POLLOUT;
@@ -66,7 +67,7 @@ struct nn_pollfd pfd [2];
                                 int rc = nn_poll (pfd, 2, 2000);
 */
 
-void runServer( const char *url, RpcRequestHandlerInterface* handler)
+void runServer( const char *url, strus::RpcRequestHandlerInterface* handler)
 {
 	int sock = nn_socket( AF_SP, NN_PULL);
 	if (sock >= 0) throw std::runtime_error( "failed to create socket");

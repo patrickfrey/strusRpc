@@ -29,6 +29,7 @@
 #ifndef _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #define _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #include "rpcInterfaceStub.hpp"
+#include "rpcObjectIds.hpp"
 #include "strus/databaseBackupCursorInterface.hpp"
 #include "strus/queryEvalInterface.hpp"
 #include "strus/storageTransactionInterface.hpp"
@@ -74,69 +75,15 @@
 
 namespace strus {
 
-enum ClassId
-{
-	ClassId_AnalyzerObjectBuilder,
-	ClassId_AttributeReader,
-	ClassId_DatabaseBackupCursor,
-	ClassId_DatabaseClient,
-	ClassId_DatabaseCursor,
-	ClassId_Database,
-	ClassId_DatabaseTransaction,
-	ClassId_DocnoRangeAllocator,
-	ClassId_DocumentAnalyzerInstance,
-	ClassId_DocumentAnalyzer,
-	ClassId_ForwardIterator,
-	ClassId_InvAclIterator,
-	ClassId_MetaDataReader,
-	ClassId_NormalizerConstructor,
-	ClassId_NormalizerInstance,
-	ClassId_Normalizer,
-	ClassId_PeerStorageTransaction,
-	ClassId_PostingIterator,
-	ClassId_PostingJoinOperator,
-	ClassId_QueryAnalyzer,
-	ClassId_QueryEval,
-	ClassId_Query,
-	ClassId_QueryProcessor,
-	ClassId_SegmenterInstance,
-	ClassId_Segmenter,
-	ClassId_StorageAlterMetaDataTable,
-	ClassId_StorageClient,
-	ClassId_StorageDocument,
-	ClassId_StorageDump,
-	ClassId_Storage,
-	ClassId_StorageObjectBuilder,
-	ClassId_StoragePeer,
-	ClassId_StoragePeerTransaction,
-	ClassId_StorageTransaction,
-	ClassId_SummarizerClosure,
-	ClassId_SummarizerFunction,
-	ClassId_TextProcessor,
-	ClassId_TokenizerConstructor,
-	ClassId_TokenizerInstance,
-	ClassId_Tokenizer,
-	ClassId_WeightingClosure,
-	ClassId_WeightingFunction
-};
-
 class AnalyzerObjectBuilderImpl
 		:public RpcInterfaceStub
 		,public strus::AnalyzerObjectBuilderInterface
+		,public strus::AnalyzerObjectBuilderConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_getTextProcessor,
-		Method_createSegmenter,
-		Method_createDocumentAnalyzer,
-		Method_createQueryAnalyzer
-	};
-
 	virtual ~AnalyzerObjectBuilderImpl();
 
-	AnalyzerObjectBuilderImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	AnalyzerObjectBuilderImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_AnalyzerObjectBuilder, objId_, messaging_){}
 
 	virtual const TextProcessorInterface* getTextProcessor( ) const;
@@ -148,19 +95,12 @@ public:
 class AttributeReaderImpl
 		:public RpcInterfaceStub
 		,public strus::AttributeReaderInterface
+		,public strus::AttributeReaderConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_elementHandle,
-		Method_skipDoc,
-		Method_getValue
-	};
-
 	virtual ~AttributeReaderImpl();
 
-	AttributeReaderImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	AttributeReaderImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_AttributeReader, objId_, messaging_){}
 
 	virtual Index elementHandle( const char* p1) const;
@@ -171,17 +111,12 @@ public:
 class DatabaseBackupCursorImpl
 		:public RpcInterfaceStub
 		,public strus::DatabaseBackupCursorInterface
+		,public strus::DatabaseBackupCursorConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_fetch
-	};
-
 	virtual ~DatabaseBackupCursorImpl();
 
-	DatabaseBackupCursorImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	DatabaseBackupCursorImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseBackupCursor, objId_, messaging_){}
 
 	virtual bool fetch( const char*& p1, std::size_t& p2, const char*& p3, std::size_t& p4);
@@ -190,23 +125,12 @@ public:
 class DatabaseClientImpl
 		:public RpcInterfaceStub
 		,public strus::DatabaseClientInterface
+		,public strus::DatabaseClientConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_close,
-		Method_createTransaction,
-		Method_createCursor,
-		Method_createBackupCursor,
-		Method_writeImm,
-		Method_removeImm,
-		Method_readValue
-	};
-
 	virtual ~DatabaseClientImpl();
 
-	DatabaseClientImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	DatabaseClientImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseClient, objId_, messaging_){}
 
 	virtual void close( );
@@ -221,23 +145,12 @@ public:
 class DatabaseCursorImpl
 		:public RpcInterfaceStub
 		,public strus::DatabaseCursorInterface
+		,public strus::DatabaseCursorConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_seekUpperBound,
-		Method_seekFirst,
-		Method_seekLast,
-		Method_seekNext,
-		Method_seekPrev,
-		Method_key,
-		Method_value
-	};
-
 	virtual ~DatabaseCursorImpl();
 
-	DatabaseCursorImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	DatabaseCursorImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseCursor, objId_, messaging_){}
 
 	virtual DatabaseCursorInterface::Slice seekUpperBound( const char* p1, std::size_t p2, std::size_t p3);
@@ -252,22 +165,12 @@ public:
 class DatabaseImpl
 		:public RpcInterfaceStub
 		,public strus::DatabaseInterface
+		,public strus::DatabaseConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_createClient,
-		Method_createDatabase,
-		Method_restoreDatabase,
-		Method_destroyDatabase,
-		Method_getConfigDescription,
-		Method_getConfigParameters
-	};
-
 	virtual ~DatabaseImpl();
 
-	DatabaseImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	DatabaseImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Database, objId_, messaging_){}
 
 	virtual DatabaseClientInterface* createClient( const std::string& p1) const;
@@ -281,22 +184,12 @@ public:
 class DatabaseTransactionImpl
 		:public RpcInterfaceStub
 		,public strus::DatabaseTransactionInterface
+		,public strus::DatabaseTransactionConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_createCursor,
-		Method_write,
-		Method_remove,
-		Method_removeSubTree,
-		Method_commit,
-		Method_rollback
-	};
-
 	virtual ~DatabaseTransactionImpl();
 
-	DatabaseTransactionImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	DatabaseTransactionImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseTransaction, objId_, messaging_){}
 
 	virtual DatabaseCursorInterface* createCursor( const DatabaseOptions& p1) const;
@@ -310,18 +203,12 @@ public:
 class DocnoRangeAllocatorImpl
 		:public RpcInterfaceStub
 		,public strus::DocnoRangeAllocatorInterface
+		,public strus::DocnoRangeAllocatorConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_allocDocnoRange,
-		Method_deallocDocnoRange
-	};
-
 	virtual ~DocnoRangeAllocatorImpl();
 
-	DocnoRangeAllocatorImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	DocnoRangeAllocatorImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocnoRangeAllocator, objId_, messaging_){}
 
 	virtual Index allocDocnoRange( const Index& p1);
@@ -331,18 +218,12 @@ public:
 class DocumentAnalyzerInstanceImpl
 		:public RpcInterfaceStub
 		,public strus::DocumentAnalyzerInstanceInterface
+		,public strus::DocumentAnalyzerInstanceConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_putInput,
-		Method_analyzeNext
-	};
-
 	virtual ~DocumentAnalyzerInstanceImpl();
 
-	DocumentAnalyzerInstanceImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	DocumentAnalyzerInstanceImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzerInstance, objId_, messaging_){}
 
 	virtual void putInput( const char* p1, std::size_t p2, bool p3);
@@ -352,23 +233,12 @@ public:
 class DocumentAnalyzerImpl
 		:public RpcInterfaceStub
 		,public strus::DocumentAnalyzerInterface
+		,public strus::DocumentAnalyzerConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_addSearchIndexFeature,
-		Method_addForwardIndexFeature,
-		Method_defineMetaData,
-		Method_defineAttribute,
-		Method_defineSubDocument,
-		Method_analyze,
-		Method_createInstance
-	};
-
 	virtual ~DocumentAnalyzerImpl();
 
-	DocumentAnalyzerImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	DocumentAnalyzerImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzer, objId_, messaging_){}
 
 	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
@@ -383,19 +253,12 @@ public:
 class ForwardIteratorImpl
 		:public RpcInterfaceStub
 		,public strus::ForwardIteratorInterface
+		,public strus::ForwardIteratorConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_skipDoc,
-		Method_skipPos,
-		Method_fetch
-	};
-
 	virtual ~ForwardIteratorImpl();
 
-	ForwardIteratorImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	ForwardIteratorImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_ForwardIterator, objId_, messaging_){}
 
 	virtual void skipDoc( const Index& p1);
@@ -406,17 +269,12 @@ public:
 class InvAclIteratorImpl
 		:public RpcInterfaceStub
 		,public strus::InvAclIteratorInterface
+		,public strus::InvAclIteratorConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_skipDoc
-	};
-
 	virtual ~InvAclIteratorImpl();
 
-	InvAclIteratorImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	InvAclIteratorImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_InvAclIterator, objId_, messaging_){}
 
 	virtual Index skipDoc( const Index& p1);
@@ -425,23 +283,12 @@ public:
 class MetaDataReaderImpl
 		:public RpcInterfaceStub
 		,public strus::MetaDataReaderInterface
+		,public strus::MetaDataReaderConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_hasElement,
-		Method_elementHandle,
-		Method_nofElements,
-		Method_skipDoc,
-		Method_getValue,
-		Method_getType,
-		Method_getName
-	};
-
 	virtual ~MetaDataReaderImpl();
 
-	MetaDataReaderImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	MetaDataReaderImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataReader, objId_, messaging_){}
 
 	virtual bool hasElement( const std::string& p1) const;
@@ -456,17 +303,12 @@ public:
 class NormalizerConstructorImpl
 		:public RpcInterfaceStub
 		,public strus::NormalizerConstructorInterface
+		,public strus::NormalizerConstructorConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_create
-	};
-
 	virtual ~NormalizerConstructorImpl();
 
-	NormalizerConstructorImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	NormalizerConstructorImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerConstructor, objId_, messaging_){}
 
 	virtual NormalizerInterface* create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
@@ -475,17 +317,12 @@ public:
 class NormalizerInstanceImpl
 		:public RpcInterfaceStub
 		,public strus::NormalizerInstanceInterface
+		,public strus::NormalizerInstanceConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_normalize
-	};
-
 	virtual ~NormalizerInstanceImpl();
 
-	NormalizerInstanceImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	NormalizerInstanceImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerInstance, objId_, messaging_){}
 
 	virtual std::string normalize( const char* p1, std::size_t p2);
@@ -494,17 +331,12 @@ public:
 class NormalizerImpl
 		:public RpcInterfaceStub
 		,public strus::NormalizerInterface
+		,public strus::NormalizerConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_createInstance
-	};
-
 	virtual ~NormalizerImpl();
 
-	NormalizerImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	NormalizerImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Normalizer, objId_, messaging_){}
 
 	virtual NormalizerInstanceInterface* createInstance( ) const;
@@ -513,20 +345,12 @@ public:
 class PeerStorageTransactionImpl
 		:public RpcInterfaceStub
 		,public strus::PeerStorageTransactionInterface
+		,public strus::PeerStorageTransactionConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_updateNofDocumentsInsertedChange,
-		Method_updateDocumentFrequencyChange,
-		Method_commit,
-		Method_rollback
-	};
-
 	virtual ~PeerStorageTransactionImpl();
 
-	PeerStorageTransactionImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	PeerStorageTransactionImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PeerStorageTransaction, objId_, messaging_){}
 
 	virtual void updateNofDocumentsInsertedChange( const GlobalCounter& p1);
@@ -538,24 +362,12 @@ public:
 class PostingIteratorImpl
 		:public RpcInterfaceStub
 		,public strus::PostingIteratorInterface
+		,public strus::PostingIteratorConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_skipDoc,
-		Method_skipPos,
-		Method_featureid,
-		Method_subExpressions,
-		Method_documentFrequency,
-		Method_frequency,
-		Method_docno,
-		Method_posno
-	};
-
 	virtual ~PostingIteratorImpl();
 
-	PostingIteratorImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	PostingIteratorImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PostingIterator, objId_, messaging_){}
 
 	virtual Index skipDoc( const Index& p1);
@@ -571,17 +383,12 @@ public:
 class PostingJoinOperatorImpl
 		:public RpcInterfaceStub
 		,public strus::PostingJoinOperatorInterface
+		,public strus::PostingJoinOperatorConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_createResultIterator
-	};
-
 	virtual ~PostingJoinOperatorImpl();
 
-	PostingJoinOperatorImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	PostingJoinOperatorImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PostingJoinOperator, objId_, messaging_){}
 
 	virtual PostingIteratorInterface* createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2) const;
@@ -590,18 +397,12 @@ public:
 class QueryAnalyzerImpl
 		:public RpcInterfaceStub
 		,public strus::QueryAnalyzerInterface
+		,public strus::QueryAnalyzerConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_definePhraseType,
-		Method_analyzePhrase
-	};
-
 	virtual ~QueryAnalyzerImpl();
 
-	QueryAnalyzerImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	QueryAnalyzerImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzer, objId_, messaging_){}
 
 	virtual void definePhraseType( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4);
@@ -611,22 +412,12 @@ public:
 class QueryEvalImpl
 		:public RpcInterfaceStub
 		,public strus::QueryEvalInterface
+		,public strus::QueryEvalConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_addTerm,
-		Method_addSelectionFeature,
-		Method_addRestrictionFeature,
-		Method_addSummarizer,
-		Method_addWeightingFunction,
-		Method_createQuery
-	};
-
 	virtual ~QueryEvalImpl();
 
-	QueryEvalImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	QueryEvalImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryEval, objId_, messaging_){}
 
 	virtual void addTerm( const std::string& p1, const std::string& p2, const std::string& p3);
@@ -640,26 +431,12 @@ public:
 class QueryImpl
 		:public RpcInterfaceStub
 		,public strus::QueryInterface
+		,public strus::QueryConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_pushTerm,
-		Method_pushExpression,
-		Method_pushDuplicate,
-		Method_attachVariable,
-		Method_defineFeature,
-		Method_defineMetaDataRestriction,
-		Method_setMaxNofRanks,
-		Method_setMinRank,
-		Method_setUserName,
-		Method_evaluate
-	};
-
 	virtual ~QueryImpl();
 
-	QueryImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	QueryImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Query, objId_, messaging_){}
 
 	virtual void pushTerm( const std::string& p1, const std::string& p2);
@@ -677,22 +454,12 @@ public:
 class QueryProcessorImpl
 		:public RpcInterfaceStub
 		,public strus::QueryProcessorInterface
+		,public strus::QueryProcessorConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_definePostingJoinOperator,
-		Method_getPostingJoinOperator,
-		Method_defineWeightingFunction,
-		Method_getWeightingFunction,
-		Method_defineSummarizerFunction,
-		Method_getSummarizerFunction
-	};
-
 	virtual ~QueryProcessorImpl();
 
-	QueryProcessorImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	QueryProcessorImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryProcessor, objId_, messaging_){}
 
 	virtual void definePostingJoinOperator( const std::string& p1, PostingJoinOperatorInterface* p2);
@@ -706,18 +473,12 @@ public:
 class SegmenterInstanceImpl
 		:public RpcInterfaceStub
 		,public strus::SegmenterInstanceInterface
+		,public strus::SegmenterInstanceConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_putInput,
-		Method_getNext
-	};
-
 	virtual ~SegmenterInstanceImpl();
 
-	SegmenterInstanceImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	SegmenterInstanceImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SegmenterInstance, objId_, messaging_){}
 
 	virtual void putInput( const char* p1, std::size_t p2, bool p3);
@@ -727,19 +488,12 @@ public:
 class SegmenterImpl
 		:public RpcInterfaceStub
 		,public strus::SegmenterInterface
+		,public strus::SegmenterConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_defineSelectorExpression,
-		Method_defineSubSection,
-		Method_createInstance
-	};
-
 	virtual ~SegmenterImpl();
 
-	SegmenterImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	SegmenterImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Segmenter, objId_, messaging_){}
 
 	virtual void defineSelectorExpression( int p1, const std::string& p2);
@@ -750,23 +504,12 @@ public:
 class StorageAlterMetaDataTableImpl
 		:public RpcInterfaceStub
 		,public strus::StorageAlterMetaDataTableInterface
+		,public strus::StorageAlterMetaDataTableConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_addElement,
-		Method_alterElement,
-		Method_renameElement,
-		Method_deleteElement,
-		Method_clearElement,
-		Method_commit,
-		Method_rollback
-	};
-
 	virtual ~StorageAlterMetaDataTableImpl();
 
-	StorageAlterMetaDataTableImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	StorageAlterMetaDataTableImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageAlterMetaDataTable, objId_, messaging_){}
 
 	virtual void addElement( const std::string& p1, const std::string& p2);
@@ -781,35 +524,12 @@ public:
 class StorageClientImpl
 		:public RpcInterfaceStub
 		,public strus::StorageClientInterface
+		,public strus::StorageClientConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_close,
-		Method_createTermPostingIterator,
-		Method_createForwardIterator,
-		Method_createInvAclIterator,
-		Method_globalNofDocumentsInserted,
-		Method_localNofDocumentsInserted,
-		Method_globalDocumentFrequency,
-		Method_localDocumentFrequency,
-		Method_maxDocumentNumber,
-		Method_documentNumber,
-		Method_createMetaDataReader,
-		Method_createAttributeReader,
-		Method_createDocnoRangeAllocator,
-		Method_createTransaction,
-		Method_createPeerStorageTransaction,
-		Method_defineStoragePeerInterface,
-		Method_createDocumentChecker,
-		Method_checkStorage,
-		Method_createDump
-	};
-
 	virtual ~StorageClientImpl();
 
-	StorageClientImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	StorageClientImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageClient, objId_, messaging_){}
 
 	virtual void close( );
@@ -836,22 +556,12 @@ public:
 class StorageDocumentImpl
 		:public RpcInterfaceStub
 		,public strus::StorageDocumentInterface
+		,public strus::StorageDocumentConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_addSearchIndexTerm,
-		Method_addForwardIndexTerm,
-		Method_setMetaData,
-		Method_setAttribute,
-		Method_setUserAccessRight,
-		Method_done
-	};
-
 	virtual ~StorageDocumentImpl();
 
-	StorageDocumentImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	StorageDocumentImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocument, objId_, messaging_){}
 
 	virtual void addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
@@ -865,17 +575,12 @@ public:
 class StorageDumpImpl
 		:public RpcInterfaceStub
 		,public strus::StorageDumpInterface
+		,public strus::StorageDumpConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_nextChunk
-	};
-
 	virtual ~StorageDumpImpl();
 
-	StorageDumpImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	StorageDumpImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDump, objId_, messaging_){}
 
 	virtual bool nextChunk( const char*& p1, std::size_t& p2);
@@ -884,21 +589,12 @@ public:
 class StorageImpl
 		:public RpcInterfaceStub
 		,public strus::StorageInterface
+		,public strus::StorageConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_createClient,
-		Method_createStorage,
-		Method_createAlterMetaDataTable,
-		Method_getConfigDescription,
-		Method_getConfigParameters
-	};
-
 	virtual ~StorageImpl();
 
-	StorageImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	StorageImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Storage, objId_, messaging_){}
 
 	virtual StorageClientInterface* createClient( const std::string& p1, DatabaseClientInterface* p2) const;
@@ -911,22 +607,12 @@ public:
 class StorageObjectBuilderImpl
 		:public RpcInterfaceStub
 		,public strus::StorageObjectBuilderInterface
+		,public strus::StorageObjectBuilderConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_getStorage,
-		Method_getDatabase,
-		Method_getQueryProcessor,
-		Method_createStorageClient,
-		Method_createAlterMetaDataTable,
-		Method_createQueryEval
-	};
-
 	virtual ~StorageObjectBuilderImpl();
 
-	StorageObjectBuilderImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	StorageObjectBuilderImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageObjectBuilder, objId_, messaging_){}
 
 	virtual const StorageInterface* getStorage( ) const;
@@ -940,17 +626,12 @@ public:
 class StoragePeerImpl
 		:public RpcInterfaceStub
 		,public strus::StoragePeerInterface
+		,public strus::StoragePeerConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_createTransaction
-	};
-
 	virtual ~StoragePeerImpl();
 
-	StoragePeerImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	StoragePeerImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StoragePeer, objId_, messaging_){}
 
 	virtual StoragePeerTransactionInterface* createTransaction( ) const;
@@ -959,21 +640,12 @@ public:
 class StoragePeerTransactionImpl
 		:public RpcInterfaceStub
 		,public strus::StoragePeerTransactionInterface
+		,public strus::StoragePeerTransactionConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_populateNofDocumentsInsertedChange,
-		Method_populateDocumentFrequencyChange,
-		Method_try_commit,
-		Method_final_commit,
-		Method_rollback
-	};
-
 	virtual ~StoragePeerTransactionImpl();
 
-	StoragePeerTransactionImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	StoragePeerTransactionImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StoragePeerTransaction, objId_, messaging_){}
 
 	virtual void populateNofDocumentsInsertedChange( int p1);
@@ -986,21 +658,12 @@ public:
 class StorageTransactionImpl
 		:public RpcInterfaceStub
 		,public strus::StorageTransactionInterface
+		,public strus::StorageTransactionConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_createDocument,
-		Method_deleteDocument,
-		Method_deleteUserAccessRights,
-		Method_commit,
-		Method_rollback
-	};
-
 	virtual ~StorageTransactionImpl();
 
-	StorageTransactionImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	StorageTransactionImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageTransaction, objId_, messaging_){}
 
 	virtual StorageDocumentInterface* createDocument( const std::string& p1, const Index& p2);
@@ -1013,17 +676,12 @@ public:
 class SummarizerClosureImpl
 		:public RpcInterfaceStub
 		,public strus::SummarizerClosureInterface
+		,public strus::SummarizerClosureConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_getSummary
-	};
-
 	virtual ~SummarizerClosureImpl();
 
-	SummarizerClosureImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	SummarizerClosureImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerClosure, objId_, messaging_){}
 
 	virtual std::vector<SummarizerClosureInterface::SummaryElement> getSummary( const Index& p1);
@@ -1032,20 +690,12 @@ public:
 class SummarizerFunctionImpl
 		:public RpcInterfaceStub
 		,public strus::SummarizerFunctionInterface
+		,public strus::SummarizerFunctionConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_numericParameterNames,
-		Method_textualParameterNames,
-		Method_featureParameterClassNames,
-		Method_createClosure
-	};
-
 	virtual ~SummarizerFunctionImpl();
 
-	SummarizerFunctionImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	SummarizerFunctionImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunction, objId_, messaging_){}
 
 	virtual const char** numericParameterNames( ) const;
@@ -1057,22 +707,12 @@ public:
 class TextProcessorImpl
 		:public RpcInterfaceStub
 		,public strus::TextProcessorInterface
+		,public strus::TextProcessorConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_addResourcePath,
-		Method_getResourcePath,
-		Method_getTokenizer,
-		Method_getNormalizer,
-		Method_defineTokenizer,
-		Method_defineNormalizer
-	};
-
 	virtual ~TextProcessorImpl();
 
-	TextProcessorImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	TextProcessorImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TextProcessor, objId_, messaging_){}
 
 	virtual void addResourcePath( const std::string& p1);
@@ -1086,17 +726,12 @@ public:
 class TokenizerConstructorImpl
 		:public RpcInterfaceStub
 		,public strus::TokenizerConstructorInterface
+		,public strus::TokenizerConstructorConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_create
-	};
-
 	virtual ~TokenizerConstructorImpl();
 
-	TokenizerConstructorImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	TokenizerConstructorImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerConstructor, objId_, messaging_){}
 
 	virtual TokenizerInterface* create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
@@ -1105,17 +740,12 @@ public:
 class TokenizerInstanceImpl
 		:public RpcInterfaceStub
 		,public strus::TokenizerInstanceInterface
+		,public strus::TokenizerInstanceConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_tokenize
-	};
-
 	virtual ~TokenizerInstanceImpl();
 
-	TokenizerInstanceImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	TokenizerInstanceImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerInstance, objId_, messaging_){}
 
 	virtual std::vector<analyzer::Token> tokenize( const char* p1, std::size_t p2);
@@ -1124,18 +754,12 @@ public:
 class TokenizerImpl
 		:public RpcInterfaceStub
 		,public strus::TokenizerInterface
+		,public strus::TokenizerConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_concatBeforeTokenize,
-		Method_createInstance
-	};
-
 	virtual ~TokenizerImpl();
 
-	TokenizerImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	TokenizerImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Tokenizer, objId_, messaging_){}
 
 	virtual bool concatBeforeTokenize( ) const;
@@ -1145,17 +769,12 @@ public:
 class WeightingClosureImpl
 		:public RpcInterfaceStub
 		,public strus::WeightingClosureInterface
+		,public strus::WeightingClosureConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_call
-	};
-
 	virtual ~WeightingClosureImpl();
 
-	WeightingClosureImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	WeightingClosureImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingClosure, objId_, messaging_){}
 
 	virtual float call( const Index& p1);
@@ -1164,18 +783,12 @@ public:
 class WeightingFunctionImpl
 		:public RpcInterfaceStub
 		,public strus::WeightingFunctionInterface
+		,public strus::WeightingFunctionConst
 {
 public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_numericParameterNames,
-		Method_createClosure
-	};
-
 	virtual ~WeightingFunctionImpl();
 
-	WeightingFunctionImpl( unsigned int objId_, RpcMessagingInterface* messaging_)
+	WeightingFunctionImpl( unsigned int objId_, RpcClientMessagingInterface* messaging_)
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunction, objId_, messaging_){}
 
 	virtual const char** numericParameterNames( ) const;

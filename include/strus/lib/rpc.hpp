@@ -41,13 +41,13 @@ class RpcClientInterface;
 /// \brief Forward declaration
 class RpcRequestHandlerInterface;
 /// \brief Forward declaration
-class RpcMessagingInterface;
+class RpcClientMessagingInterface;
 
 /// \brief Creates an RPC Client connection to the server
 /// \param[in] connector interface to use for sending and receiving messages to and from the server
 RpcClientInterface*
 	createRpcClient(
-		RpcMessagingInterface* connector);
+		RpcClientMessagingInterface* connector);
 
 /// \brief Creates an RPC request handler object to be used by a server implementation
 /// \param[in] storageBuilder_ storage builder (ownership passed to callee)

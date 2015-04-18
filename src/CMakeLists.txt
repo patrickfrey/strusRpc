@@ -17,6 +17,7 @@ include_directories(
         "${Boost_INCLUDE_DIRS}"
 	"${PROJECT_SOURCE_DIR}/include"
 	"${PROJECT_SOURCE_DIR}/src/serialize"
+	"${PROJECT_SOURCE_DIR}/src/client"
 	"${strusmodule_INCLUDE_DIRS}"
 	"${strus_INCLUDE_DIRS}"
 	"${strusanalyzer_INCLUDE_DIRS}" )
@@ -56,8 +57,8 @@ set_target_properties(
 # ------------------------------
 # PROGRAMS
 # ------------------------------
-add_executable( strusRpcServer server/strusRpcServer.cpp )
-target_link_libraries( strusRpcServer  nanomsg strus_module )
+#add_executable( strusRpcServer server/strusRpcServer.cpp )
+#target_link_libraries( strusRpcServer  nanomsg strus_module )
 
 # ------------------------------
 # INSTALLATION
@@ -68,7 +69,7 @@ install( TARGETS strus_rpc_nanomsg
 install( TARGETS strus_rpc
            LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strus )
 
-install( TARGETS strusRpcServer
-	   RUNTIME DESTINATION bin )
+#install( TARGETS strusRpcServer
+#	   RUNTIME DESTINATION bin )
 
 

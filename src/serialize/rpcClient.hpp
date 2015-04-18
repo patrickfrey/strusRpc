@@ -34,14 +34,14 @@ namespace strus
 {
 
 /// \brief Forward declaration
-class RpcMessagingInterface;
+class RpcClientMessagingInterface;
 
 /// \brief Interface providing a mechanism to create complex objects
 class RpcClient
 	:public RpcClientInterface
 {
 public:
-	RpcClient( RpcMessagingInterface* messaging_)
+	RpcClient( RpcClientMessagingInterface* messaging_)
 		:m_messaging(messaging_),m_objcnt(0){}
 
 	/// \brief Destructor
@@ -52,7 +52,7 @@ public:
 	virtual AnalyzerObjectBuilderInterface* createAnalyzerObjectBuilder() const;
 
 private:
-	RpcMessagingInterface* m_messaging;
+	RpcClientMessagingInterface* m_messaging;
 	mutable unsigned int m_objcnt;
 };
 

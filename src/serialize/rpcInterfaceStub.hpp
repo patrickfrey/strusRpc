@@ -28,7 +28,7 @@
 */
 #ifndef _STRUS_RPC_INTERFACE_STUB_HPP_INCLUDED
 #define _STRUS_RPC_INTERFACE_STUB_HPP_INCLUDED
-#include "strus/rpcMessagingInterface.hpp"
+#include "strus/rpcClientMessagingInterface.hpp"
 #include "constConstructor.hpp"
 #include <string>
 
@@ -39,7 +39,7 @@ class RpcInterfaceStub
 public:
 	virtual ~RpcInterfaceStub(){}
 
-	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, RpcMessagingInterface* messaging_);
+	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, RpcClientMessagingInterface* messaging_);
 	RpcInterfaceStub( const RpcInterfaceStub& o);
 	RpcInterfaceStub();
 
@@ -49,16 +49,16 @@ public:
 	void enter() const;
 	const ConstConstructor* constConstructor() const		{return &m_constConstructor;}
 
-	void rpc_send( const std::string& msg) const;
-	std::string rpc_recv() const;
-	void rpc_waitAnswer() const;
+	std::string rpc_sendRequest( const std::string& msg) const;
+	void rpc_sendMessage( const std::string& msg) const;
+	void rpc_synchronize() const;
 
-	RpcMessagingInterface* messaging() const			{return m_messaging;}
+	RpcClientMessagingInterface* messaging() const			{return m_messaging;}
 
 private:
 	unsigned char m_classId;
 	unsigned int m_objId;
-	mutable RpcMessagingInterface* m_messaging;
+	mutable RpcClientMessagingInterface* m_messaging;
 	ConstConstructor m_constConstructor;
 };
 

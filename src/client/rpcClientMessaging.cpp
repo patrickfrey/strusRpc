@@ -26,8 +26,15 @@
 
 --------------------------------------------------------------------
 */
+#include "rpcClientMessaging.hpp"
+#include <stdexcept>
+#include <cstring>
+#include <nn.h>
+#include <reqrep.h>
 #include <netinet/in.h>
 #include <stdint.h>
+#include <errno.h>
+
 using namespace strus;
 
 static void packUint( std::string& buf, uint32_t size)
@@ -36,22 +43,102 @@ static void packUint( std::string& buf, uint32_t size)
 	buf.append( (const char*)&vv, 4);
 }
 
-static void unpackUint( char const*& itr, const char* end, void* ptr)
-{
-	if (itr+4 > end) throw std::runtime_error( "message to small to encode next dword");
-	uint32_t val;
-	std::memcpy( &val, itr, 4);
-	itr += 4;
-	*(uint32_t*)ptr = ntohl( val);
-}
-
-
 RpcClientMessaging::RpcClientMessaging( const char* config)
 {
-	m_messageBuffer.push_back( 0xFF);
+	m_sock = nn_socket( AF_SP, NN_REQ);
+	if (m_sock < 0) switch (errno)
+	{
+		case EAFNOSUPPORT:
+			throw std::runtime_error( "error connecting to server (nanomsg: specified address family is not supported)");
+		case EINVAL:
+			throw std::runtime_error( "error connecting to server (nanomsg: unknown protocol)");
+		case EMFILE:
+			throw std::runtime_error( "error connecting to server (nanomsg: the limit on the total number of open SP sockets or OS limit for file descriptors has been reached");
+		case ETERM:
+			throw std::runtime_error( "error connecting to server (nanomsg: the library is terminating");
+		default:
+			throw std::runtime_error( "error connecting to server (socket create)");
+	}
+	if (nn_connect( m_sock, config) < 0) switch (errno)
+	{
+		case EBADF:
+			throw std::runtime_error( "error connecting to server (nanomsg: the provided socket is invalid");
+		case EMFILE:
+			throw std::runtime_error( "error connecting to server (nanomsg: maximum number of active endpoints was reached");
+		case ETERM:
+			throw std::runtime_error( "error connecting to server (nanomsg: the library is terminating");
+		case EINVAL:
+			throw std::runtime_error( "error connecting to server (nanomsg: the syntax of the supplied address is invalid");
+		case ENAMETOOLONG:
+			throw std::runtime_error( "error connecting to server (nanomsg: the supplied address is too long");
+		case EPROTONOSUPPORT:
+			throw std::runtime_error( "error connecting to server (nanomsg: the requested transport protocol is not supported");
+		case ENODEV:
+			throw std::runtime_error( "error connecting to server (nanomsg: address specifies a nonexistent interface");
+		default:
+			throw std::runtime_error( "error connecting to server (nanomsg: unknown error)");
+	}
 }
 
-RpcClientMessaging::~RpcClientMessaging(){}
+RpcClientMessaging::~RpcClientMessaging()
+{
+	if (m_recvbuf) nn_freemsg( m_recvbuf);
+	nn_close( m_sock);
+}
+
+void RpcClientMessaging::send_req( const char* msg, std::size_t msgsize)
+{
+	if (m_recvbuf) nn_freemsg( m_recvbuf);
+	m_recvbuf = 0;
+	if (nn_send( m_sock, msg, msgsize, 0) < 0) switch (errno)
+	{
+		case EFAULT:
+			throw std::runtime_error( "error sending request to server (nanomsg: buf is NULL or len is NN_MSG and the message pointer (pointed to by buf) is NULL");
+		case EBADF:
+			throw std::runtime_error( "error sending request to server (nanomsg: the provided socket is invalid");
+		case ENOTSUP:
+			throw std::runtime_error( "error sending request to server (nanomsg: the operation is not supported by this socket type");
+		case EFSM:
+			throw std::runtime_error( "error sending request to server (nanomsg: the operation cannot be performed on this socket at the moment because the socket is not in the appropriate state");
+		case EAGAIN:
+			throw std::runtime_error( "error sending request to server (nanomsg: non-blocking mode was requested and the message cannot be sent at the moment");
+		case EINTR:
+			throw std::runtime_error( "error sending request to server (nanomsg: the operation was interrupted by delivery of a signal before the message was sent");
+		case ETIMEDOUT:
+			throw std::runtime_error( "error sending request to server (nanomsg: timeout on socket");
+		case ETERM:
+			throw std::runtime_error( "error sending request to server (nanomsg: the library is terminating");
+		default:
+			throw std::runtime_error( "error sending request to server (nanomsg: unknown error)");
+	}
+}
+
+void RpcClientMessaging::recv_rep( const char*& msg, std::size_t& msgsize)
+{
+	if (m_recvbuf) nn_freemsg( m_recvbuf);
+	m_recvbuf = 0;
+	msgsize = nn_recv( m_sock, &m_recvbuf, NN_MSG, 0);
+	if (msgsize < 0) switch (errno)
+	{
+		case EBADF:
+			throw std::runtime_error( "error receiving request from server (nanomsg: the provided socket is invalid");
+		case ENOTSUP:
+			throw std::runtime_error( "error receiving request from server (nanomsg: the operation is not supported by this socket type");
+		case EFSM:
+			throw std::runtime_error( "error receiving request from server (nanomsg: the operation cannot be performed on this socket at the moment because the socket is not in the appropriate state");
+		case EAGAIN:
+			throw std::runtime_error( "error receiving request from server (nanomsg: non-blocking mode was requested and there’s no message to receive at the moment");
+		case EINTR:
+			throw std::runtime_error( "error receiving request from server (nanomsg: the operation was interrupted by delivery of a signal before the message was received.");
+		case ETIMEDOUT:
+			throw std::runtime_error( "error receiving request from server (nanomsg: timeout on socket");
+		case ETERM:
+			throw std::runtime_error( "error receiving request from server (nanomsg: the library is terminating");
+		default:
+			throw std::runtime_error( "error receiving request from server (nanomsg: unknown error)");
+	}
+	msg = (const char*)m_recvbuf;
+}
 
 std::string RpcClientMessaging::sendRequest( const std::string& content)
 {
@@ -59,23 +146,43 @@ std::string RpcClientMessaging::sendRequest( const std::string& content)
 	{
 		packUint( m_messageBuffer, content.size());
 		m_messageBuffer.append( content);
+		send_req( m_messageBuffer.c_str(), m_messageBuffer.size());
+		const char* msg;
+		std::size_t msgsize;
+		recv_rep( msg, msgsize);
+		return std::string( msg, msgsize);
 	}
 	else
 	{
-		send content as request
+		send_req( content.c_str(), content.size());
+		const char* msg;
+		std::size_t msgsize;
+		recv_rep( msg, msgsize);
+		return std::string( msg, msgsize);
 	}
 }
 
 void RpcClientMessaging::sendMessage( const std::string& content)
 {
+	if (m_messageBuffer.size() == 0)
+	{
+		m_messageBuffer.push_back( (unsigned char)0xFF);
+	}
 	packUint( m_messageBuffer, content.size());
 	m_messageBuffer.append( content);
 }
 
 std::string RpcClientMessaging::synchronize()
 {
-	send m_messageBuffer as request
-	m_messageBuffer.clear();
-	m_messageBuffer.push_back( 0xFF);
+	if (m_messageBuffer.size() > 0)
+	{
+		send_req( m_messageBuffer.c_str(), m_messageBuffer.size());
+		const char* msg;
+		std::size_t msgsize;
+		recv_rep( msg, msgsize);
+		return std::string( msg, msgsize);
+		m_messageBuffer.clear();
+	}
+	return std::string();
 }
 

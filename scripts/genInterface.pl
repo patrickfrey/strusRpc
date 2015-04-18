@@ -243,6 +243,13 @@ sub interfaceImplementationClassName
 	return $classname . "Impl";
 }
 
+sub interfaceConstClassName
+{
+	my ($classname) = @_;
+	$classname =~ s/Interface$//;
+	return $classname . "Const";
+}
+
 sub parseInterface
 {
 	my ($interfacename) = @_;
@@ -659,7 +666,7 @@ sub packParameter
 		}
 		else
 		{
-			$rt .= "PACK_UNKNOWN( \"$type\" $id);";
+			die "no serialization defined for type \"$type\"";
 		}
 	}
 	elsif ($type eq "std::string")
@@ -748,7 +755,7 @@ sub packParameter
 	}
 	else
 	{
-		$rt .= "PACK_UNKNOWN( \"$type\" $id);";
+		die "no serialization defined for type \"$type\"";
 	}
 	return $rt;
 }
@@ -823,7 +830,7 @@ sub unpackParameter
 			}
 			else
 			{
-				$rt .= "UNPACK_UNKNOWN( \"$type\" $id);";
+				die "no deserialization defined for type \"$type\"";
 			}
 		}
 		elsif ($indirection == 2)
@@ -834,7 +841,7 @@ sub unpackParameter
 			}
 			else
 			{
-				$rt .= "UNPACK_UNKNOWN( \"$type\" $id);";
+				die "no deserialization defined for type \"$type\"";
 			}
 		}
 		elsif ($indirection == 0)
@@ -843,7 +850,7 @@ sub unpackParameter
 		}
 		else
 		{
-			$rt .= "PACK_UNKNOWN( \"$type\" $id);";
+			die "no deserialization defined for type \"$type\"";
 		}
 	}
 	elsif ($type eq "std::string")
@@ -912,7 +919,7 @@ sub unpackParameter
 		}
 		else
 		{
-			$rt .= "UNPACK_UNKNOWN( \"$type\" $id);";
+			die "no deserialization defined for type \"$type\"";
 		}
 	}
 	elsif ($type eq "SummarizerClosureInterface::SummaryElement")
@@ -961,7 +968,7 @@ sub unpackParameter
 	}
 	else
 	{
-		$rt .= "UNPACK_UNKNOWN( \"$type\" $id);";
+		die "no deserialization defined for type \"$type\"";
 	}
 	return $rt;
 }
@@ -1191,8 +1198,7 @@ sub getMethodDeclarationSource
 				}
 				else
 				{
-					$sender_output .= "UNKNOWN RETURN VALUE TYPE\n";
-					$receiver_output .= "UNKNOWN RETURN VALUE TYPE\n";
+					die "cannot handle return value type $retval";
 				}
 			}
 			elsif ($isarray)
@@ -1243,12 +1249,19 @@ sub getMethodDeclarationSource
 		{
 			$sender_code .= "\tmsg.packCrc32();\n";
 			$sender_code .= "\tenter();\n";
-			$sender_code .= "\tRpcDeserializer serializedMsg( rpc_sendRequest( msg.content()));\n";
+			$sender_code .= "\tstd::string answer = rpc_sendRequest( msg.content());\n";
+			$sender_code .= "\tRpcDeserializer serializedMsg( answer.c_str(), answer.size());\n";
 			$sender_code .= "\tserializedMsg.unpackByte();\n";
 			$sender_code .= $sender_output;
 			$receiver_code .= $receiver_output;
 		}
 		elsif ($syncMethods{$methodname})
+		{
+			$sender_code .= "\tmsg.packCrc32();\n";
+			$sender_code .= "\trpc_sendMessage( msg.content());\n";
+			$sender_code .= "\trpc_synchronize();\n";
+		}
+		else
 		{
 			$sender_code .= "\tmsg.packCrc32();\n";
 			$sender_code .= "\trpc_sendMessage( msg.content());\n";
@@ -1264,7 +1277,7 @@ sub getMethodDeclarationSource
 	return ($sender_code,$receiver_code);
 }
 
-sub getClassHeaderSource
+sub getClassMethodEnumSource
 {
 	my $rt = "";
 	my $ii = 0;
@@ -1272,8 +1285,8 @@ sub getClassHeaderSource
 	foreach (@interfaceClasses)
 	{
 		my $interfacename = getInterfaceName($_);
-		my $classname = interfaceImplementationClassName( $interfacename);
-		$rt .= "\nclass $classname\n\t\t:public RpcInterfaceStub\n\t\t,public strus::$interfacename\n{\npublic:";
+		my $classname = interfaceConstClassName( $interfacename);
+		$rt .= "\nclass $classname\n{\npublic:";
 
 		my @mth = split('%');
 		shift( @mth);
@@ -1285,9 +1298,30 @@ sub getClassHeaderSource
 			my $callname = getMethodName( $mm);
 			$rt .= ",\n\t\tMethod_" . $callname;
 		}
-		$rt .= "\n\t};\n";
+		$rt .= "\n\t};";
+		$rt .= "\n};\n";
+		++$ii;
+	}
+	return $rt;
+}
+
+sub getClassHeaderSource
+{
+	my $rt = "";
+	my $ii = 0;
+	
+	foreach (@interfaceClasses)
+	{
+		my $interfacename = getInterfaceName($_);
+		my $classname = interfaceImplementationClassName( $interfacename);
+		my $conststructname = interfaceConstClassName( $interfacename);
+		$rt .= "\nclass $classname\n\t\t:public RpcInterfaceStub\n\t\t,public strus::$interfacename\n\t\t,public strus::$conststructname\n{\npublic:";
+
+		my @mth = split('%');
+		shift( @mth);
 		$rt .= "\n\tvirtual ~$classname();\n";
-		$rt .= "\n\t$classname( unsigned int objId_, RpcMessagingInterface* messaging_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, messaging_){}\n";
+		$rt .= "\n\t$classname( unsigned int objId_, RpcClientMessagingInterface* messaging_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, messaging_){}\n";
+		my $mm;
 		foreach $mm( @mth)
 		{
 			$rt .= "\n\t" . getMethodDeclarationHeader( $classname, $mm) .";";
@@ -1303,7 +1337,7 @@ sub getClassImplementationSource
 	my ($sender_code,$receiver_code) = ("","");
 	my $ii = 0;
 
-	$receiver_code .= "\tRpcDeserializer serializedMsg( msg);\n";
+	$receiver_code .= "\tRpcDeserializer serializedMsg( src, srcsize);\n";
 	$receiver_code .= "\tif (!serializedMsg.unpackCrc32()) throw std::runtime_error(\"message CRC32 check failed\");\n";
 	$receiver_code .= "\tunsigned char classId; unsigned int objId; unsigned char methodId;\n";
 	$receiver_code .= "\tserializedMsg.unpackObject( classId, objId);\n";
@@ -1315,6 +1349,7 @@ sub getClassImplementationSource
 	{
 		my $interfacename = getInterfaceName($_);
 		my $classname = interfaceImplementationClassName( $interfacename);
+		my $classenumname = interfaceConstClassName( $interfacename);
 
 		$sender_code .= "\n$classname" . "::~$classname()\n";
 		$sender_code .= "{\n";
@@ -1322,15 +1357,15 @@ sub getClassImplementationSource
 		$sender_code .= "\tmsg.packObject( classId(), objId());\n";
 		$sender_code .= "\tmsg.packByte( Method_Destructor);\n";
 		$sender_code .= "\tmsg.packCrc32();\n";
-		$sender_code .= "\trpc_send( msg.content());\n";
+		$sender_code .= "\trpc_sendMessage( msg.content());\n";
 		$sender_code .= "}\n";
 
 		$receiver_code .= "\tcase " . getInterfaceEnumName( $interfacename) . ":\n";
 		$receiver_code .= "\t{\n";
 		$receiver_code .= "\t$interfacename* obj = getObject<$interfacename>( classId, objId);\n";
-		$receiver_code .= "\tswitch( ($classname" . "::MethodId)methodId)\n";
+		$receiver_code .= "\tswitch( ($classenumname" . "::MethodId)methodId)\n";
 		$receiver_code .= "\t{\n";
-		$receiver_code .= "\t\tcase $classname" . "::Method_Destructor:\n";
+		$receiver_code .= "\t\tcase $classenumname" . "::Method_Destructor:\n";
 		$receiver_code .= "\t\t{\n";
 		$receiver_code .= "\t\t\tdeleteObject( classId, objId);\n";
 		$receiver_code .= "\t\t}\n";
@@ -1346,7 +1381,7 @@ sub getClassImplementationSource
 			my @param = split( '!', $mm);
 			my $methodname = shift( @param);
 			$methodname =~ s/^const //;
-			$receiver_code .= "\t\tcase $classname" . "::Method_" . $methodname . ":\n";
+			$receiver_code .= "\t\tcase $classenumname" . "::Method_" . $methodname . ":\n";
 			$receiver_code .= "\t\t{\n";
 			$rcv =~ s/\n$//;
 			$rcv =~ s/\n/\n\t\t/g;
@@ -1360,9 +1395,57 @@ sub getClassImplementationSource
 		$receiver_code .= "\t}\n";
 	}
 	$receiver_code .= "\t}\n";
-	$receiver_code .= "\treturn serializedMsg.content();\n";
+	$receiver_code .= "\tthrow std::runtime_error(\"calling undefined request handler\");\n";
 	return ($sender_code,$receiver_code);
 }
+
+my $interfacefile = "src/serialize/rpcObjectIds.hpp";
+open( HDRFILE, ">$interfacefile") or die "Couldn't open file $interfacefile, $!";
+print HDRFILE <<EOF;
+/*
+---------------------------------------------------------------------
+    The C++ library strus implements basic operations to build
+    a search engine for structured search on unstructured data.
+
+    Copyright (C) 2013,2014 Patrick Frey
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+--------------------------------------------------------------------
+
+	The latest version of strus can be found at 'http://github.com/patrickfrey/strus'
+	For documentation see 'http://patrickfrey.github.com/strus'
+
+--------------------------------------------------------------------
+*/
+#ifndef _STRUS_RPC_OBJECT_IDS_HPP_INCLUDED
+#define _STRUS_RPC_OBJECT_IDS_HPP_INCLUDED
+EOF
+
+print HDRFILE "\n";
+print HDRFILE "namespace strus {\n";
+
+print HDRFILE getClassEnumSource();
+print HDRFILE getClassMethodEnumSource();
+
+print HDRFILE <<EOF;
+} //namespace
+#endif
+EOF
+close HDRFILE;
+
 
 
 my $interfacefile = "src/serialize/rpcObjects.hpp";
@@ -1400,6 +1483,7 @@ print HDRFILE <<EOF;
 #ifndef _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #define _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #include "rpcInterfaceStub.hpp"
+#include "rpcObjectIds.hpp"
 EOF
 foreach $inputfile( @inputfiles)
 {
@@ -1415,7 +1499,6 @@ foreach $inputfile( @inputfiles)
 print HDRFILE "\n";
 print HDRFILE "namespace strus {\n";
 
-print HDRFILE getClassEnumSource();
 print HDRFILE getClassHeaderSource();
 
 print HDRFILE <<EOF;
@@ -1423,6 +1506,7 @@ print HDRFILE <<EOF;
 #endif
 EOF
 close HDRFILE;
+
 
 my $sourcefile = "src/serialize/rpcObjects.cpp";
 open( SRCFILE, ">$sourcefile") or die "Couldn't open file $sourcefile, $!";
@@ -1505,11 +1589,11 @@ print SRCFILE <<EOF;
 */
 #include "rpcRequestHandler.hpp"
 #include "rpcSerializer.hpp"
-#include "rpcObjects.hpp"
+#include "rpcObjectIds.hpp"
 #include <string>
 
 using namespace strus;
-std::string RpcRequestHandler::handleRequest( const std::string& msg)
+std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsize)
 {
 EOF
 

@@ -26,19 +26,28 @@
 
 --------------------------------------------------------------------
 */
+#include "strus/rpcClientMessagingInterface.hpp"
+
 using namespace strus;
 
 class RpcClientMessaging
-	:public RpcMessagingClientInterface
+	:public RpcClientMessagingInterface
 {
 public:
 	RpcClientMessaging( const char* config);
+	virtual ~RpcClientMessaging();
 
 	virtual std::string sendRequest( const std::string& content)=0;
 	virtual void sendMessage( const std::string& content)=0;
 	virtual std::string synchronize()=0;
 
 private:
+	void send_req( const char* msg, std::size_t msgsize);
+	void recv_rep( const char*& msg, std::size_t& msgsize);
+
+private:
+	int m_sock;
+	void* m_recvbuf;
 	std::string m_messageBuffer;
 };
 

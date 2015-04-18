@@ -28,7 +28,7 @@
 */
 #include "strus/lib/rpc.hpp"
 #include "strus/rpcClientInterface.hpp"
-#include "strus/rpcMessagingInterface.hpp"
+#include "strus/rpcClientMessagingInterface.hpp"
 #include "strus/rpcRequestHandlerInterface.hpp"
 #include "rpcRequestHandler.hpp"
 #include "rpcClient.hpp"
@@ -36,7 +36,7 @@
 
 using namespace strus;
 
-DLL_PUBLIC RpcClientInterface* strus::createRpcClient( RpcMessagingInterface* connector)
+DLL_PUBLIC RpcClientInterface* strus::createRpcClient( RpcClientMessagingInterface* connector)
 {
 	return new RpcClient( connector);
 }

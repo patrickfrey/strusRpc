@@ -28,13 +28,13 @@
 */
 #include "rpcRequestHandler.hpp"
 #include "rpcSerializer.hpp"
-#include "rpcObjects.hpp"
+#include "rpcObjectIds.hpp"
 #include <string>
 
 using namespace strus;
-std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsize)
+std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsize)
 {
-	RpcDeserializer serializedMsg( msg, msg + msgsize);
+	RpcDeserializer serializedMsg( src, srcsize);
 	if (!serializedMsg.unpackCrc32()) throw std::runtime_error("message CRC32 check failed");
 	unsigned char classId; unsigned int objId; unsigned char methodId;
 	serializedMsg.unpackObject( classId, objId);
@@ -44,13 +44,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_AnalyzerObjectBuilder:
 	{
 	AnalyzerObjectBuilderInterface* obj = getObject<AnalyzerObjectBuilderInterface>( classId, objId);
-	switch( (AnalyzerObjectBuilderImpl::MethodId)methodId)
+	switch( (AnalyzerObjectBuilderConst::MethodId)methodId)
 	{
-		case AnalyzerObjectBuilderImpl::Method_Destructor:
+		case AnalyzerObjectBuilderConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case AnalyzerObjectBuilderImpl::Method_getTextProcessor:
+		case AnalyzerObjectBuilderConst::Method_getTextProcessor:
 		{
 			RpcSerializer msg;
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -58,7 +58,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case AnalyzerObjectBuilderImpl::Method_createSegmenter:
+		case AnalyzerObjectBuilderConst::Method_createSegmenter:
 		{
 			RpcSerializer msg;
 			SegmenterInterface* p0;
@@ -87,7 +87,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case AnalyzerObjectBuilderImpl::Method_createDocumentAnalyzer:
+		case AnalyzerObjectBuilderConst::Method_createDocumentAnalyzer:
 		{
 			RpcSerializer msg;
 			DocumentAnalyzerInterface* p0;
@@ -116,7 +116,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case AnalyzerObjectBuilderImpl::Method_createQueryAnalyzer:
+		case AnalyzerObjectBuilderConst::Method_createQueryAnalyzer:
 		{
 			RpcSerializer msg;
 			QueryAnalyzerInterface* p0;
@@ -149,13 +149,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_AttributeReader:
 	{
 	AttributeReaderInterface* obj = getObject<AttributeReaderInterface>( classId, objId);
-	switch( (AttributeReaderImpl::MethodId)methodId)
+	switch( (AttributeReaderConst::MethodId)methodId)
 	{
-		case AttributeReaderImpl::Method_Destructor:
+		case AttributeReaderConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case AttributeReaderImpl::Method_elementHandle:
+		case AttributeReaderConst::Method_elementHandle:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -182,7 +182,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case AttributeReaderImpl::Method_skipDoc:
+		case AttributeReaderConst::Method_skipDoc:
 		{
 			RpcSerializer msg;
 			Index p1;
@@ -207,7 +207,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case AttributeReaderImpl::Method_getValue:
+		case AttributeReaderConst::Method_getValue:
 		{
 			RpcSerializer msg;
 			std::string p0;
@@ -240,13 +240,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_DatabaseBackupCursor:
 	{
 	DatabaseBackupCursorInterface* obj = getObject<DatabaseBackupCursorInterface>( classId, objId);
-	switch( (DatabaseBackupCursorImpl::MethodId)methodId)
+	switch( (DatabaseBackupCursorConst::MethodId)methodId)
 	{
-		case DatabaseBackupCursorImpl::Method_Destructor:
+		case DatabaseBackupCursorConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case DatabaseBackupCursorImpl::Method_fetch:
+		case DatabaseBackupCursorConst::Method_fetch:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -283,13 +283,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_DatabaseClient:
 	{
 	DatabaseClientInterface* obj = getObject<DatabaseClientInterface>( classId, objId);
-	switch( (DatabaseClientImpl::MethodId)methodId)
+	switch( (DatabaseClientConst::MethodId)methodId)
 	{
-		case DatabaseClientImpl::Method_Destructor:
+		case DatabaseClientConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case DatabaseClientImpl::Method_close:
+		case DatabaseClientConst::Method_close:
 		{
 			RpcSerializer msg;
 			try {
@@ -312,7 +312,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseClientImpl::Method_createTransaction:
+		case DatabaseClientConst::Method_createTransaction:
 		{
 			RpcSerializer msg;
 			DatabaseTransactionInterface* p0;
@@ -339,7 +339,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseClientImpl::Method_createCursor:
+		case DatabaseClientConst::Method_createCursor:
 		{
 			RpcSerializer msg;
 			DatabaseCursorInterface* p0;
@@ -368,7 +368,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseClientImpl::Method_createBackupCursor:
+		case DatabaseClientConst::Method_createBackupCursor:
 		{
 			RpcSerializer msg;
 			DatabaseBackupCursorInterface* p0;
@@ -395,7 +395,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseClientImpl::Method_writeImm:
+		case DatabaseClientConst::Method_writeImm:
 		{
 			RpcSerializer msg;
 			const char* p1;
@@ -424,7 +424,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseClientImpl::Method_removeImm:
+		case DatabaseClientConst::Method_removeImm:
 		{
 			RpcSerializer msg;
 			const char* p1;
@@ -450,7 +450,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseClientImpl::Method_readValue:
+		case DatabaseClientConst::Method_readValue:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -488,13 +488,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_DatabaseCursor:
 	{
 	DatabaseCursorInterface* obj = getObject<DatabaseCursorInterface>( classId, objId);
-	switch( (DatabaseCursorImpl::MethodId)methodId)
+	switch( (DatabaseCursorConst::MethodId)methodId)
 	{
-		case DatabaseCursorImpl::Method_Destructor:
+		case DatabaseCursorConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case DatabaseCursorImpl::Method_seekUpperBound:
+		case DatabaseCursorConst::Method_seekUpperBound:
 		{
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
@@ -524,7 +524,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseCursorImpl::Method_seekFirst:
+		case DatabaseCursorConst::Method_seekFirst:
 		{
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
@@ -552,7 +552,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseCursorImpl::Method_seekLast:
+		case DatabaseCursorConst::Method_seekLast:
 		{
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
@@ -580,7 +580,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseCursorImpl::Method_seekNext:
+		case DatabaseCursorConst::Method_seekNext:
 		{
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
@@ -605,7 +605,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseCursorImpl::Method_seekPrev:
+		case DatabaseCursorConst::Method_seekPrev:
 		{
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
@@ -630,7 +630,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseCursorImpl::Method_key:
+		case DatabaseCursorConst::Method_key:
 		{
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
@@ -655,7 +655,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseCursorImpl::Method_value:
+		case DatabaseCursorConst::Method_value:
 		{
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
@@ -686,13 +686,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_Database:
 	{
 	DatabaseInterface* obj = getObject<DatabaseInterface>( classId, objId);
-	switch( (DatabaseImpl::MethodId)methodId)
+	switch( (DatabaseConst::MethodId)methodId)
 	{
-		case DatabaseImpl::Method_Destructor:
+		case DatabaseConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case DatabaseImpl::Method_createClient:
+		case DatabaseConst::Method_createClient:
 		{
 			RpcSerializer msg;
 			DatabaseClientInterface* p0;
@@ -721,7 +721,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseImpl::Method_createDatabase:
+		case DatabaseConst::Method_createDatabase:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -746,7 +746,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseImpl::Method_restoreDatabase:
+		case DatabaseConst::Method_restoreDatabase:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -776,7 +776,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseImpl::Method_destroyDatabase:
+		case DatabaseConst::Method_destroyDatabase:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -801,7 +801,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseImpl::Method_getConfigDescription:
+		case DatabaseConst::Method_getConfigDescription:
 		{
 			RpcSerializer msg;
 			const char* p0;
@@ -828,7 +828,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseImpl::Method_getConfigParameters:
+		case DatabaseConst::Method_getConfigParameters:
 		{
 			RpcSerializer msg;
 			const char** p0;
@@ -861,13 +861,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_DatabaseTransaction:
 	{
 	DatabaseTransactionInterface* obj = getObject<DatabaseTransactionInterface>( classId, objId);
-	switch( (DatabaseTransactionImpl::MethodId)methodId)
+	switch( (DatabaseTransactionConst::MethodId)methodId)
 	{
-		case DatabaseTransactionImpl::Method_Destructor:
+		case DatabaseTransactionConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case DatabaseTransactionImpl::Method_createCursor:
+		case DatabaseTransactionConst::Method_createCursor:
 		{
 			RpcSerializer msg;
 			DatabaseCursorInterface* p0;
@@ -896,7 +896,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseTransactionImpl::Method_write:
+		case DatabaseTransactionConst::Method_write:
 		{
 			RpcSerializer msg;
 			const char* p1;
@@ -925,7 +925,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseTransactionImpl::Method_remove:
+		case DatabaseTransactionConst::Method_remove:
 		{
 			RpcSerializer msg;
 			const char* p1;
@@ -951,7 +951,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseTransactionImpl::Method_removeSubTree:
+		case DatabaseTransactionConst::Method_removeSubTree:
 		{
 			RpcSerializer msg;
 			const char* p1;
@@ -977,7 +977,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseTransactionImpl::Method_commit:
+		case DatabaseTransactionConst::Method_commit:
 		{
 			RpcSerializer msg;
 			try {
@@ -1000,7 +1000,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DatabaseTransactionImpl::Method_rollback:
+		case DatabaseTransactionConst::Method_rollback:
 		{
 			RpcSerializer msg;
 			try {
@@ -1029,13 +1029,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_DocnoRangeAllocator:
 	{
 	DocnoRangeAllocatorInterface* obj = getObject<DocnoRangeAllocatorInterface>( classId, objId);
-	switch( (DocnoRangeAllocatorImpl::MethodId)methodId)
+	switch( (DocnoRangeAllocatorConst::MethodId)methodId)
 	{
-		case DocnoRangeAllocatorImpl::Method_Destructor:
+		case DocnoRangeAllocatorConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case DocnoRangeAllocatorImpl::Method_allocDocnoRange:
+		case DocnoRangeAllocatorConst::Method_allocDocnoRange:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -1062,7 +1062,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DocnoRangeAllocatorImpl::Method_deallocDocnoRange:
+		case DocnoRangeAllocatorConst::Method_deallocDocnoRange:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -1097,13 +1097,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_DocumentAnalyzerInstance:
 	{
 	DocumentAnalyzerInstanceInterface* obj = getObject<DocumentAnalyzerInstanceInterface>( classId, objId);
-	switch( (DocumentAnalyzerInstanceImpl::MethodId)methodId)
+	switch( (DocumentAnalyzerInstanceConst::MethodId)methodId)
 	{
-		case DocumentAnalyzerInstanceImpl::Method_Destructor:
+		case DocumentAnalyzerInstanceConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case DocumentAnalyzerInstanceImpl::Method_putInput:
+		case DocumentAnalyzerInstanceConst::Method_putInput:
 		{
 			RpcSerializer msg;
 			const char* p1;
@@ -1131,7 +1131,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DocumentAnalyzerInstanceImpl::Method_analyzeNext:
+		case DocumentAnalyzerInstanceConst::Method_analyzeNext:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -1164,13 +1164,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_DocumentAnalyzer:
 	{
 	DocumentAnalyzerInterface* obj = getObject<DocumentAnalyzerInterface>( classId, objId);
-	switch( (DocumentAnalyzerImpl::MethodId)methodId)
+	switch( (DocumentAnalyzerConst::MethodId)methodId)
 	{
-		case DocumentAnalyzerImpl::Method_Destructor:
+		case DocumentAnalyzerConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case DocumentAnalyzerImpl::Method_addSearchIndexFeature:
+		case DocumentAnalyzerConst::Method_addSearchIndexFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1207,7 +1207,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DocumentAnalyzerImpl::Method_addForwardIndexFeature:
+		case DocumentAnalyzerConst::Method_addForwardIndexFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1244,7 +1244,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DocumentAnalyzerImpl::Method_defineMetaData:
+		case DocumentAnalyzerConst::Method_defineMetaData:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1279,7 +1279,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DocumentAnalyzerImpl::Method_defineAttribute:
+		case DocumentAnalyzerConst::Method_defineAttribute:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1314,7 +1314,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DocumentAnalyzerImpl::Method_defineSubDocument:
+		case DocumentAnalyzerConst::Method_defineSubDocument:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1341,7 +1341,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DocumentAnalyzerImpl::Method_analyze:
+		case DocumentAnalyzerConst::Method_analyze:
 		{
 			RpcSerializer msg;
 			analyzer::Document p0;
@@ -1368,7 +1368,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case DocumentAnalyzerImpl::Method_createInstance:
+		case DocumentAnalyzerConst::Method_createInstance:
 		{
 			RpcSerializer msg;
 			DocumentAnalyzerInstanceInterface* p0;
@@ -1401,13 +1401,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_ForwardIterator:
 	{
 	ForwardIteratorInterface* obj = getObject<ForwardIteratorInterface>( classId, objId);
-	switch( (ForwardIteratorImpl::MethodId)methodId)
+	switch( (ForwardIteratorConst::MethodId)methodId)
 	{
-		case ForwardIteratorImpl::Method_Destructor:
+		case ForwardIteratorConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case ForwardIteratorImpl::Method_skipDoc:
+		case ForwardIteratorConst::Method_skipDoc:
 		{
 			RpcSerializer msg;
 			Index p1;
@@ -1432,7 +1432,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case ForwardIteratorImpl::Method_skipPos:
+		case ForwardIteratorConst::Method_skipPos:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -1459,7 +1459,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case ForwardIteratorImpl::Method_fetch:
+		case ForwardIteratorConst::Method_fetch:
 		{
 			RpcSerializer msg;
 			std::string p0;
@@ -1490,13 +1490,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_InvAclIterator:
 	{
 	InvAclIteratorInterface* obj = getObject<InvAclIteratorInterface>( classId, objId);
-	switch( (InvAclIteratorImpl::MethodId)methodId)
+	switch( (InvAclIteratorConst::MethodId)methodId)
 	{
-		case InvAclIteratorImpl::Method_Destructor:
+		case InvAclIteratorConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case InvAclIteratorImpl::Method_skipDoc:
+		case InvAclIteratorConst::Method_skipDoc:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -1529,13 +1529,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_MetaDataReader:
 	{
 	MetaDataReaderInterface* obj = getObject<MetaDataReaderInterface>( classId, objId);
-	switch( (MetaDataReaderImpl::MethodId)methodId)
+	switch( (MetaDataReaderConst::MethodId)methodId)
 	{
-		case MetaDataReaderImpl::Method_Destructor:
+		case MetaDataReaderConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case MetaDataReaderImpl::Method_hasElement:
+		case MetaDataReaderConst::Method_hasElement:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -1562,7 +1562,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case MetaDataReaderImpl::Method_elementHandle:
+		case MetaDataReaderConst::Method_elementHandle:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -1589,7 +1589,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case MetaDataReaderImpl::Method_nofElements:
+		case MetaDataReaderConst::Method_nofElements:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -1614,7 +1614,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case MetaDataReaderImpl::Method_skipDoc:
+		case MetaDataReaderConst::Method_skipDoc:
 		{
 			RpcSerializer msg;
 			Index p1;
@@ -1639,7 +1639,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case MetaDataReaderImpl::Method_getValue:
+		case MetaDataReaderConst::Method_getValue:
 		{
 			RpcSerializer msg;
 			ArithmeticVariant p0;
@@ -1666,7 +1666,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case MetaDataReaderImpl::Method_getType:
+		case MetaDataReaderConst::Method_getType:
 		{
 			RpcSerializer msg;
 			const char* p0;
@@ -1693,7 +1693,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case MetaDataReaderImpl::Method_getName:
+		case MetaDataReaderConst::Method_getName:
 		{
 			RpcSerializer msg;
 			const char* p0;
@@ -1726,13 +1726,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_NormalizerConstructor:
 	{
 	NormalizerConstructorInterface* obj = getObject<NormalizerConstructorInterface>( classId, objId);
-	switch( (NormalizerConstructorImpl::MethodId)methodId)
+	switch( (NormalizerConstructorConst::MethodId)methodId)
 	{
-		case NormalizerConstructorImpl::Method_Destructor:
+		case NormalizerConstructorConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case NormalizerConstructorImpl::Method_create:
+		case NormalizerConstructorConst::Method_create:
 		{
 			RpcSerializer msg;
 			NormalizerInterface* p0;
@@ -1776,13 +1776,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_NormalizerInstance:
 	{
 	NormalizerInstanceInterface* obj = getObject<NormalizerInstanceInterface>( classId, objId);
-	switch( (NormalizerInstanceImpl::MethodId)methodId)
+	switch( (NormalizerInstanceConst::MethodId)methodId)
 	{
-		case NormalizerInstanceImpl::Method_Destructor:
+		case NormalizerInstanceConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case NormalizerInstanceImpl::Method_normalize:
+		case NormalizerInstanceConst::Method_normalize:
 		{
 			RpcSerializer msg;
 			std::string p0;
@@ -1816,13 +1816,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_Normalizer:
 	{
 	NormalizerInterface* obj = getObject<NormalizerInterface>( classId, objId);
-	switch( (NormalizerImpl::MethodId)methodId)
+	switch( (NormalizerConst::MethodId)methodId)
 	{
-		case NormalizerImpl::Method_Destructor:
+		case NormalizerConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case NormalizerImpl::Method_createInstance:
+		case NormalizerConst::Method_createInstance:
 		{
 			RpcSerializer msg;
 			NormalizerInstanceInterface* p0;
@@ -1855,13 +1855,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_PeerStorageTransaction:
 	{
 	PeerStorageTransactionInterface* obj = getObject<PeerStorageTransactionInterface>( classId, objId);
-	switch( (PeerStorageTransactionImpl::MethodId)methodId)
+	switch( (PeerStorageTransactionConst::MethodId)methodId)
 	{
-		case PeerStorageTransactionImpl::Method_Destructor:
+		case PeerStorageTransactionConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case PeerStorageTransactionImpl::Method_updateNofDocumentsInsertedChange:
+		case PeerStorageTransactionConst::Method_updateNofDocumentsInsertedChange:
 		{
 			RpcSerializer msg;
 			GlobalCounter p1;
@@ -1886,7 +1886,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case PeerStorageTransactionImpl::Method_updateDocumentFrequencyChange:
+		case PeerStorageTransactionConst::Method_updateDocumentFrequencyChange:
 		{
 			RpcSerializer msg;
 			const char* p1;
@@ -1915,7 +1915,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case PeerStorageTransactionImpl::Method_commit:
+		case PeerStorageTransactionConst::Method_commit:
 		{
 			RpcSerializer msg;
 			try {
@@ -1938,7 +1938,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case PeerStorageTransactionImpl::Method_rollback:
+		case PeerStorageTransactionConst::Method_rollback:
 		{
 			RpcSerializer msg;
 			try {
@@ -1967,13 +1967,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_PostingIterator:
 	{
 	PostingIteratorInterface* obj = getObject<PostingIteratorInterface>( classId, objId);
-	switch( (PostingIteratorImpl::MethodId)methodId)
+	switch( (PostingIteratorConst::MethodId)methodId)
 	{
-		case PostingIteratorImpl::Method_Destructor:
+		case PostingIteratorConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case PostingIteratorImpl::Method_skipDoc:
+		case PostingIteratorConst::Method_skipDoc:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -2000,7 +2000,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case PostingIteratorImpl::Method_skipPos:
+		case PostingIteratorConst::Method_skipPos:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -2027,7 +2027,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case PostingIteratorImpl::Method_featureid:
+		case PostingIteratorConst::Method_featureid:
 		{
 			RpcSerializer msg;
 			const char* p0;
@@ -2052,7 +2052,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case PostingIteratorImpl::Method_subExpressions:
+		case PostingIteratorConst::Method_subExpressions:
 		{
 			RpcSerializer msg;
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -2060,7 +2060,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case PostingIteratorImpl::Method_documentFrequency:
+		case PostingIteratorConst::Method_documentFrequency:
 		{
 			RpcSerializer msg;
 			GlobalCounter p0;
@@ -2085,7 +2085,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case PostingIteratorImpl::Method_frequency:
+		case PostingIteratorConst::Method_frequency:
 		{
 			RpcSerializer msg;
 			unsigned int p0;
@@ -2110,7 +2110,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case PostingIteratorImpl::Method_docno:
+		case PostingIteratorConst::Method_docno:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -2135,7 +2135,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case PostingIteratorImpl::Method_posno:
+		case PostingIteratorConst::Method_posno:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -2166,13 +2166,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_PostingJoinOperator:
 	{
 	PostingJoinOperatorInterface* obj = getObject<PostingJoinOperatorInterface>( classId, objId);
-	switch( (PostingJoinOperatorImpl::MethodId)methodId)
+	switch( (PostingJoinOperatorConst::MethodId)methodId)
 	{
-		case PostingJoinOperatorImpl::Method_Destructor:
+		case PostingJoinOperatorConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case PostingJoinOperatorImpl::Method_createResultIterator:
+		case PostingJoinOperatorConst::Method_createResultIterator:
 		{
 			RpcSerializer msg;
 			PostingIteratorInterface* p0;
@@ -2216,13 +2216,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_QueryAnalyzer:
 	{
 	QueryAnalyzerInterface* obj = getObject<QueryAnalyzerInterface>( classId, objId);
-	switch( (QueryAnalyzerImpl::MethodId)methodId)
+	switch( (QueryAnalyzerConst::MethodId)methodId)
 	{
-		case QueryAnalyzerImpl::Method_Destructor:
+		case QueryAnalyzerConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case QueryAnalyzerImpl::Method_definePhraseType:
+		case QueryAnalyzerConst::Method_definePhraseType:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2257,7 +2257,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryAnalyzerImpl::Method_analyzePhrase:
+		case QueryAnalyzerConst::Method_analyzePhrase:
 		{
 			RpcSerializer msg;
 			std::vector<analyzer::Term> p0;
@@ -2295,13 +2295,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_QueryEval:
 	{
 	QueryEvalInterface* obj = getObject<QueryEvalInterface>( classId, objId);
-	switch( (QueryEvalImpl::MethodId)methodId)
+	switch( (QueryEvalConst::MethodId)methodId)
 	{
-		case QueryEvalImpl::Method_Destructor:
+		case QueryEvalConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case QueryEvalImpl::Method_addTerm:
+		case QueryEvalConst::Method_addTerm:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2330,7 +2330,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryEvalImpl::Method_addSelectionFeature:
+		case QueryEvalConst::Method_addSelectionFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2355,7 +2355,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryEvalImpl::Method_addRestrictionFeature:
+		case QueryEvalConst::Method_addRestrictionFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2380,7 +2380,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryEvalImpl::Method_addSummarizer:
+		case QueryEvalConst::Method_addSummarizer:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2409,7 +2409,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryEvalImpl::Method_addWeightingFunction:
+		case QueryEvalConst::Method_addWeightingFunction:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2442,7 +2442,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryEvalImpl::Method_createQuery:
+		case QueryEvalConst::Method_createQuery:
 		{
 			RpcSerializer msg;
 			QueryInterface* p0;
@@ -2480,13 +2480,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_Query:
 	{
 	QueryInterface* obj = getObject<QueryInterface>( classId, objId);
-	switch( (QueryImpl::MethodId)methodId)
+	switch( (QueryConst::MethodId)methodId)
 	{
-		case QueryImpl::Method_Destructor:
+		case QueryConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case QueryImpl::Method_pushTerm:
+		case QueryConst::Method_pushTerm:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2513,7 +2513,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryImpl::Method_pushExpression:
+		case QueryConst::Method_pushExpression:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2542,7 +2542,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryImpl::Method_pushDuplicate:
+		case QueryConst::Method_pushDuplicate:
 		{
 			RpcSerializer msg;
 			try {
@@ -2565,7 +2565,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryImpl::Method_attachVariable:
+		case QueryConst::Method_attachVariable:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2590,7 +2590,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryImpl::Method_defineFeature:
+		case QueryConst::Method_defineFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2617,7 +2617,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryImpl::Method_defineMetaDataRestriction:
+		case QueryConst::Method_defineMetaDataRestriction:
 		{
 			RpcSerializer msg;
 			QueryInterface::CompareOperator p1;
@@ -2648,7 +2648,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryImpl::Method_setMaxNofRanks:
+		case QueryConst::Method_setMaxNofRanks:
 		{
 			RpcSerializer msg;
 			std::size_t p1;
@@ -2673,7 +2673,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryImpl::Method_setMinRank:
+		case QueryConst::Method_setMinRank:
 		{
 			RpcSerializer msg;
 			std::size_t p1;
@@ -2698,7 +2698,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryImpl::Method_setUserName:
+		case QueryConst::Method_setUserName:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2723,7 +2723,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryImpl::Method_evaluate:
+		case QueryConst::Method_evaluate:
 		{
 			RpcSerializer msg;
 			std::vector<ResultDocument> p0;
@@ -2757,13 +2757,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_QueryProcessor:
 	{
 	QueryProcessorInterface* obj = getObject<QueryProcessorInterface>( classId, objId);
-	switch( (QueryProcessorImpl::MethodId)methodId)
+	switch( (QueryProcessorConst::MethodId)methodId)
 	{
-		case QueryProcessorImpl::Method_Destructor:
+		case QueryProcessorConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case QueryProcessorImpl::Method_definePostingJoinOperator:
+		case QueryProcessorConst::Method_definePostingJoinOperator:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2794,7 +2794,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryProcessorImpl::Method_getPostingJoinOperator:
+		case QueryProcessorConst::Method_getPostingJoinOperator:
 		{
 			RpcSerializer msg;
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -2802,7 +2802,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryProcessorImpl::Method_defineWeightingFunction:
+		case QueryProcessorConst::Method_defineWeightingFunction:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2833,7 +2833,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryProcessorImpl::Method_getWeightingFunction:
+		case QueryProcessorConst::Method_getWeightingFunction:
 		{
 			RpcSerializer msg;
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -2841,7 +2841,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryProcessorImpl::Method_defineSummarizerFunction:
+		case QueryProcessorConst::Method_defineSummarizerFunction:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2872,7 +2872,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case QueryProcessorImpl::Method_getSummarizerFunction:
+		case QueryProcessorConst::Method_getSummarizerFunction:
 		{
 			RpcSerializer msg;
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -2886,13 +2886,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_SegmenterInstance:
 	{
 	SegmenterInstanceInterface* obj = getObject<SegmenterInstanceInterface>( classId, objId);
-	switch( (SegmenterInstanceImpl::MethodId)methodId)
+	switch( (SegmenterInstanceConst::MethodId)methodId)
 	{
-		case SegmenterInstanceImpl::Method_Destructor:
+		case SegmenterInstanceConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case SegmenterInstanceImpl::Method_putInput:
+		case SegmenterInstanceConst::Method_putInput:
 		{
 			RpcSerializer msg;
 			const char* p1;
@@ -2920,7 +2920,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case SegmenterInstanceImpl::Method_getNext:
+		case SegmenterInstanceConst::Method_getNext:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -2958,13 +2958,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_Segmenter:
 	{
 	SegmenterInterface* obj = getObject<SegmenterInterface>( classId, objId);
-	switch( (SegmenterImpl::MethodId)methodId)
+	switch( (SegmenterConst::MethodId)methodId)
 	{
-		case SegmenterImpl::Method_Destructor:
+		case SegmenterConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case SegmenterImpl::Method_defineSelectorExpression:
+		case SegmenterConst::Method_defineSelectorExpression:
 		{
 			RpcSerializer msg;
 			int p1;
@@ -2991,7 +2991,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case SegmenterImpl::Method_defineSubSection:
+		case SegmenterConst::Method_defineSubSection:
 		{
 			RpcSerializer msg;
 			int p1;
@@ -3020,7 +3020,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case SegmenterImpl::Method_createInstance:
+		case SegmenterConst::Method_createInstance:
 		{
 			RpcSerializer msg;
 			SegmenterInstanceInterface* p0;
@@ -3053,13 +3053,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_StorageAlterMetaDataTable:
 	{
 	StorageAlterMetaDataTableInterface* obj = getObject<StorageAlterMetaDataTableInterface>( classId, objId);
-	switch( (StorageAlterMetaDataTableImpl::MethodId)methodId)
+	switch( (StorageAlterMetaDataTableConst::MethodId)methodId)
 	{
-		case StorageAlterMetaDataTableImpl::Method_Destructor:
+		case StorageAlterMetaDataTableConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case StorageAlterMetaDataTableImpl::Method_addElement:
+		case StorageAlterMetaDataTableConst::Method_addElement:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3086,7 +3086,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageAlterMetaDataTableImpl::Method_alterElement:
+		case StorageAlterMetaDataTableConst::Method_alterElement:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3115,7 +3115,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageAlterMetaDataTableImpl::Method_renameElement:
+		case StorageAlterMetaDataTableConst::Method_renameElement:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3142,7 +3142,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageAlterMetaDataTableImpl::Method_deleteElement:
+		case StorageAlterMetaDataTableConst::Method_deleteElement:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3167,7 +3167,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageAlterMetaDataTableImpl::Method_clearElement:
+		case StorageAlterMetaDataTableConst::Method_clearElement:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3192,7 +3192,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageAlterMetaDataTableImpl::Method_commit:
+		case StorageAlterMetaDataTableConst::Method_commit:
 		{
 			RpcSerializer msg;
 			try {
@@ -3215,7 +3215,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageAlterMetaDataTableImpl::Method_rollback:
+		case StorageAlterMetaDataTableConst::Method_rollback:
 		{
 			RpcSerializer msg;
 			try {
@@ -3244,13 +3244,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_StorageClient:
 	{
 	StorageClientInterface* obj = getObject<StorageClientInterface>( classId, objId);
-	switch( (StorageClientImpl::MethodId)methodId)
+	switch( (StorageClientConst::MethodId)methodId)
 	{
-		case StorageClientImpl::Method_Destructor:
+		case StorageClientConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case StorageClientImpl::Method_close:
+		case StorageClientConst::Method_close:
 		{
 			RpcSerializer msg;
 			try {
@@ -3273,7 +3273,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_createTermPostingIterator:
+		case StorageClientConst::Method_createTermPostingIterator:
 		{
 			RpcSerializer msg;
 			PostingIteratorInterface* p0;
@@ -3304,7 +3304,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_createForwardIterator:
+		case StorageClientConst::Method_createForwardIterator:
 		{
 			RpcSerializer msg;
 			ForwardIteratorInterface* p0;
@@ -3333,7 +3333,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_createInvAclIterator:
+		case StorageClientConst::Method_createInvAclIterator:
 		{
 			RpcSerializer msg;
 			InvAclIteratorInterface* p0;
@@ -3362,7 +3362,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_globalNofDocumentsInserted:
+		case StorageClientConst::Method_globalNofDocumentsInserted:
 		{
 			RpcSerializer msg;
 			GlobalCounter p0;
@@ -3387,7 +3387,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_localNofDocumentsInserted:
+		case StorageClientConst::Method_localNofDocumentsInserted:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -3412,7 +3412,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_globalDocumentFrequency:
+		case StorageClientConst::Method_globalDocumentFrequency:
 		{
 			RpcSerializer msg;
 			GlobalCounter p0;
@@ -3441,7 +3441,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_localDocumentFrequency:
+		case StorageClientConst::Method_localDocumentFrequency:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -3470,7 +3470,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_maxDocumentNumber:
+		case StorageClientConst::Method_maxDocumentNumber:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -3495,7 +3495,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_documentNumber:
+		case StorageClientConst::Method_documentNumber:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -3522,7 +3522,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_createMetaDataReader:
+		case StorageClientConst::Method_createMetaDataReader:
 		{
 			RpcSerializer msg;
 			MetaDataReaderInterface* p0;
@@ -3549,7 +3549,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_createAttributeReader:
+		case StorageClientConst::Method_createAttributeReader:
 		{
 			RpcSerializer msg;
 			AttributeReaderInterface* p0;
@@ -3576,7 +3576,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_createDocnoRangeAllocator:
+		case StorageClientConst::Method_createDocnoRangeAllocator:
 		{
 			RpcSerializer msg;
 			DocnoRangeAllocatorInterface* p0;
@@ -3603,7 +3603,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_createTransaction:
+		case StorageClientConst::Method_createTransaction:
 		{
 			RpcSerializer msg;
 			StorageTransactionInterface* p0;
@@ -3630,7 +3630,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_createPeerStorageTransaction:
+		case StorageClientConst::Method_createPeerStorageTransaction:
 		{
 			RpcSerializer msg;
 			PeerStorageTransactionInterface* p0;
@@ -3657,7 +3657,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_defineStoragePeerInterface:
+		case StorageClientConst::Method_defineStoragePeerInterface:
 		{
 			RpcSerializer msg;
 			const StoragePeerInterface* p1;
@@ -3687,7 +3687,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_createDocumentChecker:
+		case StorageClientConst::Method_createDocumentChecker:
 		{
 			RpcSerializer msg;
 			StorageDocumentInterface* p0;
@@ -3718,7 +3718,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_checkStorage:
+		case StorageClientConst::Method_checkStorage:
 		{
 			RpcSerializer msg;
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -3726,7 +3726,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageClientImpl::Method_createDump:
+		case StorageClientConst::Method_createDump:
 		{
 			RpcSerializer msg;
 			StorageDumpInterface* p0;
@@ -3759,13 +3759,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_StorageDocument:
 	{
 	StorageDocumentInterface* obj = getObject<StorageDocumentInterface>( classId, objId);
-	switch( (StorageDocumentImpl::MethodId)methodId)
+	switch( (StorageDocumentConst::MethodId)methodId)
 	{
-		case StorageDocumentImpl::Method_Destructor:
+		case StorageDocumentConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case StorageDocumentImpl::Method_addSearchIndexTerm:
+		case StorageDocumentConst::Method_addSearchIndexTerm:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3794,7 +3794,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageDocumentImpl::Method_addForwardIndexTerm:
+		case StorageDocumentConst::Method_addForwardIndexTerm:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3823,7 +3823,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageDocumentImpl::Method_setMetaData:
+		case StorageDocumentConst::Method_setMetaData:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3850,7 +3850,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageDocumentImpl::Method_setAttribute:
+		case StorageDocumentConst::Method_setAttribute:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3877,7 +3877,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageDocumentImpl::Method_setUserAccessRight:
+		case StorageDocumentConst::Method_setUserAccessRight:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3902,7 +3902,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageDocumentImpl::Method_done:
+		case StorageDocumentConst::Method_done:
 		{
 			RpcSerializer msg;
 			try {
@@ -3931,13 +3931,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_StorageDump:
 	{
 	StorageDumpInterface* obj = getObject<StorageDumpInterface>( classId, objId);
-	switch( (StorageDumpImpl::MethodId)methodId)
+	switch( (StorageDumpConst::MethodId)methodId)
 	{
-		case StorageDumpImpl::Method_Destructor:
+		case StorageDumpConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case StorageDumpImpl::Method_nextChunk:
+		case StorageDumpConst::Method_nextChunk:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -3971,13 +3971,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_Storage:
 	{
 	StorageInterface* obj = getObject<StorageInterface>( classId, objId);
-	switch( (StorageImpl::MethodId)methodId)
+	switch( (StorageConst::MethodId)methodId)
 	{
-		case StorageImpl::Method_Destructor:
+		case StorageConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case StorageImpl::Method_createClient:
+		case StorageConst::Method_createClient:
 		{
 			RpcSerializer msg;
 			StorageClientInterface* p0;
@@ -4012,7 +4012,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageImpl::Method_createStorage:
+		case StorageConst::Method_createStorage:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -4042,7 +4042,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageImpl::Method_createAlterMetaDataTable:
+		case StorageConst::Method_createAlterMetaDataTable:
 		{
 			RpcSerializer msg;
 			StorageAlterMetaDataTableInterface* p0;
@@ -4075,7 +4075,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageImpl::Method_getConfigDescription:
+		case StorageConst::Method_getConfigDescription:
 		{
 			RpcSerializer msg;
 			const char* p0;
@@ -4102,7 +4102,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageImpl::Method_getConfigParameters:
+		case StorageConst::Method_getConfigParameters:
 		{
 			RpcSerializer msg;
 			const char** p0;
@@ -4135,13 +4135,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_StorageObjectBuilder:
 	{
 	StorageObjectBuilderInterface* obj = getObject<StorageObjectBuilderInterface>( classId, objId);
-	switch( (StorageObjectBuilderImpl::MethodId)methodId)
+	switch( (StorageObjectBuilderConst::MethodId)methodId)
 	{
-		case StorageObjectBuilderImpl::Method_Destructor:
+		case StorageObjectBuilderConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case StorageObjectBuilderImpl::Method_getStorage:
+		case StorageObjectBuilderConst::Method_getStorage:
 		{
 			RpcSerializer msg;
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -4149,7 +4149,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageObjectBuilderImpl::Method_getDatabase:
+		case StorageObjectBuilderConst::Method_getDatabase:
 		{
 			RpcSerializer msg;
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -4157,7 +4157,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageObjectBuilderImpl::Method_getQueryProcessor:
+		case StorageObjectBuilderConst::Method_getQueryProcessor:
 		{
 			RpcSerializer msg;
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -4165,7 +4165,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageObjectBuilderImpl::Method_createStorageClient:
+		case StorageObjectBuilderConst::Method_createStorageClient:
 		{
 			RpcSerializer msg;
 			StorageClientInterface* p0;
@@ -4194,7 +4194,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageObjectBuilderImpl::Method_createAlterMetaDataTable:
+		case StorageObjectBuilderConst::Method_createAlterMetaDataTable:
 		{
 			RpcSerializer msg;
 			StorageAlterMetaDataTableInterface* p0;
@@ -4223,7 +4223,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageObjectBuilderImpl::Method_createQueryEval:
+		case StorageObjectBuilderConst::Method_createQueryEval:
 		{
 			RpcSerializer msg;
 			QueryEvalInterface* p0;
@@ -4256,13 +4256,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_StoragePeer:
 	{
 	StoragePeerInterface* obj = getObject<StoragePeerInterface>( classId, objId);
-	switch( (StoragePeerImpl::MethodId)methodId)
+	switch( (StoragePeerConst::MethodId)methodId)
 	{
-		case StoragePeerImpl::Method_Destructor:
+		case StoragePeerConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case StoragePeerImpl::Method_createTransaction:
+		case StoragePeerConst::Method_createTransaction:
 		{
 			RpcSerializer msg;
 			StoragePeerTransactionInterface* p0;
@@ -4295,13 +4295,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_StoragePeerTransaction:
 	{
 	StoragePeerTransactionInterface* obj = getObject<StoragePeerTransactionInterface>( classId, objId);
-	switch( (StoragePeerTransactionImpl::MethodId)methodId)
+	switch( (StoragePeerTransactionConst::MethodId)methodId)
 	{
-		case StoragePeerTransactionImpl::Method_Destructor:
+		case StoragePeerTransactionConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case StoragePeerTransactionImpl::Method_populateNofDocumentsInsertedChange:
+		case StoragePeerTransactionConst::Method_populateNofDocumentsInsertedChange:
 		{
 			RpcSerializer msg;
 			int p1;
@@ -4326,7 +4326,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StoragePeerTransactionImpl::Method_populateDocumentFrequencyChange:
+		case StoragePeerTransactionConst::Method_populateDocumentFrequencyChange:
 		{
 			RpcSerializer msg;
 			const char* p1;
@@ -4357,7 +4357,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StoragePeerTransactionImpl::Method_try_commit:
+		case StoragePeerTransactionConst::Method_try_commit:
 		{
 			RpcSerializer msg;
 			try {
@@ -4380,7 +4380,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StoragePeerTransactionImpl::Method_final_commit:
+		case StoragePeerTransactionConst::Method_final_commit:
 		{
 			RpcSerializer msg;
 			try {
@@ -4403,7 +4403,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StoragePeerTransactionImpl::Method_rollback:
+		case StoragePeerTransactionConst::Method_rollback:
 		{
 			RpcSerializer msg;
 			try {
@@ -4432,13 +4432,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_StorageTransaction:
 	{
 	StorageTransactionInterface* obj = getObject<StorageTransactionInterface>( classId, objId);
-	switch( (StorageTransactionImpl::MethodId)methodId)
+	switch( (StorageTransactionConst::MethodId)methodId)
 	{
-		case StorageTransactionImpl::Method_Destructor:
+		case StorageTransactionConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case StorageTransactionImpl::Method_createDocument:
+		case StorageTransactionConst::Method_createDocument:
 		{
 			RpcSerializer msg;
 			StorageDocumentInterface* p0;
@@ -4469,7 +4469,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageTransactionImpl::Method_deleteDocument:
+		case StorageTransactionConst::Method_deleteDocument:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -4494,7 +4494,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageTransactionImpl::Method_deleteUserAccessRights:
+		case StorageTransactionConst::Method_deleteUserAccessRights:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -4519,7 +4519,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageTransactionImpl::Method_commit:
+		case StorageTransactionConst::Method_commit:
 		{
 			RpcSerializer msg;
 			try {
@@ -4542,7 +4542,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case StorageTransactionImpl::Method_rollback:
+		case StorageTransactionConst::Method_rollback:
 		{
 			RpcSerializer msg;
 			try {
@@ -4571,13 +4571,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_SummarizerClosure:
 	{
 	SummarizerClosureInterface* obj = getObject<SummarizerClosureInterface>( classId, objId);
-	switch( (SummarizerClosureImpl::MethodId)methodId)
+	switch( (SummarizerClosureConst::MethodId)methodId)
 	{
-		case SummarizerClosureImpl::Method_Destructor:
+		case SummarizerClosureConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case SummarizerClosureImpl::Method_getSummary:
+		case SummarizerClosureConst::Method_getSummary:
 		{
 			RpcSerializer msg;
 			std::vector<SummarizerClosureInterface::SummaryElement> p0;
@@ -4613,13 +4613,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_SummarizerFunction:
 	{
 	SummarizerFunctionInterface* obj = getObject<SummarizerFunctionInterface>( classId, objId);
-	switch( (SummarizerFunctionImpl::MethodId)methodId)
+	switch( (SummarizerFunctionConst::MethodId)methodId)
 	{
-		case SummarizerFunctionImpl::Method_Destructor:
+		case SummarizerFunctionConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case SummarizerFunctionImpl::Method_numericParameterNames:
+		case SummarizerFunctionConst::Method_numericParameterNames:
 		{
 			RpcSerializer msg;
 			const char** p0;
@@ -4644,7 +4644,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case SummarizerFunctionImpl::Method_textualParameterNames:
+		case SummarizerFunctionConst::Method_textualParameterNames:
 		{
 			RpcSerializer msg;
 			const char** p0;
@@ -4669,7 +4669,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case SummarizerFunctionImpl::Method_featureParameterClassNames:
+		case SummarizerFunctionConst::Method_featureParameterClassNames:
 		{
 			RpcSerializer msg;
 			const char** p0;
@@ -4694,7 +4694,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case SummarizerFunctionImpl::Method_createClosure:
+		case SummarizerFunctionConst::Method_createClosure:
 		{
 			RpcSerializer msg;
 			SummarizerClosureInterface* p0;
@@ -4775,13 +4775,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_TextProcessor:
 	{
 	TextProcessorInterface* obj = getObject<TextProcessorInterface>( classId, objId);
-	switch( (TextProcessorImpl::MethodId)methodId)
+	switch( (TextProcessorConst::MethodId)methodId)
 	{
-		case TextProcessorImpl::Method_Destructor:
+		case TextProcessorConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case TextProcessorImpl::Method_addResourcePath:
+		case TextProcessorConst::Method_addResourcePath:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -4806,7 +4806,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case TextProcessorImpl::Method_getResourcePath:
+		case TextProcessorConst::Method_getResourcePath:
 		{
 			RpcSerializer msg;
 			std::string p0;
@@ -4833,7 +4833,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case TextProcessorImpl::Method_getTokenizer:
+		case TextProcessorConst::Method_getTokenizer:
 		{
 			RpcSerializer msg;
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -4841,7 +4841,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case TextProcessorImpl::Method_getNormalizer:
+		case TextProcessorConst::Method_getNormalizer:
 		{
 			RpcSerializer msg;
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -4849,7 +4849,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case TextProcessorImpl::Method_defineTokenizer:
+		case TextProcessorConst::Method_defineTokenizer:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -4879,7 +4879,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case TextProcessorImpl::Method_defineNormalizer:
+		case TextProcessorConst::Method_defineNormalizer:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -4915,13 +4915,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_TokenizerConstructor:
 	{
 	TokenizerConstructorInterface* obj = getObject<TokenizerConstructorInterface>( classId, objId);
-	switch( (TokenizerConstructorImpl::MethodId)methodId)
+	switch( (TokenizerConstructorConst::MethodId)methodId)
 	{
-		case TokenizerConstructorImpl::Method_Destructor:
+		case TokenizerConstructorConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case TokenizerConstructorImpl::Method_create:
+		case TokenizerConstructorConst::Method_create:
 		{
 			RpcSerializer msg;
 			TokenizerInterface* p0;
@@ -4965,13 +4965,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_TokenizerInstance:
 	{
 	TokenizerInstanceInterface* obj = getObject<TokenizerInstanceInterface>( classId, objId);
-	switch( (TokenizerInstanceImpl::MethodId)methodId)
+	switch( (TokenizerInstanceConst::MethodId)methodId)
 	{
-		case TokenizerInstanceImpl::Method_Destructor:
+		case TokenizerInstanceConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case TokenizerInstanceImpl::Method_tokenize:
+		case TokenizerInstanceConst::Method_tokenize:
 		{
 			RpcSerializer msg;
 			std::vector<analyzer::Token> p0;
@@ -5008,13 +5008,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_Tokenizer:
 	{
 	TokenizerInterface* obj = getObject<TokenizerInterface>( classId, objId);
-	switch( (TokenizerImpl::MethodId)methodId)
+	switch( (TokenizerConst::MethodId)methodId)
 	{
-		case TokenizerImpl::Method_Destructor:
+		case TokenizerConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case TokenizerImpl::Method_concatBeforeTokenize:
+		case TokenizerConst::Method_concatBeforeTokenize:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -5039,7 +5039,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case TokenizerImpl::Method_createInstance:
+		case TokenizerConst::Method_createInstance:
 		{
 			RpcSerializer msg;
 			TokenizerInstanceInterface* p0;
@@ -5072,13 +5072,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_WeightingClosure:
 	{
 	WeightingClosureInterface* obj = getObject<WeightingClosureInterface>( classId, objId);
-	switch( (WeightingClosureImpl::MethodId)methodId)
+	switch( (WeightingClosureConst::MethodId)methodId)
 	{
-		case WeightingClosureImpl::Method_Destructor:
+		case WeightingClosureConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case WeightingClosureImpl::Method_call:
+		case WeightingClosureConst::Method_call:
 		{
 			RpcSerializer msg;
 			float p0;
@@ -5111,13 +5111,13 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	case ClassId_WeightingFunction:
 	{
 	WeightingFunctionInterface* obj = getObject<WeightingFunctionInterface>( classId, objId);
-	switch( (WeightingFunctionImpl::MethodId)methodId)
+	switch( (WeightingFunctionConst::MethodId)methodId)
 	{
-		case WeightingFunctionImpl::Method_Destructor:
+		case WeightingFunctionConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 		}
-		case WeightingFunctionImpl::Method_numericParameterNames:
+		case WeightingFunctionConst::Method_numericParameterNames:
 		{
 			RpcSerializer msg;
 			const char** p0;
@@ -5142,7 +5142,7 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 			return msg.content();
 			break;
 		}
-		case WeightingFunctionImpl::Method_createClosure:
+		case WeightingFunctionConst::Method_createClosure:
 		{
 			RpcSerializer msg;
 			WeightingClosureInterface* p0;
@@ -5194,5 +5194,5 @@ std::string RpcRequestHandler::handleRequest( const char* msg, std::size_t msgsi
 	break;
 	}
 	}
-	return serializedMsg.content();
+	throw std::runtime_error("calling undefined request handler");
 }

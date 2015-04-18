@@ -34,7 +34,7 @@
 
 using namespace strus;
 
-RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, RpcMessagingInterface* messaging_)
+RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, RpcClientMessagingInterface* messaging_)
 	:m_classId(classId_),m_objId(objId_),m_messaging(messaging_)
 {}
 
@@ -53,7 +53,7 @@ void RpcInterfaceStub::enter() const
 static void handleResultError( const std::string& msgstr)
 {
 	if (msgstr.empty()) throw std::runtime_error( "got no answer from server");
-	RpcDeserializer msg( msgstr);
+	RpcDeserializer msg( msgstr.c_str(), msgstr.size());
 	RpcReturnType returntype = (RpcReturnType)msg.unpackByte();
 	switch (returntype)
 	{
@@ -69,24 +69,27 @@ static void handleResultError( const std::string& msgstr)
 }
 
 
-void RpcInterfaceStub::rpc_send( const std::string& msg) const
+std::string RpcInterfaceStub::rpc_sendRequest( const std::string& msg) const
 {
-	m_messaging->sendMessage(msg);
-}
-
-std::string RpcInterfaceStub::rpc_recv() const
-{
-	std::string answer = m_messaging->recvMessage();
+	std::string answer = m_messaging->sendRequest( msg);
 	handleResultError( answer);
 	return answer;
 }
 
-void RpcInterfaceStub::rpc_waitAnswer() const
+void RpcInterfaceStub::rpc_sendMessage( const std::string& msg) const
 {
-	std::string answer = m_messaging->getStatus();
+	m_messaging->sendMessage( msg);
+}
+
+void RpcInterfaceStub::rpc_synchronize() const
+{
+	std::string answer = m_messaging->synchronize();
 	if (answer.empty()) return;
 	handleResultError( answer);
-	if (!answer.empty()) throw std::runtime_error("expected status message or empty string (no object expected to be returned)");
+	if (answer.size() > 5)
+	{
+		throw std::runtime_error("got unexpected (non empty) answer from server calling rpc_synchronize");
+	}
 }
 
 

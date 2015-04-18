@@ -120,8 +120,8 @@ enum RpcReturnType
 class RpcDeserializer
 {
 public:
-	RpcDeserializer( const char* start_, const char* end_)
-		:m_start(start_),m_itr(start_),m_end(end_)
+	RpcDeserializer( const char* start_, std::size_t size_)
+		:m_start(start_),m_itr(start_),m_end(start_+size_)
 	{}
 
 	void unpackObject( unsigned char& classId_, unsigned int& objId_);
