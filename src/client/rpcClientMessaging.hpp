@@ -37,9 +37,9 @@ public:
 	RpcClientMessaging( const char* config);
 	virtual ~RpcClientMessaging();
 
-	virtual std::string sendRequest( const std::string& content)=0;
-	virtual void sendMessage( const std::string& content)=0;
-	virtual std::string synchronize()=0;
+	virtual std::string sendRequest( const std::string& content);
+	virtual void sendMessage( const std::string& content);
+	virtual std::string synchronize();
 
 private:
 	void send_req( const char* msg, std::size_t msgsize);

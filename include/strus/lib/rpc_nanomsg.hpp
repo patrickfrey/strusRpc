@@ -32,7 +32,7 @@
 namespace strus {
 
 /// \brief Forward declaration
-class RpcMessagingClientInterface;
+class RpcClientMessagingInterface;
 
 /// \brief Create a messaging interface for the strus RPC Client based on nanomsg
 /// \param[in] config configuration string for connecting to the server
