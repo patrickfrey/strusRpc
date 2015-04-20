@@ -26,43 +26,24 @@
 
 --------------------------------------------------------------------
 */
-#ifndef _STRUS_RPC_INTERFACE_STUB_HPP_INCLUDED
-#define _STRUS_RPC_INTERFACE_STUB_HPP_INCLUDED
-#include "strus/rpcClientMessagingInterface.hpp"
-#include "constConstructor.hpp"
+#include "rpcRequestHandler.hpp"
+#include "private/dll_tags.hpp"
 #include <string>
+#include <map>
 
-namespace strus {
+using namespace strus;
 
-class RpcInterfaceStub
+RpcRequestHandler::RpcRequestHandler(
+			StorageObjectBuilderInterface* storageBuilder_,
+			AnalyzerObjectBuilderInterface* analyzerBuilder_)
+		:m_objIdCnt(0)
 {
-public:
-	virtual ~RpcInterfaceStub(){}
+	defineObject( ClassId_StorageObjectBuilder, 0, storageBuilder_);
+	defineObject( ClassId_AnalyzerObjectBuilder, 0, analyzerBuilder_);
+}
 
-	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, RpcClientMessagingInterface* messaging_);
-	RpcInterfaceStub( const RpcInterfaceStub& o);
-	RpcInterfaceStub();
-
-	unsigned char classId() const					{return m_classId;}
-	unsigned int objId() const					{return m_objId;}
-
-	void enter() const;
-	const ConstConstructor* constConstructor() const		{return &m_constConstructor;}
-
-	std::string rpc_sendRequest( const std::string& msg) const;
-	void rpc_sendMessage( const std::string& msg) const;
-	void rpc_synchronize() const;
-
-	RpcClientMessagingInterface* messaging() const			{return m_messaging;}
-
-private:
-	unsigned char m_classId;
-	unsigned int m_objId;
-	mutable RpcClientMessagingInterface* m_messaging;
-	ConstConstructor m_constConstructor;
-};
-
-}//namespace
-#endif
-
+RpcRequestHandler::~RpcRequestHandler()
+{
+	clear();
+}
 

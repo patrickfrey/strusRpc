@@ -27,8 +27,8 @@
 --------------------------------------------------------------------
 */
 #include "private/utils.hpp"
-#include "rpcInterfaceStub.hpp"
-#include "rpcSerializer.hpp"
+#include "interfaceStub.hpp"
+#include "serializer.hpp"
 #include <stdexcept>
 #include <limits>
 
@@ -50,10 +50,11 @@ void RpcInterfaceStub::enter() const
 	m_constConstructor.reset();
 }
 
-static void handleResultError( const std::string& msgstr)
+void RpcInterfaceStub::handleError( const std::string& msgstr) const
 {
 	if (msgstr.empty()) throw std::runtime_error( "got no answer from server");
 	RpcDeserializer msg( msgstr.c_str(), msgstr.size());
+	if (!msg.unpackCrc32()) throw std::runtime_error( "answer CRC32 check failed");
 	RpcReturnType returntype = (RpcReturnType)msg.unpackByte();
 	switch (returntype)
 	{
@@ -72,7 +73,7 @@ static void handleResultError( const std::string& msgstr)
 std::string RpcInterfaceStub::rpc_sendRequest( const std::string& msg) const
 {
 	std::string answer = m_messaging->sendRequest( msg);
-	handleResultError( answer);
+	handleError( answer);
 	return answer;
 }
 
@@ -85,7 +86,7 @@ void RpcInterfaceStub::rpc_synchronize() const
 {
 	std::string answer = m_messaging->synchronize();
 	if (answer.empty()) return;
-	handleResultError( answer);
+	handleError( answer);
 	if (answer.size() > 5)
 	{
 		throw std::runtime_error("got unexpected (non empty) answer from server calling rpc_synchronize");

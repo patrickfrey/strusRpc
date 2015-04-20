@@ -26,36 +26,17 @@
 
 --------------------------------------------------------------------
 */
-#ifndef _STRUS_RPC_CLIENT_IMPLEMENTATION_HPP_INCLUDED
-#define _STRUS_RPC_CLIENT_IMPLEMENTATION_HPP_INCLUDED
-#include "strus/rpcClientInterface.hpp"
+#include "strus/lib/rpc_client_socket.hpp"
+#include "strus/rpcClientMessagingInterface.hpp"
+#include "rpcClientMessaging.hpp"
+#include "private/dll_tags.hpp"
 
-namespace strus
+DLL_PUBLIC RpcClientMessagingInterface*
+	strus::createRpcClientMessaging(
+		const char* config)
 {
+	return new RpcClientMessaging( config);
+}
 
-/// \brief Forward declaration
-class RpcClientMessagingInterface;
 
-/// \brief Interface providing a mechanism to create complex objects
-class RpcClient
-	:public RpcClientInterface
-{
-public:
-	RpcClient( RpcClientMessagingInterface* messaging_)
-		:m_messaging(messaging_),m_objcnt(0){}
-
-	/// \brief Destructor
-	virtual ~RpcClient(){}
-
-	virtual StorageObjectBuilderInterface* createStorageObjectBuilder() const;
-
-	virtual AnalyzerObjectBuilderInterface* createAnalyzerObjectBuilder() const;
-
-private:
-	RpcClientMessagingInterface* m_messaging;
-	mutable unsigned int m_objcnt;
-};
-
-}//namespace
-#endif
 

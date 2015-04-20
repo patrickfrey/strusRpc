@@ -27,12 +27,13 @@
 --------------------------------------------------------------------
 */
 #include "rpcRequestHandler.hpp"
-#include "rpcSerializer.hpp"
-#include "rpcObjectIds.hpp"
+#include "serializer.hpp"
+#include "objectIds_gen.hpp"
+#include "private/dll_tags.hpp"
 #include <string>
 
 using namespace strus;
-std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsize)
+DLL_PUBLIC std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsize)
 {
 	RpcDeserializer serializedMsg( src, srcsize);
 	if (!serializedMsg.unpackCrc32()) throw std::runtime_error("message CRC32 check failed");

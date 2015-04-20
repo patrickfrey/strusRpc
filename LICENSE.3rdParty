@@ -5,15 +5,17 @@ Table of Contents
 -----------------
 
   boost
-  nanomsg
+  libevent
 
 boost
 -----
   http://www.boost.org/LICENSE_1_0.txt
 
-nanomsg
--------
-   MIT/X11 License
+libevent
+--------
+   3-clause BSD license (see http://libevent.org/LICENSE.txt)
+
+
 
 
 

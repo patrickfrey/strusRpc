@@ -42,3 +42,4 @@ CPackConfig.cmake
 CPackSourceConfig.cmake
 
 # Compiled Programs
+src/strusRpcServer

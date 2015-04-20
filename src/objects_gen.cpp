@@ -26,8 +26,8 @@
 
 --------------------------------------------------------------------
 */
-#include "rpcObjects.hpp"
-#include "rpcSerializer.hpp"
+#include "objects_gen.hpp"
+#include "serializer.hpp"
 
 using namespace strus;
 

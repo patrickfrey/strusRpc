@@ -26,25 +26,37 @@
 
 --------------------------------------------------------------------
 */
-#include "rpcClient.hpp"
-#include "strus/storageObjectBuilderInterface.hpp"
-#include "strus/analyzerObjectBuilderInterface.hpp"
-#include "rpcObjects.hpp"
+#ifndef _STRUS_RPC_CLIENT_IMPLEMENTATION_HPP_INCLUDED
+#define _STRUS_RPC_CLIENT_IMPLEMENTATION_HPP_INCLUDED
+#include "strus/rpcClientInterface.hpp"
 
-using namespace strus;
-
-StorageObjectBuilderInterface* RpcClient::createStorageObjectBuilder() const
+namespace strus
 {
-	if (m_objcnt) throw std::runtime_error( "tried to build a second instance of a storage object builder");
-	return new StorageObjectBuilderImpl( 0, m_messaging);
-	m_objcnt = 1;
-}
 
-AnalyzerObjectBuilderInterface* RpcClient::createAnalyzerObjectBuilder() const
+/// \brief Forward declaration
+class RpcClientMessagingInterface;
+
+/// \brief Interface providing a mechanism to create complex objects
+class RpcClient
+	:public RpcClientInterface
 {
-	if (m_objcnt) throw std::runtime_error( "tried to build a second instance of an analyzer object builder");
-	return new AnalyzerObjectBuilderImpl( 0, m_messaging);
-	m_objcnt = 1;
-}
+public:
+	RpcClient( RpcClientMessagingInterface* messaging_)
+		:m_messaging(messaging_),m_storage_builder_objcnt(0),m_analyzer_builder_objcnt(0){}
 
+	/// \brief Destructor
+	virtual ~RpcClient(){}
+
+	virtual StorageObjectBuilderInterface* createStorageObjectBuilder() const;
+
+	virtual AnalyzerObjectBuilderInterface* createAnalyzerObjectBuilder() const;
+
+private:
+	RpcClientMessagingInterface* m_messaging;
+	mutable unsigned int m_storage_builder_objcnt;
+	mutable unsigned int m_analyzer_builder_objcnt;
+};
+
+}//namespace
+#endif
 

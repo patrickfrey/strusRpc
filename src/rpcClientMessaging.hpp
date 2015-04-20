@@ -42,8 +42,9 @@ public:
 	virtual std::string synchronize();
 
 private:
+	std::string errorstr( const char* msg);
 	void send_req( const char* msg, std::size_t msgsize);
-	void recv_rep( const char*& msg, std::size_t& msgsize);
+	std::string recv_rep();
 
 private:
 	int m_sock;

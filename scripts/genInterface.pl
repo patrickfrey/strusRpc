@@ -1399,7 +1399,7 @@ sub getClassImplementationSource
 	return ($sender_code,$receiver_code);
 }
 
-my $interfacefile = "src/serialize/rpcObjectIds.hpp";
+my $interfacefile = "src/objectIds_gen.hpp";
 open( HDRFILE, ">$interfacefile") or die "Couldn't open file $interfacefile, $!";
 print HDRFILE <<EOF;
 /*
@@ -1448,7 +1448,7 @@ close HDRFILE;
 
 
 
-my $interfacefile = "src/serialize/rpcObjects.hpp";
+my $interfacefile = "src/objects_gen.hpp";
 open( HDRFILE, ">$interfacefile") or die "Couldn't open file $interfacefile, $!";
 
 print HDRFILE <<EOF;
@@ -1482,8 +1482,8 @@ print HDRFILE <<EOF;
 */
 #ifndef _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #define _STRUS_RPC_OBJECTS_HPP_INCLUDED
-#include "rpcInterfaceStub.hpp"
-#include "rpcObjectIds.hpp"
+#include "interfaceStub.hpp"
+#include "objectIds_gen.hpp"
 EOF
 foreach $inputfile( @inputfiles)
 {
@@ -1508,7 +1508,7 @@ EOF
 close HDRFILE;
 
 
-my $sourcefile = "src/serialize/rpcObjects.cpp";
+my $sourcefile = "src/objects_gen.cpp";
 open( SRCFILE, ">$sourcefile") or die "Couldn't open file $sourcefile, $!";
 
 print SRCFILE <<EOF;
@@ -1540,8 +1540,8 @@ print SRCFILE <<EOF;
 
 --------------------------------------------------------------------
 */
-#include "rpcObjects.hpp"
-#include "rpcSerializer.hpp"
+#include "objects_gen.hpp"
+#include "serializer.hpp"
 
 using namespace strus;
 EOF
@@ -1555,7 +1555,7 @@ EOF
 close SRCFILE;
 
 
-$sourcefile = "src/serialize/rpcRequestHandler.cpp";
+$sourcefile = "src/rpcRequestHandler_gen.cpp";
 open( SRCFILE, ">$sourcefile") or die "Couldn't open file $sourcefile, $!";
 
 print SRCFILE <<EOF;
@@ -1588,12 +1588,13 @@ print SRCFILE <<EOF;
 --------------------------------------------------------------------
 */
 #include "rpcRequestHandler.hpp"
-#include "rpcSerializer.hpp"
-#include "rpcObjectIds.hpp"
+#include "serializer.hpp"
+#include "objectIds_gen.hpp"
+#include "private/dll_tags.hpp"
 #include <string>
 
 using namespace strus;
-std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsize)
+DLL_PUBLIC std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsize)
 {
 EOF
 

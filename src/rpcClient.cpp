@@ -26,17 +26,25 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc_client_nanomsg.hpp"
-#include "strus/rpcClientMessagingInterface.hpp"
-#include "rpcClientMessaging.hpp"
-#include "private/dll_tags.hpp"
+#include "rpcClient.hpp"
+#include "strus/storageObjectBuilderInterface.hpp"
+#include "strus/analyzerObjectBuilderInterface.hpp"
+#include "objects_gen.hpp"
 
-DLL_PUBLIC RpcClientMessagingInterface*
-	strus::createRpcClientMessaging(
-		const char* config)
+using namespace strus;
+
+StorageObjectBuilderInterface* RpcClient::createStorageObjectBuilder() const
 {
-	return new RpcClientMessaging( config);
+	if (m_storage_builder_objcnt) throw std::runtime_error( "tried to build a second instance of a storage object builder");
+	return new StorageObjectBuilderImpl( 0, m_messaging);
+	m_storage_builder_objcnt = 1;
 }
 
+AnalyzerObjectBuilderInterface* RpcClient::createAnalyzerObjectBuilder() const
+{
+	if (m_analyzer_builder_objcnt) throw std::runtime_error( "tried to build a second instance of an analyzer object builder");
+	return new AnalyzerObjectBuilderImpl( 0, m_messaging);
+	m_analyzer_builder_objcnt = 1;
+}
 
 

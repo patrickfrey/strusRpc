@@ -29,7 +29,7 @@
 #ifndef _STRUS_RPC_MESSAGE_STUB_HPP_INCLUDED
 #define _STRUS_RPC_MESSAGE_STUB_HPP_INCLUDED
 #include <string>
-#include "rpcInterfaceStub.hpp"
+#include "interfaceStub.hpp"
 #include "strus/index.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/arithmeticVariant.hpp"
@@ -63,6 +63,7 @@ public:
 		:m_content(o.m_content){}
 	RpcSerializer( unsigned char classId_, unsigned int objId_);
 
+	void packSessionId( unsigned int id_);
 	void packObject( unsigned char classId_, unsigned int objId_);
 	void packString( const std::string& str);
 	void packCharp( const char* buf);
@@ -124,6 +125,7 @@ public:
 		:m_start(start_),m_itr(start_),m_end(start_+size_)
 	{}
 
+	unsigned int unpackSessionId();
 	void unpackObject( unsigned char& classId_, unsigned int& objId_);
 	std::string unpackString();
 	const char* unpackConstCharp();
@@ -158,6 +160,11 @@ public:
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();
 	bool unpackCrc32();
+
+	std::size_t position() const
+	{
+		return (std::size_t)(m_itr - m_start);
+	}
 
 private:
 	const char* m_start;

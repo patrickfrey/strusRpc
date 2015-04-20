@@ -26,7 +26,7 @@
 
 --------------------------------------------------------------------
 */
-#include "rpcSerializer.hpp"
+#include "serializer.hpp"
 #include "private/utils.hpp"
 #include <stdexcept>
 #include <cstring>
@@ -121,6 +121,11 @@ SCALAR unpackScalar( char const*& itr, const char* end)
 	unpack<sizeof(SCALAR)>( itr, end, &val);
 	return val;
 }
+}
+
+void RpcSerializer::packSessionId( unsigned int id_)
+{
+	packScalar( m_content, (uint32_t)id_);
 }
 
 void RpcSerializer::packObject( unsigned char classId_, unsigned int objId_)
@@ -418,6 +423,11 @@ void RpcSerializer::packResultDocument( const ResultDocument& val)
 void RpcSerializer::packCrc32()
 {
 	packScalar( m_content, utils::Crc32::calc( m_content.c_str(), m_content.size()));
+}
+
+unsigned int RpcDeserializer::unpackSessionId()
+{
+	return unpackScalar<uint32_t>( m_itr, m_end);
 }
 
 void RpcDeserializer::unpackObject( unsigned char& classId_, unsigned int& objId_)

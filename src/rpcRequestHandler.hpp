@@ -31,7 +31,7 @@
 #include "strus/rpcRequestHandlerInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
-#include "rpcObjects.hpp"
+#include "objects_gen.hpp"
 #include <string>
 #include <map>
 
@@ -54,16 +54,8 @@ class RpcRequestHandler
 public:
 	RpcRequestHandler(
 			StorageObjectBuilderInterface* storageBuilder_,
-			AnalyzerObjectBuilderInterface* analyzerBuilder_)
-		:m_objIdCnt(0)
-	{
-		defineObject( ClassId_StorageObjectBuilder, 0, storageBuilder_);
-		defineObject( ClassId_AnalyzerObjectBuilder, 0, analyzerBuilder_);
-	}
-	~RpcRequestHandler()
-	{
-		clear();
-	}
+			AnalyzerObjectBuilderInterface* analyzerBuilder_);
+	virtual ~RpcRequestHandler();
 
 	virtual std::string handleRequest( const char* msg, std::size_t msgsize);
 

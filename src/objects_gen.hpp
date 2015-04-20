@@ -28,8 +28,8 @@
 */
 #ifndef _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #define _STRUS_RPC_OBJECTS_HPP_INCLUDED
-#include "rpcInterfaceStub.hpp"
-#include "rpcObjectIds.hpp"
+#include "interfaceStub.hpp"
+#include "objectIds_gen.hpp"
 #include "strus/databaseBackupCursorInterface.hpp"
 #include "strus/queryEvalInterface.hpp"
 #include "strus/storageTransactionInterface.hpp"
