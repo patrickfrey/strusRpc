@@ -26,21 +26,37 @@
 
 --------------------------------------------------------------------
 */
-#include "rpcClient.hpp"
-#include "strus/storageObjectBuilderInterface.hpp"
-#include "strus/analyzerObjectBuilderInterface.hpp"
-#include "objects_gen.hpp"
+#ifndef _STRUS_RPC_CLIENT_CONTEXT_HPP_INCLUDED
+#define _STRUS_RPC_CLIENT_CONTEXT_HPP_INCLUDED
+#include "strus/rpcClientMessagingInterface.hpp"
+#include <string>
 
-using namespace strus;
+namespace strus {
 
-StorageObjectBuilderInterface* RpcClient::createStorageObjectBuilder() const
+class RpcClientContext
 {
-	return new StorageObjectBuilderImpl( 0, &m_ctx);
-}
+public:
+	virtual ~RpcClientContext(){}
 
-AnalyzerObjectBuilderInterface* RpcClient::createAnalyzerObjectBuilder() const
-{
-	return new AnalyzerObjectBuilderImpl( 0, &m_ctx);
-}
+	explicit RpcClientContext( RpcClientMessagingInterface* messaging_);
+	RpcClientContext( const RpcClientContext& o);
+	RpcClientContext();
+
+	unsigned int newObjId() const					{return ++m_objIdCnt;}
+
+	std::string rpc_sendRequest( const std::string& msg) const;
+	void rpc_sendMessage( const std::string& msg) const;
+	void rpc_synchronize() const;
+
+private:
+	void handleError( const std::string& msgstr) const;
+
+private:
+	mutable unsigned int m_objIdCnt;
+	mutable RpcClientMessagingInterface* m_messaging;
+};
+
+}//namespace
+#endif
 
 

@@ -65,9 +65,14 @@ static void printUsage()
 	std::cerr << "    Load components from module <MOD>" << std::endl;
 	std::cerr << "-M|--moduledir <DIR>" << std::endl;
 	std::cerr << "    Search modules to load first in <DIR>" << std::endl;
+	std::cerr << "-s|--storage <CONFIG>" << std::endl;
+	std::cerr << "    Define configuration <CONFIG> of storage hosted by this server" << std::endl;
 }
 
 static strus::ModuleLoaderInterface* g_moduleLoader = 0;
+static strus::StorageObjectBuilderInterface* g_storageObjectBuilder = 0;
+static strus::AnalyzerObjectBuilderInterface* g_analyzerObjectBuilder = 0;
+static strus::StorageClientInterface* g_storageClient = 0;
 
 struct handler_context
 {
@@ -84,21 +89,12 @@ static void destroy_handler_context( handler_context* ctx)
 	std::free( ctx);
 }
 
-static int init_handler_context( handler_context* ctx)
+static int init_handler_context( handler_context* ctx, const char* storageconfig)
 {
 	try
 	{
-		std::auto_ptr<strus::StorageObjectBuilderInterface>
-			storageBuilder( g_moduleLoader->createStorageObjectBuilder());
-		std::auto_ptr<strus::AnalyzerObjectBuilderInterface>
-			analyzerBuilder( g_moduleLoader->createAnalyzerObjectBuilder());
-	
-		std::auto_ptr<strus::RpcRequestHandlerInterface>
-			requestHandler( strus::createRpcRequestHandler(
-				storageBuilder.get(), analyzerBuilder.get()));
-		(void)storageBuilder.release();
-		(void)analyzerBuilder.release();
-		ctx->obj = requestHandler.release();
+		ctx->obj = new strus::createRpcRequestHandler(
+				g_storageBuilder, g_analyzerBuilder, g_storageClient);
 	}
 	catch (const std::runtime_error& err)
 	{
@@ -163,7 +159,7 @@ static int handler_context_process_input( handler_context* ctx, struct evbuffer 
 			{
 				uint32_t msglen = unpackMessageLen( itr, end);
 				answer = ctx->obj->handleRequest( itr, msglen);
-				if (answer.size() > 5)
+				if (answer.size() > 0)
 				{
 					if (answer[0] == (char)strus::MsgTypeAnswer && itr+msglen != end)
 					{
@@ -337,6 +333,7 @@ int main( int argc, const char* argv[])
 	int argi = 1;
 	std::vector<std::string> moduledirs;
 	std::vector<std::string> modules;
+	std::string storageconfig;
 	int port = 7181; //... default port
 	try
 	{
@@ -375,6 +372,20 @@ int main( int argc, const char* argv[])
 					throw std::runtime_error( "invalid port");
 				}
 			}
+			else if (0==std::strcmp( argv[argi], "-m") || 0==std::strcmp( argv[argi], "--module"))
+			{
+				++argi;
+				if (argi == argc) throw std::runtime_error("option --module expects argument");
+				modules.push_back( argv[argi]);
+			}
+			else if (0==std::strcmp( argv[argi], "-s") || 0==std::strcmp( argv[argi], "--storage"))
+			{
+				if (!storageconfig.empty()) throw std::runtime_error("option --storage specified twice");
+				++argi;
+				if (argi == argc) throw std::runtime_error("option --storage expects argument (storage configuration string)");
+				storageconfig.append( argv[argi]);
+				if (!storageconfig.empty()) throw std::runtime_error("option --storage with empty argument");
+			}
 			else if (argv[argi][0] == '-')
 			{
 				throw std::runtime_error( std::string( "unknown option ") + argv[argi]);
@@ -403,6 +414,19 @@ int main( int argc, const char* argv[])
 		for (; mi != me; ++mi)
 		{
 			g_moduleLoader->loadModule( *mi);
+		}
+		std::auto_ptr<strus::StorageObjectBuilderInterface>
+			storageBuilder( g_moduleLoader->createStorageObjectBuilder());
+		std::auto_ptr<strus::AnalyzerObjectBuilderInterface>
+			analyzerBuilder( g_moduleLoader->createAnalyzerObjectBuilder());
+		std::auto_ptr<strus::StorageClientInterface> storageClient;
+
+		g_storageObjectBuilder = storageBuilder.get();
+		g_analyzerObjectBuilder = analyzerBuilder.get();
+		if (!storageconfig.empty)
+		{
+			storageClient.reset( g_storageObjectBuilder->createStorageClient());
+			g_storageClient = storageClient.get();
 		}
 
 		// Start server:

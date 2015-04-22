@@ -34,65 +34,19 @@
 
 using namespace strus;
 
-RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, RpcClientMessagingInterface* messaging_)
-	:m_classId(classId_),m_objId(objId_),m_messaging(messaging_)
+RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcClientContext* ctx_)
+	:m_classId(classId_),m_objId(objId_),m_ctx(ctx_)
 {}
 
 RpcInterfaceStub::RpcInterfaceStub( const RpcInterfaceStub& o)
-	:m_classId(o.m_classId),m_objId(o.m_objId),m_messaging(o.m_messaging){}
+	:m_classId(o.m_classId),m_objId(o.m_objId),m_ctx(o.m_ctx){}
 
 RpcInterfaceStub::RpcInterfaceStub()
-	:m_classId(0),m_objId(0),m_messaging(){}
+	:m_classId(0),m_objId(0),m_ctx(0){}
 
 
 void RpcInterfaceStub::enter() const
 {
 	m_constConstructor.reset();
 }
-
-void RpcInterfaceStub::handleError( const std::string& msgstr) const
-{
-	if (msgstr.empty()) throw std::runtime_error( "got no answer from server");
-	RpcDeserializer msg( msgstr.c_str(), msgstr.size());
-	if (!msg.unpackCrc32()) throw std::runtime_error( "answer CRC32 check failed");
-	RpcReturnType returntype = (RpcReturnType)msg.unpackByte();
-	switch (returntype)
-	{
-		case MsgTypeException_BadAlloc:
-			throw std::runtime_error( std::string("method call failed: ") + msg.unpackString());
-		case MsgTypeException_RuntimeError:
-			throw std::runtime_error( std::string("method call failed: ") + msg.unpackString());
-		case MsgTypeException_LogicError:
-			throw std::logic_error( std::string("method call failed: ") + msg.unpackString());
-		case MsgTypeAnswer:
-			break;
-	}
-}
-
-
-std::string RpcInterfaceStub::rpc_sendRequest( const std::string& msg) const
-{
-	std::string answer = m_messaging->sendRequest( msg);
-	handleError( answer);
-	return answer;
-}
-
-void RpcInterfaceStub::rpc_sendMessage( const std::string& msg) const
-{
-	m_messaging->sendMessage( msg);
-}
-
-void RpcInterfaceStub::rpc_synchronize() const
-{
-	std::string answer = m_messaging->synchronize();
-	if (answer.empty()) return;
-	handleError( answer);
-	if (answer.size() > 5)
-	{
-		throw std::runtime_error("got unexpected (non empty) answer from server calling rpc_synchronize");
-	}
-}
-
-
-
 

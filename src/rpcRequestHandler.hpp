@@ -29,14 +29,19 @@
 #ifndef _STRUS_RPC_REQUEST_HANDLER_IMPLEMENTATION_HPP_INCLUDED
 #define _STRUS_RPC_REQUEST_HANDLER_IMPLEMENTATION_HPP_INCLUDED
 #include "strus/rpcRequestHandlerInterface.hpp"
-#include "strus/analyzerObjectBuilderInterface.hpp"
-#include "strus/storageObjectBuilderInterface.hpp"
 #include "objects_gen.hpp"
 #include <string>
 #include <map>
 
 namespace strus
 {
+
+/// \brief Forward declaration
+class AnalyzerObjectBuilderInterface;
+/// \brief Forward declaration
+class StorageObjectBuilderInterface;
+/// \brief Forward declaration
+class StorageClientInterface;
 
 template <class Interface>
 class RpcObjDeleter
@@ -54,7 +59,8 @@ class RpcRequestHandler
 public:
 	RpcRequestHandler(
 			StorageObjectBuilderInterface* storageBuilder_,
-			AnalyzerObjectBuilderInterface* analyzerBuilder_);
+			AnalyzerObjectBuilderInterface* analyzerBuilder_,
+			StorageClientInterface* storageClient_);
 	virtual ~RpcRequestHandler();
 
 	virtual std::string handleRequest( const char* msg, std::size_t msgsize);
@@ -63,72 +69,25 @@ public:
 	template <class Interface>
 	void defineObject( unsigned char classId_, unsigned int objId_, Interface* obj_)
 	{
-		ObjKey objkey( classId_, objId_);
-		Object obj( obj_, &RpcObjDeleter<Interface>::call);
-		ObjMap::iterator oi = m_objmap.find( objkey);
-		if (oi != m_objmap.end() && oi->second.deleter)
-		{
-			oi->second.deleter( oi->second.ptr);
-			oi->second = obj;
-		}
-		else
-		{
-			m_objmap[ objkey] = obj;
-		}
-	}
-
-	template <class Interface>
-	unsigned int createObject( unsigned char classId_, Interface* obj_)
-	{
-		defineObject( classId_, ++m_objIdCnt, obj_);
-		return m_objIdCnt;
+		defineObjectPtr( classId_, objId_, obj_, &RpcObjDeleter<Interface>::call);
 	}
 
 	template <class Interface>
 	Interface* getObject( unsigned char classId_, unsigned int objId_) const
 	{
-		ObjKey objkey( classId_, objId_);
-		ObjMap::const_iterator oi = m_objmap.find( objkey);
-		if (oi != m_objmap.end())
-		{
-			return (Interface*)oi->second.ptr;
-		}
-		else
-		{
-			throw std::runtime_error( "accessing non existing object (invalid reference)");
-		}
+		return (Interface*)getObjectPtr( classId_, objId_);
 	}
 
-	void deleteObject( unsigned char classId_, unsigned int objId_)
-	{
-		ObjKey objkey( classId_, objId_);
-		ObjMap::iterator oi = m_objmap.find( objkey);
-		if (oi != m_objmap.end() && oi->second.deleter)
-		{
-			oi->second.deleter( oi->second.ptr);
-		}
-		m_objmap.erase( objkey);
-	}
-
-	void releaseObject( unsigned char classId_, unsigned int objId_)
-	{
-		ObjKey objkey( classId_, objId_);
-		m_objmap.erase( objkey);
-	}
-
-	void clear()
-	{
-		ObjMap::iterator oi = m_objmap.begin(), oe = m_objmap.end();
-		for (; oi != oe; ++oi)
-		{
-			if (oi->second.deleter)
-			{
-				oi->second.deleter( oi->second.ptr);
-			}
-		}
-	}
+	void deleteObject( unsigned char classId_, unsigned int objId_);
+	void releaseObject( unsigned char classId_, unsigned int objId_);
+	void clear();
 
 private:
+	typedef void (*ObjDeleter)( void* objptr);
+
+	void defineObjectPtr( unsigned char classId_, unsigned int objId_, void* obj_, ObjDeleter deleter_);
+	void* getObjectPtr( unsigned char classId_, unsigned int objId_) const;
+
 	struct ObjKey
 	{
 		ObjKey( unsigned char classId_, unsigned int objId_)
@@ -149,8 +108,6 @@ private:
 		unsigned int objId;
 	};
 
-	typedef void (*ObjDeleter)( void* objptr);
-
 	struct Object
 	{
 		void* ptr;
@@ -165,9 +122,7 @@ private:
 	};
 
 	typedef std::map<ObjKey,Object> ObjMap;
-
 	ObjMap m_objmap;
-	int unsigned m_objIdCnt;
 };
 }
 #endif

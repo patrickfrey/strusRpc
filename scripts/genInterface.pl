@@ -130,15 +130,18 @@ sub joinIdent
 # <paramtype>	= STRING
 my @interfaceClasses = ();
 
+# Map for rewriting type names that contain spaces (space is used to delimit indirection prefixes):
 my %typeRewriteMap = ();
 $typeRewriteMap{"unsigned_int"} = "unsigned int";
 $typeRewriteMap{"unsigned_char"} = "unsigned char";
 $typeRewriteMap{"const_PostingIteratorInterface*"} = "const PostingIteratorInterface*";
 
+# List of methods that do not return anything, but still issue a request to get possible errors from previous method calls:
 my %syncMethods = ();
 $syncMethods{"done"} = 1;
 $syncMethods{"commit"} = 1;
 
+# List of methods that are not implemented for RPC:
 my %notImplMethods = ();
 $notImplMethods{"checkStorage"} = 1;           # ...ostream reference input cannot be handled
 $notImplMethods{"getPostingJoinOperator"} = 1; # ...const Object return can not be handled
@@ -152,12 +155,17 @@ $notImplMethods{"getStorage"} = 1;             # ...const Object return can not 
 $notImplMethods{"getQueryProcessor"} = 1;      # ...const Object return can not be handled
 $notImplMethods{"getDatabase"} = 1;            # ...const Object return can not be handled
 
+# List of methods that pass interface params with ownership:
 my %passOwnershipParams = ();
 $passOwnershipParams{"definePostingJoinOperator"} = 1;
 $passOwnershipParams{"defineWeightingFunction"} = 1;
 $passOwnershipParams{"defineSummarizerFunction"} = 1;
 $passOwnershipParams{"createClient"} = 1;
 $passOwnershipParams{"createAlterMetaDataTable"} = 1;
+
+# List of hacks (client code inserted at the beginning of a method call):
+my %alternativeClientImpl = ();
+$alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx());\n";
 
 sub parseType
 {
@@ -607,9 +615,7 @@ sub packParameter
 		$idx =~ s/[^0-9]//g;
 		if ($serverSide)
 		{
-			$rt .= "\tunsigned char classId_$idx = (unsigned char)ClassId_$objtype;\n";
-			$rt .= "\tunsigned int objId_$idx = createObject( classId_$idx, $id);\n";
-			$rt .= "\tmsg.packObject( classId_$idx, objId_$idx);";
+			$rt .= "\tdefineObject( classId_$idx, objId_$idx, $id);\n";
 		}
 		else
 		{
@@ -768,17 +774,17 @@ sub unpackParameter
 	my $rt = "";
 	if ($type =~ m/(.*)Interface$/)
 	{
-		$rt .= "unsigned char classId_$idx; unsigned int objId_$idx;\n";
-		$rt .= "\tserializedMsg.unpackObject( classId_$idx, objId_$idx);\n";
-		$rt .= "\tif (classId_$idx != " . getInterfaceEnumName( $type) .") throw std::runtime_error(\"error in RPC serialzed message: output parameter object type mismatch\");\n";
 		if ($serverSide)
 		{
-			$rt .= "\t$id = getObject<$type>( classId_$idx, objId_$idx);";
+			$rt .= "unsigned char classId_$idx; unsigned int objId_$idx;\n";
+			$rt .= "serializedMsg.unpackObject( classId_$idx, objId_$idx);\n";
+			$rt .= "if (classId_$idx != " . getInterfaceEnumName( $type) .") throw std::runtime_error(\"error in RPC serialzed message: output parameter object type mismatch\");\n";
+			$rt .= "$id = getObject<$type>( classId_$idx, objId_$idx);";
 		}
 		else
 		{
 			my $implname = interfaceImplementationClassName( $type);
-			$rt .= "\t$id = new $implname( objId_$idx, messaging());";
+			$rt .= "$id = new $implname( objId_$idx, ctx());";
 		}
 	}
 	elsif ($type eq "ArithmeticVariant")
@@ -980,7 +986,17 @@ sub inputParameterPackFunctionCall
 	my ($paramtype, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $param);
 	if ($passbyref && ($isconst == 0 || $indirection > 0))
 	{
-		return ("","");
+		if ($paramtype =~ m/^(.*)Interface$/ && $indirection == 1 && $isconst == 0)
+		{
+			# The object id's of the returned type Interface are created by the client
+			my $objtype = $1;
+			$sender_code .= "\tunsigned int objId_$idx = ctx()->newObjId();\n";
+			$sender_code .= "\tunsigned char classId_$idx = (unsigned char)ClassId_$objtype;\n";
+			$sender_code .= "\tmsg.packObject( classId_$idx, objId_$idx);\n";
+			$receiver_code .= "\tunsigned char classId_$idx; unsigned int objId_$idx;\n";
+			$receiver_code .= "\tserializedMsg.unpackObject( classId_$idx, objId_$idx);\n";
+		}
+		return ($sender_code,$receiver_code);
 	}
 	elsif ($isarray)
 	{
@@ -1114,6 +1130,10 @@ sub getMethodDeclarationSource
 	}
 	else
 	{
+		if ($alternativeClientImpl{$methodname})
+		{
+			$sender_code .= "\t$alternativeClientImpl{$methodname}";
+		}
 		$sender_code .= "\tRpcSerializer msg;\n";
 		$sender_code .= "\tmsg.packObject( classId(), objId());\n";
 		$sender_code .= "\tmsg.packByte( Method_" . $methodname . ");\n";
@@ -1158,6 +1178,27 @@ sub getMethodDeclarationSource
 				$receiver_code .= $rcv;
 			}
 		}
+		if ($retval ne "void")
+		{
+			my ($retvaltype, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $retval);
+			if ($retvaltype =~ m/^(.*)Interface$/)
+			{
+				# The object id's of the return type Interface are created by the client
+				my $objtype = $1;
+				if ($indirection == 1 && $isconst == 0)
+				{
+					$sender_code .= "\tunsigned int objId_0 = ctx()->newObjId();\n";
+					$sender_code .= "\tunsigned char classId_0 = (unsigned char)ClassId_$objtype;\n";
+					$sender_code .= "\tmsg.packObject( classId_0, objId_0);\n";
+					$receiver_code .= "\tunsigned char classId_0; unsigned int objId_0;\n";
+					$receiver_code .= "\tserializedMsg.unpackObject( classId_0, objId_0);\n";
+				}
+				else
+				{
+					die "cannot handle return value type $retval";
+				}
+			}
+		}
 		$receiver_code .= "\ttry {\n";
 		$receiver_code .= "\t\t$retvalassigner" . "obj->" . $methodname . "(" . $receiver_paramlist . ");\n";
 		if ($passOwnershipParams{$methodname})
@@ -1191,7 +1232,7 @@ sub getMethodDeclarationSource
 			my ($retvaltype, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $retval);
 			if ($retvaltype =~ m/Interface$/)
 			{
-				if ($indirection == 1)
+				if ($indirection == 1 && $isconst == 0)
 				{
 					$sender_output .= "\t" . unpackParameter( $retvaltype, "$retvaltype* p0", 0, $indirection, 0) . "\n";
 					$receiver_output .= packParameter( $retvaltype, "p0", 0, $indirection, 1) . "\n";
@@ -1245,33 +1286,40 @@ sub getMethodDeclarationSource
 				$receiver_output .= $rcv;
 			}
 		}
-		if ($sender_output ne "")
+		if ($sender_output =~ m/serializedMsg.unpack/)
 		{
 			$sender_code .= "\tmsg.packCrc32();\n";
 			$sender_code .= "\tenter();\n";
-			$sender_code .= "\tstd::string answer = rpc_sendRequest( msg.content());\n";
+			$sender_code .= "\tstd::string answer = ctx()->rpc_sendRequest( msg.content());\n";
 			$sender_code .= "\tRpcDeserializer serializedMsg( answer.c_str(), answer.size());\n";
 			$sender_code .= "\tserializedMsg.unpackByte();\n";
 			$sender_code .= $sender_output;
 			$receiver_code .= $receiver_output;
+			$receiver_code .= "\tmsg.packCrc32();\n";
+			$receiver_code .= "\treturn msg.content();\n";
 		}
 		elsif ($syncMethods{$methodname})
 		{
 			$sender_code .= "\tmsg.packCrc32();\n";
-			$sender_code .= "\trpc_sendMessage( msg.content());\n";
-			$sender_code .= "\trpc_synchronize();\n";
+			$sender_code .= "\tctx()->rpc_sendMessage( msg.content());\n";
+			$sender_code .= "\tctx()->rpc_synchronize();\n";
+			$sender_code .= $sender_output;
+			$receiver_code .= $receiver_output;
+			$receiver_code .= "\tmsg.packCrc32();\n";
+			$receiver_code .= "\treturn msg.content();\n";
 		}
 		else
 		{
 			$sender_code .= "\tmsg.packCrc32();\n";
-			$sender_code .= "\trpc_sendMessage( msg.content());\n";
+			$sender_code .= "\tctx()->rpc_sendMessage( msg.content());\n";
+			$sender_code .= $sender_output;
+			$receiver_code .= $receiver_output;
+			$receiver_code .= "\treturn std::string();\n";
 		}
 		if ($retval ne "void")
 		{
 			$sender_code .= "\treturn p0;\n";
 		}
-		$receiver_code .= "\tmsg.packCrc32();\n";
-		$receiver_code .= "\treturn msg.content();\n";
 	}
 	$sender_code .= "}\n";
 	return ($sender_code,$receiver_code);
@@ -1320,7 +1368,7 @@ sub getClassHeaderSource
 		my @mth = split('%');
 		shift( @mth);
 		$rt .= "\n\tvirtual ~$classname();\n";
-		$rt .= "\n\t$classname( unsigned int objId_, RpcClientMessagingInterface* messaging_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, messaging_){}\n";
+		$rt .= "\n\t$classname( unsigned int objId_, const RpcClientContext* ctx_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, ctx_){}\n";
 		my $mm;
 		foreach $mm( @mth)
 		{
@@ -1357,7 +1405,7 @@ sub getClassImplementationSource
 		$sender_code .= "\tmsg.packObject( classId(), objId());\n";
 		$sender_code .= "\tmsg.packByte( Method_Destructor);\n";
 		$sender_code .= "\tmsg.packCrc32();\n";
-		$sender_code .= "\trpc_sendMessage( msg.content());\n";
+		$sender_code .= "\tctx()->rpc_sendMessage( msg.content());\n";
 		$sender_code .= "}\n";
 
 		$receiver_code .= "\tcase " . getInterfaceEnumName( $interfacename) . ":\n";
