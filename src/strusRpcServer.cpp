@@ -33,7 +33,6 @@
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/moduleLoaderInterface.hpp"
 #include "strus/versionRpc.hpp"
-#include "rpcRequestHandler.hpp"
 #include "serializer.hpp"
 #include <cstring>
 #include <stdexcept>
@@ -89,12 +88,12 @@ static void destroy_handler_context( handler_context* ctx)
 	std::free( ctx);
 }
 
-static int init_handler_context( handler_context* ctx, const char* storageconfig)
+static int init_handler_context( handler_context* ctx)
 {
 	try
 	{
-		ctx->obj = new strus::createRpcRequestHandler(
-				g_storageBuilder, g_analyzerBuilder, g_storageClient);
+		ctx->obj = strus::createRpcRequestHandler(
+				g_storageObjectBuilder, g_analyzerObjectBuilder, g_storageClient);
 	}
 	catch (const std::runtime_error& err)
 	{
@@ -423,9 +422,10 @@ int main( int argc, const char* argv[])
 
 		g_storageObjectBuilder = storageBuilder.get();
 		g_analyzerObjectBuilder = analyzerBuilder.get();
-		if (!storageconfig.empty)
+		if (!storageconfig.empty())
 		{
-			storageClient.reset( g_storageObjectBuilder->createStorageClient());
+			storageClient.reset( g_storageObjectBuilder->createStorageClient( storageconfig));
+			std::cerr << "strus RPC server is hosting storage '" << storageconfig << "'" << std::endl;
 			g_storageClient = storageClient.get();
 		}
 

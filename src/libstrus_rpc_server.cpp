@@ -36,8 +36,9 @@ using namespace strus;
 DLL_PUBLIC RpcRequestHandlerInterface*
 	strus::createRpcRequestHandler(
 		StorageObjectBuilderInterface* storageBuilder_,
-		AnalyzerObjectBuilderInterface* analyzerBuilder_)
+		AnalyzerObjectBuilderInterface* analyzerBuilder_,
+		StorageClientInterface* hostedStorageClient_)
 {
-	return new RpcRequestHandler( storageBuilder_, analyzerBuilder_);
+	return new RpcRequestHandler( storageBuilder_, analyzerBuilder_, hostedStorageClient_);
 }
 
