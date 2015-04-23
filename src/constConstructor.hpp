@@ -42,6 +42,11 @@ public:
 
 	void reset() const
 	{
+		std::vector<Value>::const_iterator ai = m_ar.begin(), ae = m_ar.end();
+		for (; ai != ae; ++ai)
+		{
+			std::free( ai->value);
+		}
 		m_ar.clear();
 	}
 
@@ -58,10 +63,8 @@ public:
 
 	const void* get( const void* ptr, std::size_t size) const
 	{
-		Value val( ptr, size);
-		const void* rt = val.value;
-		m_ar.push_back( val);
-		return rt;
+		m_ar.push_back( Value::copy( ptr, size));
+		return m_ar.back().value;
 	}
 
 private:
@@ -70,21 +73,22 @@ private:
 		void* value;
 		std::size_t size;
 
-		~Value()
-		{
-			if (value) std::free( value);
-		}
+		~Value(){}
 
 		Value()
 			:value(0),size(0){}
 		Value( const Value& o)
 			:value(o.value),size(o.size){}
-		Value( const void* value_, std::size_t size_)
-			:value(0),size(size_)
+		Value( void* value_, std::size_t size_)
+			:value(value_),size(size_)
+		{}
+
+		static Value copy( const void* ptr_, std::size_t size_)
 		{
-			value = std::malloc(size_);
-			if (!value) throw std::bad_alloc();
-			std::memcpy( value, value_, size);
+			void* ptr = std::malloc(size_);
+			if (!ptr) throw std::bad_alloc();
+			std::memcpy( ptr, ptr_, size_);
+			return Value( ptr, size_);
 		}
 	};
 

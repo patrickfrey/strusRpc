@@ -64,25 +64,24 @@ void RpcClientContext::handleError( const std::string& msgstr) const
 	}
 }
 
-
-std::string RpcInterfaceStub::rpc_sendRequest( const std::string& msg) const
+std::string RpcClientContext::rpc_sendRequest( const std::string& msg) const
 {
 	std::string answer = m_messaging->sendRequest( msg);
 	handleError( answer);
 	return answer;
 }
 
-void RpcInterfaceStub::rpc_sendMessage( const std::string& msg) const
+void RpcClientContext::rpc_sendMessage( const std::string& msg) const
 {
 	m_messaging->sendMessage( msg);
 }
 
-void RpcInterfaceStub::rpc_synchronize() const
+void RpcClientContext::rpc_synchronize() const
 {
 	std::string answer = m_messaging->synchronize();
 	if (answer.empty()) return;
 	handleError( answer);
-	if (answer.size() > 5)
+	if (answer.size() > 0)
 	{
 		throw std::runtime_error("got unexpected (non empty) answer from server calling rpc_synchronize");
 	}

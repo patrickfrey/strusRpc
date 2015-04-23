@@ -167,6 +167,8 @@ $passOwnershipParams{"createAlterMetaDataTable"} = 1;
 my %alternativeClientImpl = ();
 $alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx());\n";
 
+my $doGenerateDebugCode = 1;
+
 sub parseType
 {
 	my $prefix = "";
@@ -1130,6 +1132,10 @@ sub getMethodDeclarationSource
 	}
 	else
 	{
+		if ($doGenerateDebugCode)
+		{
+			$sender_code .= "\tstd::cerr << \"calling method $classname" . "::" . "$methodname\" << std::endl;\n";
+		}
 		if ($alternativeClientImpl{$methodname})
 		{
 			$sender_code .= "\t$alternativeClientImpl{$methodname}";
@@ -1401,6 +1407,10 @@ sub getClassImplementationSource
 
 		$sender_code .= "\n$classname" . "::~$classname()\n";
 		$sender_code .= "{\n";
+		if ($doGenerateDebugCode)
+		{
+			$sender_code .= "\tstd::cerr << \"calling destructor of $classname\" << std::endl;\n";
+		}
 		$sender_code .= "\tRpcSerializer msg;\n";
 		$sender_code .= "\tmsg.packObject( classId(), objId());\n";
 		$sender_code .= "\tmsg.packByte( Method_Destructor);\n";
@@ -1590,7 +1600,7 @@ print SRCFILE <<EOF;
 */
 #include "objects_gen.hpp"
 #include "serializer.hpp"
-
+#include <iostream>
 using namespace strus;
 EOF
 

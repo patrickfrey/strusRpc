@@ -52,6 +52,8 @@
 #include <errno.h>
 #include <signal.h>
 
+#define STRUS_LOWLEVEL_DEBUG
+
 static void printUsage()
 {
 	std::cerr << "strusRpcServer [options] <storageconfig>" << std::endl;
@@ -64,6 +66,8 @@ static void printUsage()
 	std::cerr << "    Load components from module <MOD>" << std::endl;
 	std::cerr << "-M|--moduledir <DIR>" << std::endl;
 	std::cerr << "    Search modules to load first in <DIR>" << std::endl;
+	std::cerr << "-R|--resourcedir <DIR>" << std::endl;
+	std::cerr << "    Define a resource path <DIR> for the analyzer" << std::endl;
 	std::cerr << "-s|--storage <CONFIG>" << std::endl;
 	std::cerr << "    Define configuration <CONFIG> of storage hosted by this server" << std::endl;
 }
@@ -76,6 +80,10 @@ static strus::StorageClientInterface* g_storageClient = 0;
 struct handler_context
 {
 	strus::RpcRequestHandlerInterface* obj;
+	std::string* buf;
+	uint32_t msgsize;
+	uint32_t msgsizebuf;
+	uint32_t msgsizepos;
 };
 
 static void destroy_handler_context( handler_context* ctx)
@@ -85,7 +93,23 @@ static void destroy_handler_context( handler_context* ctx)
 		delete ctx->obj;
 		ctx->obj = 0;
 	}
+	if (ctx->buf)
+	{
+		delete ctx->buf;
+		ctx->buf = 0;
+	}
 	std::free( ctx);
+}
+
+static void reset_handler_context_input( handler_context* ctx)
+{
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "reset handler context input" << std::endl;
+#endif
+	ctx->buf->clear();
+	ctx->msgsize = 0;
+	ctx->msgsizebuf = 0;
+	ctx->msgsizepos = 0;
 }
 
 static int init_handler_context( handler_context* ctx)
@@ -94,6 +118,10 @@ static int init_handler_context( handler_context* ctx)
 	{
 		ctx->obj = strus::createRpcRequestHandler(
 				g_storageObjectBuilder, g_analyzerObjectBuilder, g_storageClient);
+		ctx->buf = new std::string();
+		ctx->msgsize = 0;
+		ctx->msgsizebuf = 0;
+		ctx->msgsizepos = 0;
 	}
 	catch (const std::runtime_error& err)
 	{
@@ -127,36 +155,78 @@ static uint32_t unpackMessageLen( char const*& itr, const char* end)
 	return ntohl( val);
 }
 
-static int handler_context_process_input( handler_context* ctx, struct evbuffer *input, struct evbuffer *output)
+static int handler_context_consume_input( handler_context* ctx, struct evbuffer *input)
+{
+	int res = 0;
+	if (!ctx->obj)
+	{
+		int ec;
+		if (0!=(ec=init_handler_context( ctx)))
+		{
+			return 10+ec;
+		}
+	}
+	if (!ctx->msgsize)
+	{
+		while (ctx->msgsizepos < sizeof(ctx->msgsizebuf)
+			&& 0<(res=evbuffer_remove( input, (char*)&ctx->msgsizebuf + ctx->msgsizepos, sizeof(ctx->msgsizebuf)-ctx->msgsizepos)))
+		{
+			ctx->msgsizepos += res;
+			if (ctx->msgsizepos == sizeof(ctx->msgsizebuf)) break;
+		}
+		if (res == 0) return 1;
+		if (res < 0) return -1;
+	
+		ctx->msgsize = ntohl( ctx->msgsizebuf);
+		if (!ctx->msgsize) return -1;
+	}
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "consumed input message size " << ctx->msgsize << std::endl;
+#endif
+	enum {bufsize=256};
+	char buf[ bufsize];
+	unsigned int fetchsize = bufsize;
+	if (ctx->msgsize < ctx->buf->size() + fetchsize)
+	{
+		fetchsize = ctx->msgsize - ctx->buf->size();
+	}
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "consumed input fetch size " << fetchsize << std::endl;
+#endif
+	while (0<(res=evbuffer_remove( input, buf, fetchsize)))
+	{
+		ctx->buf->append( buf, res);
+		if (ctx->msgsize == ctx->buf->size()) break;
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "consumed input buf size " << ctx->buf->size() << std::endl;
+#endif
+	}
+	if (res > 0) return 0;
+	if (res == 0) return 1;
+	return -1;
+}
+
+static int handler_context_process_input( handler_context* ctx, struct evbuffer *output)
 {
 	try
 	{
-		std::string inputbuf;
-		enum {bufsize=256};
-		char buf[ bufsize];
-		int res;
-		while (0<(res=evbuffer_remove( input, buf, bufsize)))
-		{
-			inputbuf.append( buf, res);
-		}
-		if (res < 0)
-		{
-			std::cerr << "error when copying input data of request ... closing connection" << std::endl;
-			return 4;
-		}
-		if (!ctx->obj)
-		{
-			std::cerr << "context not initialized (event lost) ... closing connection" << std::endl;
-			return 5;
-		}
+#ifdef STRUS_LOWLEVEL_DEBUG
+		std::cerr << "got request [" << ctx->buf->size() << " bytes]" << std::endl;
+#endif
 		std::string answer;
-		if (inputbuf.size() > 0 && inputbuf[0] == (char)0xFF)
+		if (ctx->buf->size() > 0 && ctx->buf->at(0) == (char)0xFF)
 		{
-			char const* itr = inputbuf.c_str()+1;
-			const char* end = itr + inputbuf.size() -1;
+#ifdef STRUS_LOWLEVEL_DEBUG
+			std::cerr << "got multipart request" << std::endl;
+#endif
+			char const* itr = ctx->buf->c_str()+1;
+			const char* end = itr + ctx->buf->size() -1;
 			while (itr < end)
 			{
 				uint32_t msglen = unpackMessageLen( itr, end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+				std::cerr << "call request handler [" << msglen << " bytes]" << std::endl;
+#endif
 				answer = ctx->obj->handleRequest( itr, msglen);
 				if (answer.size() > 0)
 				{
@@ -167,17 +237,31 @@ static int handler_context_process_input( handler_context* ctx, struct evbuffer 
 					}
 					break;
 				}
+				itr += msglen;
 			}
 		}
 		else
 		{
-			answer = ctx->obj->handleRequest( inputbuf.c_str(), inputbuf.size());
+#ifdef STRUS_LOWLEVEL_DEBUG
+			std::cerr << "call request handler [" << ctx->buf->size() << " bytes]" << std::endl;
+#endif
+			answer = ctx->obj->handleRequest( ctx->buf->c_str(), ctx->buf->size());
 		}
-		if (-1==evbuffer_add( output, answer.c_str(), answer.size()))
+		uint32_t answersize = htonl( answer.size());
+		if (-1==evbuffer_add( output, &answersize, sizeof(answersize)))
 		{
 			std::cerr << "error when copying request answer to output ... closing connection" << std::endl;
 			return 7;
 		}
+		if (-1==evbuffer_add( output, answer.c_str(), answer.size()))
+		{
+			std::cerr << "error when copying request answer to output ... closing connection" << std::endl;
+			return 8;
+		}
+
+#ifdef STRUS_LOWLEVEL_DEBUG
+		std::cerr << "request reply [" << answer.size() << " bytes] sent back" << std::endl;
+#endif
 		return 0;
 	}
 	catch (const std::runtime_error& err)
@@ -210,16 +294,44 @@ static void handler_read_cb( struct bufferevent *bev, void *ctx_)
 	struct evbuffer *input = bufferevent_get_input( bev);
 	struct evbuffer *output = bufferevent_get_output( bev);
 
-	// Handle the request:
-	if (0!=handler_context_process_input( ctx, input, output))
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "handler got data" << std::endl;
+#endif
+	// Consume input:
+	int ec = handler_context_consume_input( ctx, input);
+	if (ec < 0)
 	{
+		// ... got unrecoverable error
 		bufferevent_free( bev);
 		destroy_handler_context( ctx);
 	}
+	if (ec > 0)
+	{
+		// ... input not yet complete
+		return;
+	}
+	// Handle the request:
+	if (0!=handler_context_process_input( ctx, output))
+	{
+		bufferevent_free( bev);
+		destroy_handler_context( ctx);
+		return;
+	}
+	if (0>bufferevent_write_buffer( bev, output))
+	{
+		perror( "error writing buffer with request answer");
+		bufferevent_free( bev);
+		destroy_handler_context( ctx);
+		return;
+	}
+	reset_handler_context_input( ctx);
 }
 
 static void handler_event_cb( struct bufferevent *bev, short events, void *ctx_)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "got event" << std::endl;
+#endif
 	handler_context* ctx = (handler_context*)ctx_;
 	if (events & BEV_EVENT_ERROR)
 	{
@@ -227,19 +339,11 @@ static void handler_event_cb( struct bufferevent *bev, short events, void *ctx_)
 	}
 	if (events & (BEV_EVENT_EOF | BEV_EVENT_ERROR))
 	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		if (0!=(events & BEV_EVENT_EOF)) std::cerr << "got eof" << std::endl;
+#endif
 		bufferevent_free( bev);
 		destroy_handler_context( ctx);
-	}
-	if (events & BEV_EVENT_CONNECTED)
-	{
-		if (!ctx->obj)
-		{
-			if (0!=init_handler_context( ctx))
-			{
-				bufferevent_free( bev);
-				destroy_handler_context( ctx);
-			}
-		}
 	}
 }
 
@@ -268,6 +372,9 @@ static void accept_conn_cb(
 	}
 	else
 	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		std::cerr << "accept connection" << std::endl;
+#endif
 		bufferevent_setcb( bev, handler_read_cb, NULL, handler_event_cb, ctx);
 		bufferevent_enable( bev, EV_READ|EV_WRITE);
 	}
@@ -332,19 +439,20 @@ int main( int argc, const char* argv[])
 	int argi = 1;
 	std::vector<std::string> moduledirs;
 	std::vector<std::string> modules;
+	std::vector<std::string> resourcedirs;
 	std::string storageconfig;
 	int port = 7181; //... default port
 	try
 	{
 		// Parsing arguments:
-		while (argi < argc)
+		for (; argi < argc; ++argi)
 		{
 			if (0==std::strcmp( argv[argi], "-h") || 0==std::strcmp( argv[argi], "--help"))
 			{
 				printUsage();
 				doExit = true;
 			}
-			if (0==std::strcmp( argv[argi], "-h") || 0==std::strcmp( argv[argi], "--help"))
+			else if (0==std::strcmp( argv[argi], "-v") || 0==std::strcmp( argv[argi], "--version"))
 			{
 				std::cerr << "strusRpc version " << STRUS_RPC_VERSION_STRING << std::endl;
 				doExit = true;
@@ -360,6 +468,12 @@ int main( int argc, const char* argv[])
 				++argi;
 				if (argi == argc) throw std::runtime_error("option --moduledir expects argument");
 				moduledirs.push_back( argv[argi]);
+			}
+			else if (0==std::strcmp( argv[argi], "-R") || 0==std::strcmp( argv[argi], "--resourcedir"))
+			{
+				++argi;
+				if (argi == argc) throw std::runtime_error("option --resourcedir expects argument");
+				resourcedirs.push_back( argv[argi]);
 			}
 			else if (0==std::strcmp( argv[argi], "-p") || 0==std::strcmp( argv[argi], "--port"))
 			{
@@ -383,7 +497,7 @@ int main( int argc, const char* argv[])
 				++argi;
 				if (argi == argc) throw std::runtime_error("option --storage expects argument (storage configuration string)");
 				storageconfig.append( argv[argi]);
-				if (!storageconfig.empty()) throw std::runtime_error("option --storage with empty argument");
+				if (storageconfig.empty()) throw std::runtime_error("option --storage with empty argument");
 			}
 			else if (argv[argi][0] == '-')
 			{
@@ -414,6 +528,13 @@ int main( int argc, const char* argv[])
 		{
 			g_moduleLoader->loadModule( *mi);
 		}
+		std::vector<std::string>::const_iterator
+			pi = resourcedirs.begin(), pe = resourcedirs.end();
+		for (; pi != pe; ++pi)
+		{
+			g_moduleLoader->addResourcePath( *pi);
+		}
+
 		std::auto_ptr<strus::StorageObjectBuilderInterface>
 			storageBuilder( g_moduleLoader->createStorageObjectBuilder());
 		std::auto_ptr<strus::AnalyzerObjectBuilderInterface>

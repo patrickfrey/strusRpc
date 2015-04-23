@@ -13,6 +13,7 @@ set( client_source_files
 	serializer.cpp
 	objects_gen.cpp
 	interfaceStub.cpp
+	clientContext.cpp
 	rpcClient.cpp
 )
 
