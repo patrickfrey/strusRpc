@@ -66,7 +66,8 @@ ServiceAddress::ServiceAddress( const char* config)
 {
 	init();
 	char const* portstr = std::strchr( config, '\0');
-	std::size_t hostnamelen = (std::size_t)(portstr - config);
+	std::size_t configlen = (std::size_t)(portstr - config);
+	std::size_t hostnamelen = configlen;
 	if (hostnamelen >= sizeof(hostname))
 	{
 		throw std::runtime_error( "invalid host configuration (host name length)");
@@ -75,6 +76,10 @@ ServiceAddress::ServiceAddress( const char* config)
 	if (portstr > config)
 	{
 		hostnamelen -= 1;
+	}
+	else
+	{
+		hostnamelen = configlen;
 	}
 	std::memcpy( hostname, config, hostnamelen);
 	hostname[ hostnamelen] = 0;
