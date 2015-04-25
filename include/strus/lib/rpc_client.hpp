@@ -38,7 +38,7 @@ class RpcClientInterface;
 class RpcClientMessagingInterface;
 
 /// \brief Creates an RPC Client connection to the server
-/// \param[in] connector interface to use for sending and receiving messages to and from the server
+/// \param[in] connector interface (passed with ownership) to use for sending and receiving messages to and from the server
 RpcClientInterface*
 	createRpcClient(
 		RpcClientMessagingInterface* connector);

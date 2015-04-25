@@ -36,8 +36,10 @@ namespace strus {
 class RpcClientContext
 {
 public:
-	virtual ~RpcClientContext(){}
-
+	virtual ~RpcClientContext()
+	{
+		delete m_messaging;
+	}
 	explicit RpcClientContext( RpcClientMessagingInterface* messaging_);
 	RpcClientContext( const RpcClientContext& o);
 	RpcClientContext();
