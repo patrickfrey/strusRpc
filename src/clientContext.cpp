@@ -47,9 +47,11 @@ RpcClientContext::RpcClientContext()
 
 void RpcClientContext::handleError( const std::string& msgstr) const
 {
-	if (msgstr.empty()) throw std::runtime_error( "got no answer from server");
+	if (msgstr.empty())
+	{
+		throw std::runtime_error( "got no answer from server");
+	}
 	RpcDeserializer msg( msgstr.c_str(), msgstr.size());
-	if (!msg.unpackCrc32()) throw std::runtime_error( "answer CRC32 check failed");
 	RpcReturnType returntype = (RpcReturnType)msg.unpackByte();
 	switch (returntype)
 	{
@@ -60,6 +62,10 @@ void RpcClientContext::handleError( const std::string& msgstr) const
 		case MsgTypeException_LogicError:
 			throw std::logic_error( std::string("method call failed: ") + msg.unpackString());
 		case MsgTypeAnswer:
+			if (!msg.unpackCrc32())
+			{
+				throw std::runtime_error( "answer CRC32 check failed");
+			}
 			break;
 	}
 }

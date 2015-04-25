@@ -34,15 +34,15 @@
 
 using namespace strus;
 
-RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcClientContext* ctx_)
-	:m_classId(classId_),m_objId(objId_),m_ctx(ctx_)
+RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcClientContext* ctx_, bool isConst_)
+	:m_classId(classId_),m_objId(objId_),m_ctx(ctx_),m_isConst(isConst_)
 {}
 
 RpcInterfaceStub::RpcInterfaceStub( const RpcInterfaceStub& o)
-	:m_classId(o.m_classId),m_objId(o.m_objId),m_ctx(o.m_ctx){}
+	:m_classId(o.m_classId),m_objId(o.m_objId),m_ctx(o.m_ctx),m_isConst(o.m_isConst){}
 
 RpcInterfaceStub::RpcInterfaceStub()
-	:m_classId(0),m_objId(0),m_ctx(0){}
+	:m_classId(0),m_objId(0),m_ctx(0),m_isConst(true){}
 
 
 void RpcInterfaceStub::enter() const

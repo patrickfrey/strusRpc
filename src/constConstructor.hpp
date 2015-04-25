@@ -39,6 +39,14 @@ class ConstConstructor
 {
 public:
 	ConstConstructor(){}
+	~ConstConstructor()
+	{
+		std::vector<Value>::const_iterator ai = m_longliving_ar.begin(), ae = m_longliving_ar.end();
+		for (; ai != ae; ++ai)
+		{
+			std::free( ai->value);
+		}
+	}
 
 	void reset() const
 	{
@@ -58,13 +66,18 @@ public:
 	{
 		char const** pp = ptr;
 		while (*pp)++pp;
-		return (const char**)get( ptr, (pp-ptr)*sizeof(*pp));
+		return (const char**)get( ptr, ((pp-ptr)+1)*sizeof(char*));
 	}
 
 	const void* get( const void* ptr, std::size_t size) const
 	{
 		m_ar.push_back( Value::copy( ptr, size));
 		return m_ar.back().value;
+	}
+	const void* getLongLiving( const void* ptr, std::size_t size) const
+	{
+		m_longliving_ar.push_back( Value::copy( ptr, size));
+		return m_longliving_ar.back().value;
 	}
 
 private:
@@ -93,6 +106,7 @@ private:
 	};
 
 	mutable std::vector<Value> m_ar;
+	mutable std::vector<Value> m_longliving_ar;
 };
 
 }//namespace

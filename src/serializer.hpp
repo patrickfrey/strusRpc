@@ -89,7 +89,7 @@ public:
 	void packSummaryElement( const SummarizerClosureInterface::SummaryElement& val);
 	void packWeightingConfig( const WeightingConfig& val);
 	void packCompareOperator( const QueryInterface::CompareOperator& val);
-	void packFeatureParameter( const SummarizerFunctionInterface::FeatureParameter& val);
+	void packSummarizationVariable( const SummarizationVariable& val);
 	void packSlice( DatabaseCursorInterface::Slice& val);
 	void packAnalyzerDocument( const analyzer::Document& val);
 	void packAnalyzerAttribute( const analyzer::Attribute& val);
@@ -164,6 +164,10 @@ public:
 	std::size_t position() const
 	{
 		return (std::size_t)(m_itr - m_start);
+	}
+	std::size_t size() const
+	{
+		return (std::size_t)(m_end - m_start);
 	}
 
 private:

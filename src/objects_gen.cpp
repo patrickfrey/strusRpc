@@ -33,6 +33,7 @@ using namespace strus;
 
 AnalyzerObjectBuilderImpl::~AnalyzerObjectBuilderImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of AnalyzerObjectBuilderImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -43,7 +44,18 @@ AnalyzerObjectBuilderImpl::~AnalyzerObjectBuilderImpl()
 
 const TextProcessorInterface* AnalyzerObjectBuilderImpl::getTextProcessor( ) const
 {
-	throw std::runtime_error("the method 'getTextProcessor' is not implemented for RPC");
+	std::cerr << "calling method AnalyzerObjectBuilderImpl::getTextProcessor" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getTextProcessor);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_TextProcessor;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	TextProcessorImpl const_0( objId_0, ctx(), true);
+	const TextProcessorInterface* p0 = (const TextProcessorImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
 }
 
 SegmenterInterface* AnalyzerObjectBuilderImpl::createSegmenter( const std::string& p1) const
@@ -95,6 +107,7 @@ QueryAnalyzerInterface* AnalyzerObjectBuilderImpl::createQueryAnalyzer( ) const
 
 AttributeReaderImpl::~AttributeReaderImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of AttributeReaderImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -148,6 +161,7 @@ std::string AttributeReaderImpl::getValue( const Index& p1) const
 
 DatabaseBackupCursorImpl::~DatabaseBackupCursorImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of DatabaseBackupCursorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -179,6 +193,7 @@ bool DatabaseBackupCursorImpl::fetch( const char*& p1, std::size_t& p2, const ch
 
 DatabaseClientImpl::~DatabaseClientImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of DatabaseClientImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -286,6 +301,7 @@ bool DatabaseClientImpl::readValue( const char* p1, std::size_t p2, std::string&
 
 DatabaseCursorImpl::~DatabaseCursorImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of DatabaseCursorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -412,6 +428,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::value( ) const
 
 DatabaseImpl::~DatabaseImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of DatabaseImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -454,7 +471,7 @@ void DatabaseImpl::restoreDatabase( const std::string& p1, DatabaseBackupCursorI
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_restoreDatabase);
 	msg.packString( p1);
-		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -506,6 +523,7 @@ const char** DatabaseImpl::getConfigParameters( DatabaseInterface::ConfigType p1
 
 DatabaseTransactionImpl::~DatabaseTransactionImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of DatabaseTransactionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -587,6 +605,7 @@ void DatabaseTransactionImpl::rollback( )
 
 DocnoRangeAllocatorImpl::~DocnoRangeAllocatorImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of DocnoRangeAllocatorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -630,6 +649,7 @@ bool DocnoRangeAllocatorImpl::deallocDocnoRange( const Index& p1, const Index& p
 
 DocumentAnalyzerInstanceImpl::~DocumentAnalyzerInstanceImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of DocumentAnalyzerInstanceImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -668,6 +688,7 @@ bool DocumentAnalyzerInstanceImpl::analyzeNext( analyzer::Document& p1)
 
 DocumentAnalyzerImpl::~DocumentAnalyzerImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of DocumentAnalyzerImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -791,6 +812,7 @@ DocumentAnalyzerInstanceInterface* DocumentAnalyzerImpl::createInstance( ) const
 
 ForwardIteratorImpl::~ForwardIteratorImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of ForwardIteratorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -843,6 +865,7 @@ std::string ForwardIteratorImpl::fetch( )
 
 InvAclIteratorImpl::~InvAclIteratorImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of InvAclIteratorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -869,6 +892,7 @@ Index InvAclIteratorImpl::skipDoc( const Index& p1)
 
 MetaDataReaderImpl::~MetaDataReaderImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of MetaDataReaderImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -985,6 +1009,7 @@ const char* MetaDataReaderImpl::getName( const Index& p1) const
 
 NormalizerConstructorImpl::~NormalizerConstructorImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of NormalizerConstructorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1003,7 +1028,7 @@ NormalizerInterface* NormalizerConstructorImpl::create( const std::vector<std::s
 	for (unsigned int ii=0; ii < p1.size(); ++ii) {
 		msg.packString( p1[ii]);
 	}
-		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
@@ -1017,6 +1042,7 @@ NormalizerInterface* NormalizerConstructorImpl::create( const std::vector<std::s
 
 NormalizerInstanceImpl::~NormalizerInstanceImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of NormalizerInstanceImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1043,6 +1069,7 @@ std::string NormalizerInstanceImpl::normalize( const char* p1, std::size_t p2)
 
 NormalizerImpl::~NormalizerImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of NormalizerImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1068,6 +1095,7 @@ NormalizerInstanceInterface* NormalizerImpl::createInstance( ) const
 
 PeerStorageTransactionImpl::~PeerStorageTransactionImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of PeerStorageTransactionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1123,6 +1151,7 @@ void PeerStorageTransactionImpl::rollback( )
 
 PostingIteratorImpl::~PostingIteratorImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of PostingIteratorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1245,6 +1274,7 @@ Index PostingIteratorImpl::posno( ) const
 
 PostingJoinOperatorImpl::~PostingJoinOperatorImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of PostingJoinOperatorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1255,28 +1285,12 @@ PostingJoinOperatorImpl::~PostingJoinOperatorImpl()
 
 PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2) const
 {
-	std::cerr << "calling method PostingJoinOperatorImpl::createResultIterator" << std::endl;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createResultIterator);
-	msg.packSize( p1.size());
-	for (unsigned int ii=0; ii < p1.size(); ++ii) {
-			const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1[ii].get());
-	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
-	msg.packObject( impl_1->classId(), impl_1->objId());
-	}
-	msg.packInt( p2);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_PostingIterator;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, ctx());
-	return p0;
+	throw std::runtime_error("the method 'createResultIterator' is not implemented for RPC");
 }
 
 QueryAnalyzerImpl::~QueryAnalyzerImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of QueryAnalyzerImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1326,6 +1340,7 @@ std::vector<analyzer::Term> QueryAnalyzerImpl::analyzePhrase( const std::string&
 
 QueryEvalImpl::~QueryEvalImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of QueryEvalImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1404,7 +1419,7 @@ QueryInterface* QueryEvalImpl::createQuery( const StorageClientInterface* p1) co
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createQuery);
-		const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	unsigned int objId_0 = ctx()->newObjId();
@@ -1418,6 +1433,7 @@ QueryInterface* QueryEvalImpl::createQuery( const StorageClientInterface* p1) co
 
 QueryImpl::~QueryImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of QueryImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1553,6 +1569,7 @@ std::vector<ResultDocument> QueryImpl::evaluate( )
 
 QueryProcessorImpl::~QueryProcessorImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of QueryProcessorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1568,7 +1585,7 @@ void QueryProcessorImpl::definePostingJoinOperator( const std::string& p1, Posti
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_definePostingJoinOperator);
 	msg.packString( p1);
-		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -1577,7 +1594,19 @@ void QueryProcessorImpl::definePostingJoinOperator( const std::string& p1, Posti
 
 const PostingJoinOperatorInterface* QueryProcessorImpl::getPostingJoinOperator( const std::string& p1) const
 {
-	throw std::runtime_error("the method 'getPostingJoinOperator' is not implemented for RPC");
+	std::cerr << "calling method QueryProcessorImpl::getPostingJoinOperator" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getPostingJoinOperator);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_PostingJoinOperator;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	PostingJoinOperatorImpl const_0( objId_0, ctx(), true);
+	const PostingJoinOperatorInterface* p0 = (const PostingJoinOperatorImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
 }
 
 void QueryProcessorImpl::defineWeightingFunction( const std::string& p1, WeightingFunctionInterface* p2)
@@ -1587,7 +1616,7 @@ void QueryProcessorImpl::defineWeightingFunction( const std::string& p1, Weighti
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineWeightingFunction);
 	msg.packString( p1);
-		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -1596,7 +1625,19 @@ void QueryProcessorImpl::defineWeightingFunction( const std::string& p1, Weighti
 
 const WeightingFunctionInterface* QueryProcessorImpl::getWeightingFunction( const std::string& p1) const
 {
-	throw std::runtime_error("the method 'getWeightingFunction' is not implemented for RPC");
+	std::cerr << "calling method QueryProcessorImpl::getWeightingFunction" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getWeightingFunction);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_WeightingFunction;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	WeightingFunctionImpl const_0( objId_0, ctx(), true);
+	const WeightingFunctionInterface* p0 = (const WeightingFunctionImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
 }
 
 void QueryProcessorImpl::defineSummarizerFunction( const std::string& p1, SummarizerFunctionInterface* p2)
@@ -1606,7 +1647,7 @@ void QueryProcessorImpl::defineSummarizerFunction( const std::string& p1, Summar
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSummarizerFunction);
 	msg.packString( p1);
-		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -1615,11 +1656,24 @@ void QueryProcessorImpl::defineSummarizerFunction( const std::string& p1, Summar
 
 const SummarizerFunctionInterface* QueryProcessorImpl::getSummarizerFunction( const std::string& p1) const
 {
-	throw std::runtime_error("the method 'getSummarizerFunction' is not implemented for RPC");
+	std::cerr << "calling method QueryProcessorImpl::getSummarizerFunction" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getSummarizerFunction);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_SummarizerFunction;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	SummarizerFunctionImpl const_0( objId_0, ctx(), true);
+	const SummarizerFunctionInterface* p0 = (const SummarizerFunctionImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
 }
 
 SegmenterInstanceImpl::~SegmenterInstanceImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of SegmenterInstanceImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1662,6 +1716,7 @@ bool SegmenterInstanceImpl::getNext( int& p1, SegmenterPosition& p2, const char*
 
 SegmenterImpl::~SegmenterImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of SegmenterImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1712,6 +1767,7 @@ SegmenterInstanceInterface* SegmenterImpl::createInstance( ) const
 
 StorageAlterMetaDataTableImpl::~StorageAlterMetaDataTableImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of StorageAlterMetaDataTableImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1802,6 +1858,7 @@ void StorageAlterMetaDataTableImpl::rollback( )
 
 StorageClientImpl::~StorageClientImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of StorageClientImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2045,7 +2102,7 @@ void StorageClientImpl::defineStoragePeerInterface( const StoragePeerInterface* 
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineStoragePeerInterface);
-		const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	msg.packBool( p2);
@@ -2092,6 +2149,7 @@ StorageDumpInterface* StorageClientImpl::createDump( ) const
 
 StorageDocumentImpl::~StorageDocumentImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of StorageDocumentImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2174,6 +2232,7 @@ void StorageDocumentImpl::done( )
 
 StorageDumpImpl::~StorageDumpImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of StorageDumpImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2202,6 +2261,7 @@ bool StorageDumpImpl::nextChunk( const char*& p1, std::size_t& p2)
 
 StorageImpl::~StorageImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of StorageImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2217,7 +2277,7 @@ StorageClientInterface* StorageImpl::createClient( const std::string& p1, Databa
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClient);
 	msg.packString( p1);
-		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
@@ -2236,7 +2296,7 @@ void StorageImpl::createStorage( const std::string& p1, DatabaseClientInterface*
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createStorage);
 	msg.packString( p1);
-		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -2249,7 +2309,7 @@ StorageAlterMetaDataTableInterface* StorageImpl::createAlterMetaDataTable( Datab
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createAlterMetaDataTable);
-		const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	unsigned int objId_0 = ctx()->newObjId();
@@ -2295,6 +2355,7 @@ const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) 
 
 StorageObjectBuilderImpl::~StorageObjectBuilderImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of StorageObjectBuilderImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2305,17 +2366,51 @@ StorageObjectBuilderImpl::~StorageObjectBuilderImpl()
 
 const StorageInterface* StorageObjectBuilderImpl::getStorage( ) const
 {
-	throw std::runtime_error("the method 'getStorage' is not implemented for RPC");
+	std::cerr << "calling method StorageObjectBuilderImpl::getStorage" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getStorage);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Storage;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	StorageImpl const_0( objId_0, ctx(), true);
+	const StorageInterface* p0 = (const StorageImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
 }
 
 const DatabaseInterface* StorageObjectBuilderImpl::getDatabase( const std::string& p1) const
 {
-	throw std::runtime_error("the method 'getDatabase' is not implemented for RPC");
+	std::cerr << "calling method StorageObjectBuilderImpl::getDatabase" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getDatabase);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Database;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	DatabaseImpl const_0( objId_0, ctx(), true);
+	const DatabaseInterface* p0 = (const DatabaseImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
 }
 
 const QueryProcessorInterface* StorageObjectBuilderImpl::getQueryProcessor( ) const
 {
-	throw std::runtime_error("the method 'getQueryProcessor' is not implemented for RPC");
+	std::cerr << "calling method StorageObjectBuilderImpl::getQueryProcessor" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getQueryProcessor);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_QueryProcessor;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	QueryProcessorImpl const_0( objId_0, ctx(), true);
+	const QueryProcessorInterface* p0 = (const QueryProcessorImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
 }
 
 StorageClientInterface* StorageObjectBuilderImpl::createStorageClient( const std::string& p1) const
@@ -2368,6 +2463,7 @@ QueryEvalInterface* StorageObjectBuilderImpl::createQueryEval( ) const
 
 StoragePeerImpl::~StoragePeerImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of StoragePeerImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2393,6 +2489,7 @@ StoragePeerTransactionInterface* StoragePeerImpl::createTransaction( ) const
 
 StoragePeerTransactionImpl::~StoragePeerTransactionImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of StoragePeerTransactionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2458,6 +2555,7 @@ void StoragePeerTransactionImpl::rollback( )
 
 StorageTransactionImpl::~StorageTransactionImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of StorageTransactionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2528,10 +2626,29 @@ void StorageTransactionImpl::rollback( )
 
 SummarizerClosureImpl::~SummarizerClosureImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of SummarizerClosureImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void SummarizerClosureImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3)
+{
+	std::cerr << "calling method SummarizerClosureImpl::addSummarizationFeature" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addSummarizationFeature);
+	msg.packString( p1);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	msg.packObject( impl_2->classId(), impl_2->objId());
+	msg.packSize( p3.size());
+	for (unsigned int ii=0; ii < p3.size(); ++ii) {
+		msg.packSummarizationVariable( p3[ii]);
+	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 }
@@ -2557,9 +2674,10 @@ std::vector<SummarizerClosureInterface::SummaryElement> SummarizerClosureImpl::g
 	return p0;
 }
 
-SummarizerFunctionImpl::~SummarizerFunctionImpl()
+SummarizerFunctionInstanceImpl::~SummarizerFunctionInstanceImpl()
 {
-	std::cerr << "calling destructor of SummarizerFunctionImpl" << std::endl;
+	if (isConst()) return;
+	std::cerr << "calling destructor of SummarizerFunctionInstanceImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2567,78 +2685,45 @@ SummarizerFunctionImpl::~SummarizerFunctionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-const char** SummarizerFunctionImpl::numericParameterNames( ) const
+void SummarizerFunctionInstanceImpl::addStringParameter( const std::string& p1, const std::string& p2)
 {
-	std::cerr << "calling method SummarizerFunctionImpl::numericParameterNames" << std::endl;
+	std::cerr << "calling method SummarizerFunctionInstanceImpl::addStringParameter" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_numericParameterNames);
+	msg.packByte( Method_addStringParameter);
+	msg.packString( p1);
+	msg.packString( p2);
 	msg.packCrc32();
-	enter();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	const char** p0 = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
-	return p0;
+	ctx()->rpc_sendMessage( msg.content());
 }
 
-const char** SummarizerFunctionImpl::textualParameterNames( ) const
+void SummarizerFunctionInstanceImpl::addNumericParameter( const std::string& p1, const ArithmeticVariant& p2)
 {
-	std::cerr << "calling method SummarizerFunctionImpl::textualParameterNames" << std::endl;
+	std::cerr << "calling method SummarizerFunctionInstanceImpl::addNumericParameter" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_textualParameterNames);
+	msg.packByte( Method_addNumericParameter);
+	msg.packString( p1);
+	msg.packArithmeticVariant( p2);
 	msg.packCrc32();
-	enter();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	const char** p0 = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
-	return p0;
+	ctx()->rpc_sendMessage( msg.content());
 }
 
-const char** SummarizerFunctionImpl::featureParameterClassNames( ) const
+SummarizerClosureInterface* SummarizerFunctionInstanceImpl::createClosure( const StorageClientInterface* p1, const QueryProcessorInterface* p2, MetaDataReaderInterface* p3) const
 {
-	std::cerr << "calling method SummarizerFunctionImpl::featureParameterClassNames" << std::endl;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_featureParameterClassNames);
-	msg.packCrc32();
-	enter();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	const char** p0 = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
-	return p0;
-}
-
-SummarizerClosureInterface* SummarizerFunctionImpl::createClosure( const StorageClientInterface* p1, const QueryProcessorInterface* p2, MetaDataReaderInterface* p3, const std::vector<SummarizerFunctionInterface::FeatureParameter>& p4, const std::vector<std::string>& p5, const std::vector<ArithmeticVariant>& p6) const
-{
-	std::cerr << "calling method SummarizerFunctionImpl::createClosure" << std::endl;
+	std::cerr << "calling method SummarizerFunctionInstanceImpl::createClosure" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClosure);
-		const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_1->classId(), impl_1->objId());
-		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
-		const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
+	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
 	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_3->classId(), impl_3->objId());
-	msg.packSize( p4.size());
-	for (unsigned int ii=0; ii < p4.size(); ++ii) {
-		msg.packFeatureParameter( p4[ii]);
-	}
-	msg.packSize( p5.size());
-	for (unsigned int ii=0; ii < p5.size(); ++ii) {
-		msg.packString( p5[ii]);
-	}
-	msg.packSize( p6.size());
-	for (unsigned int ii=0; ii < p6.size(); ++ii) {
-		msg.packArithmeticVariant( p6[ii]);
-	}
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_SummarizerClosure;
 	msg.packObject( classId_0, objId_0);
@@ -2648,8 +2733,50 @@ SummarizerClosureInterface* SummarizerFunctionImpl::createClosure( const Storage
 	return p0;
 }
 
+std::string SummarizerFunctionInstanceImpl::tostring( ) const
+{
+	std::cerr << "calling method SummarizerFunctionInstanceImpl::tostring" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_tostring);
+	msg.packCrc32();
+	enter();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+}
+
+SummarizerFunctionImpl::~SummarizerFunctionImpl()
+{
+	if (isConst()) return;
+	std::cerr << "calling destructor of SummarizerFunctionImpl" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+SummarizerFunctionInstanceInterface* SummarizerFunctionImpl::createInstance( ) const
+{
+	std::cerr << "calling method SummarizerFunctionImpl::createInstance" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createInstance);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_SummarizerFunctionInstance;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	SummarizerFunctionInstanceInterface* p0 = new SummarizerFunctionInstanceImpl( objId_0, ctx());
+	return p0;
+}
+
 TextProcessorImpl::~TextProcessorImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of TextProcessorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2687,12 +2814,36 @@ std::string TextProcessorImpl::getResourcePath( const std::string& p1) const
 
 const TokenizerConstructorInterface* TextProcessorImpl::getTokenizer( const std::string& p1) const
 {
-	throw std::runtime_error("the method 'getTokenizer' is not implemented for RPC");
+	std::cerr << "calling method TextProcessorImpl::getTokenizer" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getTokenizer);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_TokenizerConstructor;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	TokenizerConstructorImpl const_0( objId_0, ctx(), true);
+	const TokenizerConstructorInterface* p0 = (const TokenizerConstructorImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
 }
 
 const NormalizerConstructorInterface* TextProcessorImpl::getNormalizer( const std::string& p1) const
 {
-	throw std::runtime_error("the method 'getNormalizer' is not implemented for RPC");
+	std::cerr << "calling method TextProcessorImpl::getNormalizer" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getNormalizer);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_NormalizerConstructor;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	NormalizerConstructorImpl const_0( objId_0, ctx(), true);
+	const NormalizerConstructorInterface* p0 = (const NormalizerConstructorImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
 }
 
 void TextProcessorImpl::defineTokenizer( const std::string& p1, const TokenizerConstructorInterface* p2)
@@ -2702,7 +2853,7 @@ void TextProcessorImpl::defineTokenizer( const std::string& p1, const TokenizerC
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineTokenizer);
 	msg.packString( p1);
-		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -2716,7 +2867,7 @@ void TextProcessorImpl::defineNormalizer( const std::string& p1, const Normalize
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineNormalizer);
 	msg.packString( p1);
-		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
@@ -2725,6 +2876,7 @@ void TextProcessorImpl::defineNormalizer( const std::string& p1, const Normalize
 
 TokenizerConstructorImpl::~TokenizerConstructorImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of TokenizerConstructorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2743,7 +2895,7 @@ TokenizerInterface* TokenizerConstructorImpl::create( const std::vector<std::str
 	for (unsigned int ii=0; ii < p1.size(); ++ii) {
 		msg.packString( p1[ii]);
 	}
-		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
@@ -2757,6 +2909,7 @@ TokenizerInterface* TokenizerConstructorImpl::create( const std::vector<std::str
 
 TokenizerInstanceImpl::~TokenizerInstanceImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of TokenizerInstanceImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2788,6 +2941,7 @@ std::vector<analyzer::Token> TokenizerInstanceImpl::tokenize( const char* p1, st
 
 TokenizerImpl::~TokenizerImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of TokenizerImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2828,6 +2982,7 @@ TokenizerInstanceInterface* TokenizerImpl::createInstance( ) const
 
 WeightingClosureImpl::~WeightingClosureImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of WeightingClosureImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2852,8 +3007,83 @@ float WeightingClosureImpl::call( const Index& p1)
 	return p0;
 }
 
+WeightingFunctionInstanceImpl::~WeightingFunctionInstanceImpl()
+{
+	if (isConst()) return;
+	std::cerr << "calling destructor of WeightingFunctionInstanceImpl" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void WeightingFunctionInstanceImpl::addStringParameter( const std::string& p1, const std::string& p2)
+{
+	std::cerr << "calling method WeightingFunctionInstanceImpl::addStringParameter" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addStringParameter);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void WeightingFunctionInstanceImpl::addNumericParameter( const std::string& p1, const ArithmeticVariant& p2)
+{
+	std::cerr << "calling method WeightingFunctionInstanceImpl::addNumericParameter" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addNumericParameter);
+	msg.packString( p1);
+	msg.packArithmeticVariant( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+WeightingClosureInterface* WeightingFunctionInstanceImpl::createClosure( const StorageClientInterface* p1, PostingIteratorInterface* p2, MetaDataReaderInterface* p3) const
+{
+	std::cerr << "calling method WeightingFunctionInstanceImpl::createClosure" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createClosure);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	msg.packObject( impl_1->classId(), impl_1->objId());
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	msg.packObject( impl_2->classId(), impl_2->objId());
+	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
+	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	msg.packObject( impl_3->classId(), impl_3->objId());
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_WeightingClosure;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	WeightingClosureInterface* p0 = new WeightingClosureImpl( objId_0, ctx());
+	return p0;
+}
+
+std::string WeightingFunctionInstanceImpl::tostring( ) const
+{
+	std::cerr << "calling method WeightingFunctionInstanceImpl::tostring" << std::endl;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_tostring);
+	msg.packCrc32();
+	enter();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+}
+
 WeightingFunctionImpl::~WeightingFunctionImpl()
 {
+	if (isConst()) return;
 	std::cerr << "calling destructor of WeightingFunctionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2862,46 +3092,18 @@ WeightingFunctionImpl::~WeightingFunctionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-const char** WeightingFunctionImpl::numericParameterNames( ) const
+WeightingFunctionInstanceInterface* WeightingFunctionImpl::createInstance( ) const
 {
-	std::cerr << "calling method WeightingFunctionImpl::numericParameterNames" << std::endl;
+	std::cerr << "calling method WeightingFunctionImpl::createInstance" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_numericParameterNames);
-	msg.packCrc32();
-	enter();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	const char** p0 = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
-	return p0;
-}
-
-WeightingClosureInterface* WeightingFunctionImpl::createClosure( const StorageClientInterface* p1, PostingIteratorInterface* p2, MetaDataReaderInterface* p3, const std::vector<ArithmeticVariant>& p4) const
-{
-	std::cerr << "calling method WeightingFunctionImpl::createClosure" << std::endl;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createClosure);
-		const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
-	msg.packObject( impl_1->classId(), impl_1->objId());
-		const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
-	msg.packObject( impl_2->classId(), impl_2->objId());
-		const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
-	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call");
-	msg.packObject( impl_3->classId(), impl_3->objId());
-	msg.packSize( p4.size());
-	for (unsigned int ii=0; ii < p4.size(); ++ii) {
-		msg.packArithmeticVariant( p4[ii]);
-	}
+	msg.packByte( Method_createInstance);
 	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_WeightingClosure;
+	unsigned char classId_0 = (unsigned char)ClassId_WeightingFunctionInstance;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	WeightingClosureInterface* p0 = new WeightingClosureImpl( objId_0, ctx());
+	WeightingFunctionInstanceInterface* p0 = new WeightingFunctionInstanceImpl( objId_0, ctx());
 	return p0;
 }
 

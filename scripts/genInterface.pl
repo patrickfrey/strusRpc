@@ -144,16 +144,8 @@ $syncMethods{"commit"} = 1;
 # List of methods that are not implemented for RPC:
 my %notImplMethods = ();
 $notImplMethods{"checkStorage"} = 1;           # ...ostream reference input cannot be handled
-$notImplMethods{"getPostingJoinOperator"} = 1; # ...const Object return can not be handled
-$notImplMethods{"getSummarizerFunction"} = 1;  # ...const Object return can not be handled
-$notImplMethods{"getWeightingFunction"} = 1;   # ...const Object return can not be handled
-$notImplMethods{"subExpressions"} = 1;         # ...vector of const Object return can not be handled
-$notImplMethods{"getNormalizer"} = 1;          # ...const Object return can not be handled
-$notImplMethods{"getTokenizer"} = 1;           # ...const Object return can not be handled
-$notImplMethods{"getTextProcessor"} = 1;       # ...const Object return can not be handled
-$notImplMethods{"getStorage"} = 1;             # ...const Object return can not be handled
-$notImplMethods{"getQueryProcessor"} = 1;      # ...const Object return can not be handled
-$notImplMethods{"getDatabase"} = 1;            # ...const Object return can not be handled
+$notImplMethods{"subExpressions"} = 1;         # ...vector of const object return can not be handled
+$notImplMethods{"createResultIterator"} = 1;   # ...vector of object references as passed argument can not be handled
 
 # List of methods that pass interface params with ownership:
 my %passOwnershipParams = ();
@@ -414,6 +406,13 @@ foreach $inputfile( @inputfiles)
 }
 @interfaceClasses = sort @interfaceClasses;
 
+sub mapIndent
+{
+	my ($indentstr, $src) = @_;
+	$src =~ s/\n/\n$indentstr/g;
+	return $src;
+}
+
 sub printParsedDump
 {
 	my $ic;
@@ -617,13 +616,20 @@ sub packParameter
 		$idx =~ s/[^0-9]//g;
 		if ($serverSide)
 		{
-			$rt .= "\tdefineObject( classId_$idx, objId_$idx, $id);\n";
+			if ($isconst)
+			{
+				$rt .= "defineConstObject( classId_$idx, objId_$idx, $id);\n";
+			}
+			else
+			{
+				$rt .= "defineObject( classId_$idx, objId_$idx, $id);\n";
+			}
 		}
 		else
 		{
-			$rt .= "\tconst RpcInterfaceStub* impl_$idx = dynamic_cast<const RpcInterfaceStub*>($id);\n";
-			$rt .= "\tif (!impl_$idx) throw std::runtime_error( \"passing non RPC interface object in RPC call\");\n";
-			$rt .= "\tmsg.packObject( impl_" . $idx . "->classId(), impl_" . $idx . "->objId());";
+			$rt .= "const RpcInterfaceStub* impl_$idx = dynamic_cast<const RpcInterfaceStub*>($id);\n";
+			$rt .= "if (!impl_$idx) throw std::runtime_error( \"passing non RPC interface object in RPC call\");\n";
+			$rt .= "msg.packObject( impl_" . $idx . "->classId(), impl_" . $idx . "->objId());";
 		}
 	}
 	elsif ($type eq "ArithmeticVariant")
@@ -721,9 +727,9 @@ sub packParameter
 	{
 		$rt .= "msg.packCompareOperator( " . $id . ");";
 	}
-	elsif ($type eq "SummarizerFunctionInterface::FeatureParameter")
+	elsif ($type eq "SummarizationVariable")
 	{
-		$rt .= "msg.packFeatureParameter( " . $id . ");";
+		$rt .= "msg.packSummarizationVariable( " . $id . ");";
 	}
 	elsif ($type eq "SummarizerClosureInterface::SummaryElement")
 	{
@@ -781,12 +787,27 @@ sub unpackParameter
 			$rt .= "unsigned char classId_$idx; unsigned int objId_$idx;\n";
 			$rt .= "serializedMsg.unpackObject( classId_$idx, objId_$idx);\n";
 			$rt .= "if (classId_$idx != " . getInterfaceEnumName( $type) .") throw std::runtime_error(\"error in RPC serialzed message: output parameter object type mismatch\");\n";
-			$rt .= "$id = getObject<$type>( classId_$idx, objId_$idx);";
+			if ($isconst)
+			{
+				$rt .= "$id = getConstObject<$type>( classId_$idx, objId_$idx);";
+			}
+			else
+			{
+				$rt .= "$id = getObject<$type>( classId_$idx, objId_$idx);";
+			}
 		}
 		else
 		{
 			my $implname = interfaceImplementationClassName( $type);
-			$rt .= "$id = new $implname( objId_$idx, ctx());";
+			if ($isconst)
+			{
+				$rt .= "$implname const_$idx( objId_$idx, ctx(), true);\n";
+				$rt .= "$id = (const $implname*)constConstructor()->getLongLiving( &const_$idx, sizeof(const_$idx));";
+			}
+			else
+			{
+				$rt .= "$id = new $implname( objId_$idx, ctx());";
+			}
 		}
 	}
 	elsif ($type eq "ArithmeticVariant")
@@ -905,25 +926,15 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackCompareOperator();";
 	}
-	elsif ($type eq "SummarizerFunctionInterface::FeatureParameter")
+	elsif ($type eq "SummarizationVariable")
 	{
 		if ($serverSide)
 		{
-			$rt .= "\tunsigned int featclass_$idx = serializedMsg.unpackUint();\n";
-			$rt .= "\tunsigned char piclassId_$idx; unsigned int piobjId_$idx;\n";
-			$rt .= "\tserializedMsg.unpackObject( piclassId_$idx, piobjId_$idx);\n";
-			$rt .= "\tPostingIteratorInterface* pos_$idx = getObject<PostingIteratorInterface>( piclassId_$idx, piobjId_$idx);\n";
-			$rt .= "\tstd::size_t vi_$idx=0,ve_$idx = serializedMsg.unpackSize();\n";
-			$rt .= "\tstd::vector<SummarizationVariable> vars_$idx;\n";
-			$rt .= "\tfor (; vi_$idx != ve_$idx; ++vi_$idx)\n";
-			$rt .= "\t{\n";
-			$rt .= "\t\tstd::string varname = serializedMsg.unpackString();\n";
-			$rt .= "\tunsigned char viclassId_$idx; unsigned int viobjId_$idx;\n";
-			$rt .= "\tserializedMsg.unpackObject( viclassId_$idx, viobjId_$idx);\n";
-			$rt .= "\t\tPostingIteratorInterface* varpos = getObject<PostingIteratorInterface>( viclassId_$idx, viobjId_$idx);\n";
-			$rt .= "\t\tvars_$idx.push_back( SummarizationVariable( varname, varpos));\n";
-			$rt .= "\t}\n";
-			$rt .= "\t$id = SummarizerFunctionInterface::FeatureParameter( featclass_$idx, SummarizationFeature( pos_$idx, vars_$idx));\n";
+			$rt .= "std::string varname_$idx = serializedMsg.unpackString();\n";
+			$rt .= "unsigned char viclassId_$idx; unsigned int viobjId_$idx;\n";
+			$rt .= "serializedMsg.unpackObject( viclassId_$idx, viobjId_$idx);\n";
+			$rt .= "PostingIteratorInterface* varpos_$idx = getObject<PostingIteratorInterface>( viclassId_$idx, viobjId_$idx);\n";
+			$rt .= "$id = SummarizationVariable( varname_$idx, varpos_$idx);\n";
 		}
 		else
 		{
@@ -943,7 +954,7 @@ sub unpackParameter
 		else
 		{
 			$rt .= "DatabaseCursorInterface::Slice slice$idx = serializedMsg.unpackSlice();\n";
-			$rt .= "\t$id = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice$idx" . ".ptr(), slice$idx" . ".size()), slice$idx" . ".size());";
+			$rt .= "$id = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice$idx" . ".ptr(), slice$idx" . ".size()), slice$idx" . ".size());";
 		}
 	}
 	elsif ($type eq "analyzer::Document")
@@ -1006,27 +1017,18 @@ sub inputParameterPackFunctionCall
 		$sender_code .= "\tfor (unsigned int ii=0; ii < p$idx" . ".size(); ++ii) {\n";
 		if ($isreference)
 		{
-			$sender_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii].get()", $isconst, $indirection+1, 0) . "\n";
+			$sender_code .= "\t\t" . mapIndent( "\t\t", packParameter( $paramtype, "p$idx" . "[ii].get()", $isconst, $indirection+1, 0)) . "\n";
 		}
 		else
 		{
-			$sender_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii]", $isconst, $indirection, 0) . "\n";
+			$sender_code .= "\t\t" . mapIndent( "\t\t", packParameter( $paramtype, "p$idx" . "[ii]", $isconst, $indirection, 0)) . "\n";
 		}
 		$sender_code .= "\t}\n";
 
 		$receiver_code .= "\tstd::size_t n$idx = serializedMsg.unpackSize();\n";
 		$receiver_code .= "\tfor (std::size_t ii=0; ii < n$idx; ++ii) {\n";
-		my $indirection_prefix = "";
-		my $ii;
-		for ($ii=0; $ii<$indirection; ++$ii)
-		{
-			$indirection_prefix .= "*";
-		}
-		if ($isreference)
-		{
-			$indirection_prefix .= "*";
-		}
-		$receiver_code .= "\t\t" . unpackParameter( $paramtype, "$paramtype$indirection_prefix ee", $isconst, $indirection, 1) . "\n";
+		my $paramtype_decl = getVariableTypeSource( $paramtype, 0, 0, $indirection, 0, $isreference);
+		$receiver_code .= "\t\t" . mapIndent( "\t\t", unpackParameter( $paramtype, "$paramtype_decl ee", 0, $indirection, 1)) . "\n";
 		$receiver_code .= "\t\tp$idx" . ".push_back( ee);\n";
 		$receiver_code .= "\t}\n";
 	}
@@ -1034,15 +1036,15 @@ sub inputParameterPackFunctionCall
 	{
 		if ($isreference)
 		{
-			$sender_code .= "\t" . packParameter( $paramtype, "p$idx.get()", $isconst, $indirection, 0) . "\n";
+			$sender_code .= "\t" . mapIndent( "\t", packParameter( $paramtype, "p$idx.get()", $isconst, $indirection, 0)) . "\n";
 
-			$receiver_code .= "\t" . unpackParameter( $paramtype, "$paramtype* e$idx", $isconst, $indirection+1, 1) . "\n";
+			$receiver_code .= "\t" . mapIndent( "\t", unpackParameter( $paramtype, "$paramtype* e$idx", $isconst, $indirection+1, 1)) . "\n";
 			$receiver_code .= "p$idx = Reference<$paramtype>( e$idx);\n";
 		}
 		else
 		{
-			$sender_code .= "\t" . packParameter( $paramtype, "p$idx", $isconst, $indirection, 0) . "\n";
-			$receiver_code .= "\t" . unpackParameter( $paramtype, "p$idx", $isconst, $indirection, 1) . "\n";
+			$sender_code .= "\t" . mapIndent( "\t", packParameter( $paramtype, "p$idx", $isconst, $indirection, 0)) . "\n";
+			$receiver_code .= "\t" . mapIndent( "\t", unpackParameter( $paramtype, "p$idx", $isconst, $indirection, 1)) . "\n";
 		}
 	}
 	return ($sender_code,$receiver_code);
@@ -1062,7 +1064,7 @@ sub outputParameterPackFunctionCall
 		{
 			$sender_code .= "\tstd::size_t n$idx = serializedMsg.unpackSize();\n";
 			$sender_code .= "\tfor (unsigned int ii=0; ii < n$idx; ++ii) {\n";
-			$sender_code .= "\t\t" . unpackParameter( $paramtype, "$paramtype elem_p$idx", $isconst, $indirection+1, 0) . ";\n";
+			$sender_code .= "\t\t" . mapIndent( "\t\t", unpackParameter( $paramtype, "$paramtype elem_p$idx", $isconst, $indirection+1, 0)) . ";\n";
 			$sender_code .= "\t\tp$idx.push_back( elem_p$idx);\n";
 			$sender_code .= "\n\t}\n";
 
@@ -1070,18 +1072,18 @@ sub outputParameterPackFunctionCall
 			$receiver_code .= "\tfor (unsigned int ii=0; ii < p$idx" . ".size(); ++ii) {\n";
 			if ($isreference)
 			{
-				$receiver_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii].get()", $isconst, $indirection+1, 1) . "\n\t}\n";
+				$receiver_code .= "\t\t" . mapIndent( "\t\t", packParameter( $paramtype, "p$idx" . "[ii].get()", $isconst, $indirection+1, 1)) . "\n\t}\n";
 			}
 			else
 			{
-				$receiver_code .= "\t\t" . packParameter( $paramtype, "p$idx" . "[ii]", $isconst, $indirection, 1) . "\n\t}\n";
+				$receiver_code .= "\t\t" . mapIndent( "\t\t", packParameter( $paramtype, "p$idx" . "[ii]", $isconst, $indirection, 1)) . "\n\t}\n";
 			}
 		}
 		else
 		{
-			$sender_code .= "\t" . unpackParameter( $paramtype, "p$idx", $isconst, $indirection, 0) . "\n";
+			$sender_code .= "\t" . mapIndent( "\t", unpackParameter( $paramtype, "p$idx", $isconst, $indirection, 0)) . "\n";
 
-			$receiver_code .= "\t" . packParameter( $paramtype, "p$idx", $isconst, $indirection, 1) . "\n";
+			$receiver_code .= "\t" . mapIndent( "\t", packParameter( $paramtype, "p$idx", $isconst, $indirection, 1)) . "\n";
 		}
 	}
 	return ($sender_code,$receiver_code);
@@ -1126,6 +1128,7 @@ sub getMethodDeclarationSource
 	{
 		$sender_code .= "\tthrow std::runtime_error(\"the method '$methodname' is not implemented for RPC\");\n";
 
+		$receiver_code .= "\t(void)(obj);\n";
 		$receiver_code .= "\tmsg.packByte( MsgTypeException_RuntimeError);\n";
 		$receiver_code .= "\tmsg.packString( \"the method '$methodname' is not implemented for RPC\");\n";
 		$receiver_code .= "\treturn msg.content();\n";
@@ -1191,7 +1194,7 @@ sub getMethodDeclarationSource
 			{
 				# The object id's of the return type Interface are created by the client
 				my $objtype = $1;
-				if ($indirection == 1 && $isconst == 0)
+				if ($indirection == 1)
 				{
 					$sender_code .= "\tunsigned int objId_0 = ctx()->newObjId();\n";
 					$sender_code .= "\tunsigned char classId_0 = (unsigned char)ClassId_$objtype;\n";
@@ -1238,10 +1241,17 @@ sub getMethodDeclarationSource
 			my ($retvaltype, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $retval);
 			if ($retvaltype =~ m/Interface$/)
 			{
-				if ($indirection == 1 && $isconst == 0)
+				if ($indirection == 1)
 				{
-					$sender_output .= "\t" . unpackParameter( $retvaltype, "$retvaltype* p0", 0, $indirection, 0) . "\n";
-					$receiver_output .= packParameter( $retvaltype, "p0", 0, $indirection, 1) . "\n";
+					if ($isconst)
+					{
+						$sender_output .= "\t" . mapIndent( "\t", unpackParameter( $retvaltype, "const $retvaltype* p0", $isconst, $indirection, 0)) . "\n";
+					}
+					else
+					{
+						$sender_output .= "\t" . mapIndent( "\t", unpackParameter( $retvaltype, "$retvaltype* p0", $isconst, $indirection, 0)) . "\n";
+					}
+					$receiver_output .= "\t" . mapIndent( "\t", packParameter( $retvaltype, "p0", $isconst, $indirection, 1)) . "\n";
 				}
 				else
 				{
@@ -1253,13 +1263,13 @@ sub getMethodDeclarationSource
 				$sender_output .= "\tstd::vector<$retvaltype> p0;\n";
 				$sender_output .= "\tstd::size_t n0 = serializedMsg.unpackSize();\n";
 				$sender_output .= "\tfor (std::size_t ii=0; ii < n0; ++ii) {\n";
-				$sender_output .= "\t\t" . unpackParameter( $retvaltype, "$retvaltype elem_p0", $isconst, $indirection, 0) . "\n";
+				$sender_output .= "\t\t" . mapIndent( "\t\t", unpackParameter( $retvaltype, "$retvaltype elem_p0", $isconst, $indirection, 0)) . "\n";
 				$sender_output .= "\t\tp0.push_back( elem_p0);\n";
 				$sender_output .= "\t}\n";
 
 				$receiver_output .= "\tmsg.packSize( p0.size());\n";
 				$receiver_output .= "\tfor (std::size_t ii=0; ii < p0.size(); ++ii) {\n";
-				$receiver_output .= "\t\t" . packParameter( $retvaltype, "p0[ii]", $isconst, $indirection, 1) . "\n";
+				$receiver_output .= "\t\t" . mapIndent( "\t\t", packParameter( $retvaltype, "p0[ii]", $isconst, $indirection, 1)) . "\n";
 				$receiver_output .= "\t}\n";
 
 				$retvaltype = "std::vector<$retvaltype>";
@@ -1267,8 +1277,8 @@ sub getMethodDeclarationSource
 			else
 			{
 				my $retvaltype_decl = getVariableTypeSource($retvaltype, $isconst, $isarray, $indirection, 0, $isreference);
-				$sender_output .= "\t" . unpackParameter( $retvaltype, "$retvaltype_decl p0", $isconst, $indirection, 0) . ";\n";
-				$receiver_output .= "\t" . packParameter( $retvaltype, "p0", $isconst, $indirection, 1) . "\n";
+				$sender_output .= "\t" . mapIndent( "\t", unpackParameter( $retvaltype, "$retvaltype_decl p0", $isconst, $indirection, 0)) . ";\n";
+				$receiver_output .= "\t" . mapIndent( "\t", packParameter( $retvaltype, "p0", $isconst, $indirection, 1)) . "\n";
 			}
 		}
 		$pi = 0;
@@ -1374,7 +1384,7 @@ sub getClassHeaderSource
 		my @mth = split('%');
 		shift( @mth);
 		$rt .= "\n\tvirtual ~$classname();\n";
-		$rt .= "\n\t$classname( unsigned int objId_, const RpcClientContext* ctx_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, ctx_){}\n";
+		$rt .= "\n\t$classname( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, ctx_, isConst_){}\n";
 		my $mm;
 		foreach $mm( @mth)
 		{
@@ -1407,6 +1417,7 @@ sub getClassImplementationSource
 
 		$sender_code .= "\n$classname" . "::~$classname()\n";
 		$sender_code .= "{\n";
+		$sender_code .= "\tif (isConst()) return;\n";
 		if ($doGenerateDebugCode)
 		{
 			$sender_code .= "\tstd::cerr << \"calling destructor of $classname\" << std::endl;\n";
@@ -1425,7 +1436,12 @@ sub getClassImplementationSource
 		$receiver_code .= "\t{\n";
 		$receiver_code .= "\t\tcase $classenumname" . "::Method_Destructor:\n";
 		$receiver_code .= "\t\t{\n";
+		if ($doGenerateDebugCode)
+		{
+			$receiver_code .= "\t\t\tstd::cerr << \"called destructor of $classname\" << std::endl;\n";
+		}
 		$receiver_code .= "\t\t\tdeleteObject( classId, objId);\n";
+		$receiver_code .= "\t\t\treturn std::string();\n";
 		$receiver_code .= "\t\t}\n";
 		my @mth = split('%');
 		shift( @mth);
@@ -1441,10 +1457,13 @@ sub getClassImplementationSource
 			$methodname =~ s/^const //;
 			$receiver_code .= "\t\tcase $classenumname" . "::Method_" . $methodname . ":\n";
 			$receiver_code .= "\t\t{\n";
+			if ($doGenerateDebugCode)
+			{
+				$receiver_code .= "\t\t\tstd::cerr << \"called method $classname" . "::" . "$methodname [\" << serializedMsg.size() << \" bytes]\" << std::endl;\n";
+			}
 			$rcv =~ s/\n$//;
 			$rcv =~ s/\n/\n\t\t/g;
 			$receiver_code .= "\t\t\t$rcv\n";
-			$receiver_code .= "\t\t\tbreak;\n";
 			$receiver_code .= "\t\t}\n";
 		}
 		++$ii;
@@ -1506,7 +1525,7 @@ close HDRFILE;
 
 
 
-my $interfacefile = "src/objects_gen.hpp";
+$interfacefile = "src/objects_gen.hpp";
 open( HDRFILE, ">$interfacefile") or die "Couldn't open file $interfacefile, $!";
 
 print HDRFILE <<EOF;
@@ -1652,7 +1671,7 @@ print SRCFILE <<EOF;
 #include <string>
 
 using namespace strus;
-DLL_PUBLIC std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsize)
+std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsize)
 {
 EOF
 

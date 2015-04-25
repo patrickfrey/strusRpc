@@ -71,11 +71,20 @@ public:
 	{
 		defineObjectPtr( classId_, objId_, obj_, &RpcObjDeleter<Interface>::call);
 	}
-
+	template <class Interface>
+	void defineConstObject( unsigned char classId_, unsigned int objId_, const Interface* obj_)
+	{
+		defineConstObjectPtr( classId_, objId_, obj_);
+	}
 	template <class Interface>
 	Interface* getObject( unsigned char classId_, unsigned int objId_) const
 	{
 		return (Interface*)getObjectPtr( classId_, objId_);
+	}
+	template <class Interface>
+	const Interface* getConstObject( unsigned char classId_, unsigned int objId_) const
+	{
+		return (const Interface*)getConstObjectPtr( classId_, objId_);
 	}
 
 	void deleteObject( unsigned char classId_, unsigned int objId_);
@@ -85,8 +94,10 @@ public:
 private:
 	typedef void (*ObjDeleter)( void* objptr);
 
+	void defineConstObjectPtr( unsigned char classId_, unsigned int objId_, const void* obj_);
 	void defineObjectPtr( unsigned char classId_, unsigned int objId_, void* obj_, ObjDeleter deleter_);
 	void* getObjectPtr( unsigned char classId_, unsigned int objId_) const;
+	const void* getConstObjectPtr( unsigned char classId_, unsigned int objId_) const;
 
 	struct ObjKey
 	{
@@ -99,8 +110,8 @@ private:
 
 		bool operator<( const ObjKey& o) const
 		{
-			if (classId != classId) return (classId < classId);
-			if (objId != objId) return (objId < objId);
+			if (classId != o.classId) return (classId < o.classId);
+			if (objId != o.objId) return (objId < o.objId);
 			return false;
 		}
 

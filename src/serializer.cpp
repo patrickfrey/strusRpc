@@ -151,13 +151,20 @@ void RpcSerializer::packCharp( const char* buf)
 
 void RpcSerializer::packCharpp( const char** buf)
 {
-	char const** bi = buf;
-	for (; *bi; ++bi){}
-	packSize( bi - buf);
-	const char** be = bi;
-	for (bi = buf; bi != be; ++bi)
+	if (buf)
 	{
-		packCharp( *bi);
+		char const** bi = buf;
+		for (; *bi; ++bi){}
+		packSize( bi - buf);
+		const char** be = bi;
+		for (bi = buf; bi != be; ++bi)
+		{
+			packCharp( *bi);
+		}
+	}
+	else
+	{
+		packSize( 0);
 	}
 }
 
@@ -281,14 +288,14 @@ void RpcSerializer::packSummarizerConfig( const SummarizerConfig& val)
 		packArithmeticVariant( ni->second);
 	}
 	std::map<std::string,std::string>::const_iterator
-		ti = val.textualParameters().begin(), te = val.textualParameters().end();
-	packSize( val.textualParameters().size());
+		ti = val.stringParameters().begin(), te = val.stringParameters().end();
+	packSize( val.stringParameters().size());
 	for (; ti != te; ++ti)
 	{
 		packString( ti->first);
 		packString( ti->second);
 	}
-	std::map<std::string,std::string>::const_iterator
+	std::vector<std::pair<std::string,std::string> >::const_iterator
 		fi = val.featureParameters().begin(), fe = val.featureParameters().end();
 	packSize( val.featureParameters().size());
 	for (; fi != fe; ++fi)
@@ -321,23 +328,12 @@ void RpcSerializer::packCompareOperator( const QueryInterface::CompareOperator& 
 	packByte( (unsigned char)val);
 }
 
-void RpcSerializer::packFeatureParameter( const SummarizerFunctionInterface::FeatureParameter& val)
+void RpcSerializer::packSummarizationVariable( const SummarizationVariable& val)
 {
-	packUint( val.classidx());
-	const RpcInterfaceStub* obj = dynamic_cast<const RpcInterfaceStub*>( val.feature().postingIterator());
-	if (!obj) throw std::runtime_error( "passing non RPC interface object in RPC call");
-	packObject( obj->classId(), obj->objId());
-	packSize( val.feature().variables().size());
-	std::vector<SummarizationVariable>::const_iterator
-		vi = val.feature().variables().begin(),
-		ve = val.feature().variables().end();
-	for (; vi != ve; ++vi)
-	{
-		packString( vi->name());
-		const RpcInterfaceStub* so = dynamic_cast<const RpcInterfaceStub*>( vi->itr());
-		if (!so) throw std::runtime_error( "passing non RPC interface object in RPC call");
-		packObject( so->classId(), so->objId());
-	}
+	packString( val.name());
+	const RpcInterfaceStub* so = dynamic_cast<const RpcInterfaceStub*>( val.itr());
+	if (!so) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	packObject( so->classId(), so->objId());
 }
 
 void RpcSerializer::packSlice( DatabaseCursorInterface::Slice& val)
@@ -440,7 +436,10 @@ std::string RpcDeserializer::unpackString()
 {
 	std::string rt;
 	uint32_t size = unpackScalar<uint32_t>( m_itr, m_end);
-	if (m_itr+size > m_end) throw std::runtime_error( "message to small to encode next string");
+	if (m_itr+size > m_end)
+	{
+		throw std::runtime_error( "message to small to encode next string");
+	}
 	rt.append( m_itr, size);
 	m_itr += size;
 	return rt;
@@ -462,11 +461,12 @@ const char** RpcDeserializer::unpackConstCharpp()
 {
 	std::size_t ii=0,size = unpackSize();
 	m_charpp_buf.clear();
-	m_charpp_buf.reserve( size);
+	m_charpp_buf.reserve( size+1);
 	for (; ii<size; ++ii)
 	{
 		m_charpp_buf.push_back( unpackConstCharp());
 	}
+	m_charpp_buf.push_back( 0);
 	return (const char**)m_charpp_buf.data();
 }
 
@@ -588,24 +588,27 @@ SummarizerConfig RpcDeserializer::unpackSummarizerConfig()
 		std::size_t ii=0,size = unpackSize();
 		for (; ii<size; ++ii)
 		{
-			rt.defineNumericParameter( 
-				unpackString(), unpackArithmeticVariant());
+			std::string pname = unpackString();
+			ArithmeticVariant pvalue = unpackArithmeticVariant();
+			rt.defineNumericParameter( pname, pvalue);
 		}
 	}
 	{
 		std::size_t ii=0,size = unpackSize();
 		for (; ii<size; ++ii)
 		{
-			rt.defineTextualParameter( 
-				unpackString(), unpackString());
+			std::string pname = unpackString();
+			std::string pvalue = unpackString();
+			rt.defineStringParameter( pname, pvalue);
 		}
 	}
 	{
 		std::size_t ii=0,size = unpackSize();
 		for (; ii<size; ++ii)
 		{
-			rt.defineFeatureParameter( 
-				unpackString(), unpackString());
+			std::string pname = unpackString();
+			std::string pvalue = unpackString();
+			rt.addFeatureParameter( pname, pvalue);
 		}
 	}
 	return rt;
@@ -613,7 +616,9 @@ SummarizerConfig RpcDeserializer::unpackSummarizerConfig()
 
 SummarizerClosureInterface::SummaryElement RpcDeserializer::unpackSummaryElement()
 {
-	return SummarizerClosureInterface::SummaryElement( unpackString(), unpackFloat());
+	std::string pname = unpackString();
+	float pvalue = unpackFloat();
+	return SummarizerClosureInterface::SummaryElement( pname, pvalue);
 }
 
 WeightingConfig RpcDeserializer::unpackWeightingConfig()
@@ -623,8 +628,9 @@ WeightingConfig RpcDeserializer::unpackWeightingConfig()
 		std::size_t ii=0,size = unpackSize();
 		for (; ii<size; ++ii)
 		{
-			rt.defineNumericParameter( 
-				unpackString(), unpackArithmeticVariant());
+			std::string pname = unpackString();
+			ArithmeticVariant pvalue = unpackArithmeticVariant();
+			rt.defineNumericParameter( pname, pvalue);
 		}
 	}
 	return rt;
@@ -651,46 +657,68 @@ analyzer::Document RpcDeserializer::unpackAnalyzerDocument()
 	std::size_t ii=0,size=unpackSize();
 	for (; ii<size; ++ii)
 	{
-		rt.setAttribute( unpackString(), unpackString());
+		std::string name = unpackString();
+		std::string value = unpackString();
+		rt.setAttribute( name, value);
 	}
 	for (ii=0,size=unpackSize(); ii<size; ++ii)
 	{
-		rt.setMetaData( unpackString(), unpackString());
+		std::string name = unpackString();
+		std::string value = unpackString();
+		rt.setMetaData( name, value);
 	}
 	for (ii=0,size=unpackSize(); ii<size; ++ii)
 	{
-		rt.addSearchIndexTerm( unpackString(), unpackString(), unpackUint());
+		std::string type = unpackString();
+		std::string value = unpackString();
+		unsigned int pos = unpackUint();
+		rt.addSearchIndexTerm( type, value, pos);
 	}
 	for (ii=0,size=unpackSize(); ii<size; ++ii)
 	{
-		rt.addForwardIndexTerm( unpackString(), unpackString(), unpackUint());
+		std::string type = unpackString();
+		std::string value = unpackString();
+		unsigned int pos = unpackUint();
+		rt.addForwardIndexTerm( type, value, pos);
 	}
 	return rt;
 }
 
 analyzer::Attribute RpcDeserializer::unpackAnalyzerAttribute()
 {
-	return analyzer::Attribute( unpackString(), unpackString());
+	std::string name = unpackString();
+	std::string value = unpackString();
+	return analyzer::Attribute( name, value);
 }
 
 analyzer::MetaData RpcDeserializer::unpackAnalyzerMetaData()
 {
-	return analyzer::MetaData( unpackString(), unpackString());
+	std::string name = unpackString();
+	std::string value = unpackString();
+	return analyzer::MetaData( name, value);
 }
 
 analyzer::Term RpcDeserializer::unpackAnalyzerTerm()
 {
-	return analyzer::Term( unpackString(), unpackString(), unpackUint());
+	std::string type = unpackString();
+	std::string value = unpackString();
+	unsigned int pos = unpackUint();
+	return analyzer::Term( type, value, pos);
 }
 
 analyzer::Token RpcDeserializer::unpackAnalyzerToken()
 {
-	return analyzer::Token( unpackUint(), unpackUint(), unpackUint());
+	unsigned int docpos = unpackUint();
+	unsigned int strpos = unpackUint();
+	unsigned int strsize = unpackUint();
+	return analyzer::Token( docpos, strpos, strsize);
 }
 
 WeightedDocument RpcDeserializer::unpackWeightedDocument()
 {
-	return WeightedDocument( unpackIndex(), unpackFloat());
+	Index docno = unpackIndex();
+	float weight = unpackFloat();
+	return WeightedDocument( docno, weight);
 }
 
 ResultDocument RpcDeserializer::unpackResultDocument()
@@ -699,7 +727,10 @@ ResultDocument RpcDeserializer::unpackResultDocument()
 	std::size_t ii=0,size=unpackSize();
 	for (; ii<size; ++ii)
 	{
-		rt.addAttribute( unpackString(), unpackString(), unpackFloat());
+		std::string name = unpackString();
+		std::string value = unpackString();
+		float weight = unpackFloat();
+		rt.addAttribute( name, value, weight);
 	}
 	return rt;
 }

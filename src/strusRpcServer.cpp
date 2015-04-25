@@ -52,7 +52,7 @@
 #include <errno.h>
 #include <signal.h>
 
-#define STRUS_LOWLEVEL_DEBUG
+#undef STRUS_LOWLEVEL_DEBUG
 
 static void printUsage()
 {

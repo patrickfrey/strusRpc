@@ -40,7 +40,7 @@
 
 using namespace strus;
 
-#define STRUS_LOWLEVEL_DEBUG
+#undef STRUS_LOWLEVEL_DEBUG
 #define DEFAULT_PORT "7181"
 
 struct ServiceAddress

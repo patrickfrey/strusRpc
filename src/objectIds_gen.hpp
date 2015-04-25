@@ -68,12 +68,14 @@ enum ClassId
 	ClassId_StoragePeerTransaction,
 	ClassId_StorageTransaction,
 	ClassId_SummarizerClosure,
+	ClassId_SummarizerFunctionInstance,
 	ClassId_SummarizerFunction,
 	ClassId_TextProcessor,
 	ClassId_TokenizerConstructor,
 	ClassId_TokenizerInstance,
 	ClassId_Tokenizer,
 	ClassId_WeightingClosure,
+	ClassId_WeightingFunctionInstance,
 	ClassId_WeightingFunction
 };
 
@@ -545,7 +547,21 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_addSummarizationFeature,
 		Method_getSummary
+	};
+};
+
+class SummarizerFunctionInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addStringParameter,
+		Method_addNumericParameter,
+		Method_createClosure,
+		Method_tostring
 	};
 };
 
@@ -555,10 +571,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_numericParameterNames,
-		Method_textualParameterNames,
-		Method_featureParameterClassNames,
-		Method_createClosure
+		Method_createInstance
 	};
 };
 
@@ -618,14 +631,26 @@ public:
 	};
 };
 
+class WeightingFunctionInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addStringParameter,
+		Method_addNumericParameter,
+		Method_createClosure,
+		Method_tostring
+	};
+};
+
 class WeightingFunctionConst
 {
 public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_numericParameterNames,
-		Method_createClosure
+		Method_createInstance
 	};
 };
 } //namespace

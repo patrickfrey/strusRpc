@@ -39,7 +39,7 @@ class RpcInterfaceStub
 public:
 	virtual ~RpcInterfaceStub(){}
 
-	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcClientContext* ctx_);
+	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false);
 	RpcInterfaceStub( const RpcInterfaceStub& o);
 	RpcInterfaceStub();
 
@@ -50,12 +50,14 @@ public:
 	const ConstConstructor* constConstructor() const		{return &m_constConstructor;}
 
 	const RpcClientContext* ctx() const				{return m_ctx;}
+	bool isConst() const						{return m_isConst;}
 
 private:
 	unsigned char m_classId;
 	unsigned int m_objId;
 	const RpcClientContext* m_ctx;
 	ConstConstructor m_constConstructor;
+	bool m_isConst;
 };
 
 }//namespace
