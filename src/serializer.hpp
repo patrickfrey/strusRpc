@@ -38,13 +38,10 @@
 #include "strus/databaseInterface.hpp"
 #include "strus/databaseCursorInterface.hpp"
 #include "strus/storageInterface.hpp"
-#include "strus/tokenizerConfig.hpp"
-#include "strus/normalizerConfig.hpp"
-#include "strus/summarizerConfig.hpp"
 #include "strus/summarizerFunctionInterface.hpp"
-#include "strus/summarizerClosureInterface.hpp"
-#include "strus/weightingConfig.hpp"
+#include "strus/summarizerExecutionContextInterface.hpp"
 #include "strus/queryInterface.hpp"
+#include "strus/queryEvalInterface.hpp"
 #include "strus/weightedDocument.hpp"
 #include "strus/resultDocument.hpp"
 #include "strus/analyzer/token.hpp"
@@ -82,12 +79,8 @@ public:
 	void packDatabaseOptions( const DatabaseOptions& val);
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
 	void packStorageConfigType( const StorageInterface::ConfigType& val);
-	void packTokenizerConfig( const TokenizerConfig& val);
-	void packNormalizerConfig( const NormalizerConfig& val);
 	void packFeatureOptions( const DocumentAnalyzerInterface::FeatureOptions& val);
-	void packSummarizerConfig( const SummarizerConfig& val);
-	void packSummaryElement( const SummarizerClosureInterface::SummaryElement& val);
-	void packWeightingConfig( const WeightingConfig& val);
+	void packSummaryElement( const SummarizerExecutionContextInterface::SummaryElement& val);
 	void packCompareOperator( const QueryInterface::CompareOperator& val);
 	void packSummarizationVariable( const SummarizationVariable& val);
 	void packSlice( DatabaseCursorInterface::Slice& val);
@@ -98,7 +91,7 @@ public:
 	void packAnalyzerToken( const analyzer::Token& val);
 	void packWeightedDocument( const WeightedDocument& val);
 	void packResultDocument( const ResultDocument& val);
-	
+	void packSummarizerFeatureParameter( const QueryEvalInterface::SummarizerFeatureParameter& val);
 	void packCrc32();
 
 	const std::string& content() const
@@ -144,12 +137,8 @@ public:
 	DatabaseOptions unpackDatabaseOptions();
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();
 	StorageInterface::ConfigType unpackStorageConfigType();
-	TokenizerConfig unpackTokenizerConfig();
-	NormalizerConfig unpackNormalizerConfig();
 	DocumentAnalyzerInterface::FeatureOptions unpackFeatureOptions();
-	SummarizerConfig unpackSummarizerConfig();
-	SummarizerClosureInterface::SummaryElement unpackSummaryElement();
-	WeightingConfig unpackWeightingConfig();
+	SummarizerExecutionContextInterface::SummaryElement unpackSummaryElement();
 	QueryInterface::CompareOperator unpackCompareOperator();
 	DatabaseCursorInterface::Slice unpackSlice();
 	analyzer::Document unpackAnalyzerDocument();
@@ -159,6 +148,7 @@ public:
 	analyzer::Token unpackAnalyzerToken();
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();
+	QueryEvalInterface::SummarizerFeatureParameter unpackSummarizerFeatureParameter();
 	bool unpackCrc32();
 
 	std::size_t position() const

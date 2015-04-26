@@ -246,81 +246,15 @@ void RpcSerializer::packStorageConfigType( const StorageInterface::ConfigType& v
 	packByte( (unsigned char)val);
 }
 
-void RpcSerializer::packTokenizerConfig( const TokenizerConfig& val)
-{
-	packString( val.name());
-	packSize( val.arguments().size());
-	std::vector<std::string>::const_iterator
-		ai = val.arguments().begin(),
-		ae = val.arguments().end();
-	for (; ai != ae; ++ai)
-	{
-		packString( *ai);
-	}
-}
-
-void RpcSerializer::packNormalizerConfig( const NormalizerConfig& val)
-{
-	packString( val.name());
-	packSize( val.arguments().size());
-	std::vector<std::string>::const_iterator
-		ai = val.arguments().begin(),
-		ae = val.arguments().end();
-	for (; ai != ae; ++ai)
-	{
-		packString( *ai);
-	}
-}
-
 void RpcSerializer::packFeatureOptions( const DocumentAnalyzerInterface::FeatureOptions& val)
 {
 	packUint( val.opt());
 }
 
-void RpcSerializer::packSummarizerConfig( const SummarizerConfig& val)
-{
-	std::map<std::string,ArithmeticVariant>::const_iterator
-		ni = val.numericParameters().begin(), ne = val.numericParameters().end();
-	packSize( val.numericParameters().size());
-	for (; ni != ne; ++ni)
-	{
-		packString( ni->first);
-		packArithmeticVariant( ni->second);
-	}
-	std::map<std::string,std::string>::const_iterator
-		ti = val.stringParameters().begin(), te = val.stringParameters().end();
-	packSize( val.stringParameters().size());
-	for (; ti != te; ++ti)
-	{
-		packString( ti->first);
-		packString( ti->second);
-	}
-	std::vector<std::pair<std::string,std::string> >::const_iterator
-		fi = val.featureParameters().begin(), fe = val.featureParameters().end();
-	packSize( val.featureParameters().size());
-	for (; fi != fe; ++fi)
-	{
-		packString( fi->first);
-		packString( fi->second);
-	}
-}
-
-void RpcSerializer::packSummaryElement( const SummarizerClosureInterface::SummaryElement& val)
+void RpcSerializer::packSummaryElement( const SummarizerExecutionContextInterface::SummaryElement& val)
 {
 	packString( val.text());
 	packFloat( val.weight());
-}
-
-void RpcSerializer::packWeightingConfig( const WeightingConfig& val)
-{
-	std::map<std::string,ArithmeticVariant>::const_iterator
-		ni = val.numericParameters().begin(), ne = val.numericParameters().end();
-	packSize( val.numericParameters().size());
-	for (; ni != ne; ++ni)
-	{
-		packString( ni->first);
-		packArithmeticVariant( ni->second);
-	}
 }
 
 void RpcSerializer::packCompareOperator( const QueryInterface::CompareOperator& val)
@@ -414,6 +348,12 @@ void RpcSerializer::packResultDocument( const ResultDocument& val)
 		packString( ai->value());
 		packFloat( ai->weight());
 	}
+}
+
+void RpcSerializer::packSummarizerFeatureParameter( const QueryEvalInterface::SummarizerFeatureParameter& val)
+{
+	packString( val.parameterName());
+	packString( val.featureSet());
 }
 
 void RpcSerializer::packCrc32()
@@ -552,88 +492,16 @@ StorageInterface::ConfigType RpcDeserializer::unpackStorageConfigType()
 	return StorageInterface::ConfigType( unpackByte());
 }
 
-TokenizerConfig RpcDeserializer::unpackTokenizerConfig()
-{
-	std::string name = unpackString();
-	std::size_t ii=0,size = unpackSize();
-	std::vector<std::string> arguments;
-	for (; ii<size; ++ii)
-	{
-		arguments.push_back( unpackString());
-	}
-	return TokenizerConfig( name, arguments);
-}
-
-NormalizerConfig RpcDeserializer::unpackNormalizerConfig()
-{
-	std::string name = unpackString();
-	std::size_t ii=0,size = unpackSize();
-	std::vector<std::string> arguments;
-	for (; ii<size; ++ii)
-	{
-		arguments.push_back( unpackString());
-	}
-	return NormalizerConfig( name, arguments);
-}
-
 DocumentAnalyzerInterface::FeatureOptions RpcDeserializer::unpackFeatureOptions()
 {
 	return DocumentAnalyzerInterface::FeatureOptions( unpackUint());
 }
 
-SummarizerConfig RpcDeserializer::unpackSummarizerConfig()
-{
-	SummarizerConfig rt;
-	{
-		std::size_t ii=0,size = unpackSize();
-		for (; ii<size; ++ii)
-		{
-			std::string pname = unpackString();
-			ArithmeticVariant pvalue = unpackArithmeticVariant();
-			rt.defineNumericParameter( pname, pvalue);
-		}
-	}
-	{
-		std::size_t ii=0,size = unpackSize();
-		for (; ii<size; ++ii)
-		{
-			std::string pname = unpackString();
-			std::string pvalue = unpackString();
-			rt.defineStringParameter( pname, pvalue);
-		}
-	}
-	{
-		std::size_t ii=0,size = unpackSize();
-		for (; ii<size; ++ii)
-		{
-			std::string pname = unpackString();
-			std::string pvalue = unpackString();
-			rt.addFeatureParameter( pname, pvalue);
-		}
-	}
-	return rt;
-}
-
-SummarizerClosureInterface::SummaryElement RpcDeserializer::unpackSummaryElement()
+SummarizerExecutionContextInterface::SummaryElement RpcDeserializer::unpackSummaryElement()
 {
 	std::string pname = unpackString();
 	float pvalue = unpackFloat();
-	return SummarizerClosureInterface::SummaryElement( pname, pvalue);
-}
-
-WeightingConfig RpcDeserializer::unpackWeightingConfig()
-{
-	WeightingConfig rt;
-	{
-		std::size_t ii=0,size = unpackSize();
-		for (; ii<size; ++ii)
-		{
-			std::string pname = unpackString();
-			ArithmeticVariant pvalue = unpackArithmeticVariant();
-			rt.defineNumericParameter( pname, pvalue);
-		}
-	}
-	return rt;
+	return SummarizerExecutionContextInterface::SummaryElement( pname, pvalue);
 }
 
 QueryInterface::CompareOperator RpcDeserializer::unpackCompareOperator()
@@ -734,4 +602,12 @@ ResultDocument RpcDeserializer::unpackResultDocument()
 	}
 	return rt;
 }
+
+QueryEvalInterface::SummarizerFeatureParameter RpcDeserializer::unpackSummarizerFeatureParameter()
+{
+	std::string parameterName = unpackString();
+	std::string featureSet = unpackString();
+	return QueryEvalInterface::SummarizerFeatureParameter( parameterName, featureSet);
+}
+
 

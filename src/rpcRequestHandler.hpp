@@ -87,6 +87,17 @@ public:
 		return (const Interface*)getConstObjectPtr( classId_, objId_);
 	}
 
+	void markObjectToRelease( unsigned char classId_, unsigned int objId_)
+	{
+		m_objsMarkedToRelease.push_back( ObjKey( classId_, objId_));
+	}
+
+	void releaseObjectsMarked();
+	void unmarkObjectsToRelease()
+	{
+		m_objsMarkedToRelease.clear();
+	}
+
 	void deleteObject( unsigned char classId_, unsigned int objId_);
 	void releaseObject( unsigned char classId_, unsigned int objId_);
 	void clear();
@@ -134,6 +145,7 @@ private:
 
 	typedef std::map<ObjKey,Object> ObjMap;
 	ObjMap m_objmap;
+	std::vector<ObjKey> m_objsMarkedToRelease;
 };
 }
 #endif

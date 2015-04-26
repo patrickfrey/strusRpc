@@ -142,6 +142,19 @@ void RpcRequestHandler::releaseObject( unsigned char classId_, unsigned int objI
 	m_objmap.erase( objkey);
 }
 
+void RpcRequestHandler::releaseObjectsMarked()
+{
+	std::vector<ObjKey>::const_iterator ri = m_objsMarkedToRelease.begin(), re = m_objsMarkedToRelease.end();
+	for (; ri != re; ++ri)
+	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "release object classid=" << (unsigned int)ri->classId << " objid=" << ri->objId << std::endl;
+#endif
+		m_objmap.erase( *ri);
+	}
+	m_objsMarkedToRelease.clear();
+}
+
 void RpcRequestHandler::clear()
 {
 	ObjMap::iterator oi = m_objmap.begin(), oe = m_objmap.end();

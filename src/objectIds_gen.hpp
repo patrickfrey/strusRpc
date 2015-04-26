@@ -46,9 +46,9 @@ enum ClassId
 	ClassId_ForwardIterator,
 	ClassId_InvAclIterator,
 	ClassId_MetaDataReader,
-	ClassId_NormalizerConstructor,
-	ClassId_NormalizerInstance,
-	ClassId_Normalizer,
+	ClassId_NormalizerExecutionContext,
+	ClassId_NormalizerFunctionInstance,
+	ClassId_NormalizerFunction,
 	ClassId_PeerStorageTransaction,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
@@ -67,14 +67,14 @@ enum ClassId
 	ClassId_StoragePeer,
 	ClassId_StoragePeerTransaction,
 	ClassId_StorageTransaction,
-	ClassId_SummarizerClosure,
+	ClassId_SummarizerExecutionContext,
 	ClassId_SummarizerFunctionInstance,
 	ClassId_SummarizerFunction,
 	ClassId_TextProcessor,
-	ClassId_TokenizerConstructor,
-	ClassId_TokenizerInstance,
-	ClassId_Tokenizer,
-	ClassId_WeightingClosure,
+	ClassId_TokenizerExecutionContext,
+	ClassId_TokenizerFunctionInstance,
+	ClassId_TokenizerFunction,
+	ClassId_WeightingExecutionContext,
 	ClassId_WeightingFunctionInstance,
 	ClassId_WeightingFunction
 };
@@ -252,17 +252,7 @@ public:
 	};
 };
 
-class NormalizerConstructorConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_create
-	};
-};
-
-class NormalizerInstanceConst
+class NormalizerExecutionContextConst
 {
 public:
 	enum MethodId
@@ -272,7 +262,17 @@ public:
 	};
 };
 
-class NormalizerConst
+class NormalizerFunctionInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createExecutionContext
+	};
+};
+
+class NormalizerFunctionConst
 {
 public:
 	enum MethodId
@@ -342,7 +342,7 @@ public:
 		Method_addTerm,
 		Method_addSelectionFeature,
 		Method_addRestrictionFeature,
-		Method_addSummarizer,
+		Method_addSummarizerFunction,
 		Method_addWeightingFunction,
 		Method_createQuery
 	};
@@ -541,7 +541,7 @@ public:
 	};
 };
 
-class SummarizerClosureConst
+class SummarizerExecutionContextConst
 {
 public:
 	enum MethodId
@@ -560,7 +560,7 @@ public:
 		Method_Destructor,
 		Method_addStringParameter,
 		Method_addNumericParameter,
-		Method_createClosure,
+		Method_createExecutionContext,
 		Method_tostring
 	};
 };
@@ -590,17 +590,7 @@ public:
 	};
 };
 
-class TokenizerConstructorConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_create
-	};
-};
-
-class TokenizerInstanceConst
+class TokenizerExecutionContextConst
 {
 public:
 	enum MethodId
@@ -610,18 +600,28 @@ public:
 	};
 };
 
-class TokenizerConst
+class TokenizerFunctionInstanceConst
 {
 public:
 	enum MethodId
 	{
 		Method_Destructor,
 		Method_concatBeforeTokenize,
+		Method_createExecutionContext
+	};
+};
+
+class TokenizerFunctionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
 		Method_createInstance
 	};
 };
 
-class WeightingClosureConst
+class WeightingExecutionContextConst
 {
 public:
 	enum MethodId
@@ -639,7 +639,7 @@ public:
 		Method_Destructor,
 		Method_addStringParameter,
 		Method_addNumericParameter,
-		Method_createClosure,
+		Method_createExecutionContext,
 		Method_tostring
 	};
 };

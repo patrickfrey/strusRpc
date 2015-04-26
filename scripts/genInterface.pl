@@ -154,12 +154,19 @@ $passOwnershipParams{"defineWeightingFunction"} = 1;
 $passOwnershipParams{"defineSummarizerFunction"} = 1;
 $passOwnershipParams{"createClient"} = 1;
 $passOwnershipParams{"createAlterMetaDataTable"} = 1;
+$passOwnershipParams{"addSearchIndexFeature"} = 1;
+$passOwnershipParams{"addForwardIndexFeature"} = 1;
+$passOwnershipParams{"defineMetaData"} = 1;
+$passOwnershipParams{"defineAttribute"} = 1;
+$passOwnershipParams{"addWeightingFunction"} = 1;
+$passOwnershipParams{"addSummarizerFunction"} = 1;
+$passOwnershipParams{"definePhraseType"} = 1;
 
 # List of hacks (client code inserted at the beginning of a method call):
 my %alternativeClientImpl = ();
 $alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx());\n";
 
-my $doGenerateDebugCode = 1;
+my $doGenerateDebugCode = 0;
 
 sub parseType
 {
@@ -609,6 +616,11 @@ sub packParameter
 {
 	my ($type, $id, $isconst, $indirection, $serverSide) = @_;
 	my $rt = "";
+	if ($type =~ m/^(.*)[\*]/)
+	{
+		$indirection += 1;
+		$type = $1;
+	}
 	if ($type =~ m/(.*)Interface$/)
 	{
 		my $objtype = $1;
@@ -699,14 +711,6 @@ sub packParameter
 	{
 		$rt .= "msg.packStorageConfigType( " . $id . ");";
 	}
-	elsif ($type eq "TokenizerConfig")
-	{
-		$rt .= "msg.packTokenizerConfig( " . $id . ");";
-	}
-	elsif ($type eq "NormalizerConfig")
-	{
-		$rt .= "msg.packNormalizerConfig( " . $id . ");";
-	}
 	elsif ($type eq "SegmenterPosition")
 	{
 		$rt .= "msg.packGlobalCounter( " . $id . ");";
@@ -714,14 +718,6 @@ sub packParameter
 	elsif ($type eq "DocumentAnalyzerInterface::FeatureOptions")
 	{
 		$rt .= "msg.packFeatureOptions( " . $id . ");";
-	}
-	elsif ($type eq "SummarizerConfig")
-	{
-		$rt .= "msg.packSummarizerConfig( " . $id . ");";
-	}
-	elsif ($type eq "WeightingConfig")
-	{
-		$rt .= "msg.packWeightingConfig( " . $id . ");";
 	}
 	elsif ($type eq "QueryInterface::CompareOperator")
 	{
@@ -731,7 +727,7 @@ sub packParameter
 	{
 		$rt .= "msg.packSummarizationVariable( " . $id . ");";
 	}
-	elsif ($type eq "SummarizerClosureInterface::SummaryElement")
+	elsif ($type eq "SummarizerExecutionContextInterface::SummaryElement")
 	{
 		$rt .= "msg.packSummaryElement( " . $id . ");";
 	}
@@ -767,6 +763,10 @@ sub packParameter
 	{
 		$rt .= "msg.packResultDocument( " . $id . ");";
 	}
+	elsif ($type eq "QueryEvalInterface::SummarizerFeatureParameter")
+	{
+		$rt .= "msg.packSummarizerFeatureParameter( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -780,7 +780,12 @@ sub unpackParameter
 	my $idx = $id;
 	$idx =~ s/[^0-9]//g;
 	my $rt = "";
-	if ($type =~ m/(.*)Interface$/)
+	if ($type =~ m/^(.*)[\*]/)
+	{
+		$indirection += 1;
+		$type = $1;
+	}
+	if ($type =~ m/^(.*)Interface[\*]*$/)
 	{
 		if ($serverSide)
 		{
@@ -898,14 +903,6 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackStorageConfigType();";
 	}
-	elsif ($type eq "TokenizerConfig")
-	{
-		$rt .= "$id = serializedMsg.unpackTokenizerConfig();";
-	}
-	elsif ($type eq "NormalizerConfig")
-	{
-		$rt .= "$id = serializedMsg.unpackNormalizerConfig();";
-	}
 	elsif ($type eq "SegmenterPosition")
 	{
 		$rt .= "$id = serializedMsg.unpackGlobalCounter();";
@@ -913,14 +910,6 @@ sub unpackParameter
 	elsif ($type eq "DocumentAnalyzerInterface::FeatureOptions")
 	{
 		$rt .= "$id = serializedMsg.unpackFeatureOptions();";
-	}
-	elsif ($type eq "SummarizerConfig")
-	{
-		$rt .= "$id = serializedMsg.unpackSummarizerConfig();";
-	}
-	elsif ($type eq "WeightingConfig")
-	{
-		$rt .= "$id = serializedMsg.unpackWeightingConfig();";
 	}
 	elsif ($type eq "QueryInterface::CompareOperator")
 	{
@@ -941,7 +930,7 @@ sub unpackParameter
 			die "no deserialization defined for type \"$type\"";
 		}
 	}
-	elsif ($type eq "SummarizerClosureInterface::SummaryElement")
+	elsif ($type eq "SummarizerExecutionContextInterface::SummaryElement")
 	{
 		$rt .= "$id = serializedMsg.unpackSummaryElement();";
 	}
@@ -985,6 +974,10 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackResultDocument();";
 	}
+	elsif ($type eq "QueryEvalInterface::SummarizerFeatureParameter")
+	{
+		$rt .= "$id = serializedMsg.unpackSummarizerFeatureParameter();";
+	}
 	else
 	{
 		die "no deserialization defined for type \"$type\"";
@@ -995,7 +988,7 @@ sub unpackParameter
 sub inputParameterPackFunctionCall
 {
 	my ($sender_code,$receiver_code) = ("","");
-	my ($classname, $param, $idx) = @_;
+	my ($classname, $methodname, $param, $idx) = @_;
 	my ($paramtype, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $param);
 	if ($passbyref && ($isconst == 0 || $indirection > 0))
 	{
@@ -1030,6 +1023,13 @@ sub inputParameterPackFunctionCall
 		my $paramtype_decl = getVariableTypeSource( $paramtype, 0, 0, $indirection, 0, $isreference);
 		$receiver_code .= "\t\t" . mapIndent( "\t\t", unpackParameter( $paramtype, "$paramtype_decl ee", 0, $indirection, 1)) . "\n";
 		$receiver_code .= "\t\tp$idx" . ".push_back( ee);\n";
+		if ($passOwnershipParams{$methodname})
+		{
+			if ($paramtype =~ m/^(.*)Interface[\*]*$/)
+			{
+				$receiver_code .= "\t\tmarkObjectToRelease( classId_, objId_);\n";
+			}
+		}
 		$receiver_code .= "\t}\n";
 	}
 	else
@@ -1045,6 +1045,13 @@ sub inputParameterPackFunctionCall
 		{
 			$sender_code .= "\t" . mapIndent( "\t", packParameter( $paramtype, "p$idx", $isconst, $indirection, 0)) . "\n";
 			$receiver_code .= "\t" . mapIndent( "\t", unpackParameter( $paramtype, "p$idx", $isconst, $indirection, 1)) . "\n";
+			if ($passOwnershipParams{$methodname})
+			{
+				if ($paramtype =~ m/^(.*)Interface[\*]*$/)
+				{
+					$receiver_code .= "\tmarkObjectToRelease( classId_$idx, objId_$idx);\n";
+				}
+			}
 		}
 	}
 	return ($sender_code,$receiver_code);
@@ -1182,7 +1189,7 @@ sub getMethodDeclarationSource
 			}
 			else
 			{
-				my ($snd,$rcv) = inputParameterPackFunctionCall( $classname, $param[$pi], $pi+1);
+				my ($snd,$rcv) = inputParameterPackFunctionCall( $classname, $methodname, $param[$pi], $pi+1);
 				$sender_code .= $snd;
 				$receiver_code .= $rcv;
 			}
@@ -1212,24 +1219,30 @@ sub getMethodDeclarationSource
 		$receiver_code .= "\t\t$retvalassigner" . "obj->" . $methodname . "(" . $receiver_paramlist . ");\n";
 		if ($passOwnershipParams{$methodname})
 		{
-			for ($pi = 0; $pi <= $#param; ++$pi)
-			{
-				if ($param[$pi] =~ m/Interface$/)
-				{
-					$receiver_code .= "\t\treleaseObject( classId_" . ($pi+1) . ", objId_" . ($pi+1) . ");\n";
-				}
-			}
+			$receiver_code .= "\t\treleaseObjectsMarked();\n";
 		}
 		$receiver_code .= "\t\tmsg.packByte( MsgTypeAnswer);\n";
 		$receiver_code .= "\t} catch (const std::runtime_error& err) {\n";
+		if ($passOwnershipParams{$methodname})
+		{
+			$receiver_code .= "\t\tunmarkObjectsToRelease();\n";
+		}
 		$receiver_code .= "\t\tmsg.packByte( MsgTypeException_RuntimeError);\n";
 		$receiver_code .= "\t\tmsg.packString( err.what());\n";
 		$receiver_code .= "\t\treturn msg.content();\n";
 		$receiver_code .= "\t} catch (const std::bad_alloc& err) {\n";
+		if ($passOwnershipParams{$methodname})
+		{
+			$receiver_code .= "\t\tunmarkObjectsToRelease();\n";
+		}
 		$receiver_code .= "\t\tmsg.packByte( MsgTypeException_BadAlloc);\n";
 		$receiver_code .= "\t\tmsg.packString( \"memory allocation error\");\n";
 		$receiver_code .= "\t\treturn msg.content();\n";
 		$receiver_code .= "\t} catch (const std::logic_error& err) {\n";
+		if ($passOwnershipParams{$methodname})
+		{
+			$receiver_code .= "\t\tunmarkObjectsToRelease();\n";
+		}
 		$receiver_code .= "\t\tmsg.packByte( MsgTypeException_LogicError);\n";
 		$receiver_code .= "\t\tmsg.packString( err.what());\n";
 		$receiver_code .= "\t\treturn msg.content();\n";
@@ -1331,6 +1344,37 @@ sub getMethodDeclarationSource
 			$sender_code .= $sender_output;
 			$receiver_code .= $receiver_output;
 			$receiver_code .= "\treturn std::string();\n";
+		}
+		if ($passOwnershipParams{$methodname})
+		{
+			for ($pi = 0; $pi <= $#param; ++$pi)
+			{
+				my ($paramtype, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $param[ $pi]);
+				if ($paramtype =~ m/(.*)[\*]$/)
+				{
+					$paramtype = $1;
+					++$indirection;
+					$isconst = 0;
+					$passbyref = 0;
+				}
+				if ($paramtype =~ m/(.*)Interface$/)
+				{
+					if ($isconst == 0 && $indirection > 0 && $passbyref == 0)
+					{
+						my $pidx = $pi+1;
+						if ($isarray)
+						{
+							$sender_code .= "\tfor (std::size_t ai_$pidx=0; p$pidx.size(); ++ai_$pidx) {\n";
+							$sender_code .= "\t\tdelete p$pidx" . "[ai_$pidx];\n";
+							$sender_code .= "\t}\n";
+						}
+						else
+						{
+							$sender_code .= "\tdelete p$pidx;\n";
+						}
+					}
+				}
+			}
 		}
 		if ($retval ne "void")
 		{

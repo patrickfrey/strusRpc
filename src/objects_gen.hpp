@@ -33,16 +33,16 @@
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/documentAnalyzerInstanceInterface.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
-#include "strus/normalizerConstructorInterface.hpp"
-#include "strus/normalizerInstanceInterface.hpp"
-#include "strus/normalizerInterface.hpp"
+#include "strus/normalizerExecutionContextInterface.hpp"
+#include "strus/normalizerFunctionInstanceInterface.hpp"
+#include "strus/normalizerFunctionInterface.hpp"
 #include "strus/queryAnalyzerInterface.hpp"
 #include "strus/segmenterInstanceInterface.hpp"
 #include "strus/segmenterInterface.hpp"
 #include "strus/textProcessorInterface.hpp"
-#include "strus/tokenizerConstructorInterface.hpp"
-#include "strus/tokenizerInstanceInterface.hpp"
-#include "strus/tokenizerInterface.hpp"
+#include "strus/tokenizerExecutionContextInterface.hpp"
+#include "strus/tokenizerFunctionInstanceInterface.hpp"
+#include "strus/tokenizerFunctionInterface.hpp"
 #include "strus/attributeReaderInterface.hpp"
 #include "strus/databaseBackupCursorInterface.hpp"
 #include "strus/databaseClientInterface.hpp"
@@ -68,10 +68,10 @@
 #include "strus/storagePeerInterface.hpp"
 #include "strus/storagePeerTransactionInterface.hpp"
 #include "strus/storageTransactionInterface.hpp"
-#include "strus/summarizerClosureInterface.hpp"
+#include "strus/summarizerExecutionContextInterface.hpp"
 #include "strus/summarizerFunctionInstanceInterface.hpp"
 #include "strus/summarizerFunctionInterface.hpp"
-#include "strus/weightingClosureInterface.hpp"
+#include "strus/weightingExecutionContextInterface.hpp"
 #include "strus/weightingFunctionInstanceInterface.hpp"
 #include "strus/weightingFunctionInterface.hpp"
 
@@ -243,10 +243,10 @@ public:
 	DocumentAnalyzerImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzer, objId_, ctx_, isConst_){}
 
-	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
-	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
-	virtual void defineMetaData( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4);
-	virtual void defineAttribute( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4);
+	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
+	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
+	virtual void defineMetaData( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
+	virtual void defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void defineSubDocument( const std::string& p1, const std::string& p2);
 	virtual analyzer::Document analyze( const std::string& p1) const;
 	virtual DocumentAnalyzerInstanceInterface* createInstance( ) const;
@@ -302,46 +302,46 @@ public:
 	virtual const char* getName( const Index& p1) const;
 };
 
-class NormalizerConstructorImpl
+class NormalizerExecutionContextImpl
 		:public RpcInterfaceStub
-		,public strus::NormalizerConstructorInterface
-		,public strus::NormalizerConstructorConst
+		,public strus::NormalizerExecutionContextInterface
+		,public strus::NormalizerExecutionContextConst
 {
 public:
-	virtual ~NormalizerConstructorImpl();
+	virtual ~NormalizerExecutionContextImpl();
 
-	NormalizerConstructorImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerConstructor, objId_, ctx_, isConst_){}
-
-	virtual NormalizerInterface* create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
-};
-
-class NormalizerInstanceImpl
-		:public RpcInterfaceStub
-		,public strus::NormalizerInstanceInterface
-		,public strus::NormalizerInstanceConst
-{
-public:
-	virtual ~NormalizerInstanceImpl();
-
-	NormalizerInstanceImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerInstance, objId_, ctx_, isConst_){}
+	NormalizerExecutionContextImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerExecutionContext, objId_, ctx_, isConst_){}
 
 	virtual std::string normalize( const char* p1, std::size_t p2);
 };
 
-class NormalizerImpl
+class NormalizerFunctionInstanceImpl
 		:public RpcInterfaceStub
-		,public strus::NormalizerInterface
-		,public strus::NormalizerConst
+		,public strus::NormalizerFunctionInstanceInterface
+		,public strus::NormalizerFunctionInstanceConst
 {
 public:
-	virtual ~NormalizerImpl();
+	virtual ~NormalizerFunctionInstanceImpl();
 
-	NormalizerImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_Normalizer, objId_, ctx_, isConst_){}
+	NormalizerFunctionInstanceImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunctionInstance, objId_, ctx_, isConst_){}
 
-	virtual NormalizerInstanceInterface* createInstance( ) const;
+	virtual NormalizerExecutionContextInterface* createExecutionContext( ) const;
+};
+
+class NormalizerFunctionImpl
+		:public RpcInterfaceStub
+		,public strus::NormalizerFunctionInterface
+		,public strus::NormalizerFunctionConst
+{
+public:
+	virtual ~NormalizerFunctionImpl();
+
+	NormalizerFunctionImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunction, objId_, ctx_, isConst_){}
+
+	virtual NormalizerFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
 };
 
 class PeerStorageTransactionImpl
@@ -407,7 +407,7 @@ public:
 	QueryAnalyzerImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzer, objId_, ctx_, isConst_){}
 
-	virtual void definePhraseType( const std::string& p1, const std::string& p2, const TokenizerConfig& p3, const std::vector<NormalizerConfig>& p4);
+	virtual void definePhraseType( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual std::vector<analyzer::Term> analyzePhrase( const std::string& p1, const std::string& p2) const;
 };
 
@@ -425,8 +425,8 @@ public:
 	virtual void addTerm( const std::string& p1, const std::string& p2, const std::string& p3);
 	virtual void addSelectionFeature( const std::string& p1);
 	virtual void addRestrictionFeature( const std::string& p1);
-	virtual void addSummarizer( const std::string& p1, const std::string& p2, const SummarizerConfig& p3);
-	virtual void addWeightingFunction( const std::string& p1, const WeightingConfig& p2, const std::vector<std::string>& p3);
+	virtual void addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::SummarizerFeatureParameter>& p3, const std::string& p4);
+	virtual void addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<std::string>& p3);
 	virtual QueryInterface* createQuery( const StorageClientInterface* p1) const;
 };
 
@@ -675,19 +675,19 @@ public:
 	virtual void rollback( );
 };
 
-class SummarizerClosureImpl
+class SummarizerExecutionContextImpl
 		:public RpcInterfaceStub
-		,public strus::SummarizerClosureInterface
-		,public strus::SummarizerClosureConst
+		,public strus::SummarizerExecutionContextInterface
+		,public strus::SummarizerExecutionContextConst
 {
 public:
-	virtual ~SummarizerClosureImpl();
+	virtual ~SummarizerExecutionContextImpl();
 
-	SummarizerClosureImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerClosure, objId_, ctx_, isConst_){}
+	SummarizerExecutionContextImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerExecutionContext, objId_, ctx_, isConst_){}
 
 	virtual void addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3);
-	virtual std::vector<SummarizerClosureInterface::SummaryElement> getSummary( const Index& p1);
+	virtual std::vector<SummarizerExecutionContextInterface::SummaryElement> getSummary( const Index& p1);
 };
 
 class SummarizerFunctionInstanceImpl
@@ -703,7 +703,7 @@ public:
 
 	virtual void addStringParameter( const std::string& p1, const std::string& p2);
 	virtual void addNumericParameter( const std::string& p1, const ArithmeticVariant& p2);
-	virtual SummarizerClosureInterface* createClosure( const StorageClientInterface* p1, const QueryProcessorInterface* p2, MetaDataReaderInterface* p3) const;
+	virtual SummarizerExecutionContextInterface* createExecutionContext( const StorageClientInterface* p1, const QueryProcessorInterface* p2, MetaDataReaderInterface* p3) const;
 	virtual std::string tostring( ) const;
 };
 
@@ -734,65 +734,65 @@ public:
 
 	virtual void addResourcePath( const std::string& p1);
 	virtual std::string getResourcePath( const std::string& p1) const;
-	virtual const TokenizerConstructorInterface* getTokenizer( const std::string& p1) const;
-	virtual const NormalizerConstructorInterface* getNormalizer( const std::string& p1) const;
-	virtual void defineTokenizer( const std::string& p1, const TokenizerConstructorInterface* p2);
-	virtual void defineNormalizer( const std::string& p1, const NormalizerConstructorInterface* p2);
+	virtual const TokenizerFunctionInterface* getTokenizer( const std::string& p1) const;
+	virtual const NormalizerFunctionInterface* getNormalizer( const std::string& p1) const;
+	virtual void defineTokenizer( const std::string& p1, const TokenizerFunctionInterface* p2);
+	virtual void defineNormalizer( const std::string& p1, const NormalizerFunctionInterface* p2);
 };
 
-class TokenizerConstructorImpl
+class TokenizerExecutionContextImpl
 		:public RpcInterfaceStub
-		,public strus::TokenizerConstructorInterface
-		,public strus::TokenizerConstructorConst
+		,public strus::TokenizerExecutionContextInterface
+		,public strus::TokenizerExecutionContextConst
 {
 public:
-	virtual ~TokenizerConstructorImpl();
+	virtual ~TokenizerExecutionContextImpl();
 
-	TokenizerConstructorImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerConstructor, objId_, ctx_, isConst_){}
-
-	virtual TokenizerInterface* create( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
-};
-
-class TokenizerInstanceImpl
-		:public RpcInterfaceStub
-		,public strus::TokenizerInstanceInterface
-		,public strus::TokenizerInstanceConst
-{
-public:
-	virtual ~TokenizerInstanceImpl();
-
-	TokenizerInstanceImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerInstance, objId_, ctx_, isConst_){}
+	TokenizerExecutionContextImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerExecutionContext, objId_, ctx_, isConst_){}
 
 	virtual std::vector<analyzer::Token> tokenize( const char* p1, std::size_t p2);
 };
 
-class TokenizerImpl
+class TokenizerFunctionInstanceImpl
 		:public RpcInterfaceStub
-		,public strus::TokenizerInterface
-		,public strus::TokenizerConst
+		,public strus::TokenizerFunctionInstanceInterface
+		,public strus::TokenizerFunctionInstanceConst
 {
 public:
-	virtual ~TokenizerImpl();
+	virtual ~TokenizerFunctionInstanceImpl();
 
-	TokenizerImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_Tokenizer, objId_, ctx_, isConst_){}
+	TokenizerFunctionInstanceImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerFunctionInstance, objId_, ctx_, isConst_){}
 
 	virtual bool concatBeforeTokenize( ) const;
-	virtual TokenizerInstanceInterface* createInstance( ) const;
+	virtual TokenizerExecutionContextInterface* createExecutionContext( ) const;
 };
 
-class WeightingClosureImpl
+class TokenizerFunctionImpl
 		:public RpcInterfaceStub
-		,public strus::WeightingClosureInterface
-		,public strus::WeightingClosureConst
+		,public strus::TokenizerFunctionInterface
+		,public strus::TokenizerFunctionConst
 {
 public:
-	virtual ~WeightingClosureImpl();
+	virtual ~TokenizerFunctionImpl();
 
-	WeightingClosureImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_WeightingClosure, objId_, ctx_, isConst_){}
+	TokenizerFunctionImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerFunction, objId_, ctx_, isConst_){}
+
+	virtual TokenizerFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
+};
+
+class WeightingExecutionContextImpl
+		:public RpcInterfaceStub
+		,public strus::WeightingExecutionContextInterface
+		,public strus::WeightingExecutionContextConst
+{
+public:
+	virtual ~WeightingExecutionContextImpl();
+
+	WeightingExecutionContextImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_WeightingExecutionContext, objId_, ctx_, isConst_){}
 
 	virtual float call( const Index& p1);
 };
@@ -810,7 +810,7 @@ public:
 
 	virtual void addStringParameter( const std::string& p1, const std::string& p2);
 	virtual void addNumericParameter( const std::string& p1, const ArithmeticVariant& p2);
-	virtual WeightingClosureInterface* createClosure( const StorageClientInterface* p1, PostingIteratorInterface* p2, MetaDataReaderInterface* p3) const;
+	virtual WeightingExecutionContextInterface* createExecutionContext( const StorageClientInterface* p1, PostingIteratorInterface* p2, MetaDataReaderInterface* p3) const;
 	virtual std::string tostring( ) const;
 };
 
