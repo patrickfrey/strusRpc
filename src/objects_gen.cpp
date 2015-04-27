@@ -1403,12 +1403,14 @@ void QueryImpl::pushTerm( const std::string& p1, const std::string& p2)
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void QueryImpl::pushExpression( const std::string& p1, std::size_t p2, int p3)
+void QueryImpl::pushExpression( const PostingJoinOperatorInterface* p1, std::size_t p2, int p3)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushExpression);
-	msg.packString( p1);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	msg.packObject( impl_1->classId(), impl_1->objId());
 	msg.packSize( p2);
 	msg.packInt( p3);
 	msg.packCrc32();
@@ -2571,7 +2573,7 @@ void SummarizerFunctionInstanceImpl::addNumericParameter( const std::string& p1,
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-SummarizerExecutionContextInterface* SummarizerFunctionInstanceImpl::createExecutionContext( const StorageClientInterface* p1, const QueryProcessorInterface* p2, MetaDataReaderInterface* p3) const
+SummarizerExecutionContextInterface* SummarizerFunctionInstanceImpl::createExecutionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2582,9 +2584,6 @@ SummarizerExecutionContextInterface* SummarizerFunctionInstanceImpl::createExecu
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
-	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
-	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call");
-	msg.packObject( impl_3->classId(), impl_3->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_SummarizerExecutionContext;
 	msg.packObject( classId_0, objId_0);
@@ -2618,11 +2617,14 @@ SummarizerFunctionImpl::~SummarizerFunctionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-SummarizerFunctionInstanceInterface* SummarizerFunctionImpl::createInstance( ) const
+SummarizerFunctionInstanceInterface* SummarizerFunctionImpl::createInstance( const QueryProcessorInterface* p1) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	msg.packObject( impl_1->classId(), impl_1->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_SummarizerFunctionInstance;
 	msg.packObject( classId_0, objId_0);

@@ -442,7 +442,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_Query, objId_, ctx_, isConst_){}
 
 	virtual void pushTerm( const std::string& p1, const std::string& p2);
-	virtual void pushExpression( const std::string& p1, std::size_t p2, int p3);
+	virtual void pushExpression( const PostingJoinOperatorInterface* p1, std::size_t p2, int p3);
 	virtual void pushDuplicate( );
 	virtual void attachVariable( const std::string& p1);
 	virtual void defineFeature( const std::string& p1, float p2);
@@ -703,7 +703,7 @@ public:
 
 	virtual void addStringParameter( const std::string& p1, const std::string& p2);
 	virtual void addNumericParameter( const std::string& p1, const ArithmeticVariant& p2);
-	virtual SummarizerExecutionContextInterface* createExecutionContext( const StorageClientInterface* p1, const QueryProcessorInterface* p2, MetaDataReaderInterface* p3) const;
+	virtual SummarizerExecutionContextInterface* createExecutionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2) const;
 	virtual std::string tostring( ) const;
 };
 
@@ -718,7 +718,7 @@ public:
 	SummarizerFunctionImpl( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunction, objId_, ctx_, isConst_){}
 
-	virtual SummarizerFunctionInstanceInterface* createInstance( ) const;
+	virtual SummarizerFunctionInstanceInterface* createInstance( const QueryProcessorInterface* p1) const;
 };
 
 class TextProcessorImpl

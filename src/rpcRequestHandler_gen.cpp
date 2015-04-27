@@ -2506,10 +2506,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryConst::Method_pushExpression:
 		{
 			RpcSerializer msg;
-			std::string p1;
+			const PostingJoinOperatorInterface* p1;
 			std::size_t p2;
 			int p3;
-			p1 = serializedMsg.unpackString();
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_PostingJoinOperator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			p1 = getConstObject<PostingJoinOperatorInterface>( classId_1, objId_1);
 			p2 = serializedMsg.unpackSize();
 			p3 = serializedMsg.unpackInt();
 			try {
@@ -4752,24 +4755,19 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			SummarizerExecutionContextInterface* p0;
 			const StorageClientInterface* p1;
-			const QueryProcessorInterface* p2;
-			MetaDataReaderInterface* p3;
+			MetaDataReaderInterface* p2;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_StorageClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
 			p1 = getConstObject<StorageClientInterface>( classId_1, objId_1);
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_QueryProcessor) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-			p2 = getConstObject<QueryProcessorInterface>( classId_2, objId_2);
-			unsigned char classId_3; unsigned int objId_3;
-			serializedMsg.unpackObject( classId_3, objId_3);
-			if (classId_3 != ClassId_MetaDataReader) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-			p3 = getObject<MetaDataReaderInterface>( classId_3, objId_3);
+			if (classId_2 != ClassId_MetaDataReader) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			p2 = getObject<MetaDataReaderInterface>( classId_2, objId_2);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createExecutionContext(p1,p2,p3);
+				p0 = obj->createExecutionContext(p1,p2);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -4829,10 +4827,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			SummarizerFunctionInstanceInterface* p0;
+			const QueryProcessorInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_QueryProcessor) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			p1 = getConstObject<QueryProcessorInterface>( classId_1, objId_1);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createInstance();
+				p0 = obj->createInstance(p1);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
