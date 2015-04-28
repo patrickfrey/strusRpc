@@ -807,7 +807,7 @@ sub unpackParameter
 			if ($isconst)
 			{
 				$rt .= "$implname const_$idx( objId_$idx, ctx(), true);\n";
-				$rt .= "$id = (const $implname*)constConstructor()->getLongLiving( &const_$idx, sizeof(const_$idx));";
+				$rt .= "$id = (const $implname*)ctx()->constConstructor()->getLongLiving( &const_$idx, sizeof(const_$idx));";
 			}
 			else
 			{
@@ -859,7 +859,7 @@ sub unpackParameter
 				}
 				else
 				{
-					$rt .= "$id = constConstructor()->getCharp( serializedMsg.unpackConstCharp());";
+					$rt .= "$id =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());";
 				}
 			}
 			else
@@ -871,7 +871,7 @@ sub unpackParameter
 		{
 			if ($isconst)
 			{
-				$rt .= "$id = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());";
+				$rt .= "$id =  ctx()->constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());";
 			}
 			else
 			{
@@ -943,7 +943,7 @@ sub unpackParameter
 		else
 		{
 			$rt .= "DatabaseCursorInterface::Slice slice$idx = serializedMsg.unpackSlice();\n";
-			$rt .= "$id = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice$idx" . ".ptr(), slice$idx" . ".size()), slice$idx" . ".size());";
+			$rt .= "$id = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice$idx" . ".ptr(), slice$idx" . ".size()), slice$idx" . ".size());";
 		}
 	}
 	elsif ($type eq "analyzer::Document")
@@ -1303,7 +1303,7 @@ sub getMethodDeclarationSource
 				my $bpvar = "bp" . ($pi+1);
 				$sender_output .= "\tconst char* $bpvar;\n";
 				$sender_output .= "\tserializedMsg.unpackBuffer( $bpvar, p" . ($pi+2) . ");\n";
-				$sender_output .= "\tp" . ($pi+1) . " = (const char*)constConstructor()->get( $bpvar, p" . ($pi+2) .");\n";
+				$sender_output .= "\tp" . ($pi+1) . " = (const char*) ctx()->constConstructor()->get( $bpvar, p" . ($pi+2) .");\n";
 
 				$receiver_output .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				++$pi;

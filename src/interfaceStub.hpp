@@ -47,7 +47,6 @@ public:
 	unsigned int objId() const					{return m_objId;}
 
 	void enter() const;
-	const ConstConstructor* constConstructor() const		{return &m_constConstructor;}
 
 	const RpcClientContext* ctx() const				{return m_ctx;}
 	bool isConst() const						{return m_isConst;}
@@ -57,7 +56,6 @@ private:
 	unsigned char m_classId;
 	unsigned int m_objId;
 	const RpcClientContext* m_ctx;
-	ConstConstructor m_constConstructor;
 	bool m_isConst;
 };
 

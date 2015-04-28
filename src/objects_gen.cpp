@@ -52,7 +52,7 @@ const TextProcessorInterface* AnalyzerObjectBuilderImpl::getTextProcessor( ) con
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	TextProcessorImpl const_0( objId_0, ctx(), true);
-	const TextProcessorInterface* p0 = (const TextProcessorImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	const TextProcessorInterface* p0 = (const TextProcessorImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 }
 
@@ -173,10 +173,10 @@ bool DatabaseBackupCursorImpl::fetch( const char*& p1, std::size_t& p2, const ch
 	bool p0 = serializedMsg.unpackBool();;
 	const char* bp1;
 	serializedMsg.unpackBuffer( bp1, p2);
-	p1 = (const char*)constConstructor()->get( bp1, p2);
+	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
 	const char* bp3;
 	serializedMsg.unpackBuffer( bp3, p4);
-	p3 = (const char*)constConstructor()->get( bp3, p4);
+	p3 = (const char*) ctx()->constConstructor()->get( bp3, p4);
 	return p0;
 }
 
@@ -303,7 +303,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekUpperBound( const char* p
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
 	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
-	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
@@ -319,7 +319,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekFirst( const char* p1, st
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
 	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
-	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
@@ -335,7 +335,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekLast( const char* p1, std
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
 	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
-	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
@@ -350,7 +350,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekNext( )
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
 	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
-	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
@@ -365,7 +365,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekPrev( )
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
 	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
-	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
@@ -380,7 +380,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::key( ) const
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
 	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
-	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
@@ -395,7 +395,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::value( ) const
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
 	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
-	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*)constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 }
 
@@ -468,7 +468,7 @@ const char* DatabaseImpl::getConfigDescription( DatabaseInterface::ConfigType p1
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char* p0 = constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 }
 
@@ -483,7 +483,7 @@ const char** DatabaseImpl::getConfigParameters( DatabaseInterface::ConfigType p1
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char** p0 = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
+	const char** p0 =  ctx()->constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
 	return p0;
 }
 
@@ -967,7 +967,7 @@ const char* MetaDataReaderImpl::getType( const Index& p1) const
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char* p0 = constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 }
 
@@ -982,7 +982,7 @@ const char* MetaDataReaderImpl::getName( const Index& p1) const
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char* p0 = constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 }
 
@@ -1167,7 +1167,7 @@ const char* PostingIteratorImpl::featureid( ) const
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char* p0 = constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 }
 
@@ -1571,7 +1571,7 @@ const PostingJoinOperatorInterface* QueryProcessorImpl::getPostingJoinOperator( 
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	PostingJoinOperatorImpl const_0( objId_0, ctx(), true);
-	const PostingJoinOperatorInterface* p0 = (const PostingJoinOperatorImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	const PostingJoinOperatorInterface* p0 = (const PostingJoinOperatorImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 }
 
@@ -1603,7 +1603,7 @@ const WeightingFunctionInterface* QueryProcessorImpl::getWeightingFunction( cons
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	WeightingFunctionImpl const_0( objId_0, ctx(), true);
-	const WeightingFunctionInterface* p0 = (const WeightingFunctionImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	const WeightingFunctionInterface* p0 = (const WeightingFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 }
 
@@ -1635,7 +1635,7 @@ const SummarizerFunctionInterface* QueryProcessorImpl::getSummarizerFunction( co
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	SummarizerFunctionImpl const_0( objId_0, ctx(), true);
-	const SummarizerFunctionInterface* p0 = (const SummarizerFunctionImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	const SummarizerFunctionInterface* p0 = (const SummarizerFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 }
 
@@ -1675,7 +1675,7 @@ bool SegmenterInstanceImpl::getNext( int& p1, SegmenterPosition& p2, const char*
 	p2 = serializedMsg.unpackGlobalCounter();
 	const char* bp3;
 	serializedMsg.unpackBuffer( bp3, p4);
-	p3 = (const char*)constConstructor()->get( bp3, p4);
+	p3 = (const char*) ctx()->constConstructor()->get( bp3, p4);
 	return p0;
 }
 
@@ -2180,7 +2180,7 @@ bool StorageDumpImpl::nextChunk( const char*& p1, std::size_t& p2)
 	bool p0 = serializedMsg.unpackBool();;
 	const char* bp1;
 	serializedMsg.unpackBuffer( bp1, p2);
-	p1 = (const char*)constConstructor()->get( bp1, p2);
+	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
 	return p0;
 }
 
@@ -2259,7 +2259,7 @@ const char* StorageImpl::getConfigDescription( StorageInterface::ConfigType p1) 
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char* p0 = constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 }
 
@@ -2274,7 +2274,7 @@ const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) 
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char** p0 = constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
+	const char** p0 =  ctx()->constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
 	return p0;
 }
 
@@ -2299,7 +2299,7 @@ const StorageInterface* StorageObjectBuilderImpl::getStorage( ) const
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	StorageImpl const_0( objId_0, ctx(), true);
-	const StorageInterface* p0 = (const StorageImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	const StorageInterface* p0 = (const StorageImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 }
 
@@ -2315,7 +2315,7 @@ const DatabaseInterface* StorageObjectBuilderImpl::getDatabase( const std::strin
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	DatabaseImpl const_0( objId_0, ctx(), true);
-	const DatabaseInterface* p0 = (const DatabaseImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	const DatabaseInterface* p0 = (const DatabaseImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 }
 
@@ -2330,7 +2330,7 @@ const QueryProcessorInterface* StorageObjectBuilderImpl::getQueryProcessor( ) co
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	QueryProcessorImpl const_0( objId_0, ctx(), true);
-	const QueryProcessorInterface* p0 = (const QueryProcessorImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	const QueryProcessorInterface* p0 = (const QueryProcessorImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 }
 
@@ -2715,7 +2715,7 @@ const TokenizerFunctionInterface* TextProcessorImpl::getTokenizer( const std::st
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	TokenizerFunctionImpl const_0( objId_0, ctx(), true);
-	const TokenizerFunctionInterface* p0 = (const TokenizerFunctionImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	const TokenizerFunctionInterface* p0 = (const TokenizerFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 }
 
@@ -2731,7 +2731,7 @@ const NormalizerFunctionInterface* TextProcessorImpl::getNormalizer( const std::
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	NormalizerFunctionImpl const_0( objId_0, ctx(), true);
-	const NormalizerFunctionInterface* p0 = (const NormalizerFunctionImpl*)constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	const NormalizerFunctionInterface* p0 = (const NormalizerFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 }
 

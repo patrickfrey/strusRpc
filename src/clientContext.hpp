@@ -29,6 +29,7 @@
 #ifndef _STRUS_RPC_CLIENT_CONTEXT_HPP_INCLUDED
 #define _STRUS_RPC_CLIENT_CONTEXT_HPP_INCLUDED
 #include "strus/rpcClientMessagingInterface.hpp"
+#include "constConstructor.hpp"
 #include <string>
 
 namespace strus {
@@ -44,6 +45,7 @@ public:
 	RpcClientContext( const RpcClientContext& o);
 	RpcClientContext();
 
+	ConstConstructor* constConstructor() const			{return &m_constConstructor;}
 	unsigned int newObjId() const					{return ++m_objIdCnt;}
 
 	std::string rpc_sendRequest( const std::string& msg) const;
@@ -56,6 +58,7 @@ private:
 private:
 	mutable unsigned int m_objIdCnt;
 	mutable RpcClientMessagingInterface* m_messaging;
+	mutable ConstConstructor m_constConstructor;
 };
 
 }//namespace

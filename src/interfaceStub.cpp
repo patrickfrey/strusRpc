@@ -47,6 +47,6 @@ RpcInterfaceStub::RpcInterfaceStub()
 
 void RpcInterfaceStub::enter() const
 {
-	m_constConstructor.reset();
+	m_ctx->constConstructor()->reset();
 }
 

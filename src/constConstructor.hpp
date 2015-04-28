@@ -41,16 +41,16 @@ public:
 	ConstConstructor(){}
 	~ConstConstructor()
 	{
-		std::vector<Value>::const_iterator ai = m_longliving_ar.begin(), ae = m_longliving_ar.end();
+		std::vector<Value>::iterator ai = m_longliving_ar.begin(), ae = m_longliving_ar.end();
 		for (; ai != ae; ++ai)
 		{
 			std::free( ai->value);
 		}
 	}
 
-	void reset() const
+	void reset()
 	{
-		std::vector<Value>::const_iterator ai = m_ar.begin(), ae = m_ar.end();
+		std::vector<Value>::iterator ai = m_ar.begin(), ae = m_ar.end();
 		for (; ai != ae; ++ai)
 		{
 			std::free( ai->value);
@@ -58,23 +58,23 @@ public:
 		m_ar.clear();
 	}
 
-	const char* getCharp( const char* ptr) const
+	const char* getCharp( const char* ptr)
 	{
 		return (const char*)get( ptr, std::strlen(ptr)+1);
 	}
-	const char** getCharpp( const char** ptr) const
+	const char** getCharpp( const char** ptr)
 	{
 		char const** pp = ptr;
 		while (*pp)++pp;
 		return (const char**)get( ptr, ((pp-ptr)+1)*sizeof(char*));
 	}
 
-	const void* get( const void* ptr, std::size_t size) const
+	const void* get( const void* ptr, std::size_t size)
 	{
 		m_ar.push_back( Value::copy( ptr, size));
 		return m_ar.back().value;
 	}
-	const void* getLongLiving( const void* ptr, std::size_t size) const
+	const void* getLongLiving( const void* ptr, std::size_t size)
 	{
 		m_longliving_ar.push_back( Value::copy( ptr, size));
 		return m_longliving_ar.back().value;
@@ -105,8 +105,8 @@ private:
 		}
 	};
 
-	mutable std::vector<Value> m_ar;
-	mutable std::vector<Value> m_longliving_ar;
+	std::vector<Value> m_ar;
+	std::vector<Value> m_longliving_ar;
 };
 
 }//namespace
