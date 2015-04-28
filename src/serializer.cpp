@@ -30,11 +30,14 @@
 #include "private/utils.hpp"
 #include <stdexcept>
 #include <cstring>
+#include <iostream>
 #include <limits>
 #include <netinet/in.h>
 #include <stdint.h>
 
 using namespace strus;
+
+#undef STRUS_LOWLEVEL_DEBUG
 
 namespace {
 
@@ -110,12 +113,12 @@ void unpack<8>( char const*& itr, const char* end, void* ptr)
 
 
 template <typename SCALAR>
-void packScalar( std::string& buf, const SCALAR& val)
+static void packScalar( std::string& buf, const SCALAR& val)
 {
 	pack<sizeof(SCALAR)>( buf, &val);
 }
 template <typename SCALAR>
-SCALAR unpackScalar( char const*& itr, const char* end)
+static SCALAR unpackScalar( char const*& itr, const char* end)
 {
 	SCALAR val;
 	unpack<sizeof(SCALAR)>( itr, end, &val);
@@ -125,11 +128,17 @@ SCALAR unpackScalar( char const*& itr, const char* end)
 
 void RpcSerializer::packSessionId( unsigned int id_)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packSessionId " << id_ << std::endl;
+#endif
 	packScalar( m_content, (uint32_t)id_);
 }
 
 void RpcSerializer::packObject( unsigned char classId_, unsigned int objId_)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packObject (" << (unsigned int)classId_ << ", " << objId_ << ")" << std::endl;
+#endif
 	if (objId_ > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "object id out of range");
 	packScalar( m_content, classId_);
 	packScalar( m_content, (uint32_t)objId_);
@@ -137,6 +146,9 @@ void RpcSerializer::packObject( unsigned char classId_, unsigned int objId_)
 
 void RpcSerializer::packString( const std::string& str)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packString ('" << str << "')" << std::endl;
+#endif
 	if (str.size() > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "string size out of range");
 	packScalar( m_content, (uint32_t)str.size());
 	m_content.append( str);
@@ -145,12 +157,25 @@ void RpcSerializer::packString( const std::string& str)
 
 void RpcSerializer::packCharp( const char* buf)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packCharp ('" << buf << "')" << std::endl;
+#endif
 	m_content.append( buf);
 	m_content.push_back( '\0');
 }
 
 void RpcSerializer::packCharpp( const char** buf)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	char const** gi = buf;
+	std::cerr << "packCharpp (";
+	for (int gidx=0; *gi; ++gi,++gidx)
+	{
+		if (gidx) std::cerr << ", ";
+		std::cerr << "'" << *gi << "'";
+	}
+	std::cerr << ")" << std::endl;
+#endif
 	if (buf)
 	{
 		char const** bi = buf;
@@ -170,6 +195,9 @@ void RpcSerializer::packCharpp( const char** buf)
 
 void RpcSerializer::packBuffer( const char* buf, std::size_t size)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packBuffer('" << std::string(buf,size) << "')" << std::endl;
+#endif
 	if (size > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "buffer size out of range");
 	packScalar( m_content, (uint32_t)size);
 	m_content.append( buf, size);
@@ -177,32 +205,50 @@ void RpcSerializer::packBuffer( const char* buf, std::size_t size)
 
 void RpcSerializer::packBool( bool val)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packBool(" << (val?"true":"false") << ")" << std::endl;
+#endif
 	m_content.push_back( val?1:0);
 }
 
 void RpcSerializer::packByte( unsigned char val)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packByte (" << (unsigned int)val << ")" << std::endl;
+#endif
 	m_content.push_back( val);
 }
 
 void RpcSerializer::packIndex( const Index& index)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packIndex (" << (unsigned int)index << ")" << std::endl;
+#endif
 	packScalar( m_content, index);
 }
 
 void RpcSerializer::packGlobalCounter( const GlobalCounter& index)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packGlobalCounter (" << (uintptr_t)index << ")" << std::endl;
+#endif
 	packScalar( m_content, index);
 }
 
 void RpcSerializer::packUint( unsigned int val)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packUint (" << (unsigned int)val << ")" << std::endl;
+#endif
 	if (val > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "packed uint out of range");
 	packScalar( m_content, (uint32_t)val);
 }
 
 void RpcSerializer::packInt( int val)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packInt (" << (signed int)val << ")" << std::endl;
+#endif
 	if (val > std::numeric_limits<int32_t>::max()
 	||  val < std::numeric_limits<int32_t>::min()) throw std::runtime_error( "packed int out of range");
 	packScalar( m_content, (int32_t)val);
@@ -210,11 +256,17 @@ void RpcSerializer::packInt( int val)
 
 void RpcSerializer::packFloat( float val)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packFloat (" << (float)val << ")" << std::endl;
+#endif
 	pack<sizeof(float)>( m_content, &val);
 }
 
 void RpcSerializer::packSize( std::size_t size)
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packSize (" << (std::size_t)size << ")" << std::endl;
+#endif
 	if (size > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "packed size out of range");
 	packScalar( m_content, (uint32_t)size);
 }
@@ -358,18 +410,29 @@ void RpcSerializer::packSummarizerFeatureParameter( const QueryEvalInterface::Su
 
 void RpcSerializer::packCrc32()
 {
-	packScalar( m_content, utils::Crc32::calc( m_content.c_str(), m_content.size()));
+	uint32_t crc = utils::Crc32::calc( m_content.c_str(), m_content.size());
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packCrc32(" << crc << ")" << std::endl;
+#endif
+	packScalar( m_content, crc);
 }
 
 unsigned int RpcDeserializer::unpackSessionId()
 {
-	return unpackScalar<uint32_t>( m_itr, m_end);
+	unsigned int rt = unpackScalar<uint32_t>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackSessionId (" << rt << ")" << std::endl;
+#endif
+	return rt;
 }
 
 void RpcDeserializer::unpackObject( unsigned char& classId_, unsigned int& objId_)
 {
 	classId_ = unpackScalar<char>( m_itr, m_end);
 	objId_ = unpackScalar<uint32_t>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackObject (" << (unsigned int)classId_ << ", " << objId_ << ")" << std::endl;
+#endif
 }
 
 std::string RpcDeserializer::unpackString()
@@ -382,6 +445,9 @@ std::string RpcDeserializer::unpackString()
 	}
 	rt.append( m_itr, size);
 	m_itr += size;
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackString ('" << rt << "')" << std::endl;
+#endif
 	return rt;
 }
 
@@ -394,6 +460,9 @@ const char* RpcDeserializer::unpackConstCharp()
 		throw std::runtime_error( "message to small to encode next C string");
 	}
 	++m_itr;
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackConstCharp ('" << start << "')" << std::endl;
+#endif
 	return start;
 }
 
@@ -407,6 +476,17 @@ const char** RpcDeserializer::unpackConstCharpp()
 		m_charpp_buf.push_back( unpackConstCharp());
 	}
 	m_charpp_buf.push_back( 0);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	const char** pp = (const char**)m_charpp_buf.data();
+	char const** gi = pp;
+	std::cerr << "unpackConstCharp (";
+	for (int gidx=0; *gi; ++gi,++gidx)
+	{
+		if (gidx) std::cerr << ", ";
+		std::cerr << "'" << *gi << "'";
+	}
+	std::cerr << ")" << std::endl;
+#endif
 	return (const char**)m_charpp_buf.data();
 }
 
@@ -415,46 +495,81 @@ void RpcDeserializer::unpackBuffer( const char*& buf, std::size_t& size)
 	size = unpackScalar<uint32_t>( m_itr, m_end);
 	buf = m_itr;
 	m_itr += size;
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackBuffer('" << std::string(buf,size) << "')" << std::endl;
+#endif
 }
 
 bool RpcDeserializer::unpackBool()
 {
-	return (*m_itr++ != 0)?true:false;
+	bool rt = (*m_itr++ != 0)?true:false;
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackBool(" << (rt?"true":"false") << ")" << std::endl;
+#endif
+	return rt;
 }
 
 unsigned char RpcDeserializer::unpackByte()
 {
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackByte(" << (unsigned int)(unsigned char)(*m_itr) << ")" << std::endl;
+#endif
 	return *m_itr++;
 }
 
 Index RpcDeserializer::unpackIndex()
 {
-	return unpackScalar<Index>( m_itr, m_end);
+	Index rt = unpackScalar<Index>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackIndex(" << rt << ")" << std::endl;
+#endif
+	return rt;
 }
 
 GlobalCounter RpcDeserializer::unpackGlobalCounter()
 {
-	return unpackScalar<GlobalCounter>( m_itr, m_end);
+	GlobalCounter rt = unpackScalar<GlobalCounter>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackGlobalCounter(" << rt << ")" << std::endl;
+#endif
+	return rt;
 }
 
 unsigned int RpcDeserializer::unpackUint()
 {
-	return unpackScalar<uint32_t>( m_itr, m_end);
+	unsigned int rt = unpackScalar<uint32_t>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackUint(" << rt << ")" << std::endl;
+#endif
+	return rt;
 }
 
 int RpcDeserializer::unpackInt()
 {
-	return unpackScalar<uint32_t>( m_itr, m_end);
+	int rt = unpackScalar<int32_t>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackInt(" << rt << ")" << std::endl;
+#endif
+	return rt;
 }
 
 float RpcDeserializer::unpackFloat()
 {
 	return unpackScalar<float>( m_itr, m_end);
+	float rt = unpackScalar<float>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackFloat(" << rt << ")" << std::endl;
+#endif
+	return rt;
 }
 
 std::size_t RpcDeserializer::unpackSize()
 {
-	return unpackScalar<uint32_t>( m_itr, m_end);
+	unsigned int rt = unpackScalar<uint32_t>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackSize(" << rt << ")" << std::endl;
+#endif
+	return rt;
 }
 
 ArithmeticVariant RpcDeserializer::unpackArithmeticVariant()
@@ -474,6 +589,9 @@ bool RpcDeserializer::unpackCrc32()
 {
 	uint32_t crc = utils::Crc32::calc( m_start, (m_end - m_start) - 4);
 	char const* ee = m_end-4;
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackCrc32(" << crc << ")" << std::endl;
+#endif
 	return crc == unpackScalar<uint32_t>( ee, m_end);
 }
 

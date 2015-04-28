@@ -1364,12 +1364,16 @@ sub getMethodDeclarationSource
 						my $pidx = $pi+1;
 						if ($isarray)
 						{
-							$sender_code .= "\tfor (std::size_t ai_$pidx=0; p$pidx.size(); ++ai_$pidx) {\n";
+							$sender_code .= "\tfor (std::size_t ai_$pidx=0; ai_$pidx < p$pidx.size(); ++ai_$pidx) {\n";
+							$sender_code .= "\t\tRpcInterfaceStub* done_$pidx = dynamic_cast<RpcInterfaceStub*>(p$pidx" . "[ai_$pidx]);\n";
+							$sender_code .= "\t\tdone_$pidx" . "->release();\n";
 							$sender_code .= "\t\tdelete p$pidx" . "[ai_$pidx];\n";
 							$sender_code .= "\t}\n";
 						}
 						else
 						{
+							$sender_code .= "\tRpcInterfaceStub* done_$pidx = dynamic_cast<RpcInterfaceStub*>(p$pidx);\n";
+							$sender_code .= "\tdone_$pidx" ."->release();\n";
 							$sender_code .= "\tdelete p$pidx;\n";
 						}
 					}

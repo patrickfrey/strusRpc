@@ -51,6 +51,7 @@ public:
 
 	const RpcClientContext* ctx() const				{return m_ctx;}
 	bool isConst() const						{return m_isConst;}
+	void release()							{m_isConst = true;}
 
 private:
 	unsigned char m_classId;

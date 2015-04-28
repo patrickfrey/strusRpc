@@ -668,8 +668,12 @@ void DocumentAnalyzerImpl::addSearchIndexFeature( const std::string& p1, const s
 	msg.packFeatureOptions( p5);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
+	done_3->release();
 	delete p3;
-	for (std::size_t ai_4=0; p4.size(); ++ai_4) {
+	for (std::size_t ai_4=0; ai_4 < p4.size(); ++ai_4) {
+		RpcInterfaceStub* done_4 = dynamic_cast<RpcInterfaceStub*>(p4[ai_4]);
+		done_4->release();
 		delete p4[ai_4];
 	}
 }
@@ -693,8 +697,12 @@ void DocumentAnalyzerImpl::addForwardIndexFeature( const std::string& p1, const 
 	msg.packFeatureOptions( p5);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
+	done_3->release();
 	delete p3;
-	for (std::size_t ai_4=0; p4.size(); ++ai_4) {
+	for (std::size_t ai_4=0; ai_4 < p4.size(); ++ai_4) {
+		RpcInterfaceStub* done_4 = dynamic_cast<RpcInterfaceStub*>(p4[ai_4]);
+		done_4->release();
 		delete p4[ai_4];
 	}
 }
@@ -717,8 +725,12 @@ void DocumentAnalyzerImpl::defineMetaData( const std::string& p1, const std::str
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
+	done_3->release();
 	delete p3;
-	for (std::size_t ai_4=0; p4.size(); ++ai_4) {
+	for (std::size_t ai_4=0; ai_4 < p4.size(); ++ai_4) {
+		RpcInterfaceStub* done_4 = dynamic_cast<RpcInterfaceStub*>(p4[ai_4]);
+		done_4->release();
 		delete p4[ai_4];
 	}
 }
@@ -741,8 +753,12 @@ void DocumentAnalyzerImpl::defineAttribute( const std::string& p1, const std::st
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
+	done_3->release();
 	delete p3;
-	for (std::size_t ai_4=0; p4.size(); ++ai_4) {
+	for (std::size_t ai_4=0; ai_4 < p4.size(); ++ai_4) {
+		RpcInterfaceStub* done_4 = dynamic_cast<RpcInterfaceStub*>(p4[ai_4]);
+		done_4->release();
 		delete p4[ai_4];
 	}
 }
@@ -1259,8 +1275,12 @@ void QueryAnalyzerImpl::definePhraseType( const std::string& p1, const std::stri
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
+	done_3->release();
 	delete p3;
-	for (std::size_t ai_4=0; p4.size(); ++ai_4) {
+	for (std::size_t ai_4=0; ai_4 < p4.size(); ++ai_4) {
+		RpcInterfaceStub* done_4 = dynamic_cast<RpcInterfaceStub*>(p4[ai_4]);
+		done_4->release();
 		delete p4[ai_4];
 	}
 }
@@ -1344,6 +1364,8 @@ void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunc
 	msg.packString( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
+	done_2->release();
 	delete p2;
 }
 
@@ -1362,6 +1384,8 @@ void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFuncti
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
+	done_2->release();
 	delete p2;
 }
 
@@ -1530,6 +1554,8 @@ void QueryProcessorImpl::definePostingJoinOperator( const std::string& p1, Posti
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
+	done_2->release();
 	delete p2;
 }
 
@@ -1560,6 +1586,8 @@ void QueryProcessorImpl::defineWeightingFunction( const std::string& p1, Weighti
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
+	done_2->release();
 	delete p2;
 }
 
@@ -1590,6 +1618,8 @@ void QueryProcessorImpl::defineSummarizerFunction( const std::string& p1, Summar
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
+	done_2->release();
 	delete p2;
 }
 
@@ -2179,6 +2209,8 @@ StorageClientInterface* StorageImpl::createClient( const std::string& p1, Databa
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	StorageClientInterface* p0 = new StorageClientImpl( objId_0, ctx());
+	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
+	done_2->release();
 	delete p2;
 	return p0;
 }
@@ -2210,6 +2242,8 @@ StorageAlterMetaDataTableInterface* StorageImpl::createAlterMetaDataTable( Datab
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	StorageAlterMetaDataTableInterface* p0 = new StorageAlterMetaDataTableImpl( objId_0, ctx());
+	RpcInterfaceStub* done_1 = dynamic_cast<RpcInterfaceStub*>(p1);
+	done_1->release();
 	delete p1;
 	return p0;
 }
