@@ -29,7 +29,8 @@
 #ifndef _STRUS_RPC_CLIENT_IMPLEMENTATION_HPP_INCLUDED
 #define _STRUS_RPC_CLIENT_IMPLEMENTATION_HPP_INCLUDED
 #include "strus/rpcClientInterface.hpp"
-#include "clientContext.hpp"
+#include "strus/reference.hpp"
+#include "rpcClientContext.hpp"
 
 namespace strus
 {
@@ -44,7 +45,7 @@ class RpcClient
 public:
 	/// \brief Constructor
 	explicit RpcClient( RpcClientMessagingInterface* messaging_)
-		:m_ctx(messaging_){}
+		:m_ctx( new RpcClientContext( messaging_)){}
 
 	/// \brief Destructor
 	virtual ~RpcClient(){}
@@ -54,7 +55,7 @@ public:
 	virtual AnalyzerObjectBuilderInterface* createAnalyzerObjectBuilder() const;
 
 private:
-	RpcClientContext m_ctx;
+	Reference<RpcClientContext> m_ctx;
 };
 
 }//namespace

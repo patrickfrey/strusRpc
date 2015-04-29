@@ -33,7 +33,7 @@
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/moduleLoaderInterface.hpp"
 #include "strus/versionRpc.hpp"
-#include "serializer.hpp"
+#include "rpcSerializer.hpp"
 #include <cstring>
 #include <stdexcept>
 #include <string>

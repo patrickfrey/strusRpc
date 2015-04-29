@@ -4,16 +4,16 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR )
 # SOURCES AND INCLUDES
 # --------------------------------------
 set( server_source_files
-	serializer.cpp
+	rpcSerializer.cpp
 	rpcRequestHandler.cpp
 	rpcRequestHandler_gen.cpp
 )
 
 set( client_source_files
-	serializer.cpp
+	rpcSerializer.cpp
 	objects_gen.cpp
-	interfaceStub.cpp
-	clientContext.cpp
+	rpcInterfaceStub.cpp
+	rpcClientContext.cpp
 	rpcClient.cpp
 )
 

@@ -166,7 +166,7 @@ $passOwnershipParams{"definePhraseType"} = 1;
 my %alternativeClientImpl = ();
 $alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx());\n";
 
-my $doGenerateDebugCode = 0;
+my $doGenerateDebugCode = 1;
 
 sub parseType
 {
@@ -1432,7 +1432,7 @@ sub getClassHeaderSource
 		my @mth = split('%');
 		shift( @mth);
 		$rt .= "\n\tvirtual ~$classname();\n";
-		$rt .= "\n\t$classname( unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, ctx_, isConst_){}\n";
+		$rt .= "\n\t$classname( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, ctx_, isConst_){}\n";
 		my $mm;
 		foreach $mm( @mth)
 		{
@@ -1607,7 +1607,7 @@ print HDRFILE <<EOF;
 */
 #ifndef _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #define _STRUS_RPC_OBJECTS_HPP_INCLUDED
-#include "interfaceStub.hpp"
+#include "rpcInterfaceStub.hpp"
 #include "objectIds_gen.hpp"
 EOF
 foreach $inputfile( @inputfiles)
@@ -1666,7 +1666,7 @@ print SRCFILE <<EOF;
 --------------------------------------------------------------------
 */
 #include "objects_gen.hpp"
-#include "serializer.hpp"
+#include "rpcSerializer.hpp"
 #include <iostream>
 using namespace strus;
 EOF
@@ -1713,7 +1713,7 @@ print SRCFILE <<EOF;
 --------------------------------------------------------------------
 */
 #include "rpcRequestHandler.hpp"
-#include "serializer.hpp"
+#include "rpcSerializer.hpp"
 #include "objectIds_gen.hpp"
 #include "private/dll_tags.hpp"
 #include <string>

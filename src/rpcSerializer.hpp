@@ -29,7 +29,7 @@
 #ifndef _STRUS_RPC_MESSAGE_STUB_HPP_INCLUDED
 #define _STRUS_RPC_MESSAGE_STUB_HPP_INCLUDED
 #include <string>
-#include "interfaceStub.hpp"
+#include "rpcInterfaceStub.hpp"
 #include "strus/index.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/arithmeticVariant.hpp"

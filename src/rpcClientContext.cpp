@@ -27,8 +27,8 @@
 --------------------------------------------------------------------
 */
 #include "private/utils.hpp"
-#include "clientContext.hpp"
-#include "serializer.hpp"
+#include "rpcClientContext.hpp"
+#include "rpcSerializer.hpp"
 #include <stdexcept>
 #include <limits>
 

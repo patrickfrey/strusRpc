@@ -29,7 +29,8 @@
 #ifndef _STRUS_RPC_INTERFACE_STUB_HPP_INCLUDED
 #define _STRUS_RPC_INTERFACE_STUB_HPP_INCLUDED
 #include "constConstructor.hpp"
-#include "clientContext.hpp"
+#include "rpcClientContext.hpp"
+#include "strus/reference.hpp"
 #include <string>
 
 namespace strus {
@@ -39,7 +40,7 @@ class RpcInterfaceStub
 public:
 	virtual ~RpcInterfaceStub(){}
 
-	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcClientContext* ctx_, bool isConst_=false);
+	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false);
 	RpcInterfaceStub( const RpcInterfaceStub& o);
 	RpcInterfaceStub();
 
@@ -48,14 +49,14 @@ public:
 
 	void enter() const;
 
-	const RpcClientContext* ctx() const				{return m_ctx;}
+	const Reference<RpcClientContext>& ctx() const			{return m_ctx;}
 	bool isConst() const						{return m_isConst;}
 	void release()							{m_isConst = true;}
 
 private:
 	unsigned char m_classId;
 	unsigned int m_objId;
-	const RpcClientContext* m_ctx;
+	Reference<RpcClientContext> m_ctx;
 	bool m_isConst;
 };
 

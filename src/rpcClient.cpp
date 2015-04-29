@@ -35,12 +35,12 @@ using namespace strus;
 
 StorageObjectBuilderInterface* RpcClient::createStorageObjectBuilder() const
 {
-	return new StorageObjectBuilderImpl( 0, &m_ctx);
+	return new StorageObjectBuilderImpl( 0, m_ctx);
 }
 
 AnalyzerObjectBuilderInterface* RpcClient::createAnalyzerObjectBuilder() const
 {
-	return new AnalyzerObjectBuilderImpl( 0, &m_ctx);
+	return new AnalyzerObjectBuilderImpl( 0, m_ctx);
 }
 
 

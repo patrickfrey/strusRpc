@@ -26,7 +26,7 @@
 
 --------------------------------------------------------------------
 */
-#include "serializer.hpp"
+#include "rpcSerializer.hpp"
 #include "private/utils.hpp"
 #include <stdexcept>
 #include <cstring>
@@ -37,7 +37,7 @@
 
 using namespace strus;
 
-#undef STRUS_LOWLEVEL_DEBUG
+#define STRUS_LOWLEVEL_DEBUG
 
 namespace {
 

@@ -27,14 +27,14 @@
 --------------------------------------------------------------------
 */
 #include "private/utils.hpp"
-#include "interfaceStub.hpp"
-#include "serializer.hpp"
+#include "rpcInterfaceStub.hpp"
+#include "rpcSerializer.hpp"
 #include <stdexcept>
 #include <limits>
 
 using namespace strus;
 
-RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const RpcClientContext* ctx_, bool isConst_)
+RpcInterfaceStub::RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_)
 	:m_classId(classId_),m_objId(objId_),m_ctx(ctx_),m_isConst(isConst_)
 {}
 
