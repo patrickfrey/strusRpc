@@ -34,7 +34,6 @@ using namespace strus;
 AnalyzerObjectBuilderImpl::~AnalyzerObjectBuilderImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of AnalyzerObjectBuilderImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -44,7 +43,6 @@ AnalyzerObjectBuilderImpl::~AnalyzerObjectBuilderImpl()
 
 const TextProcessorInterface* AnalyzerObjectBuilderImpl::getTextProcessor( ) const
 {
-	std::cerr << "calling method AnalyzerObjectBuilderImpl::getTextProcessor" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getTextProcessor);
@@ -60,7 +58,6 @@ const TextProcessorInterface* AnalyzerObjectBuilderImpl::getTextProcessor( ) con
 
 SegmenterInterface* AnalyzerObjectBuilderImpl::createSegmenter( const std::string& p1) const
 {
-	std::cerr << "calling method AnalyzerObjectBuilderImpl::createSegmenter" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createSegmenter);
@@ -76,7 +73,6 @@ SegmenterInterface* AnalyzerObjectBuilderImpl::createSegmenter( const std::strin
 
 DocumentAnalyzerInterface* AnalyzerObjectBuilderImpl::createDocumentAnalyzer( const std::string& p1) const
 {
-	std::cerr << "calling method AnalyzerObjectBuilderImpl::createDocumentAnalyzer" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDocumentAnalyzer);
@@ -92,7 +88,6 @@ DocumentAnalyzerInterface* AnalyzerObjectBuilderImpl::createDocumentAnalyzer( co
 
 QueryAnalyzerInterface* AnalyzerObjectBuilderImpl::createQueryAnalyzer( ) const
 {
-	std::cerr << "calling method AnalyzerObjectBuilderImpl::createQueryAnalyzer" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createQueryAnalyzer);
@@ -108,7 +103,6 @@ QueryAnalyzerInterface* AnalyzerObjectBuilderImpl::createQueryAnalyzer( ) const
 AttributeReaderImpl::~AttributeReaderImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of AttributeReaderImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -118,7 +112,6 @@ AttributeReaderImpl::~AttributeReaderImpl()
 
 Index AttributeReaderImpl::elementHandle( const char* p1) const
 {
-	std::cerr << "calling method AttributeReaderImpl::elementHandle" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_elementHandle);
@@ -134,7 +127,6 @@ Index AttributeReaderImpl::elementHandle( const char* p1) const
 
 void AttributeReaderImpl::skipDoc( const Index& p1)
 {
-	std::cerr << "calling method AttributeReaderImpl::skipDoc" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
@@ -145,7 +137,6 @@ void AttributeReaderImpl::skipDoc( const Index& p1)
 
 std::string AttributeReaderImpl::getValue( const Index& p1) const
 {
-	std::cerr << "calling method AttributeReaderImpl::getValue" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getValue);
@@ -162,7 +153,6 @@ std::string AttributeReaderImpl::getValue( const Index& p1) const
 DatabaseBackupCursorImpl::~DatabaseBackupCursorImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of DatabaseBackupCursorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -172,7 +162,6 @@ DatabaseBackupCursorImpl::~DatabaseBackupCursorImpl()
 
 bool DatabaseBackupCursorImpl::fetch( const char*& p1, std::size_t& p2, const char*& p3, std::size_t& p4)
 {
-	std::cerr << "calling method DatabaseBackupCursorImpl::fetch" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_fetch);
@@ -194,7 +183,6 @@ bool DatabaseBackupCursorImpl::fetch( const char*& p1, std::size_t& p2, const ch
 DatabaseClientImpl::~DatabaseClientImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of DatabaseClientImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -204,7 +192,6 @@ DatabaseClientImpl::~DatabaseClientImpl()
 
 void DatabaseClientImpl::close( )
 {
-	std::cerr << "calling method DatabaseClientImpl::close" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_close);
@@ -214,7 +201,6 @@ void DatabaseClientImpl::close( )
 
 DatabaseTransactionInterface* DatabaseClientImpl::createTransaction( )
 {
-	std::cerr << "calling method DatabaseClientImpl::createTransaction" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createTransaction);
@@ -229,7 +215,6 @@ DatabaseTransactionInterface* DatabaseClientImpl::createTransaction( )
 
 DatabaseCursorInterface* DatabaseClientImpl::createCursor( const DatabaseOptions& p1) const
 {
-	std::cerr << "calling method DatabaseClientImpl::createCursor" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createCursor);
@@ -245,7 +230,6 @@ DatabaseCursorInterface* DatabaseClientImpl::createCursor( const DatabaseOptions
 
 DatabaseBackupCursorInterface* DatabaseClientImpl::createBackupCursor( ) const
 {
-	std::cerr << "calling method DatabaseClientImpl::createBackupCursor" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createBackupCursor);
@@ -260,7 +244,6 @@ DatabaseBackupCursorInterface* DatabaseClientImpl::createBackupCursor( ) const
 
 void DatabaseClientImpl::writeImm( const char* p1, std::size_t p2, const char* p3, std::size_t p4)
 {
-	std::cerr << "calling method DatabaseClientImpl::writeImm" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_writeImm);
@@ -272,7 +255,6 @@ void DatabaseClientImpl::writeImm( const char* p1, std::size_t p2, const char* p
 
 void DatabaseClientImpl::removeImm( const char* p1, std::size_t p2)
 {
-	std::cerr << "calling method DatabaseClientImpl::removeImm" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_removeImm);
@@ -283,7 +265,6 @@ void DatabaseClientImpl::removeImm( const char* p1, std::size_t p2)
 
 bool DatabaseClientImpl::readValue( const char* p1, std::size_t p2, std::string& p3, const DatabaseOptions& p4) const
 {
-	std::cerr << "calling method DatabaseClientImpl::readValue" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_readValue);
@@ -302,7 +283,6 @@ bool DatabaseClientImpl::readValue( const char* p1, std::size_t p2, std::string&
 DatabaseCursorImpl::~DatabaseCursorImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of DatabaseCursorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -312,7 +292,6 @@ DatabaseCursorImpl::~DatabaseCursorImpl()
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekUpperBound( const char* p1, std::size_t p2, std::size_t p3)
 {
-	std::cerr << "calling method DatabaseCursorImpl::seekUpperBound" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekUpperBound);
@@ -330,7 +309,6 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekUpperBound( const char* p
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekFirst( const char* p1, std::size_t p2)
 {
-	std::cerr << "calling method DatabaseCursorImpl::seekFirst" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekFirst);
@@ -347,7 +325,6 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekFirst( const char* p1, st
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekLast( const char* p1, std::size_t p2)
 {
-	std::cerr << "calling method DatabaseCursorImpl::seekLast" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekLast);
@@ -364,7 +341,6 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekLast( const char* p1, std
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekNext( )
 {
-	std::cerr << "calling method DatabaseCursorImpl::seekNext" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekNext);
@@ -380,7 +356,6 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekNext( )
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekPrev( )
 {
-	std::cerr << "calling method DatabaseCursorImpl::seekPrev" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekPrev);
@@ -396,7 +371,6 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekPrev( )
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::key( ) const
 {
-	std::cerr << "calling method DatabaseCursorImpl::key" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_key);
@@ -412,7 +386,6 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::key( ) const
 
 DatabaseCursorInterface::Slice DatabaseCursorImpl::value( ) const
 {
-	std::cerr << "calling method DatabaseCursorImpl::value" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_value);
@@ -429,7 +402,6 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::value( ) const
 DatabaseImpl::~DatabaseImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of DatabaseImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -439,7 +411,6 @@ DatabaseImpl::~DatabaseImpl()
 
 DatabaseClientInterface* DatabaseImpl::createClient( const std::string& p1) const
 {
-	std::cerr << "calling method DatabaseImpl::createClient" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClient);
@@ -455,7 +426,6 @@ DatabaseClientInterface* DatabaseImpl::createClient( const std::string& p1) cons
 
 void DatabaseImpl::createDatabase( const std::string& p1) const
 {
-	std::cerr << "calling method DatabaseImpl::createDatabase" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDatabase);
@@ -466,7 +436,6 @@ void DatabaseImpl::createDatabase( const std::string& p1) const
 
 void DatabaseImpl::restoreDatabase( const std::string& p1, DatabaseBackupCursorInterface* p2) const
 {
-	std::cerr << "calling method DatabaseImpl::restoreDatabase" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_restoreDatabase);
@@ -480,7 +449,6 @@ void DatabaseImpl::restoreDatabase( const std::string& p1, DatabaseBackupCursorI
 
 void DatabaseImpl::destroyDatabase( const std::string& p1) const
 {
-	std::cerr << "calling method DatabaseImpl::destroyDatabase" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_destroyDatabase);
@@ -491,7 +459,6 @@ void DatabaseImpl::destroyDatabase( const std::string& p1) const
 
 const char* DatabaseImpl::getConfigDescription( DatabaseInterface::ConfigType p1) const
 {
-	std::cerr << "calling method DatabaseImpl::getConfigDescription" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigDescription);
@@ -507,7 +474,6 @@ const char* DatabaseImpl::getConfigDescription( DatabaseInterface::ConfigType p1
 
 const char** DatabaseImpl::getConfigParameters( DatabaseInterface::ConfigType p1) const
 {
-	std::cerr << "calling method DatabaseImpl::getConfigParameters" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigParameters);
@@ -524,7 +490,6 @@ const char** DatabaseImpl::getConfigParameters( DatabaseInterface::ConfigType p1
 DatabaseTransactionImpl::~DatabaseTransactionImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of DatabaseTransactionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -534,7 +499,6 @@ DatabaseTransactionImpl::~DatabaseTransactionImpl()
 
 DatabaseCursorInterface* DatabaseTransactionImpl::createCursor( const DatabaseOptions& p1) const
 {
-	std::cerr << "calling method DatabaseTransactionImpl::createCursor" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createCursor);
@@ -550,7 +514,6 @@ DatabaseCursorInterface* DatabaseTransactionImpl::createCursor( const DatabaseOp
 
 void DatabaseTransactionImpl::write( const char* p1, std::size_t p2, const char* p3, std::size_t p4)
 {
-	std::cerr << "calling method DatabaseTransactionImpl::write" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_write);
@@ -562,7 +525,6 @@ void DatabaseTransactionImpl::write( const char* p1, std::size_t p2, const char*
 
 void DatabaseTransactionImpl::remove( const char* p1, std::size_t p2)
 {
-	std::cerr << "calling method DatabaseTransactionImpl::remove" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_remove);
@@ -573,7 +535,6 @@ void DatabaseTransactionImpl::remove( const char* p1, std::size_t p2)
 
 void DatabaseTransactionImpl::removeSubTree( const char* p1, std::size_t p2)
 {
-	std::cerr << "calling method DatabaseTransactionImpl::removeSubTree" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_removeSubTree);
@@ -584,7 +545,6 @@ void DatabaseTransactionImpl::removeSubTree( const char* p1, std::size_t p2)
 
 void DatabaseTransactionImpl::commit( )
 {
-	std::cerr << "calling method DatabaseTransactionImpl::commit" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_commit);
@@ -595,7 +555,6 @@ void DatabaseTransactionImpl::commit( )
 
 void DatabaseTransactionImpl::rollback( )
 {
-	std::cerr << "calling method DatabaseTransactionImpl::rollback" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
@@ -606,7 +565,6 @@ void DatabaseTransactionImpl::rollback( )
 DocnoRangeAllocatorImpl::~DocnoRangeAllocatorImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of DocnoRangeAllocatorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -616,7 +574,6 @@ DocnoRangeAllocatorImpl::~DocnoRangeAllocatorImpl()
 
 Index DocnoRangeAllocatorImpl::allocDocnoRange( const Index& p1)
 {
-	std::cerr << "calling method DocnoRangeAllocatorImpl::allocDocnoRange" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_allocDocnoRange);
@@ -632,7 +589,6 @@ Index DocnoRangeAllocatorImpl::allocDocnoRange( const Index& p1)
 
 bool DocnoRangeAllocatorImpl::deallocDocnoRange( const Index& p1, const Index& p2)
 {
-	std::cerr << "calling method DocnoRangeAllocatorImpl::deallocDocnoRange" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deallocDocnoRange);
@@ -650,7 +606,6 @@ bool DocnoRangeAllocatorImpl::deallocDocnoRange( const Index& p1, const Index& p
 DocumentAnalyzerInstanceImpl::~DocumentAnalyzerInstanceImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of DocumentAnalyzerInstanceImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -660,7 +615,6 @@ DocumentAnalyzerInstanceImpl::~DocumentAnalyzerInstanceImpl()
 
 void DocumentAnalyzerInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
 {
-	std::cerr << "calling method DocumentAnalyzerInstanceImpl::putInput" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_putInput);
@@ -672,7 +626,6 @@ void DocumentAnalyzerInstanceImpl::putInput( const char* p1, std::size_t p2, boo
 
 bool DocumentAnalyzerInstanceImpl::analyzeNext( analyzer::Document& p1)
 {
-	std::cerr << "calling method DocumentAnalyzerInstanceImpl::analyzeNext" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_analyzeNext);
@@ -689,7 +642,6 @@ bool DocumentAnalyzerInstanceImpl::analyzeNext( analyzer::Document& p1)
 DocumentAnalyzerImpl::~DocumentAnalyzerImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of DocumentAnalyzerImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -699,7 +651,6 @@ DocumentAnalyzerImpl::~DocumentAnalyzerImpl()
 
 void DocumentAnalyzerImpl::addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5)
 {
-	std::cerr << "calling method DocumentAnalyzerImpl::addSearchIndexFeature" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSearchIndexFeature);
@@ -729,7 +680,6 @@ void DocumentAnalyzerImpl::addSearchIndexFeature( const std::string& p1, const s
 
 void DocumentAnalyzerImpl::addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5)
 {
-	std::cerr << "calling method DocumentAnalyzerImpl::addForwardIndexFeature" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addForwardIndexFeature);
@@ -759,7 +709,6 @@ void DocumentAnalyzerImpl::addForwardIndexFeature( const std::string& p1, const 
 
 void DocumentAnalyzerImpl::defineMetaData( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
-	std::cerr << "calling method DocumentAnalyzerImpl::defineMetaData" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineMetaData);
@@ -788,7 +737,6 @@ void DocumentAnalyzerImpl::defineMetaData( const std::string& p1, const std::str
 
 void DocumentAnalyzerImpl::defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
-	std::cerr << "calling method DocumentAnalyzerImpl::defineAttribute" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineAttribute);
@@ -817,7 +765,6 @@ void DocumentAnalyzerImpl::defineAttribute( const std::string& p1, const std::st
 
 void DocumentAnalyzerImpl::defineSubDocument( const std::string& p1, const std::string& p2)
 {
-	std::cerr << "calling method DocumentAnalyzerImpl::defineSubDocument" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSubDocument);
@@ -829,7 +776,6 @@ void DocumentAnalyzerImpl::defineSubDocument( const std::string& p1, const std::
 
 analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1) const
 {
-	std::cerr << "calling method DocumentAnalyzerImpl::analyze" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_analyze);
@@ -845,7 +791,6 @@ analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1) const
 
 DocumentAnalyzerInstanceInterface* DocumentAnalyzerImpl::createInstance( ) const
 {
-	std::cerr << "calling method DocumentAnalyzerImpl::createInstance" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
@@ -861,7 +806,6 @@ DocumentAnalyzerInstanceInterface* DocumentAnalyzerImpl::createInstance( ) const
 ForwardIteratorImpl::~ForwardIteratorImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of ForwardIteratorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -871,7 +815,6 @@ ForwardIteratorImpl::~ForwardIteratorImpl()
 
 void ForwardIteratorImpl::skipDoc( const Index& p1)
 {
-	std::cerr << "calling method ForwardIteratorImpl::skipDoc" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
@@ -882,7 +825,6 @@ void ForwardIteratorImpl::skipDoc( const Index& p1)
 
 Index ForwardIteratorImpl::skipPos( const Index& p1)
 {
-	std::cerr << "calling method ForwardIteratorImpl::skipPos" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipPos);
@@ -898,7 +840,6 @@ Index ForwardIteratorImpl::skipPos( const Index& p1)
 
 std::string ForwardIteratorImpl::fetch( )
 {
-	std::cerr << "calling method ForwardIteratorImpl::fetch" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_fetch);
@@ -914,7 +855,6 @@ std::string ForwardIteratorImpl::fetch( )
 InvAclIteratorImpl::~InvAclIteratorImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of InvAclIteratorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -924,7 +864,6 @@ InvAclIteratorImpl::~InvAclIteratorImpl()
 
 Index InvAclIteratorImpl::skipDoc( const Index& p1)
 {
-	std::cerr << "calling method InvAclIteratorImpl::skipDoc" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
@@ -941,7 +880,6 @@ Index InvAclIteratorImpl::skipDoc( const Index& p1)
 MetaDataReaderImpl::~MetaDataReaderImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of MetaDataReaderImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -951,7 +889,6 @@ MetaDataReaderImpl::~MetaDataReaderImpl()
 
 bool MetaDataReaderImpl::hasElement( const std::string& p1) const
 {
-	std::cerr << "calling method MetaDataReaderImpl::hasElement" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_hasElement);
@@ -967,7 +904,6 @@ bool MetaDataReaderImpl::hasElement( const std::string& p1) const
 
 Index MetaDataReaderImpl::elementHandle( const std::string& p1) const
 {
-	std::cerr << "calling method MetaDataReaderImpl::elementHandle" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_elementHandle);
@@ -983,7 +919,6 @@ Index MetaDataReaderImpl::elementHandle( const std::string& p1) const
 
 Index MetaDataReaderImpl::nofElements( ) const
 {
-	std::cerr << "calling method MetaDataReaderImpl::nofElements" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_nofElements);
@@ -998,7 +933,6 @@ Index MetaDataReaderImpl::nofElements( ) const
 
 void MetaDataReaderImpl::skipDoc( const Index& p1)
 {
-	std::cerr << "calling method MetaDataReaderImpl::skipDoc" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
@@ -1009,7 +943,6 @@ void MetaDataReaderImpl::skipDoc( const Index& p1)
 
 ArithmeticVariant MetaDataReaderImpl::getValue( const Index& p1) const
 {
-	std::cerr << "calling method MetaDataReaderImpl::getValue" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getValue);
@@ -1025,7 +958,6 @@ ArithmeticVariant MetaDataReaderImpl::getValue( const Index& p1) const
 
 const char* MetaDataReaderImpl::getType( const Index& p1) const
 {
-	std::cerr << "calling method MetaDataReaderImpl::getType" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getType);
@@ -1041,7 +973,6 @@ const char* MetaDataReaderImpl::getType( const Index& p1) const
 
 const char* MetaDataReaderImpl::getName( const Index& p1) const
 {
-	std::cerr << "calling method MetaDataReaderImpl::getName" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getName);
@@ -1058,7 +989,6 @@ const char* MetaDataReaderImpl::getName( const Index& p1) const
 NormalizerExecutionContextImpl::~NormalizerExecutionContextImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of NormalizerExecutionContextImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1068,7 +998,6 @@ NormalizerExecutionContextImpl::~NormalizerExecutionContextImpl()
 
 std::string NormalizerExecutionContextImpl::normalize( const char* p1, std::size_t p2)
 {
-	std::cerr << "calling method NormalizerExecutionContextImpl::normalize" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_normalize);
@@ -1085,7 +1014,6 @@ std::string NormalizerExecutionContextImpl::normalize( const char* p1, std::size
 NormalizerFunctionInstanceImpl::~NormalizerFunctionInstanceImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of NormalizerFunctionInstanceImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1095,7 +1023,6 @@ NormalizerFunctionInstanceImpl::~NormalizerFunctionInstanceImpl()
 
 NormalizerExecutionContextInterface* NormalizerFunctionInstanceImpl::createExecutionContext( ) const
 {
-	std::cerr << "calling method NormalizerFunctionInstanceImpl::createExecutionContext" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createExecutionContext);
@@ -1111,7 +1038,6 @@ NormalizerExecutionContextInterface* NormalizerFunctionInstanceImpl::createExecu
 NormalizerFunctionImpl::~NormalizerFunctionImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of NormalizerFunctionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1121,7 +1047,6 @@ NormalizerFunctionImpl::~NormalizerFunctionImpl()
 
 NormalizerFunctionInstanceInterface* NormalizerFunctionImpl::createInstance( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const
 {
-	std::cerr << "calling method NormalizerFunctionImpl::createInstance" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
@@ -1144,7 +1069,6 @@ NormalizerFunctionInstanceInterface* NormalizerFunctionImpl::createInstance( con
 PeerStorageTransactionImpl::~PeerStorageTransactionImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of PeerStorageTransactionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1154,7 +1078,6 @@ PeerStorageTransactionImpl::~PeerStorageTransactionImpl()
 
 void PeerStorageTransactionImpl::updateNofDocumentsInsertedChange( const GlobalCounter& p1)
 {
-	std::cerr << "calling method PeerStorageTransactionImpl::updateNofDocumentsInsertedChange" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_updateNofDocumentsInsertedChange);
@@ -1165,7 +1088,6 @@ void PeerStorageTransactionImpl::updateNofDocumentsInsertedChange( const GlobalC
 
 void PeerStorageTransactionImpl::updateDocumentFrequencyChange( const char* p1, const char* p2, const GlobalCounter& p3)
 {
-	std::cerr << "calling method PeerStorageTransactionImpl::updateDocumentFrequencyChange" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_updateDocumentFrequencyChange);
@@ -1178,7 +1100,6 @@ void PeerStorageTransactionImpl::updateDocumentFrequencyChange( const char* p1, 
 
 void PeerStorageTransactionImpl::commit( )
 {
-	std::cerr << "calling method PeerStorageTransactionImpl::commit" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_commit);
@@ -1189,7 +1110,6 @@ void PeerStorageTransactionImpl::commit( )
 
 void PeerStorageTransactionImpl::rollback( )
 {
-	std::cerr << "calling method PeerStorageTransactionImpl::rollback" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
@@ -1200,7 +1120,6 @@ void PeerStorageTransactionImpl::rollback( )
 PostingIteratorImpl::~PostingIteratorImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of PostingIteratorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1210,7 +1129,6 @@ PostingIteratorImpl::~PostingIteratorImpl()
 
 Index PostingIteratorImpl::skipDoc( const Index& p1)
 {
-	std::cerr << "calling method PostingIteratorImpl::skipDoc" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipDoc);
@@ -1226,7 +1144,6 @@ Index PostingIteratorImpl::skipDoc( const Index& p1)
 
 Index PostingIteratorImpl::skipPos( const Index& p1)
 {
-	std::cerr << "calling method PostingIteratorImpl::skipPos" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_skipPos);
@@ -1242,7 +1159,6 @@ Index PostingIteratorImpl::skipPos( const Index& p1)
 
 const char* PostingIteratorImpl::featureid( ) const
 {
-	std::cerr << "calling method PostingIteratorImpl::featureid" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_featureid);
@@ -1262,7 +1178,6 @@ std::vector<const PostingIteratorInterface*> PostingIteratorImpl::subExpressions
 
 GlobalCounter PostingIteratorImpl::documentFrequency( ) const
 {
-	std::cerr << "calling method PostingIteratorImpl::documentFrequency" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_documentFrequency);
@@ -1277,7 +1192,6 @@ GlobalCounter PostingIteratorImpl::documentFrequency( ) const
 
 unsigned int PostingIteratorImpl::frequency( )
 {
-	std::cerr << "calling method PostingIteratorImpl::frequency" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_frequency);
@@ -1292,7 +1206,6 @@ unsigned int PostingIteratorImpl::frequency( )
 
 Index PostingIteratorImpl::docno( ) const
 {
-	std::cerr << "calling method PostingIteratorImpl::docno" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_docno);
@@ -1307,7 +1220,6 @@ Index PostingIteratorImpl::docno( ) const
 
 Index PostingIteratorImpl::posno( ) const
 {
-	std::cerr << "calling method PostingIteratorImpl::posno" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_posno);
@@ -1323,7 +1235,6 @@ Index PostingIteratorImpl::posno( ) const
 PostingJoinOperatorImpl::~PostingJoinOperatorImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of PostingJoinOperatorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1339,7 +1250,6 @@ PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const s
 QueryAnalyzerImpl::~QueryAnalyzerImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of QueryAnalyzerImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1349,7 +1259,6 @@ QueryAnalyzerImpl::~QueryAnalyzerImpl()
 
 void QueryAnalyzerImpl::definePhraseType( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
-	std::cerr << "calling method QueryAnalyzerImpl::definePhraseType" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_definePhraseType);
@@ -1378,7 +1287,6 @@ void QueryAnalyzerImpl::definePhraseType( const std::string& p1, const std::stri
 
 std::vector<analyzer::Term> QueryAnalyzerImpl::analyzePhrase( const std::string& p1, const std::string& p2) const
 {
-	std::cerr << "calling method QueryAnalyzerImpl::analyzePhrase" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_analyzePhrase);
@@ -1401,7 +1309,6 @@ std::vector<analyzer::Term> QueryAnalyzerImpl::analyzePhrase( const std::string&
 QueryEvalImpl::~QueryEvalImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of QueryEvalImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1411,7 +1318,6 @@ QueryEvalImpl::~QueryEvalImpl()
 
 void QueryEvalImpl::addTerm( const std::string& p1, const std::string& p2, const std::string& p3)
 {
-	std::cerr << "calling method QueryEvalImpl::addTerm" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addTerm);
@@ -1424,7 +1330,6 @@ void QueryEvalImpl::addTerm( const std::string& p1, const std::string& p2, const
 
 void QueryEvalImpl::addSelectionFeature( const std::string& p1)
 {
-	std::cerr << "calling method QueryEvalImpl::addSelectionFeature" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSelectionFeature);
@@ -1435,7 +1340,6 @@ void QueryEvalImpl::addSelectionFeature( const std::string& p1)
 
 void QueryEvalImpl::addRestrictionFeature( const std::string& p1)
 {
-	std::cerr << "calling method QueryEvalImpl::addRestrictionFeature" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addRestrictionFeature);
@@ -1446,7 +1350,6 @@ void QueryEvalImpl::addRestrictionFeature( const std::string& p1)
 
 void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::SummarizerFeatureParameter>& p3, const std::string& p4)
 {
-	std::cerr << "calling method QueryEvalImpl::addSummarizerFunction" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSummarizerFunction);
@@ -1468,7 +1371,6 @@ void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunc
 
 void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<std::string>& p3)
 {
-	std::cerr << "calling method QueryEvalImpl::addWeightingFunction" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addWeightingFunction);
@@ -1489,7 +1391,6 @@ void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFuncti
 
 QueryInterface* QueryEvalImpl::createQuery( const StorageClientInterface* p1) const
 {
-	std::cerr << "calling method QueryEvalImpl::createQuery" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createQuery);
@@ -1508,7 +1409,6 @@ QueryInterface* QueryEvalImpl::createQuery( const StorageClientInterface* p1) co
 QueryImpl::~QueryImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of QueryImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1518,7 +1418,6 @@ QueryImpl::~QueryImpl()
 
 void QueryImpl::pushTerm( const std::string& p1, const std::string& p2)
 {
-	std::cerr << "calling method QueryImpl::pushTerm" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushTerm);
@@ -1530,7 +1429,6 @@ void QueryImpl::pushTerm( const std::string& p1, const std::string& p2)
 
 void QueryImpl::pushExpression( const PostingJoinOperatorInterface* p1, std::size_t p2, int p3)
 {
-	std::cerr << "calling method QueryImpl::pushExpression" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushExpression);
@@ -1545,7 +1443,6 @@ void QueryImpl::pushExpression( const PostingJoinOperatorInterface* p1, std::siz
 
 void QueryImpl::pushDuplicate( )
 {
-	std::cerr << "calling method QueryImpl::pushDuplicate" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushDuplicate);
@@ -1555,7 +1452,6 @@ void QueryImpl::pushDuplicate( )
 
 void QueryImpl::attachVariable( const std::string& p1)
 {
-	std::cerr << "calling method QueryImpl::attachVariable" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_attachVariable);
@@ -1566,7 +1462,6 @@ void QueryImpl::attachVariable( const std::string& p1)
 
 void QueryImpl::defineFeature( const std::string& p1, float p2)
 {
-	std::cerr << "calling method QueryImpl::defineFeature" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineFeature);
@@ -1578,7 +1473,6 @@ void QueryImpl::defineFeature( const std::string& p1, float p2)
 
 void QueryImpl::defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
 {
-	std::cerr << "calling method QueryImpl::defineMetaDataRestriction" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineMetaDataRestriction);
@@ -1592,7 +1486,6 @@ void QueryImpl::defineMetaDataRestriction( QueryInterface::CompareOperator p1, c
 
 void QueryImpl::setMaxNofRanks( std::size_t p1)
 {
-	std::cerr << "calling method QueryImpl::setMaxNofRanks" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMaxNofRanks);
@@ -1603,7 +1496,6 @@ void QueryImpl::setMaxNofRanks( std::size_t p1)
 
 void QueryImpl::setMinRank( std::size_t p1)
 {
-	std::cerr << "calling method QueryImpl::setMinRank" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMinRank);
@@ -1614,7 +1506,6 @@ void QueryImpl::setMinRank( std::size_t p1)
 
 void QueryImpl::setUserName( const std::string& p1)
 {
-	std::cerr << "calling method QueryImpl::setUserName" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setUserName);
@@ -1625,7 +1516,6 @@ void QueryImpl::setUserName( const std::string& p1)
 
 std::vector<ResultDocument> QueryImpl::evaluate( )
 {
-	std::cerr << "calling method QueryImpl::evaluate" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_evaluate);
@@ -1646,7 +1536,6 @@ std::vector<ResultDocument> QueryImpl::evaluate( )
 QueryProcessorImpl::~QueryProcessorImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of QueryProcessorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1656,7 +1545,6 @@ QueryProcessorImpl::~QueryProcessorImpl()
 
 void QueryProcessorImpl::definePostingJoinOperator( const std::string& p1, PostingJoinOperatorInterface* p2)
 {
-	std::cerr << "calling method QueryProcessorImpl::definePostingJoinOperator" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_definePostingJoinOperator);
@@ -1673,7 +1561,6 @@ void QueryProcessorImpl::definePostingJoinOperator( const std::string& p1, Posti
 
 const PostingJoinOperatorInterface* QueryProcessorImpl::getPostingJoinOperator( const std::string& p1) const
 {
-	std::cerr << "calling method QueryProcessorImpl::getPostingJoinOperator" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getPostingJoinOperator);
@@ -1690,7 +1577,6 @@ const PostingJoinOperatorInterface* QueryProcessorImpl::getPostingJoinOperator( 
 
 void QueryProcessorImpl::defineWeightingFunction( const std::string& p1, WeightingFunctionInterface* p2)
 {
-	std::cerr << "calling method QueryProcessorImpl::defineWeightingFunction" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineWeightingFunction);
@@ -1707,7 +1593,6 @@ void QueryProcessorImpl::defineWeightingFunction( const std::string& p1, Weighti
 
 const WeightingFunctionInterface* QueryProcessorImpl::getWeightingFunction( const std::string& p1) const
 {
-	std::cerr << "calling method QueryProcessorImpl::getWeightingFunction" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getWeightingFunction);
@@ -1724,7 +1609,6 @@ const WeightingFunctionInterface* QueryProcessorImpl::getWeightingFunction( cons
 
 void QueryProcessorImpl::defineSummarizerFunction( const std::string& p1, SummarizerFunctionInterface* p2)
 {
-	std::cerr << "calling method QueryProcessorImpl::defineSummarizerFunction" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSummarizerFunction);
@@ -1741,7 +1625,6 @@ void QueryProcessorImpl::defineSummarizerFunction( const std::string& p1, Summar
 
 const SummarizerFunctionInterface* QueryProcessorImpl::getSummarizerFunction( const std::string& p1) const
 {
-	std::cerr << "calling method QueryProcessorImpl::getSummarizerFunction" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getSummarizerFunction);
@@ -1759,7 +1642,6 @@ const SummarizerFunctionInterface* QueryProcessorImpl::getSummarizerFunction( co
 SegmenterInstanceImpl::~SegmenterInstanceImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of SegmenterInstanceImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1769,7 +1651,6 @@ SegmenterInstanceImpl::~SegmenterInstanceImpl()
 
 void SegmenterInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
 {
-	std::cerr << "calling method SegmenterInstanceImpl::putInput" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_putInput);
@@ -1781,7 +1662,6 @@ void SegmenterInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
 
 bool SegmenterInstanceImpl::getNext( int& p1, SegmenterPosition& p2, const char*& p3, std::size_t& p4)
 {
-	std::cerr << "calling method SegmenterInstanceImpl::getNext" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getNext);
@@ -1802,7 +1682,6 @@ bool SegmenterInstanceImpl::getNext( int& p1, SegmenterPosition& p2, const char*
 SegmenterImpl::~SegmenterImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of SegmenterImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1812,7 +1691,6 @@ SegmenterImpl::~SegmenterImpl()
 
 void SegmenterImpl::defineSelectorExpression( int p1, const std::string& p2)
 {
-	std::cerr << "calling method SegmenterImpl::defineSelectorExpression" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSelectorExpression);
@@ -1824,7 +1702,6 @@ void SegmenterImpl::defineSelectorExpression( int p1, const std::string& p2)
 
 void SegmenterImpl::defineSubSection( int p1, int p2, const std::string& p3)
 {
-	std::cerr << "calling method SegmenterImpl::defineSubSection" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSubSection);
@@ -1837,7 +1714,6 @@ void SegmenterImpl::defineSubSection( int p1, int p2, const std::string& p3)
 
 SegmenterInstanceInterface* SegmenterImpl::createInstance( ) const
 {
-	std::cerr << "calling method SegmenterImpl::createInstance" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
@@ -1853,7 +1729,6 @@ SegmenterInstanceInterface* SegmenterImpl::createInstance( ) const
 StorageAlterMetaDataTableImpl::~StorageAlterMetaDataTableImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of StorageAlterMetaDataTableImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1863,7 +1738,6 @@ StorageAlterMetaDataTableImpl::~StorageAlterMetaDataTableImpl()
 
 void StorageAlterMetaDataTableImpl::addElement( const std::string& p1, const std::string& p2)
 {
-	std::cerr << "calling method StorageAlterMetaDataTableImpl::addElement" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addElement);
@@ -1875,7 +1749,6 @@ void StorageAlterMetaDataTableImpl::addElement( const std::string& p1, const std
 
 void StorageAlterMetaDataTableImpl::alterElement( const std::string& p1, const std::string& p2, const std::string& p3)
 {
-	std::cerr << "calling method StorageAlterMetaDataTableImpl::alterElement" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_alterElement);
@@ -1888,7 +1761,6 @@ void StorageAlterMetaDataTableImpl::alterElement( const std::string& p1, const s
 
 void StorageAlterMetaDataTableImpl::renameElement( const std::string& p1, const std::string& p2)
 {
-	std::cerr << "calling method StorageAlterMetaDataTableImpl::renameElement" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_renameElement);
@@ -1900,7 +1772,6 @@ void StorageAlterMetaDataTableImpl::renameElement( const std::string& p1, const 
 
 void StorageAlterMetaDataTableImpl::deleteElement( const std::string& p1)
 {
-	std::cerr << "calling method StorageAlterMetaDataTableImpl::deleteElement" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deleteElement);
@@ -1911,7 +1782,6 @@ void StorageAlterMetaDataTableImpl::deleteElement( const std::string& p1)
 
 void StorageAlterMetaDataTableImpl::clearElement( const std::string& p1)
 {
-	std::cerr << "calling method StorageAlterMetaDataTableImpl::clearElement" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_clearElement);
@@ -1922,7 +1792,6 @@ void StorageAlterMetaDataTableImpl::clearElement( const std::string& p1)
 
 void StorageAlterMetaDataTableImpl::commit( )
 {
-	std::cerr << "calling method StorageAlterMetaDataTableImpl::commit" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_commit);
@@ -1933,7 +1802,6 @@ void StorageAlterMetaDataTableImpl::commit( )
 
 void StorageAlterMetaDataTableImpl::rollback( )
 {
-	std::cerr << "calling method StorageAlterMetaDataTableImpl::rollback" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
@@ -1944,7 +1812,6 @@ void StorageAlterMetaDataTableImpl::rollback( )
 StorageClientImpl::~StorageClientImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of StorageClientImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -1954,7 +1821,6 @@ StorageClientImpl::~StorageClientImpl()
 
 void StorageClientImpl::close( )
 {
-	std::cerr << "calling method StorageClientImpl::close" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_close);
@@ -1964,7 +1830,6 @@ void StorageClientImpl::close( )
 
 PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const std::string& p1, const std::string& p2) const
 {
-	std::cerr << "calling method StorageClientImpl::createTermPostingIterator" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createTermPostingIterator);
@@ -1981,7 +1846,6 @@ PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const st
 
 ForwardIteratorInterface* StorageClientImpl::createForwardIterator( const std::string& p1) const
 {
-	std::cerr << "calling method StorageClientImpl::createForwardIterator" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createForwardIterator);
@@ -1997,7 +1861,6 @@ ForwardIteratorInterface* StorageClientImpl::createForwardIterator( const std::s
 
 InvAclIteratorInterface* StorageClientImpl::createInvAclIterator( const std::string& p1) const
 {
-	std::cerr << "calling method StorageClientImpl::createInvAclIterator" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInvAclIterator);
@@ -2013,7 +1876,6 @@ InvAclIteratorInterface* StorageClientImpl::createInvAclIterator( const std::str
 
 GlobalCounter StorageClientImpl::globalNofDocumentsInserted( ) const
 {
-	std::cerr << "calling method StorageClientImpl::globalNofDocumentsInserted" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_globalNofDocumentsInserted);
@@ -2028,7 +1890,6 @@ GlobalCounter StorageClientImpl::globalNofDocumentsInserted( ) const
 
 Index StorageClientImpl::localNofDocumentsInserted( ) const
 {
-	std::cerr << "calling method StorageClientImpl::localNofDocumentsInserted" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_localNofDocumentsInserted);
@@ -2043,7 +1904,6 @@ Index StorageClientImpl::localNofDocumentsInserted( ) const
 
 GlobalCounter StorageClientImpl::globalDocumentFrequency( const std::string& p1, const std::string& p2) const
 {
-	std::cerr << "calling method StorageClientImpl::globalDocumentFrequency" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_globalDocumentFrequency);
@@ -2060,7 +1920,6 @@ GlobalCounter StorageClientImpl::globalDocumentFrequency( const std::string& p1,
 
 Index StorageClientImpl::localDocumentFrequency( const std::string& p1, const std::string& p2) const
 {
-	std::cerr << "calling method StorageClientImpl::localDocumentFrequency" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_localDocumentFrequency);
@@ -2077,7 +1936,6 @@ Index StorageClientImpl::localDocumentFrequency( const std::string& p1, const st
 
 Index StorageClientImpl::maxDocumentNumber( ) const
 {
-	std::cerr << "calling method StorageClientImpl::maxDocumentNumber" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_maxDocumentNumber);
@@ -2092,7 +1950,6 @@ Index StorageClientImpl::maxDocumentNumber( ) const
 
 Index StorageClientImpl::documentNumber( const std::string& p1) const
 {
-	std::cerr << "calling method StorageClientImpl::documentNumber" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_documentNumber);
@@ -2108,7 +1965,6 @@ Index StorageClientImpl::documentNumber( const std::string& p1) const
 
 MetaDataReaderInterface* StorageClientImpl::createMetaDataReader( ) const
 {
-	std::cerr << "calling method StorageClientImpl::createMetaDataReader" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createMetaDataReader);
@@ -2123,7 +1979,6 @@ MetaDataReaderInterface* StorageClientImpl::createMetaDataReader( ) const
 
 AttributeReaderInterface* StorageClientImpl::createAttributeReader( ) const
 {
-	std::cerr << "calling method StorageClientImpl::createAttributeReader" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createAttributeReader);
@@ -2138,7 +1993,6 @@ AttributeReaderInterface* StorageClientImpl::createAttributeReader( ) const
 
 DocnoRangeAllocatorInterface* StorageClientImpl::createDocnoRangeAllocator( )
 {
-	std::cerr << "calling method StorageClientImpl::createDocnoRangeAllocator" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDocnoRangeAllocator);
@@ -2153,7 +2007,6 @@ DocnoRangeAllocatorInterface* StorageClientImpl::createDocnoRangeAllocator( )
 
 StorageTransactionInterface* StorageClientImpl::createTransaction( )
 {
-	std::cerr << "calling method StorageClientImpl::createTransaction" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createTransaction);
@@ -2168,7 +2021,6 @@ StorageTransactionInterface* StorageClientImpl::createTransaction( )
 
 PeerStorageTransactionInterface* StorageClientImpl::createPeerStorageTransaction( )
 {
-	std::cerr << "calling method StorageClientImpl::createPeerStorageTransaction" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createPeerStorageTransaction);
@@ -2183,7 +2035,6 @@ PeerStorageTransactionInterface* StorageClientImpl::createPeerStorageTransaction
 
 void StorageClientImpl::defineStoragePeerInterface( const StoragePeerInterface* p1, bool p2)
 {
-	std::cerr << "calling method StorageClientImpl::defineStoragePeerInterface" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineStoragePeerInterface);
@@ -2197,7 +2048,6 @@ void StorageClientImpl::defineStoragePeerInterface( const StoragePeerInterface* 
 
 StorageDocumentInterface* StorageClientImpl::createDocumentChecker( const std::string& p1, const std::string& p2) const
 {
-	std::cerr << "calling method StorageClientImpl::createDocumentChecker" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDocumentChecker);
@@ -2219,7 +2069,6 @@ void StorageClientImpl::checkStorage( std::ostream& p1) const
 
 StorageDumpInterface* StorageClientImpl::createDump( ) const
 {
-	std::cerr << "calling method StorageClientImpl::createDump" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDump);
@@ -2235,7 +2084,6 @@ StorageDumpInterface* StorageClientImpl::createDump( ) const
 StorageDocumentImpl::~StorageDocumentImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of StorageDocumentImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2245,7 +2093,6 @@ StorageDocumentImpl::~StorageDocumentImpl()
 
 void StorageDocumentImpl::addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3)
 {
-	std::cerr << "calling method StorageDocumentImpl::addSearchIndexTerm" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSearchIndexTerm);
@@ -2258,7 +2105,6 @@ void StorageDocumentImpl::addSearchIndexTerm( const std::string& p1, const std::
 
 void StorageDocumentImpl::addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3)
 {
-	std::cerr << "calling method StorageDocumentImpl::addForwardIndexTerm" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addForwardIndexTerm);
@@ -2271,7 +2117,6 @@ void StorageDocumentImpl::addForwardIndexTerm( const std::string& p1, const std:
 
 void StorageDocumentImpl::setMetaData( const std::string& p1, const ArithmeticVariant& p2)
 {
-	std::cerr << "calling method StorageDocumentImpl::setMetaData" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMetaData);
@@ -2283,7 +2128,6 @@ void StorageDocumentImpl::setMetaData( const std::string& p1, const ArithmeticVa
 
 void StorageDocumentImpl::setAttribute( const std::string& p1, const std::string& p2)
 {
-	std::cerr << "calling method StorageDocumentImpl::setAttribute" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setAttribute);
@@ -2295,7 +2139,6 @@ void StorageDocumentImpl::setAttribute( const std::string& p1, const std::string
 
 void StorageDocumentImpl::setUserAccessRight( const std::string& p1)
 {
-	std::cerr << "calling method StorageDocumentImpl::setUserAccessRight" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setUserAccessRight);
@@ -2306,7 +2149,6 @@ void StorageDocumentImpl::setUserAccessRight( const std::string& p1)
 
 void StorageDocumentImpl::done( )
 {
-	std::cerr << "calling method StorageDocumentImpl::done" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_done);
@@ -2318,7 +2160,6 @@ void StorageDocumentImpl::done( )
 StorageDumpImpl::~StorageDumpImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of StorageDumpImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2328,7 +2169,6 @@ StorageDumpImpl::~StorageDumpImpl()
 
 bool StorageDumpImpl::nextChunk( const char*& p1, std::size_t& p2)
 {
-	std::cerr << "calling method StorageDumpImpl::nextChunk" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_nextChunk);
@@ -2347,7 +2187,6 @@ bool StorageDumpImpl::nextChunk( const char*& p1, std::size_t& p2)
 StorageImpl::~StorageImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of StorageImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2357,7 +2196,6 @@ StorageImpl::~StorageImpl()
 
 StorageClientInterface* StorageImpl::createClient( const std::string& p1, DatabaseClientInterface* p2) const
 {
-	std::cerr << "calling method StorageImpl::createClient" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClient);
@@ -2379,7 +2217,6 @@ StorageClientInterface* StorageImpl::createClient( const std::string& p1, Databa
 
 void StorageImpl::createStorage( const std::string& p1, DatabaseClientInterface* p2) const
 {
-	std::cerr << "calling method StorageImpl::createStorage" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createStorage);
@@ -2393,7 +2230,6 @@ void StorageImpl::createStorage( const std::string& p1, DatabaseClientInterface*
 
 StorageAlterMetaDataTableInterface* StorageImpl::createAlterMetaDataTable( DatabaseClientInterface* p1) const
 {
-	std::cerr << "calling method StorageImpl::createAlterMetaDataTable" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createAlterMetaDataTable);
@@ -2414,7 +2250,6 @@ StorageAlterMetaDataTableInterface* StorageImpl::createAlterMetaDataTable( Datab
 
 const char* StorageImpl::getConfigDescription( StorageInterface::ConfigType p1) const
 {
-	std::cerr << "calling method StorageImpl::getConfigDescription" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigDescription);
@@ -2430,7 +2265,6 @@ const char* StorageImpl::getConfigDescription( StorageInterface::ConfigType p1) 
 
 const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) const
 {
-	std::cerr << "calling method StorageImpl::getConfigParameters" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigParameters);
@@ -2447,7 +2281,6 @@ const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) 
 StorageObjectBuilderImpl::~StorageObjectBuilderImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of StorageObjectBuilderImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2457,7 +2290,6 @@ StorageObjectBuilderImpl::~StorageObjectBuilderImpl()
 
 const StorageInterface* StorageObjectBuilderImpl::getStorage( ) const
 {
-	std::cerr << "calling method StorageObjectBuilderImpl::getStorage" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getStorage);
@@ -2473,7 +2305,6 @@ const StorageInterface* StorageObjectBuilderImpl::getStorage( ) const
 
 const DatabaseInterface* StorageObjectBuilderImpl::getDatabase( const std::string& p1) const
 {
-	std::cerr << "calling method StorageObjectBuilderImpl::getDatabase" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getDatabase);
@@ -2490,7 +2321,6 @@ const DatabaseInterface* StorageObjectBuilderImpl::getDatabase( const std::strin
 
 const QueryProcessorInterface* StorageObjectBuilderImpl::getQueryProcessor( ) const
 {
-	std::cerr << "calling method StorageObjectBuilderImpl::getQueryProcessor" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getQueryProcessor);
@@ -2506,7 +2336,6 @@ const QueryProcessorInterface* StorageObjectBuilderImpl::getQueryProcessor( ) co
 
 StorageClientInterface* StorageObjectBuilderImpl::createStorageClient( const std::string& p1) const
 {
-	std::cerr << "calling method StorageObjectBuilderImpl::createStorageClient" << std::endl;
 	if (p1.empty()) return new StorageClientImpl( 0, ctx());
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2523,7 +2352,6 @@ StorageClientInterface* StorageObjectBuilderImpl::createStorageClient( const std
 
 StorageAlterMetaDataTableInterface* StorageObjectBuilderImpl::createAlterMetaDataTable( const std::string& p1) const
 {
-	std::cerr << "calling method StorageObjectBuilderImpl::createAlterMetaDataTable" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createAlterMetaDataTable);
@@ -2539,7 +2367,6 @@ StorageAlterMetaDataTableInterface* StorageObjectBuilderImpl::createAlterMetaDat
 
 QueryEvalInterface* StorageObjectBuilderImpl::createQueryEval( ) const
 {
-	std::cerr << "calling method StorageObjectBuilderImpl::createQueryEval" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createQueryEval);
@@ -2555,7 +2382,6 @@ QueryEvalInterface* StorageObjectBuilderImpl::createQueryEval( ) const
 StoragePeerImpl::~StoragePeerImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of StoragePeerImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2565,7 +2391,6 @@ StoragePeerImpl::~StoragePeerImpl()
 
 StoragePeerTransactionInterface* StoragePeerImpl::createTransaction( ) const
 {
-	std::cerr << "calling method StoragePeerImpl::createTransaction" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createTransaction);
@@ -2581,7 +2406,6 @@ StoragePeerTransactionInterface* StoragePeerImpl::createTransaction( ) const
 StoragePeerTransactionImpl::~StoragePeerTransactionImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of StoragePeerTransactionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2591,7 +2415,6 @@ StoragePeerTransactionImpl::~StoragePeerTransactionImpl()
 
 void StoragePeerTransactionImpl::populateNofDocumentsInsertedChange( int p1)
 {
-	std::cerr << "calling method StoragePeerTransactionImpl::populateNofDocumentsInsertedChange" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_populateNofDocumentsInsertedChange);
@@ -2602,7 +2425,6 @@ void StoragePeerTransactionImpl::populateNofDocumentsInsertedChange( int p1)
 
 void StoragePeerTransactionImpl::populateDocumentFrequencyChange( const char* p1, const char* p2, int p3, bool p4)
 {
-	std::cerr << "calling method StoragePeerTransactionImpl::populateDocumentFrequencyChange" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_populateDocumentFrequencyChange);
@@ -2616,7 +2438,6 @@ void StoragePeerTransactionImpl::populateDocumentFrequencyChange( const char* p1
 
 void StoragePeerTransactionImpl::try_commit( )
 {
-	std::cerr << "calling method StoragePeerTransactionImpl::try_commit" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_try_commit);
@@ -2626,7 +2447,6 @@ void StoragePeerTransactionImpl::try_commit( )
 
 void StoragePeerTransactionImpl::final_commit( )
 {
-	std::cerr << "calling method StoragePeerTransactionImpl::final_commit" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_final_commit);
@@ -2636,7 +2456,6 @@ void StoragePeerTransactionImpl::final_commit( )
 
 void StoragePeerTransactionImpl::rollback( )
 {
-	std::cerr << "calling method StoragePeerTransactionImpl::rollback" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
@@ -2647,7 +2466,6 @@ void StoragePeerTransactionImpl::rollback( )
 StorageTransactionImpl::~StorageTransactionImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of StorageTransactionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2657,7 +2475,6 @@ StorageTransactionImpl::~StorageTransactionImpl()
 
 StorageDocumentInterface* StorageTransactionImpl::createDocument( const std::string& p1, const Index& p2)
 {
-	std::cerr << "calling method StorageTransactionImpl::createDocument" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDocument);
@@ -2674,7 +2491,6 @@ StorageDocumentInterface* StorageTransactionImpl::createDocument( const std::str
 
 void StorageTransactionImpl::deleteDocument( const std::string& p1)
 {
-	std::cerr << "calling method StorageTransactionImpl::deleteDocument" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deleteDocument);
@@ -2685,7 +2501,6 @@ void StorageTransactionImpl::deleteDocument( const std::string& p1)
 
 void StorageTransactionImpl::deleteUserAccessRights( const std::string& p1)
 {
-	std::cerr << "calling method StorageTransactionImpl::deleteUserAccessRights" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deleteUserAccessRights);
@@ -2696,7 +2511,6 @@ void StorageTransactionImpl::deleteUserAccessRights( const std::string& p1)
 
 void StorageTransactionImpl::commit( )
 {
-	std::cerr << "calling method StorageTransactionImpl::commit" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_commit);
@@ -2707,7 +2521,6 @@ void StorageTransactionImpl::commit( )
 
 void StorageTransactionImpl::rollback( )
 {
-	std::cerr << "calling method StorageTransactionImpl::rollback" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_rollback);
@@ -2718,7 +2531,6 @@ void StorageTransactionImpl::rollback( )
 SummarizerExecutionContextImpl::~SummarizerExecutionContextImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of SummarizerExecutionContextImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2728,7 +2540,6 @@ SummarizerExecutionContextImpl::~SummarizerExecutionContextImpl()
 
 void SummarizerExecutionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3)
 {
-	std::cerr << "calling method SummarizerExecutionContextImpl::addSummarizationFeature" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addSummarizationFeature);
@@ -2746,7 +2557,6 @@ void SummarizerExecutionContextImpl::addSummarizationFeature( const std::string&
 
 std::vector<SummarizerExecutionContextInterface::SummaryElement> SummarizerExecutionContextImpl::getSummary( const Index& p1)
 {
-	std::cerr << "calling method SummarizerExecutionContextImpl::getSummary" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getSummary);
@@ -2768,7 +2578,6 @@ std::vector<SummarizerExecutionContextInterface::SummaryElement> SummarizerExecu
 SummarizerFunctionInstanceImpl::~SummarizerFunctionInstanceImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of SummarizerFunctionInstanceImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2778,7 +2587,6 @@ SummarizerFunctionInstanceImpl::~SummarizerFunctionInstanceImpl()
 
 void SummarizerFunctionInstanceImpl::addStringParameter( const std::string& p1, const std::string& p2)
 {
-	std::cerr << "calling method SummarizerFunctionInstanceImpl::addStringParameter" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addStringParameter);
@@ -2790,7 +2598,6 @@ void SummarizerFunctionInstanceImpl::addStringParameter( const std::string& p1, 
 
 void SummarizerFunctionInstanceImpl::addNumericParameter( const std::string& p1, const ArithmeticVariant& p2)
 {
-	std::cerr << "calling method SummarizerFunctionInstanceImpl::addNumericParameter" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addNumericParameter);
@@ -2802,7 +2609,6 @@ void SummarizerFunctionInstanceImpl::addNumericParameter( const std::string& p1,
 
 SummarizerExecutionContextInterface* SummarizerFunctionInstanceImpl::createExecutionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2) const
 {
-	std::cerr << "calling method SummarizerFunctionInstanceImpl::createExecutionContext" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createExecutionContext);
@@ -2823,7 +2629,6 @@ SummarizerExecutionContextInterface* SummarizerFunctionInstanceImpl::createExecu
 
 std::string SummarizerFunctionInstanceImpl::tostring( ) const
 {
-	std::cerr << "calling method SummarizerFunctionInstanceImpl::tostring" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_tostring);
@@ -2839,7 +2644,6 @@ std::string SummarizerFunctionInstanceImpl::tostring( ) const
 SummarizerFunctionImpl::~SummarizerFunctionImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of SummarizerFunctionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2849,7 +2653,6 @@ SummarizerFunctionImpl::~SummarizerFunctionImpl()
 
 SummarizerFunctionInstanceInterface* SummarizerFunctionImpl::createInstance( const QueryProcessorInterface* p1) const
 {
-	std::cerr << "calling method SummarizerFunctionImpl::createInstance" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
@@ -2868,7 +2671,6 @@ SummarizerFunctionInstanceInterface* SummarizerFunctionImpl::createInstance( con
 TextProcessorImpl::~TextProcessorImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of TextProcessorImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2878,7 +2680,6 @@ TextProcessorImpl::~TextProcessorImpl()
 
 void TextProcessorImpl::addResourcePath( const std::string& p1)
 {
-	std::cerr << "calling method TextProcessorImpl::addResourcePath" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addResourcePath);
@@ -2889,7 +2690,6 @@ void TextProcessorImpl::addResourcePath( const std::string& p1)
 
 std::string TextProcessorImpl::getResourcePath( const std::string& p1) const
 {
-	std::cerr << "calling method TextProcessorImpl::getResourcePath" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getResourcePath);
@@ -2905,7 +2705,6 @@ std::string TextProcessorImpl::getResourcePath( const std::string& p1) const
 
 const TokenizerFunctionInterface* TextProcessorImpl::getTokenizer( const std::string& p1) const
 {
-	std::cerr << "calling method TextProcessorImpl::getTokenizer" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getTokenizer);
@@ -2922,7 +2721,6 @@ const TokenizerFunctionInterface* TextProcessorImpl::getTokenizer( const std::st
 
 const NormalizerFunctionInterface* TextProcessorImpl::getNormalizer( const std::string& p1) const
 {
-	std::cerr << "calling method TextProcessorImpl::getNormalizer" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getNormalizer);
@@ -2939,7 +2737,6 @@ const NormalizerFunctionInterface* TextProcessorImpl::getNormalizer( const std::
 
 void TextProcessorImpl::defineTokenizer( const std::string& p1, const TokenizerFunctionInterface* p2)
 {
-	std::cerr << "calling method TextProcessorImpl::defineTokenizer" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineTokenizer);
@@ -2953,7 +2750,6 @@ void TextProcessorImpl::defineTokenizer( const std::string& p1, const TokenizerF
 
 void TextProcessorImpl::defineNormalizer( const std::string& p1, const NormalizerFunctionInterface* p2)
 {
-	std::cerr << "calling method TextProcessorImpl::defineNormalizer" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineNormalizer);
@@ -2968,7 +2764,6 @@ void TextProcessorImpl::defineNormalizer( const std::string& p1, const Normalize
 TokenizerExecutionContextImpl::~TokenizerExecutionContextImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of TokenizerExecutionContextImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -2978,7 +2773,6 @@ TokenizerExecutionContextImpl::~TokenizerExecutionContextImpl()
 
 std::vector<analyzer::Token> TokenizerExecutionContextImpl::tokenize( const char* p1, std::size_t p2)
 {
-	std::cerr << "calling method TokenizerExecutionContextImpl::tokenize" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_tokenize);
@@ -3000,7 +2794,6 @@ std::vector<analyzer::Token> TokenizerExecutionContextImpl::tokenize( const char
 TokenizerFunctionInstanceImpl::~TokenizerFunctionInstanceImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of TokenizerFunctionInstanceImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -3010,7 +2803,6 @@ TokenizerFunctionInstanceImpl::~TokenizerFunctionInstanceImpl()
 
 bool TokenizerFunctionInstanceImpl::concatBeforeTokenize( ) const
 {
-	std::cerr << "calling method TokenizerFunctionInstanceImpl::concatBeforeTokenize" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_concatBeforeTokenize);
@@ -3025,7 +2817,6 @@ bool TokenizerFunctionInstanceImpl::concatBeforeTokenize( ) const
 
 TokenizerExecutionContextInterface* TokenizerFunctionInstanceImpl::createExecutionContext( ) const
 {
-	std::cerr << "calling method TokenizerFunctionInstanceImpl::createExecutionContext" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createExecutionContext);
@@ -3041,7 +2832,6 @@ TokenizerExecutionContextInterface* TokenizerFunctionInstanceImpl::createExecuti
 TokenizerFunctionImpl::~TokenizerFunctionImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of TokenizerFunctionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -3051,7 +2841,6 @@ TokenizerFunctionImpl::~TokenizerFunctionImpl()
 
 TokenizerFunctionInstanceInterface* TokenizerFunctionImpl::createInstance( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const
 {
-	std::cerr << "calling method TokenizerFunctionImpl::createInstance" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
@@ -3074,7 +2863,6 @@ TokenizerFunctionInstanceInterface* TokenizerFunctionImpl::createInstance( const
 WeightingExecutionContextImpl::~WeightingExecutionContextImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of WeightingExecutionContextImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -3084,7 +2872,6 @@ WeightingExecutionContextImpl::~WeightingExecutionContextImpl()
 
 float WeightingExecutionContextImpl::call( const Index& p1)
 {
-	std::cerr << "calling method WeightingExecutionContextImpl::call" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_call);
@@ -3101,7 +2888,6 @@ float WeightingExecutionContextImpl::call( const Index& p1)
 WeightingFunctionInstanceImpl::~WeightingFunctionInstanceImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of WeightingFunctionInstanceImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -3111,7 +2897,6 @@ WeightingFunctionInstanceImpl::~WeightingFunctionInstanceImpl()
 
 void WeightingFunctionInstanceImpl::addStringParameter( const std::string& p1, const std::string& p2)
 {
-	std::cerr << "calling method WeightingFunctionInstanceImpl::addStringParameter" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addStringParameter);
@@ -3123,7 +2908,6 @@ void WeightingFunctionInstanceImpl::addStringParameter( const std::string& p1, c
 
 void WeightingFunctionInstanceImpl::addNumericParameter( const std::string& p1, const ArithmeticVariant& p2)
 {
-	std::cerr << "calling method WeightingFunctionInstanceImpl::addNumericParameter" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addNumericParameter);
@@ -3135,7 +2919,6 @@ void WeightingFunctionInstanceImpl::addNumericParameter( const std::string& p1, 
 
 WeightingExecutionContextInterface* WeightingFunctionInstanceImpl::createExecutionContext( const StorageClientInterface* p1, PostingIteratorInterface* p2, MetaDataReaderInterface* p3) const
 {
-	std::cerr << "calling method WeightingFunctionInstanceImpl::createExecutionContext" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createExecutionContext);
@@ -3159,7 +2942,6 @@ WeightingExecutionContextInterface* WeightingFunctionInstanceImpl::createExecuti
 
 std::string WeightingFunctionInstanceImpl::tostring( ) const
 {
-	std::cerr << "calling method WeightingFunctionInstanceImpl::tostring" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_tostring);
@@ -3175,7 +2957,6 @@ std::string WeightingFunctionInstanceImpl::tostring( ) const
 WeightingFunctionImpl::~WeightingFunctionImpl()
 {
 	if (isConst()) return;
-	std::cerr << "calling destructor of WeightingFunctionImpl" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_Destructor);
@@ -3185,7 +2966,6 @@ WeightingFunctionImpl::~WeightingFunctionImpl()
 
 WeightingFunctionInstanceInterface* WeightingFunctionImpl::createInstance( ) const
 {
-	std::cerr << "calling method WeightingFunctionImpl::createInstance" << std::endl;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);

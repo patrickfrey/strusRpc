@@ -166,7 +166,7 @@ $passOwnershipParams{"definePhraseType"} = 1;
 my %alternativeClientImpl = ();
 $alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx());\n";
 
-my $doGenerateDebugCode = 1;
+my $doGenerateDebugCode = 0;
 
 sub parseType
 {

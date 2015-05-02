@@ -37,7 +37,7 @@
 
 using namespace strus;
 
-#define STRUS_LOWLEVEL_DEBUG
+#undef STRUS_LOWLEVEL_DEBUG
 
 RpcRequestHandler::RpcRequestHandler(
 			StorageObjectBuilderInterface* storageBuilder_,

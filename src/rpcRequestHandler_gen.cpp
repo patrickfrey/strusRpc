@@ -49,13 +49,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case AnalyzerObjectBuilderConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of AnalyzerObjectBuilderImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case AnalyzerObjectBuilderConst::Method_getTextProcessor:
 		{
-			std::cerr << "called method AnalyzerObjectBuilderImpl::getTextProcessor [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const TextProcessorInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -82,7 +80,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case AnalyzerObjectBuilderConst::Method_createSegmenter:
 		{
-			std::cerr << "called method AnalyzerObjectBuilderImpl::createSegmenter [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			SegmenterInterface* p0;
 			std::string p1;
@@ -111,7 +108,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case AnalyzerObjectBuilderConst::Method_createDocumentAnalyzer:
 		{
-			std::cerr << "called method AnalyzerObjectBuilderImpl::createDocumentAnalyzer [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DocumentAnalyzerInterface* p0;
 			std::string p1;
@@ -140,7 +136,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case AnalyzerObjectBuilderConst::Method_createQueryAnalyzer:
 		{
-			std::cerr << "called method AnalyzerObjectBuilderImpl::createQueryAnalyzer [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			QueryAnalyzerInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -175,13 +170,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case AttributeReaderConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of AttributeReaderImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case AttributeReaderConst::Method_elementHandle:
 		{
-			std::cerr << "called method AttributeReaderImpl::elementHandle [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			const char* p1;
@@ -208,7 +201,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case AttributeReaderConst::Method_skipDoc:
 		{
-			std::cerr << "called method AttributeReaderImpl::skipDoc [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
@@ -232,7 +224,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case AttributeReaderConst::Method_getValue:
 		{
-			std::cerr << "called method AttributeReaderImpl::getValue [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p0;
 			Index p1;
@@ -267,13 +258,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case DatabaseBackupCursorConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of DatabaseBackupCursorImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case DatabaseBackupCursorConst::Method_fetch:
 		{
-			std::cerr << "called method DatabaseBackupCursorImpl::fetch [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			bool p0;
 			const char* p1;
@@ -312,13 +301,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case DatabaseClientConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of DatabaseClientImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case DatabaseClientConst::Method_close:
 		{
-			std::cerr << "called method DatabaseClientImpl::close [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->close();
@@ -340,7 +327,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseClientConst::Method_createTransaction:
 		{
-			std::cerr << "called method DatabaseClientImpl::createTransaction [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseTransactionInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -367,7 +353,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseClientConst::Method_createCursor:
 		{
-			std::cerr << "called method DatabaseClientImpl::createCursor [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface* p0;
 			DatabaseOptions p1;
@@ -396,7 +381,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseClientConst::Method_createBackupCursor:
 		{
-			std::cerr << "called method DatabaseClientImpl::createBackupCursor [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseBackupCursorInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -423,7 +407,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseClientConst::Method_writeImm:
 		{
-			std::cerr << "called method DatabaseClientImpl::writeImm [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p1;
 			std::size_t p2;
@@ -451,7 +434,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseClientConst::Method_removeImm:
 		{
-			std::cerr << "called method DatabaseClientImpl::removeImm [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p1;
 			std::size_t p2;
@@ -476,7 +458,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseClientConst::Method_readValue:
 		{
-			std::cerr << "called method DatabaseClientImpl::readValue [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			bool p0;
 			const char* p1;
@@ -516,13 +497,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case DatabaseCursorConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of DatabaseCursorImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case DatabaseCursorConst::Method_seekUpperBound:
 		{
-			std::cerr << "called method DatabaseCursorImpl::seekUpperBound [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
 			const char* p1;
@@ -552,7 +531,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseCursorConst::Method_seekFirst:
 		{
-			std::cerr << "called method DatabaseCursorImpl::seekFirst [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
 			const char* p1;
@@ -580,7 +558,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseCursorConst::Method_seekLast:
 		{
-			std::cerr << "called method DatabaseCursorImpl::seekLast [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
 			const char* p1;
@@ -608,7 +585,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseCursorConst::Method_seekNext:
 		{
-			std::cerr << "called method DatabaseCursorImpl::seekNext [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
 			try {
@@ -633,7 +609,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseCursorConst::Method_seekPrev:
 		{
-			std::cerr << "called method DatabaseCursorImpl::seekPrev [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
 			try {
@@ -658,7 +633,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseCursorConst::Method_key:
 		{
-			std::cerr << "called method DatabaseCursorImpl::key [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
 			try {
@@ -683,7 +657,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseCursorConst::Method_value:
 		{
-			std::cerr << "called method DatabaseCursorImpl::value [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
 			try {
@@ -716,13 +689,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case DatabaseConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of DatabaseImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case DatabaseConst::Method_createClient:
 		{
-			std::cerr << "called method DatabaseImpl::createClient [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseClientInterface* p0;
 			std::string p1;
@@ -755,7 +726,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseConst::Method_createDatabase:
 		{
-			std::cerr << "called method DatabaseImpl::createDatabase [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
@@ -779,7 +749,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseConst::Method_restoreDatabase:
 		{
-			std::cerr << "called method DatabaseImpl::restoreDatabase [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			DatabaseBackupCursorInterface* p2;
@@ -808,7 +777,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseConst::Method_destroyDatabase:
 		{
-			std::cerr << "called method DatabaseImpl::destroyDatabase [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
@@ -832,7 +800,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseConst::Method_getConfigDescription:
 		{
-			std::cerr << "called method DatabaseImpl::getConfigDescription [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p0;
 			DatabaseInterface::ConfigType p1;
@@ -859,7 +826,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseConst::Method_getConfigParameters:
 		{
-			std::cerr << "called method DatabaseImpl::getConfigParameters [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char** p0;
 			DatabaseInterface::ConfigType p1;
@@ -894,13 +860,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case DatabaseTransactionConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of DatabaseTransactionImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case DatabaseTransactionConst::Method_createCursor:
 		{
-			std::cerr << "called method DatabaseTransactionImpl::createCursor [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface* p0;
 			DatabaseOptions p1;
@@ -929,7 +893,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseTransactionConst::Method_write:
 		{
-			std::cerr << "called method DatabaseTransactionImpl::write [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p1;
 			std::size_t p2;
@@ -957,7 +920,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseTransactionConst::Method_remove:
 		{
-			std::cerr << "called method DatabaseTransactionImpl::remove [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p1;
 			std::size_t p2;
@@ -982,7 +944,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseTransactionConst::Method_removeSubTree:
 		{
-			std::cerr << "called method DatabaseTransactionImpl::removeSubTree [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p1;
 			std::size_t p2;
@@ -1007,7 +968,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseTransactionConst::Method_commit:
 		{
-			std::cerr << "called method DatabaseTransactionImpl::commit [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->commit();
@@ -1030,7 +990,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DatabaseTransactionConst::Method_rollback:
 		{
-			std::cerr << "called method DatabaseTransactionImpl::rollback [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->rollback();
@@ -1060,13 +1019,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case DocnoRangeAllocatorConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of DocnoRangeAllocatorImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case DocnoRangeAllocatorConst::Method_allocDocnoRange:
 		{
-			std::cerr << "called method DocnoRangeAllocatorImpl::allocDocnoRange [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			Index p1;
@@ -1093,7 +1050,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DocnoRangeAllocatorConst::Method_deallocDocnoRange:
 		{
-			std::cerr << "called method DocnoRangeAllocatorImpl::deallocDocnoRange [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			bool p0;
 			Index p1;
@@ -1130,13 +1086,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case DocumentAnalyzerInstanceConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of DocumentAnalyzerInstanceImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case DocumentAnalyzerInstanceConst::Method_putInput:
 		{
-			std::cerr << "called method DocumentAnalyzerInstanceImpl::putInput [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p1;
 			std::size_t p2;
@@ -1163,7 +1117,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DocumentAnalyzerInstanceConst::Method_analyzeNext:
 		{
-			std::cerr << "called method DocumentAnalyzerInstanceImpl::analyzeNext [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			bool p0;
 			analyzer::Document p1;
@@ -1198,13 +1151,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case DocumentAnalyzerConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of DocumentAnalyzerImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case DocumentAnalyzerConst::Method_addSearchIndexFeature:
 		{
-			std::cerr << "called method DocumentAnalyzerImpl::addSearchIndexFeature [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -1252,7 +1203,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DocumentAnalyzerConst::Method_addForwardIndexFeature:
 		{
-			std::cerr << "called method DocumentAnalyzerImpl::addForwardIndexFeature [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -1300,7 +1250,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DocumentAnalyzerConst::Method_defineMetaData:
 		{
-			std::cerr << "called method DocumentAnalyzerImpl::defineMetaData [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -1346,7 +1295,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DocumentAnalyzerConst::Method_defineAttribute:
 		{
-			std::cerr << "called method DocumentAnalyzerImpl::defineAttribute [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -1392,7 +1340,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DocumentAnalyzerConst::Method_defineSubDocument:
 		{
-			std::cerr << "called method DocumentAnalyzerImpl::defineSubDocument [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -1418,7 +1365,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DocumentAnalyzerConst::Method_analyze:
 		{
-			std::cerr << "called method DocumentAnalyzerImpl::analyze [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			analyzer::Document p0;
 			std::string p1;
@@ -1445,7 +1391,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case DocumentAnalyzerConst::Method_createInstance:
 		{
-			std::cerr << "called method DocumentAnalyzerImpl::createInstance [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DocumentAnalyzerInstanceInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -1480,13 +1425,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case ForwardIteratorConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of ForwardIteratorImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case ForwardIteratorConst::Method_skipDoc:
 		{
-			std::cerr << "called method ForwardIteratorImpl::skipDoc [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
@@ -1510,7 +1453,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case ForwardIteratorConst::Method_skipPos:
 		{
-			std::cerr << "called method ForwardIteratorImpl::skipPos [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			Index p1;
@@ -1537,7 +1479,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case ForwardIteratorConst::Method_fetch:
 		{
-			std::cerr << "called method ForwardIteratorImpl::fetch [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p0;
 			try {
@@ -1570,13 +1511,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case InvAclIteratorConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of InvAclIteratorImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case InvAclIteratorConst::Method_skipDoc:
 		{
-			std::cerr << "called method InvAclIteratorImpl::skipDoc [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			Index p1;
@@ -1611,13 +1550,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case MetaDataReaderConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of MetaDataReaderImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case MetaDataReaderConst::Method_hasElement:
 		{
-			std::cerr << "called method MetaDataReaderImpl::hasElement [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			bool p0;
 			std::string p1;
@@ -1644,7 +1581,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case MetaDataReaderConst::Method_elementHandle:
 		{
-			std::cerr << "called method MetaDataReaderImpl::elementHandle [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			std::string p1;
@@ -1671,7 +1607,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case MetaDataReaderConst::Method_nofElements:
 		{
-			std::cerr << "called method MetaDataReaderImpl::nofElements [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			try {
@@ -1696,7 +1631,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case MetaDataReaderConst::Method_skipDoc:
 		{
-			std::cerr << "called method MetaDataReaderImpl::skipDoc [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
@@ -1720,7 +1654,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case MetaDataReaderConst::Method_getValue:
 		{
-			std::cerr << "called method MetaDataReaderImpl::getValue [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			ArithmeticVariant p0;
 			Index p1;
@@ -1747,7 +1680,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case MetaDataReaderConst::Method_getType:
 		{
-			std::cerr << "called method MetaDataReaderImpl::getType [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p0;
 			Index p1;
@@ -1774,7 +1706,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case MetaDataReaderConst::Method_getName:
 		{
-			std::cerr << "called method MetaDataReaderImpl::getName [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p0;
 			Index p1;
@@ -1809,13 +1740,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case NormalizerExecutionContextConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of NormalizerExecutionContextImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case NormalizerExecutionContextConst::Method_normalize:
 		{
-			std::cerr << "called method NormalizerExecutionContextImpl::normalize [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p0;
 			const char* p1;
@@ -1851,13 +1780,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case NormalizerFunctionInstanceConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of NormalizerFunctionInstanceImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case NormalizerFunctionInstanceConst::Method_createExecutionContext:
 		{
-			std::cerr << "called method NormalizerFunctionInstanceImpl::createExecutionContext [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			NormalizerExecutionContextInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -1892,13 +1819,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case NormalizerFunctionConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of NormalizerFunctionImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case NormalizerFunctionConst::Method_createInstance:
 		{
-			std::cerr << "called method NormalizerFunctionImpl::createInstance [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			NormalizerFunctionInstanceInterface* p0;
 			std::vector<std::string> p1;
@@ -1944,13 +1869,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case PeerStorageTransactionConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of PeerStorageTransactionImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case PeerStorageTransactionConst::Method_updateNofDocumentsInsertedChange:
 		{
-			std::cerr << "called method PeerStorageTransactionImpl::updateNofDocumentsInsertedChange [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			GlobalCounter p1;
 			p1 = serializedMsg.unpackGlobalCounter();
@@ -1974,7 +1897,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case PeerStorageTransactionConst::Method_updateDocumentFrequencyChange:
 		{
-			std::cerr << "called method PeerStorageTransactionImpl::updateDocumentFrequencyChange [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p1;
 			const char* p2;
@@ -2002,7 +1924,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case PeerStorageTransactionConst::Method_commit:
 		{
-			std::cerr << "called method PeerStorageTransactionImpl::commit [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->commit();
@@ -2025,7 +1946,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case PeerStorageTransactionConst::Method_rollback:
 		{
-			std::cerr << "called method PeerStorageTransactionImpl::rollback [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->rollback();
@@ -2055,13 +1975,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case PostingIteratorConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of PostingIteratorImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case PostingIteratorConst::Method_skipDoc:
 		{
-			std::cerr << "called method PostingIteratorImpl::skipDoc [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			Index p1;
@@ -2088,7 +2006,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case PostingIteratorConst::Method_skipPos:
 		{
-			std::cerr << "called method PostingIteratorImpl::skipPos [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			Index p1;
@@ -2115,7 +2032,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case PostingIteratorConst::Method_featureid:
 		{
-			std::cerr << "called method PostingIteratorImpl::featureid [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p0;
 			try {
@@ -2140,7 +2056,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case PostingIteratorConst::Method_subExpressions:
 		{
-			std::cerr << "called method PostingIteratorImpl::subExpressions [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			(void)(obj);
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -2149,7 +2064,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case PostingIteratorConst::Method_documentFrequency:
 		{
-			std::cerr << "called method PostingIteratorImpl::documentFrequency [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			GlobalCounter p0;
 			try {
@@ -2174,7 +2088,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case PostingIteratorConst::Method_frequency:
 		{
-			std::cerr << "called method PostingIteratorImpl::frequency [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			unsigned int p0;
 			try {
@@ -2199,7 +2112,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case PostingIteratorConst::Method_docno:
 		{
-			std::cerr << "called method PostingIteratorImpl::docno [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			try {
@@ -2224,7 +2136,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case PostingIteratorConst::Method_posno:
 		{
-			std::cerr << "called method PostingIteratorImpl::posno [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			try {
@@ -2257,13 +2168,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case PostingJoinOperatorConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of PostingJoinOperatorImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case PostingJoinOperatorConst::Method_createResultIterator:
 		{
-			std::cerr << "called method PostingJoinOperatorImpl::createResultIterator [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			(void)(obj);
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -2280,13 +2189,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case QueryAnalyzerConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of QueryAnalyzerImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case QueryAnalyzerConst::Method_definePhraseType:
 		{
-			std::cerr << "called method QueryAnalyzerImpl::definePhraseType [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -2332,7 +2239,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryAnalyzerConst::Method_analyzePhrase:
 		{
-			std::cerr << "called method QueryAnalyzerImpl::analyzePhrase [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::vector<analyzer::Term> p0;
 			std::string p1;
@@ -2372,13 +2278,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case QueryEvalConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of QueryEvalImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case QueryEvalConst::Method_addTerm:
 		{
-			std::cerr << "called method QueryEvalImpl::addTerm [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -2406,7 +2310,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryEvalConst::Method_addSelectionFeature:
 		{
-			std::cerr << "called method QueryEvalImpl::addSelectionFeature [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
@@ -2430,7 +2333,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryEvalConst::Method_addRestrictionFeature:
 		{
-			std::cerr << "called method QueryEvalImpl::addRestrictionFeature [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
@@ -2454,7 +2356,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryEvalConst::Method_addSummarizerFunction:
 		{
-			std::cerr << "called method QueryEvalImpl::addSummarizerFunction [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			SummarizerFunctionInstanceInterface* p2;
@@ -2496,7 +2397,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryEvalConst::Method_addWeightingFunction:
 		{
-			std::cerr << "called method QueryEvalImpl::addWeightingFunction [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			WeightingFunctionInstanceInterface* p2;
@@ -2536,7 +2436,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryEvalConst::Method_createQuery:
 		{
-			std::cerr << "called method QueryEvalImpl::createQuery [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			QueryInterface* p0;
 			const StorageClientInterface* p1;
@@ -2576,13 +2475,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case QueryConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of QueryImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case QueryConst::Method_pushTerm:
 		{
-			std::cerr << "called method QueryImpl::pushTerm [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -2608,7 +2505,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryConst::Method_pushExpression:
 		{
-			std::cerr << "called method QueryImpl::pushExpression [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const PostingJoinOperatorInterface* p1;
 			std::size_t p2;
@@ -2639,7 +2535,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryConst::Method_pushDuplicate:
 		{
-			std::cerr << "called method QueryImpl::pushDuplicate [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->pushDuplicate();
@@ -2661,7 +2556,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryConst::Method_attachVariable:
 		{
-			std::cerr << "called method QueryImpl::attachVariable [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
@@ -2685,7 +2579,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryConst::Method_defineFeature:
 		{
-			std::cerr << "called method QueryImpl::defineFeature [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			float p2;
@@ -2711,7 +2604,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryConst::Method_defineMetaDataRestriction:
 		{
-			std::cerr << "called method QueryImpl::defineMetaDataRestriction [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			QueryInterface::CompareOperator p1;
 			std::string p2;
@@ -2741,7 +2633,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryConst::Method_setMaxNofRanks:
 		{
-			std::cerr << "called method QueryImpl::setMaxNofRanks [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::size_t p1;
 			p1 = serializedMsg.unpackSize();
@@ -2765,7 +2656,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryConst::Method_setMinRank:
 		{
-			std::cerr << "called method QueryImpl::setMinRank [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::size_t p1;
 			p1 = serializedMsg.unpackSize();
@@ -2789,7 +2679,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryConst::Method_setUserName:
 		{
-			std::cerr << "called method QueryImpl::setUserName [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
@@ -2813,7 +2702,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryConst::Method_evaluate:
 		{
-			std::cerr << "called method QueryImpl::evaluate [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::vector<ResultDocument> p0;
 			try {
@@ -2849,13 +2737,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case QueryProcessorConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of QueryProcessorImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case QueryProcessorConst::Method_definePostingJoinOperator:
 		{
-			std::cerr << "called method QueryProcessorImpl::definePostingJoinOperator [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			PostingJoinOperatorInterface* p2;
@@ -2889,7 +2775,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryProcessorConst::Method_getPostingJoinOperator:
 		{
-			std::cerr << "called method QueryProcessorImpl::getPostingJoinOperator [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const PostingJoinOperatorInterface* p0;
 			std::string p1;
@@ -2918,7 +2803,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryProcessorConst::Method_defineWeightingFunction:
 		{
-			std::cerr << "called method QueryProcessorImpl::defineWeightingFunction [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			WeightingFunctionInterface* p2;
@@ -2952,7 +2836,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryProcessorConst::Method_getWeightingFunction:
 		{
-			std::cerr << "called method QueryProcessorImpl::getWeightingFunction [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const WeightingFunctionInterface* p0;
 			std::string p1;
@@ -2981,7 +2864,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryProcessorConst::Method_defineSummarizerFunction:
 		{
-			std::cerr << "called method QueryProcessorImpl::defineSummarizerFunction [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			SummarizerFunctionInterface* p2;
@@ -3015,7 +2897,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case QueryProcessorConst::Method_getSummarizerFunction:
 		{
-			std::cerr << "called method QueryProcessorImpl::getSummarizerFunction [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const SummarizerFunctionInterface* p0;
 			std::string p1;
@@ -3052,13 +2933,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case SegmenterInstanceConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of SegmenterInstanceImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case SegmenterInstanceConst::Method_putInput:
 		{
-			std::cerr << "called method SegmenterInstanceImpl::putInput [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p1;
 			std::size_t p2;
@@ -3085,7 +2964,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case SegmenterInstanceConst::Method_getNext:
 		{
-			std::cerr << "called method SegmenterInstanceImpl::getNext [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			bool p0;
 			int p1;
@@ -3125,13 +3003,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case SegmenterConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of SegmenterImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case SegmenterConst::Method_defineSelectorExpression:
 		{
-			std::cerr << "called method SegmenterImpl::defineSelectorExpression [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			int p1;
 			std::string p2;
@@ -3157,7 +3033,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case SegmenterConst::Method_defineSubSection:
 		{
-			std::cerr << "called method SegmenterImpl::defineSubSection [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			int p1;
 			int p2;
@@ -3185,7 +3060,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case SegmenterConst::Method_createInstance:
 		{
-			std::cerr << "called method SegmenterImpl::createInstance [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			SegmenterInstanceInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -3220,13 +3094,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case StorageAlterMetaDataTableConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of StorageAlterMetaDataTableImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case StorageAlterMetaDataTableConst::Method_addElement:
 		{
-			std::cerr << "called method StorageAlterMetaDataTableImpl::addElement [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -3252,7 +3124,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageAlterMetaDataTableConst::Method_alterElement:
 		{
-			std::cerr << "called method StorageAlterMetaDataTableImpl::alterElement [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -3280,7 +3151,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageAlterMetaDataTableConst::Method_renameElement:
 		{
-			std::cerr << "called method StorageAlterMetaDataTableImpl::renameElement [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -3306,7 +3176,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageAlterMetaDataTableConst::Method_deleteElement:
 		{
-			std::cerr << "called method StorageAlterMetaDataTableImpl::deleteElement [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
@@ -3330,7 +3199,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageAlterMetaDataTableConst::Method_clearElement:
 		{
-			std::cerr << "called method StorageAlterMetaDataTableImpl::clearElement [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
@@ -3354,7 +3222,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageAlterMetaDataTableConst::Method_commit:
 		{
-			std::cerr << "called method StorageAlterMetaDataTableImpl::commit [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->commit();
@@ -3377,7 +3244,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageAlterMetaDataTableConst::Method_rollback:
 		{
-			std::cerr << "called method StorageAlterMetaDataTableImpl::rollback [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->rollback();
@@ -3407,13 +3273,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case StorageClientConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of StorageClientImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case StorageClientConst::Method_close:
 		{
-			std::cerr << "called method StorageClientImpl::close [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->close();
@@ -3435,7 +3299,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_createTermPostingIterator:
 		{
-			std::cerr << "called method StorageClientImpl::createTermPostingIterator [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			PostingIteratorInterface* p0;
 			std::string p1;
@@ -3466,7 +3329,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_createForwardIterator:
 		{
-			std::cerr << "called method StorageClientImpl::createForwardIterator [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			ForwardIteratorInterface* p0;
 			std::string p1;
@@ -3495,7 +3357,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_createInvAclIterator:
 		{
-			std::cerr << "called method StorageClientImpl::createInvAclIterator [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			InvAclIteratorInterface* p0;
 			std::string p1;
@@ -3524,7 +3385,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_globalNofDocumentsInserted:
 		{
-			std::cerr << "called method StorageClientImpl::globalNofDocumentsInserted [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			GlobalCounter p0;
 			try {
@@ -3549,7 +3409,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_localNofDocumentsInserted:
 		{
-			std::cerr << "called method StorageClientImpl::localNofDocumentsInserted [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			try {
@@ -3574,7 +3433,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_globalDocumentFrequency:
 		{
-			std::cerr << "called method StorageClientImpl::globalDocumentFrequency [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			GlobalCounter p0;
 			std::string p1;
@@ -3603,7 +3461,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_localDocumentFrequency:
 		{
-			std::cerr << "called method StorageClientImpl::localDocumentFrequency [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			std::string p1;
@@ -3632,7 +3489,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_maxDocumentNumber:
 		{
-			std::cerr << "called method StorageClientImpl::maxDocumentNumber [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			try {
@@ -3657,7 +3513,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_documentNumber:
 		{
-			std::cerr << "called method StorageClientImpl::documentNumber [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
 			std::string p1;
@@ -3684,7 +3539,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_createMetaDataReader:
 		{
-			std::cerr << "called method StorageClientImpl::createMetaDataReader [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			MetaDataReaderInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -3711,7 +3565,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_createAttributeReader:
 		{
-			std::cerr << "called method StorageClientImpl::createAttributeReader [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			AttributeReaderInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -3738,7 +3591,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_createDocnoRangeAllocator:
 		{
-			std::cerr << "called method StorageClientImpl::createDocnoRangeAllocator [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DocnoRangeAllocatorInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -3765,7 +3617,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_createTransaction:
 		{
-			std::cerr << "called method StorageClientImpl::createTransaction [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			StorageTransactionInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -3792,7 +3643,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_createPeerStorageTransaction:
 		{
-			std::cerr << "called method StorageClientImpl::createPeerStorageTransaction [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			PeerStorageTransactionInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -3819,7 +3669,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_defineStoragePeerInterface:
 		{
-			std::cerr << "called method StorageClientImpl::defineStoragePeerInterface [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const StoragePeerInterface* p1;
 			bool p2;
@@ -3848,7 +3697,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_createDocumentChecker:
 		{
-			std::cerr << "called method StorageClientImpl::createDocumentChecker [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			StorageDocumentInterface* p0;
 			std::string p1;
@@ -3879,7 +3727,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_checkStorage:
 		{
-			std::cerr << "called method StorageClientImpl::checkStorage [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			(void)(obj);
 			msg.packByte( MsgTypeException_RuntimeError);
@@ -3888,7 +3735,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageClientConst::Method_createDump:
 		{
-			std::cerr << "called method StorageClientImpl::createDump [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			StorageDumpInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -3923,13 +3769,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case StorageDocumentConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of StorageDocumentImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case StorageDocumentConst::Method_addSearchIndexTerm:
 		{
-			std::cerr << "called method StorageDocumentImpl::addSearchIndexTerm [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -3957,7 +3801,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageDocumentConst::Method_addForwardIndexTerm:
 		{
-			std::cerr << "called method StorageDocumentImpl::addForwardIndexTerm [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -3985,7 +3828,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageDocumentConst::Method_setMetaData:
 		{
-			std::cerr << "called method StorageDocumentImpl::setMetaData [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			ArithmeticVariant p2;
@@ -4011,7 +3853,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageDocumentConst::Method_setAttribute:
 		{
-			std::cerr << "called method StorageDocumentImpl::setAttribute [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -4037,7 +3878,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageDocumentConst::Method_setUserAccessRight:
 		{
-			std::cerr << "called method StorageDocumentImpl::setUserAccessRight [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
@@ -4061,7 +3901,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageDocumentConst::Method_done:
 		{
-			std::cerr << "called method StorageDocumentImpl::done [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->done();
@@ -4092,13 +3931,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case StorageDumpConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of StorageDumpImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case StorageDumpConst::Method_nextChunk:
 		{
-			std::cerr << "called method StorageDumpImpl::nextChunk [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			bool p0;
 			const char* p1;
@@ -4134,13 +3971,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case StorageConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of StorageImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case StorageConst::Method_createClient:
 		{
-			std::cerr << "called method StorageImpl::createClient [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			StorageClientInterface* p0;
 			std::string p1;
@@ -4179,7 +4014,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageConst::Method_createStorage:
 		{
-			std::cerr << "called method StorageImpl::createStorage [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			DatabaseClientInterface* p2;
@@ -4208,7 +4042,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageConst::Method_createAlterMetaDataTable:
 		{
-			std::cerr << "called method StorageImpl::createAlterMetaDataTable [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			StorageAlterMetaDataTableInterface* p0;
 			DatabaseClientInterface* p1;
@@ -4245,7 +4078,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageConst::Method_getConfigDescription:
 		{
-			std::cerr << "called method StorageImpl::getConfigDescription [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p0;
 			StorageInterface::ConfigType p1;
@@ -4272,7 +4104,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageConst::Method_getConfigParameters:
 		{
-			std::cerr << "called method StorageImpl::getConfigParameters [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char** p0;
 			StorageInterface::ConfigType p1;
@@ -4307,13 +4138,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case StorageObjectBuilderConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of StorageObjectBuilderImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case StorageObjectBuilderConst::Method_getStorage:
 		{
-			std::cerr << "called method StorageObjectBuilderImpl::getStorage [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const StorageInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -4340,7 +4169,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageObjectBuilderConst::Method_getDatabase:
 		{
-			std::cerr << "called method StorageObjectBuilderImpl::getDatabase [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const DatabaseInterface* p0;
 			std::string p1;
@@ -4369,7 +4197,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageObjectBuilderConst::Method_getQueryProcessor:
 		{
-			std::cerr << "called method StorageObjectBuilderImpl::getQueryProcessor [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const QueryProcessorInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -4396,7 +4223,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageObjectBuilderConst::Method_createStorageClient:
 		{
-			std::cerr << "called method StorageObjectBuilderImpl::createStorageClient [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			StorageClientInterface* p0;
 			std::string p1;
@@ -4425,7 +4251,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageObjectBuilderConst::Method_createAlterMetaDataTable:
 		{
-			std::cerr << "called method StorageObjectBuilderImpl::createAlterMetaDataTable [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			StorageAlterMetaDataTableInterface* p0;
 			std::string p1;
@@ -4458,7 +4283,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageObjectBuilderConst::Method_createQueryEval:
 		{
-			std::cerr << "called method StorageObjectBuilderImpl::createQueryEval [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			QueryEvalInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -4493,13 +4317,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case StoragePeerConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of StoragePeerImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case StoragePeerConst::Method_createTransaction:
 		{
-			std::cerr << "called method StoragePeerImpl::createTransaction [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			StoragePeerTransactionInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -4534,13 +4356,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case StoragePeerTransactionConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of StoragePeerTransactionImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case StoragePeerTransactionConst::Method_populateNofDocumentsInsertedChange:
 		{
-			std::cerr << "called method StoragePeerTransactionImpl::populateNofDocumentsInsertedChange [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			int p1;
 			p1 = serializedMsg.unpackInt();
@@ -4564,7 +4384,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StoragePeerTransactionConst::Method_populateDocumentFrequencyChange:
 		{
-			std::cerr << "called method StoragePeerTransactionImpl::populateDocumentFrequencyChange [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p1;
 			const char* p2;
@@ -4594,7 +4413,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StoragePeerTransactionConst::Method_try_commit:
 		{
-			std::cerr << "called method StoragePeerTransactionImpl::try_commit [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->try_commit();
@@ -4616,7 +4434,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StoragePeerTransactionConst::Method_final_commit:
 		{
-			std::cerr << "called method StoragePeerTransactionImpl::final_commit [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->final_commit();
@@ -4638,7 +4455,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StoragePeerTransactionConst::Method_rollback:
 		{
-			std::cerr << "called method StoragePeerTransactionImpl::rollback [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->rollback();
@@ -4668,13 +4484,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case StorageTransactionConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of StorageTransactionImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case StorageTransactionConst::Method_createDocument:
 		{
-			std::cerr << "called method StorageTransactionImpl::createDocument [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			StorageDocumentInterface* p0;
 			std::string p1;
@@ -4705,7 +4519,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageTransactionConst::Method_deleteDocument:
 		{
-			std::cerr << "called method StorageTransactionImpl::deleteDocument [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
@@ -4729,7 +4542,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageTransactionConst::Method_deleteUserAccessRights:
 		{
-			std::cerr << "called method StorageTransactionImpl::deleteUserAccessRights [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
@@ -4753,7 +4565,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageTransactionConst::Method_commit:
 		{
-			std::cerr << "called method StorageTransactionImpl::commit [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->commit();
@@ -4776,7 +4587,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case StorageTransactionConst::Method_rollback:
 		{
-			std::cerr << "called method StorageTransactionImpl::rollback [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			try {
 				obj->rollback();
@@ -4806,13 +4616,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case SummarizerExecutionContextConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of SummarizerExecutionContextImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case SummarizerExecutionContextConst::Method_addSummarizationFeature:
 		{
-			std::cerr << "called method SummarizerExecutionContextImpl::addSummarizationFeature [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			PostingIteratorInterface* p2;
@@ -4852,7 +4660,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case SummarizerExecutionContextConst::Method_getSummary:
 		{
-			std::cerr << "called method SummarizerExecutionContextImpl::getSummary [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::vector<SummarizerExecutionContextInterface::SummaryElement> p0;
 			Index p1;
@@ -4890,13 +4697,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case SummarizerFunctionInstanceConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of SummarizerFunctionInstanceImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case SummarizerFunctionInstanceConst::Method_addStringParameter:
 		{
-			std::cerr << "called method SummarizerFunctionInstanceImpl::addStringParameter [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -4922,7 +4727,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case SummarizerFunctionInstanceConst::Method_addNumericParameter:
 		{
-			std::cerr << "called method SummarizerFunctionInstanceImpl::addNumericParameter [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			ArithmeticVariant p2;
@@ -4948,7 +4752,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case SummarizerFunctionInstanceConst::Method_createExecutionContext:
 		{
-			std::cerr << "called method SummarizerFunctionInstanceImpl::createExecutionContext [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			SummarizerExecutionContextInterface* p0;
 			const StorageClientInterface* p1;
@@ -4985,7 +4788,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case SummarizerFunctionInstanceConst::Method_tostring:
 		{
-			std::cerr << "called method SummarizerFunctionInstanceImpl::tostring [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p0;
 			try {
@@ -5018,13 +4820,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case SummarizerFunctionConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of SummarizerFunctionImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case SummarizerFunctionConst::Method_createInstance:
 		{
-			std::cerr << "called method SummarizerFunctionImpl::createInstance [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			SummarizerFunctionInstanceInterface* p0;
 			const QueryProcessorInterface* p1;
@@ -5064,13 +4864,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case TextProcessorConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of TextProcessorImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case TextProcessorConst::Method_addResourcePath:
 		{
-			std::cerr << "called method TextProcessorImpl::addResourcePath [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
@@ -5094,7 +4892,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case TextProcessorConst::Method_getResourcePath:
 		{
-			std::cerr << "called method TextProcessorImpl::getResourcePath [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p0;
 			std::string p1;
@@ -5121,7 +4918,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case TextProcessorConst::Method_getTokenizer:
 		{
-			std::cerr << "called method TextProcessorImpl::getTokenizer [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const TokenizerFunctionInterface* p0;
 			std::string p1;
@@ -5150,7 +4946,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case TextProcessorConst::Method_getNormalizer:
 		{
-			std::cerr << "called method TextProcessorImpl::getNormalizer [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const NormalizerFunctionInterface* p0;
 			std::string p1;
@@ -5179,7 +4974,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case TextProcessorConst::Method_defineTokenizer:
 		{
-			std::cerr << "called method TextProcessorImpl::defineTokenizer [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			const TokenizerFunctionInterface* p2;
@@ -5208,7 +5002,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case TextProcessorConst::Method_defineNormalizer:
 		{
-			std::cerr << "called method TextProcessorImpl::defineNormalizer [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			const NormalizerFunctionInterface* p2;
@@ -5245,13 +5038,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case TokenizerExecutionContextConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of TokenizerExecutionContextImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case TokenizerExecutionContextConst::Method_tokenize:
 		{
-			std::cerr << "called method TokenizerExecutionContextImpl::tokenize [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::vector<analyzer::Token> p0;
 			const char* p1;
@@ -5290,13 +5081,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case TokenizerFunctionInstanceConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of TokenizerFunctionInstanceImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case TokenizerFunctionInstanceConst::Method_concatBeforeTokenize:
 		{
-			std::cerr << "called method TokenizerFunctionInstanceImpl::concatBeforeTokenize [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			bool p0;
 			try {
@@ -5321,7 +5110,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case TokenizerFunctionInstanceConst::Method_createExecutionContext:
 		{
-			std::cerr << "called method TokenizerFunctionInstanceImpl::createExecutionContext [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			TokenizerExecutionContextInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
@@ -5356,13 +5144,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case TokenizerFunctionConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of TokenizerFunctionImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case TokenizerFunctionConst::Method_createInstance:
 		{
-			std::cerr << "called method TokenizerFunctionImpl::createInstance [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			TokenizerFunctionInstanceInterface* p0;
 			std::vector<std::string> p1;
@@ -5408,13 +5194,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case WeightingExecutionContextConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of WeightingExecutionContextImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case WeightingExecutionContextConst::Method_call:
 		{
-			std::cerr << "called method WeightingExecutionContextImpl::call [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			float p0;
 			Index p1;
@@ -5449,13 +5233,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case WeightingFunctionInstanceConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of WeightingFunctionInstanceImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case WeightingFunctionInstanceConst::Method_addStringParameter:
 		{
-			std::cerr << "called method WeightingFunctionInstanceImpl::addStringParameter [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
@@ -5481,7 +5263,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case WeightingFunctionInstanceConst::Method_addNumericParameter:
 		{
-			std::cerr << "called method WeightingFunctionInstanceImpl::addNumericParameter [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p1;
 			ArithmeticVariant p2;
@@ -5507,7 +5288,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case WeightingFunctionInstanceConst::Method_createExecutionContext:
 		{
-			std::cerr << "called method WeightingFunctionInstanceImpl::createExecutionContext [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			WeightingExecutionContextInterface* p0;
 			const StorageClientInterface* p1;
@@ -5549,7 +5329,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		}
 		case WeightingFunctionInstanceConst::Method_tostring:
 		{
-			std::cerr << "called method WeightingFunctionInstanceImpl::tostring [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p0;
 			try {
@@ -5582,13 +5361,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	{
 		case WeightingFunctionConst::Method_Destructor:
 		{
-			std::cerr << "called destructor of WeightingFunctionImpl" << std::endl;
 			deleteObject( classId, objId);
 			return std::string();
 		}
 		case WeightingFunctionConst::Method_createInstance:
 		{
-			std::cerr << "called method WeightingFunctionImpl::createInstance [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			WeightingFunctionInstanceInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
