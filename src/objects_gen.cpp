@@ -117,7 +117,6 @@ Index AttributeReaderImpl::elementHandle( const char* p1) const
 	msg.packByte( Method_elementHandle);
 	msg.packCharp( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -142,7 +141,6 @@ std::string AttributeReaderImpl::getValue( const Index& p1) const
 	msg.packByte( Method_getValue);
 	msg.packIndex( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -166,7 +164,7 @@ bool DatabaseBackupCursorImpl::fetch( const char*& p1, std::size_t& p2, const ch
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_fetch);
 	msg.packCrc32();
-	enter();
+	ctx()->constConstructor()->reset();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -271,7 +269,6 @@ bool DatabaseClientImpl::readValue( const char* p1, std::size_t p2, std::string&
 	msg.packBuffer( p1, p2);
 	msg.packDatabaseOptions( p4);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -298,7 +295,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekUpperBound( const char* p
 	msg.packBuffer( p1, p2);
 	msg.packSize( p3);
 	msg.packCrc32();
-	enter();
+	ctx()->constConstructor()->reset();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -314,7 +311,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekFirst( const char* p1, st
 	msg.packByte( Method_seekFirst);
 	msg.packBuffer( p1, p2);
 	msg.packCrc32();
-	enter();
+	ctx()->constConstructor()->reset();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -330,7 +327,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekLast( const char* p1, std
 	msg.packByte( Method_seekLast);
 	msg.packBuffer( p1, p2);
 	msg.packCrc32();
-	enter();
+	ctx()->constConstructor()->reset();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -345,7 +342,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekNext( )
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekNext);
 	msg.packCrc32();
-	enter();
+	ctx()->constConstructor()->reset();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -360,7 +357,7 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::seekPrev( )
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_seekPrev);
 	msg.packCrc32();
-	enter();
+	ctx()->constConstructor()->reset();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -375,7 +372,6 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::key( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_key);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -390,7 +386,6 @@ DatabaseCursorInterface::Slice DatabaseCursorImpl::value( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_value);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -464,7 +459,6 @@ const char* DatabaseImpl::getConfigDescription( DatabaseInterface::ConfigType p1
 	msg.packByte( Method_getConfigDescription);
 	msg.packDatabaseConfigType( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -479,7 +473,6 @@ const char** DatabaseImpl::getConfigParameters( DatabaseInterface::ConfigType p1
 	msg.packByte( Method_getConfigParameters);
 	msg.packDatabaseConfigType( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -579,7 +572,6 @@ Index DocnoRangeAllocatorImpl::allocDocnoRange( const Index& p1)
 	msg.packByte( Method_allocDocnoRange);
 	msg.packIndex( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -595,7 +587,6 @@ bool DocnoRangeAllocatorImpl::deallocDocnoRange( const Index& p1, const Index& p
 	msg.packIndex( p1);
 	msg.packIndex( p2);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -630,7 +621,6 @@ bool DocumentAnalyzerInstanceImpl::analyzeNext( analyzer::Document& p1)
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_analyzeNext);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -781,7 +771,6 @@ analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1) const
 	msg.packByte( Method_analyze);
 	msg.packString( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -830,7 +819,6 @@ Index ForwardIteratorImpl::skipPos( const Index& p1)
 	msg.packByte( Method_skipPos);
 	msg.packIndex( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -844,7 +832,7 @@ std::string ForwardIteratorImpl::fetch( )
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_fetch);
 	msg.packCrc32();
-	enter();
+	ctx()->constConstructor()->reset();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -869,7 +857,6 @@ Index InvAclIteratorImpl::skipDoc( const Index& p1)
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -894,7 +881,6 @@ bool MetaDataReaderImpl::hasElement( const std::string& p1) const
 	msg.packByte( Method_hasElement);
 	msg.packString( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -909,7 +895,6 @@ Index MetaDataReaderImpl::elementHandle( const std::string& p1) const
 	msg.packByte( Method_elementHandle);
 	msg.packString( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -923,7 +908,6 @@ Index MetaDataReaderImpl::nofElements( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_nofElements);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -948,7 +932,6 @@ ArithmeticVariant MetaDataReaderImpl::getValue( const Index& p1) const
 	msg.packByte( Method_getValue);
 	msg.packIndex( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -963,7 +946,6 @@ const char* MetaDataReaderImpl::getType( const Index& p1) const
 	msg.packByte( Method_getType);
 	msg.packIndex( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -978,7 +960,6 @@ const char* MetaDataReaderImpl::getName( const Index& p1) const
 	msg.packByte( Method_getName);
 	msg.packIndex( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1003,7 +984,6 @@ std::string NormalizerExecutionContextImpl::normalize( const char* p1, std::size
 	msg.packByte( Method_normalize);
 	msg.packBuffer( p1, p2);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1134,7 +1114,6 @@ Index PostingIteratorImpl::skipDoc( const Index& p1)
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1149,7 +1128,6 @@ Index PostingIteratorImpl::skipPos( const Index& p1)
 	msg.packByte( Method_skipPos);
 	msg.packIndex( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1163,7 +1141,6 @@ const char* PostingIteratorImpl::featureid( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_featureid);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1182,7 +1159,6 @@ GlobalCounter PostingIteratorImpl::documentFrequency( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_documentFrequency);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1196,7 +1172,6 @@ unsigned int PostingIteratorImpl::frequency( )
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_frequency);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1210,7 +1185,6 @@ Index PostingIteratorImpl::docno( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_docno);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1224,7 +1198,6 @@ Index PostingIteratorImpl::posno( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_posno);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1293,7 +1266,6 @@ std::vector<analyzer::Term> QueryAnalyzerImpl::analyzePhrase( const std::string&
 	msg.packString( p1);
 	msg.packString( p2);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1520,7 +1492,6 @@ std::vector<ResultDocument> QueryImpl::evaluate( )
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_evaluate);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1666,7 +1637,6 @@ bool SegmenterInstanceImpl::getNext( int& p1, SegmenterPosition& p2, const char*
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getNext);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1880,7 +1850,6 @@ GlobalCounter StorageClientImpl::globalNofDocumentsInserted( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_globalNofDocumentsInserted);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1894,7 +1863,6 @@ Index StorageClientImpl::localNofDocumentsInserted( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_localNofDocumentsInserted);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1910,7 +1878,6 @@ GlobalCounter StorageClientImpl::globalDocumentFrequency( const std::string& p1,
 	msg.packString( p1);
 	msg.packString( p2);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1926,7 +1893,6 @@ Index StorageClientImpl::localDocumentFrequency( const std::string& p1, const st
 	msg.packString( p1);
 	msg.packString( p2);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1940,7 +1906,6 @@ Index StorageClientImpl::maxDocumentNumber( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_maxDocumentNumber);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -1955,7 +1920,6 @@ Index StorageClientImpl::documentNumber( const std::string& p1) const
 	msg.packByte( Method_documentNumber);
 	msg.packString( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -2173,7 +2137,7 @@ bool StorageDumpImpl::nextChunk( const char*& p1, std::size_t& p2)
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_nextChunk);
 	msg.packCrc32();
-	enter();
+	ctx()->constConstructor()->reset();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -2255,7 +2219,6 @@ const char* StorageImpl::getConfigDescription( StorageInterface::ConfigType p1) 
 	msg.packByte( Method_getConfigDescription);
 	msg.packStorageConfigType( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -2270,7 +2233,6 @@ const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) 
 	msg.packByte( Method_getConfigParameters);
 	msg.packStorageConfigType( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -2562,7 +2524,6 @@ std::vector<SummarizerExecutionContextInterface::SummaryElement> SummarizerExecu
 	msg.packByte( Method_getSummary);
 	msg.packIndex( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -2633,7 +2594,6 @@ std::string SummarizerFunctionInstanceImpl::tostring( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_tostring);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -2695,7 +2655,6 @@ std::string TextProcessorImpl::getResourcePath( const std::string& p1) const
 	msg.packByte( Method_getResourcePath);
 	msg.packString( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -2778,7 +2737,6 @@ std::vector<analyzer::Token> TokenizerExecutionContextImpl::tokenize( const char
 	msg.packByte( Method_tokenize);
 	msg.packBuffer( p1, p2);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -2807,7 +2765,6 @@ bool TokenizerFunctionInstanceImpl::concatBeforeTokenize( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_concatBeforeTokenize);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -2877,7 +2834,6 @@ float WeightingExecutionContextImpl::call( const Index& p1)
 	msg.packByte( Method_call);
 	msg.packIndex( p1);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -2946,7 +2902,6 @@ std::string WeightingFunctionInstanceImpl::tostring( ) const
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_tostring);
 	msg.packCrc32();
-	enter();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();

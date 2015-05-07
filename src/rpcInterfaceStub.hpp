@@ -47,8 +47,6 @@ public:
 	unsigned char classId() const					{return m_classId;}
 	unsigned int objId() const					{return m_objId;}
 
-	void enter() const;
-
 	const Reference<RpcClientContext>& ctx() const			{return m_ctx;}
 	bool isConst() const						{return m_isConst;}
 	void release()							{m_isConst = true;}

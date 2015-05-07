@@ -45,8 +45,3 @@ RpcInterfaceStub::RpcInterfaceStub()
 	:m_classId(0),m_objId(0),m_ctx(0),m_isConst(true){}
 
 
-void RpcInterfaceStub::enter() const
-{
-	m_ctx->constConstructor()->reset();
-}
-

@@ -162,6 +162,17 @@ $passOwnershipParams{"addWeightingFunction"} = 1;
 $passOwnershipParams{"addSummarizerFunction"} = 1;
 $passOwnershipParams{"definePhraseType"} = 1;
 
+# List of methods that reset the constants map (except long living)
+my %constResetMethodMap = ();
+$constResetMethodMap{"fetch"} = 1;
+$constResetMethodMap{"seekUpperBound"} = 1;
+$constResetMethodMap{"seekFirst"} = 1;
+$constResetMethodMap{"seekLast"} = 1;
+$constResetMethodMap{"seekNext"} = 1;
+$constResetMethodMap{"seekPrev"} = 1;
+$constResetMethodMap{"nextChunk"} = 1;
+
+
 # List of hacks (client code inserted at the beginning of a method call):
 my %alternativeClientImpl = ();
 $alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx());\n";
@@ -1318,7 +1329,10 @@ sub getMethodDeclarationSource
 		if ($sender_output =~ m/serializedMsg.unpack/)
 		{
 			$sender_code .= "\tmsg.packCrc32();\n";
-			$sender_code .= "\tenter();\n";
+			if ($constResetMethodMap{$methodname})
+			{
+				$sender_code .= "\tctx()->constConstructor()->reset();\n";
+			}
 			$sender_code .= "\tstd::string answer = ctx()->rpc_sendRequest( msg.content());\n";
 			$sender_code .= "\tRpcDeserializer serializedMsg( answer.c_str(), answer.size());\n";
 			$sender_code .= "\tserializedMsg.unpackByte();\n";
