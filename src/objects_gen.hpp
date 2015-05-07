@@ -544,6 +544,7 @@ public:
 	virtual Index localDocumentFrequency( const std::string& p1, const std::string& p2) const;
 	virtual Index maxDocumentNumber( ) const;
 	virtual Index documentNumber( const std::string& p1) const;
+	virtual Index documentStatistics( const Index& p1, const StorageClientInterface::DocumentStatisticsType& p2, const std::string& p3) const;
 	virtual MetaDataReaderInterface* createMetaDataReader( ) const;
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual DocnoRangeAllocatorInterface* createDocnoRangeAllocator( );

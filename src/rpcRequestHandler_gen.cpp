@@ -3537,6 +3537,36 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case StorageClientConst::Method_documentStatistics:
+		{
+			RpcSerializer msg;
+			Index p0;
+			Index p1;
+			StorageClientInterface::DocumentStatisticsType p2;
+			std::string p3;
+			p1 = serializedMsg.unpackIndex();
+			p2 = serializedMsg.unpackDocumentStatisticsType();
+			p3 = serializedMsg.unpackString();
+			try {
+				p0 = obj->documentStatistics(p1,p2,p3);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packIndex( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case StorageClientConst::Method_createMetaDataReader:
 		{
 			RpcSerializer msg;

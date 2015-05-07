@@ -1927,6 +1927,22 @@ Index StorageClientImpl::documentNumber( const std::string& p1) const
 	return p0;
 }
 
+Index StorageClientImpl::documentStatistics( const Index& p1, const StorageClientInterface::DocumentStatisticsType& p2, const std::string& p3) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_documentStatistics);
+	msg.packIndex( p1);
+	msg.packDocumentStatisticsType( p2);
+	msg.packString( p3);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
+	return p0;
+}
+
 MetaDataReaderInterface* StorageClientImpl::createMetaDataReader( ) const
 {
 	RpcSerializer msg;

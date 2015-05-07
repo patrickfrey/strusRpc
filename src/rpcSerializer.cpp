@@ -408,6 +408,12 @@ void RpcSerializer::packSummarizerFeatureParameter( const QueryEvalInterface::Su
 	packString( val.featureSet());
 }
 
+void RpcSerializer::packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val)
+{
+	packByte( val);
+}
+
+
 void RpcSerializer::packCrc32()
 {
 	uint32_t crc = utils::Crc32::calc( m_content.c_str(), m_content.size());
@@ -726,6 +732,11 @@ QueryEvalInterface::SummarizerFeatureParameter RpcDeserializer::unpackSummarizer
 	std::string parameterName = unpackString();
 	std::string featureSet = unpackString();
 	return QueryEvalInterface::SummarizerFeatureParameter( parameterName, featureSet);
+}
+
+StorageClientInterface::DocumentStatisticsType RpcDeserializer::unpackDocumentStatisticsType()
+{
+	return (StorageClientInterface::DocumentStatisticsType)unpackByte();
 }
 
 

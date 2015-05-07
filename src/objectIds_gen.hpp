@@ -437,6 +437,7 @@ public:
 		Method_localDocumentFrequency,
 		Method_maxDocumentNumber,
 		Method_documentNumber,
+		Method_documentStatistics,
 		Method_createMetaDataReader,
 		Method_createAttributeReader,
 		Method_createDocnoRangeAllocator,

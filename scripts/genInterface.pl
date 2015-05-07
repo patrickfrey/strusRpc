@@ -778,6 +778,10 @@ sub packParameter
 	{
 		$rt .= "msg.packSummarizerFeatureParameter( " . $id . ");";
 	}
+	elsif ($type eq "StorageClientInterface::DocumentStatisticsType")
+	{
+		$rt .= "msg.packDocumentStatisticsType( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -988,6 +992,10 @@ sub unpackParameter
 	elsif ($type eq "QueryEvalInterface::SummarizerFeatureParameter")
 	{
 		$rt .= "$id = serializedMsg.unpackSummarizerFeatureParameter();";
+	}
+	elsif ($type eq "StorageClientInterface::DocumentStatisticsType")
+	{
+		$rt .= "$id = serializedMsg.unpackDocumentStatisticsType();";
 	}
 	else
 	{

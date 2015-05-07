@@ -38,6 +38,7 @@
 #include "strus/databaseInterface.hpp"
 #include "strus/databaseCursorInterface.hpp"
 #include "strus/storageInterface.hpp"
+#include "strus/storageClientInterface.hpp"
 #include "strus/summarizerFunctionInterface.hpp"
 #include "strus/summarizerExecutionContextInterface.hpp"
 #include "strus/queryInterface.hpp"
@@ -92,6 +93,7 @@ public:
 	void packWeightedDocument( const WeightedDocument& val);
 	void packResultDocument( const ResultDocument& val);
 	void packSummarizerFeatureParameter( const QueryEvalInterface::SummarizerFeatureParameter& val);
+	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
 	void packCrc32();
 
 	const std::string& content() const
@@ -149,6 +151,7 @@ public:
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();
 	QueryEvalInterface::SummarizerFeatureParameter unpackSummarizerFeatureParameter();
+	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();
 	bool unpackCrc32();
 
 	std::size_t position() const
