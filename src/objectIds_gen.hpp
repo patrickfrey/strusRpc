@@ -61,6 +61,7 @@ enum ClassId
 	ClassId_StorageAlterMetaDataTable,
 	ClassId_StorageClient,
 	ClassId_StorageDocument,
+	ClassId_StorageDocumentUpdate,
 	ClassId_StorageDump,
 	ClassId_Storage,
 	ClassId_StorageObjectBuilder,
@@ -465,6 +466,22 @@ public:
 	};
 };
 
+class StorageDocumentUpdateConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_setMetaData,
+		Method_setAttribute,
+		Method_clearAttribute,
+		Method_setUserAccessRight,
+		Method_clearUserAccessRight,
+		Method_clearUserAccessRights,
+		Method_done
+	};
+};
+
 class StorageDumpConst
 {
 public:
@@ -535,8 +552,10 @@ public:
 	{
 		Method_Destructor,
 		Method_createDocument,
+		Method_createDocumentUpdate,
 		Method_deleteDocument,
 		Method_deleteUserAccessRights,
+		Method_updateMetaData,
 		Method_commit,
 		Method_rollback
 	};

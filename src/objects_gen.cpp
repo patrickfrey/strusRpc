@@ -2137,6 +2137,87 @@ void StorageDocumentImpl::done( )
 	ctx()->rpc_synchronize();
 }
 
+StorageDocumentUpdateImpl::~StorageDocumentUpdateImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void StorageDocumentUpdateImpl::setMetaData( const std::string& p1, const ArithmeticVariant& p2)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_setMetaData);
+	msg.packString( p1);
+	msg.packArithmeticVariant( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void StorageDocumentUpdateImpl::setAttribute( const std::string& p1, const std::string& p2)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_setAttribute);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void StorageDocumentUpdateImpl::clearAttribute( const std::string& p1)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_clearAttribute);
+	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void StorageDocumentUpdateImpl::setUserAccessRight( const std::string& p1)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_setUserAccessRight);
+	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void StorageDocumentUpdateImpl::clearUserAccessRight( const std::string& p1)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_clearUserAccessRight);
+	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void StorageDocumentUpdateImpl::clearUserAccessRights( )
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_clearUserAccessRights);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void StorageDocumentUpdateImpl::done( )
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_done);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ctx()->rpc_synchronize();
+}
+
 StorageDumpImpl::~StorageDumpImpl()
 {
 	if (isConst()) return;
@@ -2467,6 +2548,21 @@ StorageDocumentInterface* StorageTransactionImpl::createDocument( const std::str
 	return p0;
 }
 
+StorageDocumentUpdateInterface* StorageTransactionImpl::createDocumentUpdate( const Index& p1)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createDocumentUpdate);
+	msg.packIndex( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StorageDocumentUpdate;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	StorageDocumentUpdateInterface* p0 = new StorageDocumentUpdateImpl( objId_0, ctx());
+	return p0;
+}
+
 void StorageTransactionImpl::deleteDocument( const std::string& p1)
 {
 	RpcSerializer msg;
@@ -2483,6 +2579,18 @@ void StorageTransactionImpl::deleteUserAccessRights( const std::string& p1)
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_deleteUserAccessRights);
 	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void StorageTransactionImpl::updateMetaData( const Index& p1, const std::string& p2, const ArithmeticVariant& p3)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_updateMetaData);
+	msg.packIndex( p1);
+	msg.packString( p2);
+	msg.packArithmeticVariant( p3);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 }

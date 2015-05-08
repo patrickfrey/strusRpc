@@ -62,6 +62,7 @@
 #include "strus/storageAlterMetaDataTableInterface.hpp"
 #include "strus/storageClientInterface.hpp"
 #include "strus/storageDocumentInterface.hpp"
+#include "strus/storageDocumentUpdateInterface.hpp"
 #include "strus/storageDumpInterface.hpp"
 #include "strus/storageInterface.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
@@ -575,6 +576,26 @@ public:
 	virtual void done( );
 };
 
+class StorageDocumentUpdateImpl
+		:public RpcInterfaceStub
+		,public strus::StorageDocumentUpdateInterface
+		,public strus::StorageDocumentUpdateConst
+{
+public:
+	virtual ~StorageDocumentUpdateImpl();
+
+	StorageDocumentUpdateImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocumentUpdate, objId_, ctx_, isConst_){}
+
+	virtual void setMetaData( const std::string& p1, const ArithmeticVariant& p2);
+	virtual void setAttribute( const std::string& p1, const std::string& p2);
+	virtual void clearAttribute( const std::string& p1);
+	virtual void setUserAccessRight( const std::string& p1);
+	virtual void clearUserAccessRight( const std::string& p1);
+	virtual void clearUserAccessRights( );
+	virtual void done( );
+};
+
 class StorageDumpImpl
 		:public RpcInterfaceStub
 		,public strus::StorageDumpInterface
@@ -670,8 +691,10 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageTransaction, objId_, ctx_, isConst_){}
 
 	virtual StorageDocumentInterface* createDocument( const std::string& p1, const Index& p2);
+	virtual StorageDocumentUpdateInterface* createDocumentUpdate( const Index& p1);
 	virtual void deleteDocument( const std::string& p1);
 	virtual void deleteUserAccessRights( const std::string& p1);
+	virtual void updateMetaData( const Index& p1, const std::string& p2, const ArithmeticVariant& p3);
 	virtual void commit( );
 	virtual void rollback( );
 };

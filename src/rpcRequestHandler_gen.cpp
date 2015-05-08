@@ -3954,6 +3954,181 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_StorageDocumentUpdate:
+	{
+	StorageDocumentUpdateInterface* obj = getObject<StorageDocumentUpdateInterface>( classId, objId);
+	switch( (StorageDocumentUpdateConst::MethodId)methodId)
+	{
+		case StorageDocumentUpdateConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case StorageDocumentUpdateConst::Method_setMetaData:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			ArithmeticVariant p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackArithmeticVariant();
+			try {
+				obj->setMetaData(p1,p2);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			return std::string();
+		}
+		case StorageDocumentUpdateConst::Method_setAttribute:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			try {
+				obj->setAttribute(p1,p2);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			return std::string();
+		}
+		case StorageDocumentUpdateConst::Method_clearAttribute:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			try {
+				obj->clearAttribute(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			return std::string();
+		}
+		case StorageDocumentUpdateConst::Method_setUserAccessRight:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			try {
+				obj->setUserAccessRight(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			return std::string();
+		}
+		case StorageDocumentUpdateConst::Method_clearUserAccessRight:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			try {
+				obj->clearUserAccessRight(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			return std::string();
+		}
+		case StorageDocumentUpdateConst::Method_clearUserAccessRights:
+		{
+			RpcSerializer msg;
+			try {
+				obj->clearUserAccessRights();
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			return std::string();
+		}
+		case StorageDocumentUpdateConst::Method_done:
+		{
+			RpcSerializer msg;
+			try {
+				obj->done();
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_StorageDump:
 	{
 	StorageDumpInterface* obj = getObject<StorageDumpInterface>( classId, objId);
@@ -4547,6 +4722,34 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case StorageTransactionConst::Method_createDocumentUpdate:
+		{
+			RpcSerializer msg;
+			StorageDocumentUpdateInterface* p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			try {
+				p0 = obj->createDocumentUpdate(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case StorageTransactionConst::Method_deleteDocument:
 		{
 			RpcSerializer msg;
@@ -4577,6 +4780,33 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			try {
 				obj->deleteUserAccessRights(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			return std::string();
+		}
+		case StorageTransactionConst::Method_updateMetaData:
+		{
+			RpcSerializer msg;
+			Index p1;
+			std::string p2;
+			ArithmeticVariant p3;
+			p1 = serializedMsg.unpackIndex();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackArithmeticVariant();
+			try {
+				obj->updateMetaData(p1,p2,p3);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
