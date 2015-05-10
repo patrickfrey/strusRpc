@@ -101,7 +101,8 @@ public:
 		Method_Destructor,
 		Method_elementHandle,
 		Method_skipDoc,
-		Method_getValue
+		Method_getValue,
+		Method_getAttributeNames
 	};
 };
 

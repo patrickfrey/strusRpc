@@ -148,6 +148,24 @@ std::string AttributeReaderImpl::getValue( const Index& p1) const
 	return p0;
 }
 
+std::vector<std::string> AttributeReaderImpl::getAttributeNames( ) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getAttributeNames);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+}
+
 DatabaseBackupCursorImpl::~DatabaseBackupCursorImpl()
 {
 	if (isConst()) return;

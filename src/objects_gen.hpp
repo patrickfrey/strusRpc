@@ -109,6 +109,7 @@ public:
 	virtual Index elementHandle( const char* p1) const;
 	virtual void skipDoc( const Index& p1);
 	virtual std::string getValue( const Index& p1) const;
+	virtual std::vector<std::string> getAttributeNames( ) const;
 };
 
 class DatabaseBackupCursorImpl
