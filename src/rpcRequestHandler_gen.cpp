@@ -2401,6 +2401,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			WeightingFunctionInstanceInterface* p2;
 			std::vector<std::string> p3;
+			float p4;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
@@ -2412,8 +2413,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				std::string ee = serializedMsg.unpackString();
 				p3.push_back( ee);
 			}
+			p4 = serializedMsg.unpackFloat();
 			try {
-				obj->addWeightingFunction(p1,p2,p3);
+				obj->addWeightingFunction(p1,p2,p3,p4);
 				releaseObjectsMarked();
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {

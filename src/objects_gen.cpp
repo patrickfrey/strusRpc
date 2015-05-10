@@ -1341,7 +1341,7 @@ void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunc
 	delete p2;
 }
 
-void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<std::string>& p3)
+void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<std::string>& p3, float p4)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1354,6 +1354,7 @@ void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFuncti
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
 		msg.packString( p3[ii]);
 	}
+	msg.packFloat( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
