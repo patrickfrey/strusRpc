@@ -402,7 +402,7 @@ void RpcSerializer::packResultDocument( const ResultDocument& val)
 	}
 }
 
-void RpcSerializer::packSummarizerFeatureParameter( const QueryEvalInterface::SummarizerFeatureParameter& val)
+void RpcSerializer::packFeatureParameter( const QueryEvalInterface::FeatureParameter& val)
 {
 	packString( val.parameterName());
 	packString( val.featureSet());
@@ -727,11 +727,11 @@ ResultDocument RpcDeserializer::unpackResultDocument()
 	return rt;
 }
 
-QueryEvalInterface::SummarizerFeatureParameter RpcDeserializer::unpackSummarizerFeatureParameter()
+QueryEvalInterface::FeatureParameter RpcDeserializer::unpackFeatureParameter()
 {
 	std::string parameterName = unpackString();
 	std::string featureSet = unpackString();
-	return QueryEvalInterface::SummarizerFeatureParameter( parameterName, featureSet);
+	return QueryEvalInterface::FeatureParameter( parameterName, featureSet);
 }
 
 StorageClientInterface::DocumentStatisticsType RpcDeserializer::unpackDocumentStatisticsType()

@@ -774,9 +774,9 @@ sub packParameter
 	{
 		$rt .= "msg.packResultDocument( " . $id . ");";
 	}
-	elsif ($type eq "QueryEvalInterface::SummarizerFeatureParameter")
+	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
-		$rt .= "msg.packSummarizerFeatureParameter( " . $id . ");";
+		$rt .= "msg.packFeatureParameter( " . $id . ");";
 	}
 	elsif ($type eq "StorageClientInterface::DocumentStatisticsType")
 	{
@@ -989,9 +989,9 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackResultDocument();";
 	}
-	elsif ($type eq "QueryEvalInterface::SummarizerFeatureParameter")
+	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
-		$rt .= "$id = serializedMsg.unpackSummarizerFeatureParameter();";
+		$rt .= "$id = serializedMsg.unpackFeatureParameter();";
 	}
 	elsif ($type eq "StorageClientInterface::DocumentStatisticsType")
 	{

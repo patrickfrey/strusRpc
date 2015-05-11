@@ -2386,7 +2386,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			SummarizerFunctionInstanceInterface* p2;
-			std::vector<QueryEvalInterface::SummarizerFeatureParameter> p3;
+			std::vector<QueryEvalInterface::FeatureParameter> p3;
 			std::string p4;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
@@ -2396,7 +2396,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			markObjectToRelease( classId_2, objId_2);
 			std::size_t n3 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n3; ++ii) {
-				QueryEvalInterface::SummarizerFeatureParameter ee = serializedMsg.unpackSummarizerFeatureParameter();
+				QueryEvalInterface::FeatureParameter ee = serializedMsg.unpackFeatureParameter();
 				p3.push_back( ee);
 			}
 			p4 = serializedMsg.unpackString();
@@ -2427,7 +2427,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			WeightingFunctionInstanceInterface* p2;
-			std::vector<std::string> p3;
+			std::vector<QueryEvalInterface::FeatureParameter> p3;
 			float p4;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
@@ -2437,7 +2437,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			markObjectToRelease( classId_2, objId_2);
 			std::size_t n3 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n3; ++ii) {
-				std::string ee = serializedMsg.unpackString();
+				QueryEvalInterface::FeatureParameter ee = serializedMsg.unpackFeatureParameter();
 				p3.push_back( ee);
 			}
 			p4 = serializedMsg.unpackFloat();
@@ -5486,6 +5486,36 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case WeightingExecutionContextConst::Method_addWeightingFeature:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			PostingIteratorInterface* p2;
+			float p3;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_2; unsigned int objId_2;
+			serializedMsg.unpackObject( classId_2, objId_2);
+			if (classId_2 != ClassId_PostingIterator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			p2 = getObject<PostingIteratorInterface>( classId_2, objId_2);
+			p3 = serializedMsg.unpackFloat();
+			try {
+				obj->addWeightingFeature(p1,p2,p3);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			return std::string();
+		}
 		case WeightingExecutionContextConst::Method_call:
 		{
 			RpcSerializer msg;
@@ -5580,24 +5610,19 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			WeightingExecutionContextInterface* p0;
 			const StorageClientInterface* p1;
-			PostingIteratorInterface* p2;
-			MetaDataReaderInterface* p3;
+			MetaDataReaderInterface* p2;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_StorageClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
 			p1 = getConstObject<StorageClientInterface>( classId_1, objId_1);
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_PostingIterator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-			p2 = getObject<PostingIteratorInterface>( classId_2, objId_2);
-			unsigned char classId_3; unsigned int objId_3;
-			serializedMsg.unpackObject( classId_3, objId_3);
-			if (classId_3 != ClassId_MetaDataReader) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-			p3 = getObject<MetaDataReaderInterface>( classId_3, objId_3);
+			if (classId_2 != ClassId_MetaDataReader) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			p2 = getObject<MetaDataReaderInterface>( classId_2, objId_2);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createExecutionContext(p1,p2,p3);
+				p0 = obj->createExecutionContext(p1,p2);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);

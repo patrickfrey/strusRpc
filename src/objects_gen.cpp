@@ -1338,7 +1338,7 @@ void QueryEvalImpl::addRestrictionFeature( const std::string& p1)
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::SummarizerFeatureParameter>& p3, const std::string& p4)
+void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1349,7 +1349,7 @@ void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunc
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packSize( p3.size());
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
-		msg.packSummarizerFeatureParameter( p3[ii]);
+		msg.packFeatureParameter( p3[ii]);
 	}
 	msg.packString( p4);
 	msg.packCrc32();
@@ -1359,7 +1359,7 @@ void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunc
 	delete p2;
 }
 
-void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<std::string>& p3, float p4)
+void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, float p4)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1370,7 +1370,7 @@ void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFuncti
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packSize( p3.size());
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
-		msg.packString( p3[ii]);
+		msg.packFeatureParameter( p3[ii]);
 	}
 	msg.packFloat( p4);
 	msg.packCrc32();
@@ -2970,6 +2970,20 @@ WeightingExecutionContextImpl::~WeightingExecutionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+void WeightingExecutionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addWeightingFeature);
+	msg.packString( p1);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	msg.packObject( impl_2->classId(), impl_2->objId());
+	msg.packFloat( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
 float WeightingExecutionContextImpl::call( const Index& p1)
 {
 	RpcSerializer msg;
@@ -3016,7 +3030,7 @@ void WeightingFunctionInstanceImpl::addNumericParameter( const std::string& p1, 
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-WeightingExecutionContextInterface* WeightingFunctionInstanceImpl::createExecutionContext( const StorageClientInterface* p1, PostingIteratorInterface* p2, MetaDataReaderInterface* p3) const
+WeightingExecutionContextInterface* WeightingFunctionInstanceImpl::createExecutionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -3027,9 +3041,6 @@ WeightingExecutionContextInterface* WeightingFunctionInstanceImpl::createExecuti
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
-	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
-	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call");
-	msg.packObject( impl_3->classId(), impl_3->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_WeightingExecutionContext;
 	msg.packObject( classId_0, objId_0);

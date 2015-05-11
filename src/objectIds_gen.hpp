@@ -648,6 +648,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_addWeightingFeature,
 		Method_call
 	};
 };

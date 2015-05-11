@@ -92,7 +92,7 @@ public:
 	void packAnalyzerToken( const analyzer::Token& val);
 	void packWeightedDocument( const WeightedDocument& val);
 	void packResultDocument( const ResultDocument& val);
-	void packSummarizerFeatureParameter( const QueryEvalInterface::SummarizerFeatureParameter& val);
+	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
 	void packCrc32();
 
@@ -150,7 +150,7 @@ public:
 	analyzer::Token unpackAnalyzerToken();
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();
-	QueryEvalInterface::SummarizerFeatureParameter unpackSummarizerFeatureParameter();
+	QueryEvalInterface::FeatureParameter unpackFeatureParameter();
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();
 	bool unpackCrc32();
 
