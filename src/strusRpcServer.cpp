@@ -479,9 +479,9 @@ int main( int argc, const char* argv[])
 			}
 			else if (0==std::strcmp( argv[argi], "-p") || 0==std::strcmp( argv[argi], "--port"))
 			{
-				if (argc > 1) {
-					port = atoi( argv[1]);
-				}
+				++argi;
+				if (argi == argc) throw std::runtime_error("option --port expects argument");
+				port = atoi( argv[argi]);
 				if (port <= 0 || port > 65535)
 				{
 					throw std::runtime_error( "invalid port");
