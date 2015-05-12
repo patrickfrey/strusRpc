@@ -68,6 +68,8 @@ static void printUsage()
 	std::cerr << "    Search modules to load first in <DIR>" << std::endl;
 	std::cerr << "-R|--resourcedir <DIR>" << std::endl;
 	std::cerr << "    Define a resource path <DIR> for the analyzer" << std::endl;
+	std::cerr << "-p|--port <PORT>" << std::endl;
+	std::cerr << "    Define the port to listen for requests as <PORT> (default 7181)" << std::endl;
 	std::cerr << "-s|--storage <CONFIG>" << std::endl;
 	std::cerr << "    Define configuration <CONFIG> of storage hosted by this server" << std::endl;
 }
@@ -484,12 +486,6 @@ int main( int argc, const char* argv[])
 				{
 					throw std::runtime_error( "invalid port");
 				}
-			}
-			else if (0==std::strcmp( argv[argi], "-m") || 0==std::strcmp( argv[argi], "--module"))
-			{
-				++argi;
-				if (argi == argc) throw std::runtime_error("option --module expects argument");
-				modules.push_back( argv[argi]);
 			}
 			else if (0==std::strcmp( argv[argi], "-s") || 0==std::strcmp( argv[argi], "--storage"))
 			{
