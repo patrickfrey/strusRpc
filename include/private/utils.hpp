@@ -44,13 +44,11 @@ namespace utils {
 class Crc32
 {
 public:
-	static uint32_t calc( const char* blk, std::size_t blksize)
-	{
-		boost::crc_32_type result;
-		result.process_bytes( blk, blksize);
-		return result.checksum();
-	}
+	static uint32_t calc( const char* blk, std::size_t blksize);
 };
+
+std::string tostring( int val);
+
 
 template <class X>
 class SharedPtr

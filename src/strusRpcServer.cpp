@@ -33,6 +33,7 @@
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/moduleLoaderInterface.hpp"
 #include "strus/versionRpc.hpp"
+#include "loadGlobalStatistics.hpp"
 #include "rpcSerializer.hpp"
 #include <cstring>
 #include <stdexcept>
@@ -42,6 +43,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
+#include <fstream>
 #include <memory>
 #include <stdint.h>
 #include <netinet/in.h>
@@ -72,6 +74,8 @@ static void printUsage()
 	std::cerr << "    Define the port to listen for requests as <PORT> (default 7181)" << std::endl;
 	std::cerr << "-s|--storage <CONFIG>" << std::endl;
 	std::cerr << "    Define configuration <CONFIG> of storage hosted by this server" << std::endl;
+	std::cerr << "-g|--globalstats <FILE>" << std::endl;
+	std::cerr << "    Load global statistics of peers from file <FILE>" << std::endl;
 }
 
 static strus::ModuleLoaderInterface* g_moduleLoader = 0;
@@ -442,6 +446,7 @@ int main( int argc, const char* argv[])
 	std::vector<std::string> moduledirs;
 	std::vector<std::string> modules;
 	std::vector<std::string> resourcedirs;
+	std::vector<std::string> globalstatfiles;
 	std::string storageconfig;
 	int port = 7181; //... default port
 	try
@@ -495,6 +500,12 @@ int main( int argc, const char* argv[])
 				storageconfig.append( argv[argi]);
 				if (storageconfig.empty()) throw std::runtime_error("option --storage with empty argument");
 			}
+			else if (0==std::strcmp( argv[argi], "-g") || 0==std::strcmp( argv[argi], "--globalstats"))
+			{
+				++argi;
+				if (argi == argc) throw std::runtime_error("option --storage expects argument (storage configuration string)");
+				globalstatfiles.push_back( argv[argi]);
+			}
 			else if (argv[argi][0] == '-')
 			{
 				throw std::runtime_error( std::string( "unknown option ") + argv[argi]);
@@ -546,7 +557,31 @@ int main( int argc, const char* argv[])
 			g_storageClient = storageClient.get();
 		}
 
+		// Load global statistics from file if defined:
+		std::vector<std::string>::const_iterator
+			gi = globalstatfiles.begin(), ge = globalstatfiles.end();
+		for (; gi != ge; ++gi)
+		{
+			std::cerr << "strus RPC server loading global statistics from file '" << *gi << "'" << std::endl;
+			std::ifstream file;
+			file.exceptions( std::ifstream::failbit | std::ifstream::badbit);
+			try 
+			{
+				file.open( gi->c_str(), std::fstream::in);
+				strus::loadGlobalStatistics( *g_storageClient, file);
+			}
+			catch (const std::ifstream::failure& err)
+			{
+				throw std::runtime_error( std::string( "failed to read global statistics from file '") + *gi + "': " + err.what());
+			}
+			catch (const std::runtime_error& err)
+			{
+				throw std::runtime_error( std::string( "failed to read global statistics from file '") + *gi + "': " + err.what());
+			}
+		}
+
 		// Start server:
+		std::cerr << "strus RPC server is starting ..." << std::endl;
 		if (!!runServer( port))
 		{
 			throw std::runtime_error( "failed to start server");
