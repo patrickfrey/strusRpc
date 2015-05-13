@@ -43,7 +43,7 @@ using namespace strus;
 
 static bool isSpace( char ch)
 {
-	return (unsigned char)ch <= 32;
+	return ch > 0 && (unsigned char)ch <= 32;
 }
 
 static bool isDigit( char ch)
