@@ -41,12 +41,12 @@ enum ClassId
 	ClassId_Database,
 	ClassId_DatabaseTransaction,
 	ClassId_DocnoRangeAllocator,
-	ClassId_DocumentAnalyzerInstance,
+	ClassId_DocumentAnalyzerContext,
 	ClassId_DocumentAnalyzer,
 	ClassId_ForwardIterator,
 	ClassId_InvAclIterator,
 	ClassId_MetaDataReader,
-	ClassId_NormalizerExecutionContext,
+	ClassId_NormalizerFunctionContext,
 	ClassId_NormalizerFunctionInstance,
 	ClassId_NormalizerFunction,
 	ClassId_PeerStorageTransaction,
@@ -56,7 +56,7 @@ enum ClassId
 	ClassId_QueryEval,
 	ClassId_Query,
 	ClassId_QueryProcessor,
-	ClassId_SegmenterInstance,
+	ClassId_SegmenterContext,
 	ClassId_Segmenter,
 	ClassId_StorageAlterMetaDataTable,
 	ClassId_StorageClient,
@@ -68,14 +68,14 @@ enum ClassId
 	ClassId_StoragePeer,
 	ClassId_StoragePeerTransaction,
 	ClassId_StorageTransaction,
-	ClassId_SummarizerExecutionContext,
+	ClassId_SummarizerFunctionContext,
 	ClassId_SummarizerFunctionInstance,
 	ClassId_SummarizerFunction,
 	ClassId_TextProcessor,
-	ClassId_TokenizerExecutionContext,
+	ClassId_TokenizerFunctionContext,
 	ClassId_TokenizerFunctionInstance,
 	ClassId_TokenizerFunction,
-	ClassId_WeightingExecutionContext,
+	ClassId_WeightingFunctionContext,
 	ClassId_WeightingFunctionInstance,
 	ClassId_WeightingFunction
 };
@@ -189,7 +189,7 @@ public:
 	};
 };
 
-class DocumentAnalyzerInstanceConst
+class DocumentAnalyzerContextConst
 {
 public:
 	enum MethodId
@@ -212,7 +212,7 @@ public:
 		Method_defineAttribute,
 		Method_defineSubDocument,
 		Method_analyze,
-		Method_createInstance
+		Method_createContext
 	};
 };
 
@@ -254,7 +254,7 @@ public:
 	};
 };
 
-class NormalizerExecutionContextConst
+class NormalizerFunctionContextConst
 {
 public:
 	enum MethodId
@@ -270,7 +270,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createExecutionContext
+		Method_createFunctionContext
 	};
 };
 
@@ -384,7 +384,7 @@ public:
 	};
 };
 
-class SegmenterInstanceConst
+class SegmenterContextConst
 {
 public:
 	enum MethodId
@@ -403,7 +403,7 @@ public:
 		Method_Destructor,
 		Method_defineSelectorExpression,
 		Method_defineSubSection,
-		Method_createInstance
+		Method_createContext
 	};
 };
 
@@ -562,7 +562,7 @@ public:
 	};
 };
 
-class SummarizerExecutionContextConst
+class SummarizerFunctionContextConst
 {
 public:
 	enum MethodId
@@ -581,7 +581,7 @@ public:
 		Method_Destructor,
 		Method_addStringParameter,
 		Method_addNumericParameter,
-		Method_createExecutionContext,
+		Method_createFunctionContext,
 		Method_tostring
 	};
 };
@@ -611,7 +611,7 @@ public:
 	};
 };
 
-class TokenizerExecutionContextConst
+class TokenizerFunctionContextConst
 {
 public:
 	enum MethodId
@@ -628,7 +628,7 @@ public:
 	{
 		Method_Destructor,
 		Method_concatBeforeTokenize,
-		Method_createExecutionContext
+		Method_createFunctionContext
 	};
 };
 
@@ -642,7 +642,7 @@ public:
 	};
 };
 
-class WeightingExecutionContextConst
+class WeightingFunctionContextConst
 {
 public:
 	enum MethodId
@@ -661,7 +661,7 @@ public:
 		Method_Destructor,
 		Method_addStringParameter,
 		Method_addNumericParameter,
-		Method_createExecutionContext,
+		Method_createFunctionContext,
 		Method_tostring
 	};
 };

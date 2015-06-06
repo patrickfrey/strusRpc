@@ -40,7 +40,7 @@
 #include "strus/storageInterface.hpp"
 #include "strus/storageClientInterface.hpp"
 #include "strus/summarizerFunctionInterface.hpp"
-#include "strus/summarizerExecutionContextInterface.hpp"
+#include "strus/summarizerFunctionContextInterface.hpp"
 #include "strus/queryInterface.hpp"
 #include "strus/queryEvalInterface.hpp"
 #include "strus/weightedDocument.hpp"
@@ -81,7 +81,7 @@ public:
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
 	void packStorageConfigType( const StorageInterface::ConfigType& val);
 	void packFeatureOptions( const DocumentAnalyzerInterface::FeatureOptions& val);
-	void packSummaryElement( const SummarizerExecutionContextInterface::SummaryElement& val);
+	void packSummaryElement( const SummarizerFunctionContextInterface::SummaryElement& val);
 	void packCompareOperator( const QueryInterface::CompareOperator& val);
 	void packSummarizationVariable( const SummarizationVariable& val);
 	void packSlice( DatabaseCursorInterface::Slice& val);
@@ -140,7 +140,7 @@ public:
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();
 	StorageInterface::ConfigType unpackStorageConfigType();
 	DocumentAnalyzerInterface::FeatureOptions unpackFeatureOptions();
-	SummarizerExecutionContextInterface::SummaryElement unpackSummaryElement();
+	SummarizerFunctionContextInterface::SummaryElement unpackSummaryElement();
 	QueryInterface::CompareOperator unpackCompareOperator();
 	DatabaseCursorInterface::Slice unpackSlice();
 	analyzer::Document unpackAnalyzerDocument();

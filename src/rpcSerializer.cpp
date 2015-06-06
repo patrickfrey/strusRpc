@@ -303,7 +303,7 @@ void RpcSerializer::packFeatureOptions( const DocumentAnalyzerInterface::Feature
 	packUint( val.opt());
 }
 
-void RpcSerializer::packSummaryElement( const SummarizerExecutionContextInterface::SummaryElement& val)
+void RpcSerializer::packSummaryElement( const SummarizerFunctionContextInterface::SummaryElement& val)
 {
 	packString( val.text());
 	packFloat( val.weight());
@@ -621,11 +621,11 @@ DocumentAnalyzerInterface::FeatureOptions RpcDeserializer::unpackFeatureOptions(
 	return DocumentAnalyzerInterface::FeatureOptions( unpackUint());
 }
 
-SummarizerExecutionContextInterface::SummaryElement RpcDeserializer::unpackSummaryElement()
+SummarizerFunctionContextInterface::SummaryElement RpcDeserializer::unpackSummaryElement()
 {
 	std::string pname = unpackString();
 	float pvalue = unpackFloat();
-	return SummarizerExecutionContextInterface::SummaryElement( pname, pvalue);
+	return SummarizerFunctionContextInterface::SummaryElement( pname, pvalue);
 }
 
 QueryInterface::CompareOperator RpcDeserializer::unpackCompareOperator()

@@ -1106,17 +1106,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_DocumentAnalyzerInstance:
+	case ClassId_DocumentAnalyzerContext:
 	{
-	DocumentAnalyzerInstanceInterface* obj = getObject<DocumentAnalyzerInstanceInterface>( classId, objId);
-	switch( (DocumentAnalyzerInstanceConst::MethodId)methodId)
+	DocumentAnalyzerContextInterface* obj = getObject<DocumentAnalyzerContextInterface>( classId, objId);
+	switch( (DocumentAnalyzerContextConst::MethodId)methodId)
 	{
-		case DocumentAnalyzerInstanceConst::Method_Destructor:
+		case DocumentAnalyzerContextConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case DocumentAnalyzerInstanceConst::Method_putInput:
+		case DocumentAnalyzerContextConst::Method_putInput:
 		{
 			RpcSerializer msg;
 			const char* p1;
@@ -1142,7 +1142,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			return std::string();
 		}
-		case DocumentAnalyzerInstanceConst::Method_analyzeNext:
+		case DocumentAnalyzerContextConst::Method_analyzeNext:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -1416,14 +1416,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case DocumentAnalyzerConst::Method_createInstance:
+		case DocumentAnalyzerConst::Method_createContext:
 		{
 			RpcSerializer msg;
-			DocumentAnalyzerInstanceInterface* p0;
+			DocumentAnalyzerContextInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createInstance();
+				p0 = obj->createContext();
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -1760,17 +1760,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_NormalizerExecutionContext:
+	case ClassId_NormalizerFunctionContext:
 	{
-	NormalizerExecutionContextInterface* obj = getObject<NormalizerExecutionContextInterface>( classId, objId);
-	switch( (NormalizerExecutionContextConst::MethodId)methodId)
+	NormalizerFunctionContextInterface* obj = getObject<NormalizerFunctionContextInterface>( classId, objId);
+	switch( (NormalizerFunctionContextConst::MethodId)methodId)
 	{
-		case NormalizerExecutionContextConst::Method_Destructor:
+		case NormalizerFunctionContextConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case NormalizerExecutionContextConst::Method_normalize:
+		case NormalizerFunctionContextConst::Method_normalize:
 		{
 			RpcSerializer msg;
 			std::string p0;
@@ -1810,14 +1810,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case NormalizerFunctionInstanceConst::Method_createExecutionContext:
+		case NormalizerFunctionInstanceConst::Method_createFunctionContext:
 		{
 			RpcSerializer msg;
-			NormalizerExecutionContextInterface* p0;
+			NormalizerFunctionContextInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createExecutionContext();
+				p0 = obj->createFunctionContext();
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -2955,17 +2955,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_SegmenterInstance:
+	case ClassId_SegmenterContext:
 	{
-	SegmenterInstanceInterface* obj = getObject<SegmenterInstanceInterface>( classId, objId);
-	switch( (SegmenterInstanceConst::MethodId)methodId)
+	SegmenterContextInterface* obj = getObject<SegmenterContextInterface>( classId, objId);
+	switch( (SegmenterContextConst::MethodId)methodId)
 	{
-		case SegmenterInstanceConst::Method_Destructor:
+		case SegmenterContextConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case SegmenterInstanceConst::Method_putInput:
+		case SegmenterContextConst::Method_putInput:
 		{
 			RpcSerializer msg;
 			const char* p1;
@@ -2991,7 +2991,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			return std::string();
 		}
-		case SegmenterInstanceConst::Method_getNext:
+		case SegmenterContextConst::Method_getNext:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -3087,14 +3087,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			return std::string();
 		}
-		case SegmenterConst::Method_createInstance:
+		case SegmenterConst::Method_createContext:
 		{
 			RpcSerializer msg;
-			SegmenterInstanceInterface* p0;
+			SegmenterContextInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createInstance();
+				p0 = obj->createContext();
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -4898,17 +4898,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_SummarizerExecutionContext:
+	case ClassId_SummarizerFunctionContext:
 	{
-	SummarizerExecutionContextInterface* obj = getObject<SummarizerExecutionContextInterface>( classId, objId);
-	switch( (SummarizerExecutionContextConst::MethodId)methodId)
+	SummarizerFunctionContextInterface* obj = getObject<SummarizerFunctionContextInterface>( classId, objId);
+	switch( (SummarizerFunctionContextConst::MethodId)methodId)
 	{
-		case SummarizerExecutionContextConst::Method_Destructor:
+		case SummarizerFunctionContextConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case SummarizerExecutionContextConst::Method_addSummarizationFeature:
+		case SummarizerFunctionContextConst::Method_addSummarizationFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -4947,10 +4947,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			return std::string();
 		}
-		case SummarizerExecutionContextConst::Method_getSummary:
+		case SummarizerFunctionContextConst::Method_getSummary:
 		{
 			RpcSerializer msg;
-			std::vector<SummarizerExecutionContextInterface::SummaryElement> p0;
+			std::vector<SummarizerFunctionContextInterface::SummaryElement> p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
 			try {
@@ -5039,10 +5039,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			return std::string();
 		}
-		case SummarizerFunctionInstanceConst::Method_createExecutionContext:
+		case SummarizerFunctionInstanceConst::Method_createFunctionContext:
 		{
 			RpcSerializer msg;
-			SummarizerExecutionContextInterface* p0;
+			SummarizerFunctionContextInterface* p0;
 			const StorageClientInterface* p1;
 			MetaDataReaderInterface* p2;
 			unsigned char classId_1; unsigned int objId_1;
@@ -5056,7 +5056,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createExecutionContext(p1,p2);
+				p0 = obj->createFunctionContext(p1,p2);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -5320,17 +5320,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_TokenizerExecutionContext:
+	case ClassId_TokenizerFunctionContext:
 	{
-	TokenizerExecutionContextInterface* obj = getObject<TokenizerExecutionContextInterface>( classId, objId);
-	switch( (TokenizerExecutionContextConst::MethodId)methodId)
+	TokenizerFunctionContextInterface* obj = getObject<TokenizerFunctionContextInterface>( classId, objId);
+	switch( (TokenizerFunctionContextConst::MethodId)methodId)
 	{
-		case TokenizerExecutionContextConst::Method_Destructor:
+		case TokenizerFunctionContextConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case TokenizerExecutionContextConst::Method_tokenize:
+		case TokenizerFunctionContextConst::Method_tokenize:
 		{
 			RpcSerializer msg;
 			std::vector<analyzer::Token> p0;
@@ -5397,14 +5397,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case TokenizerFunctionInstanceConst::Method_createExecutionContext:
+		case TokenizerFunctionInstanceConst::Method_createFunctionContext:
 		{
 			RpcSerializer msg;
-			TokenizerExecutionContextInterface* p0;
+			TokenizerFunctionContextInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createExecutionContext();
+				p0 = obj->createFunctionContext();
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -5476,17 +5476,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_WeightingExecutionContext:
+	case ClassId_WeightingFunctionContext:
 	{
-	WeightingExecutionContextInterface* obj = getObject<WeightingExecutionContextInterface>( classId, objId);
-	switch( (WeightingExecutionContextConst::MethodId)methodId)
+	WeightingFunctionContextInterface* obj = getObject<WeightingFunctionContextInterface>( classId, objId);
+	switch( (WeightingFunctionContextConst::MethodId)methodId)
 	{
-		case WeightingExecutionContextConst::Method_Destructor:
+		case WeightingFunctionContextConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case WeightingExecutionContextConst::Method_addWeightingFeature:
+		case WeightingFunctionContextConst::Method_addWeightingFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -5516,7 +5516,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			return std::string();
 		}
-		case WeightingExecutionContextConst::Method_call:
+		case WeightingFunctionContextConst::Method_call:
 		{
 			RpcSerializer msg;
 			float p0;
@@ -5605,10 +5605,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			return std::string();
 		}
-		case WeightingFunctionInstanceConst::Method_createExecutionContext:
+		case WeightingFunctionInstanceConst::Method_createFunctionContext:
 		{
 			RpcSerializer msg;
-			WeightingExecutionContextInterface* p0;
+			WeightingFunctionContextInterface* p0;
 			const StorageClientInterface* p1;
 			MetaDataReaderInterface* p2;
 			unsigned char classId_1; unsigned int objId_1;
@@ -5622,7 +5622,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createExecutionContext(p1,p2);
+				p0 = obj->createFunctionContext(p1,p2);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);

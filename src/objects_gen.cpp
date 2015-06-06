@@ -612,7 +612,7 @@ bool DocnoRangeAllocatorImpl::deallocDocnoRange( const Index& p1, const Index& p
 	return p0;
 }
 
-DocumentAnalyzerInstanceImpl::~DocumentAnalyzerInstanceImpl()
+DocumentAnalyzerContextImpl::~DocumentAnalyzerContextImpl()
 {
 	if (isConst()) return;
 	RpcSerializer msg;
@@ -622,7 +622,7 @@ DocumentAnalyzerInstanceImpl::~DocumentAnalyzerInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void DocumentAnalyzerInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
+void DocumentAnalyzerContextImpl::putInput( const char* p1, std::size_t p2, bool p3)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -633,7 +633,7 @@ void DocumentAnalyzerInstanceImpl::putInput( const char* p1, std::size_t p2, boo
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-bool DocumentAnalyzerInstanceImpl::analyzeNext( analyzer::Document& p1)
+bool DocumentAnalyzerContextImpl::analyzeNext( analyzer::Document& p1)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -796,17 +796,17 @@ analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1) const
 	return p0;
 }
 
-DocumentAnalyzerInstanceInterface* DocumentAnalyzerImpl::createInstance( ) const
+DocumentAnalyzerContextInterface* DocumentAnalyzerImpl::createContext( ) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createInstance);
+	msg.packByte( Method_createContext);
 	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzerInstance;
+	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzerContext;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	DocumentAnalyzerInstanceInterface* p0 = new DocumentAnalyzerInstanceImpl( objId_0, ctx());
+	DocumentAnalyzerContextInterface* p0 = new DocumentAnalyzerContextImpl( objId_0, ctx());
 	return p0;
 }
 
@@ -985,7 +985,7 @@ const char* MetaDataReaderImpl::getName( const Index& p1) const
 	return p0;
 }
 
-NormalizerExecutionContextImpl::~NormalizerExecutionContextImpl()
+NormalizerFunctionContextImpl::~NormalizerFunctionContextImpl()
 {
 	if (isConst()) return;
 	RpcSerializer msg;
@@ -995,7 +995,7 @@ NormalizerExecutionContextImpl::~NormalizerExecutionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::string NormalizerExecutionContextImpl::normalize( const char* p1, std::size_t p2)
+std::string NormalizerFunctionContextImpl::normalize( const char* p1, std::size_t p2)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1019,17 +1019,17 @@ NormalizerFunctionInstanceImpl::~NormalizerFunctionInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-NormalizerExecutionContextInterface* NormalizerFunctionInstanceImpl::createExecutionContext( ) const
+NormalizerFunctionContextInterface* NormalizerFunctionInstanceImpl::createFunctionContext( ) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createExecutionContext);
+	msg.packByte( Method_createFunctionContext);
 	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_NormalizerExecutionContext;
+	unsigned char classId_0 = (unsigned char)ClassId_NormalizerFunctionContext;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	NormalizerExecutionContextInterface* p0 = new NormalizerExecutionContextImpl( objId_0, ctx());
+	NormalizerFunctionContextInterface* p0 = new NormalizerFunctionContextImpl( objId_0, ctx());
 	return p0;
 }
 
@@ -1629,7 +1629,7 @@ const SummarizerFunctionInterface* QueryProcessorImpl::getSummarizerFunction( co
 	return p0;
 }
 
-SegmenterInstanceImpl::~SegmenterInstanceImpl()
+SegmenterContextImpl::~SegmenterContextImpl()
 {
 	if (isConst()) return;
 	RpcSerializer msg;
@@ -1639,7 +1639,7 @@ SegmenterInstanceImpl::~SegmenterInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void SegmenterInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
+void SegmenterContextImpl::putInput( const char* p1, std::size_t p2, bool p3)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1650,7 +1650,7 @@ void SegmenterInstanceImpl::putInput( const char* p1, std::size_t p2, bool p3)
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-bool SegmenterInstanceImpl::getNext( int& p1, SegmenterPosition& p2, const char*& p3, std::size_t& p4)
+bool SegmenterContextImpl::getNext( int& p1, SegmenterPosition& p2, const char*& p3, std::size_t& p4)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -1701,17 +1701,17 @@ void SegmenterImpl::defineSubSection( int p1, int p2, const std::string& p3)
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-SegmenterInstanceInterface* SegmenterImpl::createInstance( ) const
+SegmenterContextInterface* SegmenterImpl::createContext( ) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createInstance);
+	msg.packByte( Method_createContext);
 	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_SegmenterInstance;
+	unsigned char classId_0 = (unsigned char)ClassId_SegmenterContext;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	SegmenterInstanceInterface* p0 = new SegmenterInstanceImpl( objId_0, ctx());
+	SegmenterContextInterface* p0 = new SegmenterContextImpl( objId_0, ctx());
 	return p0;
 }
 
@@ -2633,7 +2633,7 @@ void StorageTransactionImpl::rollback( )
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-SummarizerExecutionContextImpl::~SummarizerExecutionContextImpl()
+SummarizerFunctionContextImpl::~SummarizerFunctionContextImpl()
 {
 	if (isConst()) return;
 	RpcSerializer msg;
@@ -2643,7 +2643,7 @@ SummarizerExecutionContextImpl::~SummarizerExecutionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void SummarizerExecutionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3)
+void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2660,7 +2660,7 @@ void SummarizerExecutionContextImpl::addSummarizationFeature( const std::string&
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::vector<SummarizerExecutionContextInterface::SummaryElement> SummarizerExecutionContextImpl::getSummary( const Index& p1)
+std::vector<SummarizerFunctionContextInterface::SummaryElement> SummarizerFunctionContextImpl::getSummary( const Index& p1)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2670,10 +2670,10 @@ std::vector<SummarizerExecutionContextInterface::SummaryElement> SummarizerExecu
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::vector<SummarizerExecutionContextInterface::SummaryElement> p0;
+	std::vector<SummarizerFunctionContextInterface::SummaryElement> p0;
 	std::size_t n0 = serializedMsg.unpackSize();
 	for (std::size_t ii=0; ii < n0; ++ii) {
-		SummarizerExecutionContextInterface::SummaryElement elem_p0 = serializedMsg.unpackSummaryElement();
+		SummarizerFunctionContextInterface::SummaryElement elem_p0 = serializedMsg.unpackSummaryElement();
 		p0.push_back( elem_p0);
 	}
 	return p0;
@@ -2711,11 +2711,11 @@ void SummarizerFunctionInstanceImpl::addNumericParameter( const std::string& p1,
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-SummarizerExecutionContextInterface* SummarizerFunctionInstanceImpl::createExecutionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2) const
+SummarizerFunctionContextInterface* SummarizerFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createExecutionContext);
+	msg.packByte( Method_createFunctionContext);
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_1->classId(), impl_1->objId());
@@ -2723,11 +2723,11 @@ SummarizerExecutionContextInterface* SummarizerFunctionInstanceImpl::createExecu
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_SummarizerExecutionContext;
+	unsigned char classId_0 = (unsigned char)ClassId_SummarizerFunctionContext;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	SummarizerExecutionContextInterface* p0 = new SummarizerExecutionContextImpl( objId_0, ctx());
+	SummarizerFunctionContextInterface* p0 = new SummarizerFunctionContextImpl( objId_0, ctx());
 	return p0;
 }
 
@@ -2863,7 +2863,7 @@ void TextProcessorImpl::defineNormalizer( const std::string& p1, const Normalize
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-TokenizerExecutionContextImpl::~TokenizerExecutionContextImpl()
+TokenizerFunctionContextImpl::~TokenizerFunctionContextImpl()
 {
 	if (isConst()) return;
 	RpcSerializer msg;
@@ -2873,7 +2873,7 @@ TokenizerExecutionContextImpl::~TokenizerExecutionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::vector<analyzer::Token> TokenizerExecutionContextImpl::tokenize( const char* p1, std::size_t p2)
+std::vector<analyzer::Token> TokenizerFunctionContextImpl::tokenize( const char* p1, std::size_t p2)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2915,17 +2915,17 @@ bool TokenizerFunctionInstanceImpl::concatBeforeTokenize( ) const
 	return p0;
 }
 
-TokenizerExecutionContextInterface* TokenizerFunctionInstanceImpl::createExecutionContext( ) const
+TokenizerFunctionContextInterface* TokenizerFunctionInstanceImpl::createFunctionContext( ) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createExecutionContext);
+	msg.packByte( Method_createFunctionContext);
 	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_TokenizerExecutionContext;
+	unsigned char classId_0 = (unsigned char)ClassId_TokenizerFunctionContext;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	TokenizerExecutionContextInterface* p0 = new TokenizerExecutionContextImpl( objId_0, ctx());
+	TokenizerFunctionContextInterface* p0 = new TokenizerFunctionContextImpl( objId_0, ctx());
 	return p0;
 }
 
@@ -2960,7 +2960,7 @@ TokenizerFunctionInstanceInterface* TokenizerFunctionImpl::createInstance( const
 	return p0;
 }
 
-WeightingExecutionContextImpl::~WeightingExecutionContextImpl()
+WeightingFunctionContextImpl::~WeightingFunctionContextImpl()
 {
 	if (isConst()) return;
 	RpcSerializer msg;
@@ -2970,7 +2970,7 @@ WeightingExecutionContextImpl::~WeightingExecutionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void WeightingExecutionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3)
+void WeightingFunctionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -2984,7 +2984,7 @@ void WeightingExecutionContextImpl::addWeightingFeature( const std::string& p1, 
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-float WeightingExecutionContextImpl::call( const Index& p1)
+float WeightingFunctionContextImpl::call( const Index& p1)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
@@ -3030,11 +3030,11 @@ void WeightingFunctionInstanceImpl::addNumericParameter( const std::string& p1, 
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-WeightingExecutionContextInterface* WeightingFunctionInstanceImpl::createExecutionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2) const
+WeightingFunctionContextInterface* WeightingFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createExecutionContext);
+	msg.packByte( Method_createFunctionContext);
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_1->classId(), impl_1->objId());
@@ -3042,11 +3042,11 @@ WeightingExecutionContextInterface* WeightingFunctionInstanceImpl::createExecuti
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_WeightingExecutionContext;
+	unsigned char classId_0 = (unsigned char)ClassId_WeightingFunctionContext;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	WeightingExecutionContextInterface* p0 = new WeightingExecutionContextImpl( objId_0, ctx());
+	WeightingFunctionContextInterface* p0 = new WeightingFunctionContextImpl( objId_0, ctx());
 	return p0;
 }
 
