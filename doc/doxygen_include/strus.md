@@ -19,6 +19,12 @@ The strus core defines four components that are implemented as libraries.
 How to use RPC in a client
 --------------------------
 The strus [RPC client interface] (@ref strus::RpcClientInterface) is constructed by calling the
+function [createRpcClient](@ref strus::createRpcClient).
+
+How to start the rpc server
+---------------------------
+The program strusRpcServer implements the rpc server. See the man pages or use the option -h to
+get the possible options of the program.
 
 
 
