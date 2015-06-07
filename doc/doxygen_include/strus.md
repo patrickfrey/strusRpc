@@ -22,7 +22,7 @@ The strus [RPC client interface] (@ref strus::RpcClientInterface) is constructed
 function [createRpcClient](@ref strus::createRpcClient) (rpc_client.hpp) with a message
 handler object [RpcClientMessagingInterface](@ref strus::RpcClientMessagingInterface) as parameter.
 The message handler based on sockets can be created by calling the function
-[createRpcClientMessaging](@ref strus::createRpcClientMessaging).
+[createRpcClientMessaging](@ref strus::createRpcClientMessaging) (rpc_client_socket.hpp).
 
 
 How to start the rpc server
