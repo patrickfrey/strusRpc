@@ -26,9 +26,12 @@
 
 --------------------------------------------------------------------
 */
+/// \brief Proxy client interface to the objects and functions callable via RPC.
+/// \file rpcClientInterface.hpp
 #ifndef _STRUS_RPC_CLIENT_INTERFACE_HPP_INCLUDED
 #define _STRUS_RPC_CLIENT_INTERFACE_HPP_INCLUDED
 
+/// \brief strus toplevel namespace
 namespace strus
 {
 

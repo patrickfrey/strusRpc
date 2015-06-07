@@ -26,10 +26,12 @@
 
 --------------------------------------------------------------------
 */
-/// \brief Exported functions of the strus rpc library
+/// \brief Exported functions of the strus rpc server library
+/// \file rpc_server.hpp
 #ifndef _STRUS_LIB_RPC_SERVER_HPP_INCLUDED
 #define _STRUS_LIB_RPC_SERVER_HPP_INCLUDED
 
+/// \brief strus toplevel namespace
 namespace strus {
 
 /// \brief Forward declaration

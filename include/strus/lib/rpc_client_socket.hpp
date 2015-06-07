@@ -26,15 +26,18 @@
 
 --------------------------------------------------------------------
 */
-#ifndef _STRUS_LIB_RPC_CLIENT_NANOMSG_HPP_INCLUDED
-#define _STRUS_LIB_RPC_CLIENT_NANOMSG_HPP_INCLUDED
+/// \brief Exported functions of the strus rpc messaging library based on sockets
+/// \file rpc_client_socket.hpp
+#ifndef _STRUS_LIB_RPC_CLIENT_HPP_INCLUDED
+#define _STRUS_LIB_RPC_CLIENT_HPP_INCLUDED
 
+/// \brief strus toplevel namespace
 namespace strus {
 
 /// \brief Forward declaration
 class RpcClientMessagingInterface;
 
-/// \brief Create a messaging interface for the strus RPC Client based on nanomsg
+/// \brief Create a messaging interface for the strus RPC Client based on sockets
 /// \param[in] config configuration string for connecting to the server
 RpcClientMessagingInterface*
 	createRpcClientMessaging(

@@ -26,10 +26,13 @@
 
 --------------------------------------------------------------------
 */
+/// \brief Interface for the client to issue RPC requests
+/// \file rpcClientMessagingInterface.hpp
 #ifndef _STRUS_RPC_CLIENT_MESSAGING_INTERFACE_HPP_INCLUDED
 #define _STRUS_RPC_CLIENT_MESSAGING_INTERFACE_HPP_INCLUDED
 #include <string>
 
+/// \brief strus toplevel namespace
 namespace strus
 {
 

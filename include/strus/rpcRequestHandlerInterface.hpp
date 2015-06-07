@@ -26,10 +26,13 @@
 
 --------------------------------------------------------------------
 */
+/// \brief Interface for the server for handling RPC requests
+/// \file rpcRequestHandlerInterface.hpp
 #ifndef _STRUS_RPC_REQUEST_HANDLER_INTERFACE_HPP_INCLUDED
 #define _STRUS_RPC_REQUEST_HANDLER_INTERFACE_HPP_INCLUDED
 #include <string>
 
+/// \brief strus toplevel namespace
 namespace strus
 {
 
@@ -41,6 +44,8 @@ public:
 	virtual ~RpcRequestHandlerInterface(){}
 
 	/// \brief Handle a serialized request
+	/// \param[in] msg pointer to message to process
+	/// \param[in] msgsize size of message in bytes
 	virtual std::string handleRequest( const char* msg, std::size_t msgsize)=0;
 };
 
