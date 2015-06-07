@@ -41,7 +41,7 @@ class AnalyzerObjectBuilderInterface;
 class StorageObjectBuilderInterface;
 
 
-/// \brief Interface providing a mechanism to create complex objects
+/// \brief Interface providing a mechanism to create and address objects residing on server side
 class RpcClientInterface
 {
 public:
