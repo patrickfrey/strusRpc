@@ -344,6 +344,7 @@ public:
 		Method_addTerm,
 		Method_addSelectionFeature,
 		Method_addRestrictionFeature,
+		Method_addExclusionFeature,
 		Method_addSummarizerFunction,
 		Method_addWeightingFunction,
 		Method_createQuery

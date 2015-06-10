@@ -1338,6 +1338,16 @@ void QueryEvalImpl::addRestrictionFeature( const std::string& p1)
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+void QueryEvalImpl::addExclusionFeature( const std::string& p1)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addExclusionFeature);
+	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
 void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4)
 {
 	RpcSerializer msg;
