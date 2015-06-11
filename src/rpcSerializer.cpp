@@ -318,7 +318,7 @@ void RpcSerializer::packSummarizationVariable( const SummarizationVariable& val)
 {
 	packString( val.name());
 	const RpcInterfaceStub* so = dynamic_cast<const RpcInterfaceStub*>( val.itr());
-	if (!so) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!so) throw std::runtime_error( "passing non RPC interface object in RPC call (summarization variable)");
 	packObject( so->classId(), so->objId());
 }
 

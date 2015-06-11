@@ -651,7 +651,7 @@ sub packParameter
 		else
 		{
 			$rt .= "const RpcInterfaceStub* impl_$idx = dynamic_cast<const RpcInterfaceStub*>($id);\n";
-			$rt .= "if (!impl_$idx) throw std::runtime_error( \"passing non RPC interface object in RPC call\");\n";
+			$rt .= "if (!impl_$idx) throw std::runtime_error( \"passing non RPC interface object in RPC call ($objtype)\");\n";
 			$rt .= "msg.packObject( impl_" . $idx . "->classId(), impl_" . $idx . "->objId());";
 		}
 	}

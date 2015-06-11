@@ -454,7 +454,7 @@ void DatabaseImpl::restoreDatabase( const std::string& p1, DatabaseBackupCursorI
 	msg.packByte( Method_restoreDatabase);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (DatabaseBackupCursor)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -665,12 +665,12 @@ void DocumentAnalyzerImpl::addSearchIndexFeature( const std::string& p1, const s
 	msg.packString( p1);
 	msg.packString( p2);
 	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
-	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call (TokenizerFunctionInstance)");
 	msg.packObject( impl_3->classId(), impl_3->objId());
 	msg.packSize( p4.size());
 	for (unsigned int ii=0; ii < p4.size(); ++ii) {
 		const RpcInterfaceStub* impl_4 = dynamic_cast<const RpcInterfaceStub*>(p4[ii]);
-		if (!impl_4) throw std::runtime_error( "passing non RPC interface object in RPC call");
+		if (!impl_4) throw std::runtime_error( "passing non RPC interface object in RPC call (NormalizerFunctionInstance)");
 		msg.packObject( impl_4->classId(), impl_4->objId());
 	}
 	msg.packFeatureOptions( p5);
@@ -694,12 +694,12 @@ void DocumentAnalyzerImpl::addForwardIndexFeature( const std::string& p1, const 
 	msg.packString( p1);
 	msg.packString( p2);
 	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
-	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call (TokenizerFunctionInstance)");
 	msg.packObject( impl_3->classId(), impl_3->objId());
 	msg.packSize( p4.size());
 	for (unsigned int ii=0; ii < p4.size(); ++ii) {
 		const RpcInterfaceStub* impl_4 = dynamic_cast<const RpcInterfaceStub*>(p4[ii]);
-		if (!impl_4) throw std::runtime_error( "passing non RPC interface object in RPC call");
+		if (!impl_4) throw std::runtime_error( "passing non RPC interface object in RPC call (NormalizerFunctionInstance)");
 		msg.packObject( impl_4->classId(), impl_4->objId());
 	}
 	msg.packFeatureOptions( p5);
@@ -723,12 +723,12 @@ void DocumentAnalyzerImpl::defineMetaData( const std::string& p1, const std::str
 	msg.packString( p1);
 	msg.packString( p2);
 	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
-	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call (TokenizerFunctionInstance)");
 	msg.packObject( impl_3->classId(), impl_3->objId());
 	msg.packSize( p4.size());
 	for (unsigned int ii=0; ii < p4.size(); ++ii) {
 		const RpcInterfaceStub* impl_4 = dynamic_cast<const RpcInterfaceStub*>(p4[ii]);
-		if (!impl_4) throw std::runtime_error( "passing non RPC interface object in RPC call");
+		if (!impl_4) throw std::runtime_error( "passing non RPC interface object in RPC call (NormalizerFunctionInstance)");
 		msg.packObject( impl_4->classId(), impl_4->objId());
 	}
 	msg.packCrc32();
@@ -751,12 +751,12 @@ void DocumentAnalyzerImpl::defineAttribute( const std::string& p1, const std::st
 	msg.packString( p1);
 	msg.packString( p2);
 	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
-	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call (TokenizerFunctionInstance)");
 	msg.packObject( impl_3->classId(), impl_3->objId());
 	msg.packSize( p4.size());
 	for (unsigned int ii=0; ii < p4.size(); ++ii) {
 		const RpcInterfaceStub* impl_4 = dynamic_cast<const RpcInterfaceStub*>(p4[ii]);
-		if (!impl_4) throw std::runtime_error( "passing non RPC interface object in RPC call");
+		if (!impl_4) throw std::runtime_error( "passing non RPC interface object in RPC call (NormalizerFunctionInstance)");
 		msg.packObject( impl_4->classId(), impl_4->objId());
 	}
 	msg.packCrc32();
@@ -1053,7 +1053,7 @@ NormalizerFunctionInstanceInterface* NormalizerFunctionImpl::createInstance( con
 		msg.packString( p1[ii]);
 	}
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (TextProcessor)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_NormalizerFunctionInstance;
@@ -1256,12 +1256,12 @@ void QueryAnalyzerImpl::definePhraseType( const std::string& p1, const std::stri
 	msg.packString( p1);
 	msg.packString( p2);
 	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
-	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_3) throw std::runtime_error( "passing non RPC interface object in RPC call (TokenizerFunctionInstance)");
 	msg.packObject( impl_3->classId(), impl_3->objId());
 	msg.packSize( p4.size());
 	for (unsigned int ii=0; ii < p4.size(); ++ii) {
 		const RpcInterfaceStub* impl_4 = dynamic_cast<const RpcInterfaceStub*>(p4[ii]);
-		if (!impl_4) throw std::runtime_error( "passing non RPC interface object in RPC call");
+		if (!impl_4) throw std::runtime_error( "passing non RPC interface object in RPC call (NormalizerFunctionInstance)");
 		msg.packObject( impl_4->classId(), impl_4->objId());
 	}
 	msg.packCrc32();
@@ -1355,7 +1355,7 @@ void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunc
 	msg.packByte( Method_addSummarizerFunction);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (SummarizerFunctionInstance)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packSize( p3.size());
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
@@ -1376,7 +1376,7 @@ void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFuncti
 	msg.packByte( Method_addWeightingFunction);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (WeightingFunctionInstance)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packSize( p3.size());
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
@@ -1396,7 +1396,7 @@ QueryInterface* QueryEvalImpl::createQuery( const StorageClientInterface* p1) co
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createQuery);
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call (StorageClient)");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_Query;
@@ -1434,7 +1434,7 @@ void QueryImpl::pushExpression( const PostingJoinOperatorInterface* p1, std::siz
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushExpression);
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call (PostingJoinOperator)");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	msg.packSize( p2);
 	msg.packInt( p3);
@@ -1550,7 +1550,7 @@ void QueryProcessorImpl::definePostingJoinOperator( const std::string& p1, Posti
 	msg.packByte( Method_definePostingJoinOperator);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (PostingJoinOperator)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -1582,7 +1582,7 @@ void QueryProcessorImpl::defineWeightingFunction( const std::string& p1, Weighti
 	msg.packByte( Method_defineWeightingFunction);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (WeightingFunction)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -1614,7 +1614,7 @@ void QueryProcessorImpl::defineSummarizerFunction( const std::string& p1, Summar
 	msg.packByte( Method_defineSummarizerFunction);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (SummarizerFunction)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -2048,7 +2048,7 @@ void StorageClientImpl::defineStoragePeerInterface( const StoragePeerInterface* 
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineStoragePeerInterface);
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call (StoragePeer)");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	msg.packBool( p2);
 	msg.packCrc32();
@@ -2291,7 +2291,7 @@ StorageClientInterface* StorageImpl::createClient( const std::string& p1, Databa
 	msg.packByte( Method_createClient);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (DatabaseClient)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StorageClient;
@@ -2312,7 +2312,7 @@ void StorageImpl::createStorage( const std::string& p1, DatabaseClientInterface*
 	msg.packByte( Method_createStorage);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (DatabaseClient)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -2324,7 +2324,7 @@ StorageAlterMetaDataTableInterface* StorageImpl::createAlterMetaDataTable( Datab
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createAlterMetaDataTable);
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call (DatabaseClient)");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StorageAlterMetaDataTable;
@@ -2660,7 +2660,7 @@ void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& 
 	msg.packByte( Method_addSummarizationFeature);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (PostingIterator)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packSize( p3.size());
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
@@ -2727,10 +2727,10 @@ SummarizerFunctionContextInterface* SummarizerFunctionInstanceImpl::createFuncti
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createFunctionContext);
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call (StorageClient)");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (MetaDataReader)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_SummarizerFunctionContext;
@@ -2770,7 +2770,7 @@ SummarizerFunctionInstanceInterface* SummarizerFunctionImpl::createInstance( con
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call (QueryProcessor)");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_SummarizerFunctionInstance;
@@ -2854,7 +2854,7 @@ void TextProcessorImpl::defineTokenizer( const std::string& p1, const TokenizerF
 	msg.packByte( Method_defineTokenizer);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (TokenizerFunction)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -2867,7 +2867,7 @@ void TextProcessorImpl::defineNormalizer( const std::string& p1, const Normalize
 	msg.packByte( Method_defineNormalizer);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (NormalizerFunction)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -2959,7 +2959,7 @@ TokenizerFunctionInstanceInterface* TokenizerFunctionImpl::createInstance( const
 		msg.packString( p1[ii]);
 	}
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (TextProcessor)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_TokenizerFunctionInstance;
@@ -2987,7 +2987,7 @@ void WeightingFunctionContextImpl::addWeightingFeature( const std::string& p1, P
 	msg.packByte( Method_addWeightingFeature);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (PostingIterator)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packFloat( p3);
 	msg.packCrc32();
@@ -3046,10 +3046,10 @@ WeightingFunctionContextInterface* WeightingFunctionInstanceImpl::createFunction
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createFunctionContext);
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call (StorageClient)");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (MetaDataReader)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_WeightingFunctionContext;
