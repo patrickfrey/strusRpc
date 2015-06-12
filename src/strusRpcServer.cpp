@@ -58,7 +58,7 @@
 
 static void printUsage()
 {
-	std::cout << "strusRpcServer [options] <storageconfig>" << std::endl;
+	std::cout << "strusRpcServer [options]" << std::endl;
 	std::cout << "options:" << std::endl;
 	std::cout << "-h|--help" << std::endl;
 	std::cout << "   Print this usage and do nothing else" << std::endl;
