@@ -795,11 +795,11 @@ void DocumentAnalyzerImpl::defineMetaData( const std::string& p1, const std::str
 	}
 }
 
-void DocumentAnalyzerImpl::defineStatisticsMetaData( const std::string& p1, AggregatorFunctionInstanceInterface* p2)
+void DocumentAnalyzerImpl::defineAggregatedMetaData( const std::string& p1, AggregatorFunctionInstanceInterface* p2)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineStatisticsMetaData);
+	msg.packByte( Method_defineAggregatedMetaData);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (AggregatorFunctionInstance)");

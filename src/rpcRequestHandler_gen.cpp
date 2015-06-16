@@ -1404,7 +1404,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineStatisticsMetaData:
+		case DocumentAnalyzerConst::Method_defineAggregatedMetaData:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1415,7 +1415,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			if (classId_2 != ClassId_AggregatorFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
 			p2 = getObject<AggregatorFunctionInstanceInterface>( classId_2, objId_2);
 			try {
-				obj->defineStatisticsMetaData(p1,p2);
+				obj->defineAggregatedMetaData(p1,p2);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);

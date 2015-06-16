@@ -231,7 +231,7 @@ public:
 		Method_addSearchIndexFeature,
 		Method_addForwardIndexFeature,
 		Method_defineMetaData,
-		Method_defineStatisticsMetaData,
+		Method_defineAggregatedMetaData,
 		Method_defineAttribute,
 		Method_defineSubDocument,
 		Method_analyze,
