@@ -33,6 +33,8 @@ namespace strus {
 
 enum ClassId
 {
+	ClassId_AggregatorFunctionInstance,
+	ClassId_AggregatorFunction,
 	ClassId_AnalyzerObjectBuilder,
 	ClassId_AttributeReader,
 	ClassId_DatabaseBackupCursor,
@@ -58,8 +60,6 @@ enum ClassId
 	ClassId_QueryProcessor,
 	ClassId_SegmenterContext,
 	ClassId_Segmenter,
-	ClassId_StatisticsFunctionInstance,
-	ClassId_StatisticsFunction,
 	ClassId_StorageAlterMetaDataTable,
 	ClassId_StorageClient,
 	ClassId_StorageDocument,
@@ -80,6 +80,26 @@ enum ClassId
 	ClassId_WeightingFunctionContext,
 	ClassId_WeightingFunctionInstance,
 	ClassId_WeightingFunction
+};
+
+class AggregatorFunctionInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_evaluate
+	};
+};
+
+class AggregatorFunctionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createInstance
+	};
 };
 
 class AnalyzerObjectBuilderConst
@@ -411,26 +431,6 @@ public:
 	};
 };
 
-class StatisticsFunctionInstanceConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_evaluate
-	};
-};
-
-class StatisticsFunctionConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_createInstance
-	};
-};
-
 class StorageAlterMetaDataTableConst
 {
 public:
@@ -630,10 +630,10 @@ public:
 		Method_getResourcePath,
 		Method_getTokenizer,
 		Method_getNormalizer,
-		Method_getStatisticsFunction,
+		Method_getAggregator,
 		Method_defineTokenizer,
 		Method_defineNormalizer,
-		Method_defineStatisticsFunction
+		Method_defineAggregator
 	};
 };
 

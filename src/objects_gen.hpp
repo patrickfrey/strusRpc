@@ -30,6 +30,8 @@
 #define _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #include "rpcInterfaceStub.hpp"
 #include "objectIds_gen.hpp"
+#include "strus/aggregatorFunctionInstanceInterface.hpp"
+#include "strus/aggregatorFunctionInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/documentAnalyzerContextInterface.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
@@ -39,8 +41,6 @@
 #include "strus/queryAnalyzerInterface.hpp"
 #include "strus/segmenterContextInterface.hpp"
 #include "strus/segmenterInterface.hpp"
-#include "strus/statisticsFunctionInstanceInterface.hpp"
-#include "strus/statisticsFunctionInterface.hpp"
 #include "strus/textProcessorInterface.hpp"
 #include "strus/tokenizerFunctionContextInterface.hpp"
 #include "strus/tokenizerFunctionInstanceInterface.hpp"
@@ -79,6 +79,34 @@
 #include "strus/weightingFunctionInterface.hpp"
 
 namespace strus {
+
+class AggregatorFunctionInstanceImpl
+		:public RpcInterfaceStub
+		,public strus::AggregatorFunctionInstanceInterface
+		,public strus::AggregatorFunctionInstanceConst
+{
+public:
+	virtual ~AggregatorFunctionInstanceImpl();
+
+	AggregatorFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunctionInstance, objId_, ctx_, isConst_){}
+
+	virtual double evaluate( const analyzer::Document& p1) const;
+};
+
+class AggregatorFunctionImpl
+		:public RpcInterfaceStub
+		,public strus::AggregatorFunctionInterface
+		,public strus::AggregatorFunctionConst
+{
+public:
+	virtual ~AggregatorFunctionImpl();
+
+	AggregatorFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunction, objId_, ctx_, isConst_){}
+
+	virtual AggregatorFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1) const;
+};
 
 class AnalyzerObjectBuilderImpl
 		:public RpcInterfaceStub
@@ -250,7 +278,7 @@ public:
 	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
 	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
 	virtual void defineMetaData( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
-	virtual void defineStatisticsMetaData( const std::string& p1, StatisticsFunctionInstanceInterface* p2);
+	virtual void defineStatisticsMetaData( const std::string& p1, AggregatorFunctionInstanceInterface* p2);
 	virtual void defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void defineSubDocument( const std::string& p1, const std::string& p2);
 	virtual analyzer::Document analyze( const std::string& p1) const;
@@ -509,34 +537,6 @@ public:
 	virtual SegmenterContextInterface* createContext( ) const;
 };
 
-class StatisticsFunctionInstanceImpl
-		:public RpcInterfaceStub
-		,public strus::StatisticsFunctionInstanceInterface
-		,public strus::StatisticsFunctionInstanceConst
-{
-public:
-	virtual ~StatisticsFunctionInstanceImpl();
-
-	StatisticsFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsFunctionInstance, objId_, ctx_, isConst_){}
-
-	virtual double evaluate( const analyzer::Document& p1) const;
-};
-
-class StatisticsFunctionImpl
-		:public RpcInterfaceStub
-		,public strus::StatisticsFunctionInterface
-		,public strus::StatisticsFunctionConst
-{
-public:
-	virtual ~StatisticsFunctionImpl();
-
-	StatisticsFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsFunction, objId_, ctx_, isConst_){}
-
-	virtual StatisticsFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1) const;
-};
-
 class StorageAlterMetaDataTableImpl
 		:public RpcInterfaceStub
 		,public strus::StorageAlterMetaDataTableInterface
@@ -793,10 +793,10 @@ public:
 	virtual std::string getResourcePath( const std::string& p1) const;
 	virtual const TokenizerFunctionInterface* getTokenizer( const std::string& p1) const;
 	virtual const NormalizerFunctionInterface* getNormalizer( const std::string& p1) const;
-	virtual const StatisticsFunctionInterface* getStatisticsFunction( const std::string& p1) const;
+	virtual const AggregatorFunctionInterface* getAggregator( const std::string& p1) const;
 	virtual void defineTokenizer( const std::string& p1, const TokenizerFunctionInterface* p2);
 	virtual void defineNormalizer( const std::string& p1, const NormalizerFunctionInterface* p2);
-	virtual void defineStatisticsFunction( const std::string& p1, const StatisticsFunctionInterface* p2);
+	virtual void defineAggregator( const std::string& p1, const AggregatorFunctionInterface* p2);
 };
 
 class TokenizerFunctionContextImpl
