@@ -793,10 +793,10 @@ public:
 	virtual std::string getResourcePath( const std::string& p1) const;
 	virtual const TokenizerFunctionInterface* getTokenizer( const std::string& p1) const;
 	virtual const NormalizerFunctionInterface* getNormalizer( const std::string& p1) const;
-	virtual const StatisticsFunctionInterface* getStatistics( const std::string& p1) const;
+	virtual const StatisticsFunctionInterface* getStatisticsFunction( const std::string& p1) const;
 	virtual void defineTokenizer( const std::string& p1, const TokenizerFunctionInterface* p2);
 	virtual void defineNormalizer( const std::string& p1, const NormalizerFunctionInterface* p2);
-	virtual void defineStatistics( const std::string& p1, const StatisticsFunctionInterface* p2);
+	virtual void defineStatisticsFunction( const std::string& p1, const StatisticsFunctionInterface* p2);
 };
 
 class TokenizerFunctionContextImpl

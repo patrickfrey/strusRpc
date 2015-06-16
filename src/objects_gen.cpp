@@ -2912,11 +2912,11 @@ const NormalizerFunctionInterface* TextProcessorImpl::getNormalizer( const std::
 	return p0;
 }
 
-const StatisticsFunctionInterface* TextProcessorImpl::getStatistics( const std::string& p1) const
+const StatisticsFunctionInterface* TextProcessorImpl::getStatisticsFunction( const std::string& p1) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_getStatistics);
+	msg.packByte( Method_getStatisticsFunction);
 	msg.packString( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StatisticsFunction;
@@ -2954,11 +2954,11 @@ void TextProcessorImpl::defineNormalizer( const std::string& p1, const Normalize
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void TextProcessorImpl::defineStatistics( const std::string& p1, const StatisticsFunctionInterface* p2)
+void TextProcessorImpl::defineStatisticsFunction( const std::string& p1, const StatisticsFunctionInterface* p2)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineStatistics);
+	msg.packByte( Method_defineStatisticsFunction);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (StatisticsFunction)");

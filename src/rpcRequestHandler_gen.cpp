@@ -5396,7 +5396,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case TextProcessorConst::Method_getStatistics:
+		case TextProcessorConst::Method_getStatisticsFunction:
 		{
 			RpcSerializer msg;
 			const StatisticsFunctionInterface* p0;
@@ -5405,7 +5405,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->getStatistics(p1);
+				p0 = obj->getStatisticsFunction(p1);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -5480,7 +5480,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			return std::string();
 		}
-		case TextProcessorConst::Method_defineStatistics:
+		case TextProcessorConst::Method_defineStatisticsFunction:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -5491,7 +5491,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			if (classId_2 != ClassId_StatisticsFunction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
 			p2 = getConstObject<StatisticsFunctionInterface>( classId_2, objId_2);
 			try {
-				obj->defineStatistics(p1,p2);
+				obj->defineStatisticsFunction(p1,p2);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
