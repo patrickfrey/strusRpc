@@ -74,6 +74,7 @@ public:
 	void packUint( unsigned int val);
 	void packInt( int val);
 	void packFloat( float val);
+	void packDouble( double val);
 	void packSize( std::size_t size);
 	void packArithmeticVariant( const ArithmeticVariant& val);
 
@@ -133,6 +134,7 @@ public:
 	unsigned int unpackUint();
 	int unpackInt();
 	float unpackFloat();
+	double unpackDouble();
 	std::size_t unpackSize();
 	ArithmeticVariant unpackArithmeticVariant();
 

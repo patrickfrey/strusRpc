@@ -58,6 +58,8 @@ enum ClassId
 	ClassId_QueryProcessor,
 	ClassId_SegmenterContext,
 	ClassId_Segmenter,
+	ClassId_StatisticsFunctionInstance,
+	ClassId_StatisticsFunction,
 	ClassId_StorageAlterMetaDataTable,
 	ClassId_StorageClient,
 	ClassId_StorageDocument,
@@ -209,6 +211,7 @@ public:
 		Method_addSearchIndexFeature,
 		Method_addForwardIndexFeature,
 		Method_defineMetaData,
+		Method_defineStatisticsMetaData,
 		Method_defineAttribute,
 		Method_defineSubDocument,
 		Method_analyze,
@@ -344,6 +347,7 @@ public:
 		Method_addTerm,
 		Method_addSelectionFeature,
 		Method_addRestrictionFeature,
+		Method_addExclusionFeature,
 		Method_addSummarizerFunction,
 		Method_addWeightingFunction,
 		Method_createQuery
@@ -364,7 +368,7 @@ public:
 		Method_defineMetaDataRestriction,
 		Method_setMaxNofRanks,
 		Method_setMinRank,
-		Method_setUserName,
+		Method_addUserName,
 		Method_evaluate
 	};
 };
@@ -404,6 +408,26 @@ public:
 		Method_defineSelectorExpression,
 		Method_defineSubSection,
 		Method_createContext
+	};
+};
+
+class StatisticsFunctionInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_evaluate
+	};
+};
+
+class StatisticsFunctionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createInstance
 	};
 };
 
@@ -607,7 +631,9 @@ public:
 		Method_getTokenizer,
 		Method_getNormalizer,
 		Method_defineTokenizer,
-		Method_defineNormalizer
+		Method_defineNormalizer,
+		Method_defineStatistics,
+		Method_getStatistics
 	};
 };
 

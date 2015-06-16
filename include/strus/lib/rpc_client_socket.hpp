@@ -28,8 +28,8 @@
 */
 /// \brief Exported functions of the strus rpc messaging library based on sockets
 /// \file rpc_client_socket.hpp
-#ifndef _STRUS_LIB_RPC_CLIENT_HPP_INCLUDED
-#define _STRUS_LIB_RPC_CLIENT_HPP_INCLUDED
+#ifndef _STRUS_LIB_RPC_CLIENT_SOCKET_HPP_INCLUDED
+#define _STRUS_LIB_RPC_CLIENT_SOCKET_HPP_INCLUDED
 
 /// \brief strus toplevel namespace
 namespace strus {

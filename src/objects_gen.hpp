@@ -39,6 +39,8 @@
 #include "strus/queryAnalyzerInterface.hpp"
 #include "strus/segmenterContextInterface.hpp"
 #include "strus/segmenterInterface.hpp"
+#include "strus/statisticsFunctionInstanceInterface.hpp"
+#include "strus/statisticsFunctionInterface.hpp"
 #include "strus/textProcessorInterface.hpp"
 #include "strus/tokenizerFunctionContextInterface.hpp"
 #include "strus/tokenizerFunctionInstanceInterface.hpp"
@@ -248,6 +250,7 @@ public:
 	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
 	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
 	virtual void defineMetaData( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
+	virtual void defineStatisticsMetaData( const std::string& p1, StatisticsFunctionInstanceInterface* p2);
 	virtual void defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void defineSubDocument( const std::string& p1, const std::string& p2);
 	virtual analyzer::Document analyze( const std::string& p1) const;
@@ -427,6 +430,7 @@ public:
 	virtual void addTerm( const std::string& p1, const std::string& p2, const std::string& p3);
 	virtual void addSelectionFeature( const std::string& p1);
 	virtual void addRestrictionFeature( const std::string& p1);
+	virtual void addExclusionFeature( const std::string& p1);
 	virtual void addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4);
 	virtual void addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, float p4);
 	virtual QueryInterface* createQuery( const StorageClientInterface* p1) const;
@@ -451,7 +455,7 @@ public:
 	virtual void defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
 	virtual void setMaxNofRanks( std::size_t p1);
 	virtual void setMinRank( std::size_t p1);
-	virtual void setUserName( const std::string& p1);
+	virtual void addUserName( const std::string& p1);
 	virtual std::vector<ResultDocument> evaluate( );
 };
 
@@ -503,6 +507,34 @@ public:
 	virtual void defineSelectorExpression( int p1, const std::string& p2);
 	virtual void defineSubSection( int p1, int p2, const std::string& p3);
 	virtual SegmenterContextInterface* createContext( ) const;
+};
+
+class StatisticsFunctionInstanceImpl
+		:public RpcInterfaceStub
+		,public strus::StatisticsFunctionInstanceInterface
+		,public strus::StatisticsFunctionInstanceConst
+{
+public:
+	virtual ~StatisticsFunctionInstanceImpl();
+
+	StatisticsFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsFunctionInstance, objId_, ctx_, isConst_){}
+
+	virtual double evaluate( const analyzer::Document& p1) const;
+};
+
+class StatisticsFunctionImpl
+		:public RpcInterfaceStub
+		,public strus::StatisticsFunctionInterface
+		,public strus::StatisticsFunctionConst
+{
+public:
+	virtual ~StatisticsFunctionImpl();
+
+	StatisticsFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsFunction, objId_, ctx_, isConst_){}
+
+	virtual const StatisticsFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1) const;
 };
 
 class StorageAlterMetaDataTableImpl
@@ -763,6 +795,8 @@ public:
 	virtual const NormalizerFunctionInterface* getNormalizer( const std::string& p1) const;
 	virtual void defineTokenizer( const std::string& p1, const TokenizerFunctionInterface* p2);
 	virtual void defineNormalizer( const std::string& p1, const NormalizerFunctionInterface* p2);
+	virtual void defineStatistics( const std::string& p1, const StatisticsFunctionInterface* p2);
+	virtual const StatisticsFunctionInterface* getStatistics( const std::string& p1) const;
 };
 
 class TokenizerFunctionContextImpl

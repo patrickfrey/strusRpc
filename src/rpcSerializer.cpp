@@ -262,6 +262,14 @@ void RpcSerializer::packFloat( float val)
 	pack<sizeof(float)>( m_content, &val);
 }
 
+void RpcSerializer::packDouble( double val)
+{
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packDouble(" << (double)val << ")" << std::endl;
+#endif
+	pack<sizeof(double)>( m_content, &val);
+}
+
 void RpcSerializer::packSize( std::size_t size)
 {
 #ifdef STRUS_LOWLEVEL_DEBUG
@@ -318,7 +326,7 @@ void RpcSerializer::packSummarizationVariable( const SummarizationVariable& val)
 {
 	packString( val.name());
 	const RpcInterfaceStub* so = dynamic_cast<const RpcInterfaceStub*>( val.itr());
-	if (!so) throw std::runtime_error( "passing non RPC interface object in RPC call");
+	if (!so) throw std::runtime_error( "passing non RPC interface object in RPC call (summarization variable)");
 	packObject( so->classId(), so->objId());
 }
 
@@ -365,7 +373,7 @@ void RpcSerializer::packAnalyzerAttribute( const analyzer::Attribute& val)
 void RpcSerializer::packAnalyzerMetaData( const analyzer::MetaData& val)
 {
 	packString( val.name());
-	packString( val.value());
+	packDouble( val.value());
 }
 
 void RpcSerializer::packAnalyzerTerm( const analyzer::Term& val)
@@ -569,6 +577,16 @@ float RpcDeserializer::unpackFloat()
 	return rt;
 }
 
+double RpcDeserializer::unpackDouble()
+{
+	return unpackScalar<double>( m_itr, m_end);
+	float rt = unpackScalar<double>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackDouble(" << rt << ")" << std::endl;
+#endif
+	return rt;
+}
+
 std::size_t RpcDeserializer::unpackSize()
 {
 	unsigned int rt = unpackScalar<uint32_t>( m_itr, m_end);
@@ -656,7 +674,7 @@ analyzer::Document RpcDeserializer::unpackAnalyzerDocument()
 	for (ii=0,size=unpackSize(); ii<size; ++ii)
 	{
 		std::string name = unpackString();
-		std::string value = unpackString();
+		double value = unpackDouble();
 		rt.setMetaData( name, value);
 	}
 	for (ii=0,size=unpackSize(); ii<size; ++ii)
@@ -686,7 +704,7 @@ analyzer::Attribute RpcDeserializer::unpackAnalyzerAttribute()
 analyzer::MetaData RpcDeserializer::unpackAnalyzerMetaData()
 {
 	std::string name = unpackString();
-	std::string value = unpackString();
+	double value = unpackDouble();
 	return analyzer::MetaData( name, value);
 }
 

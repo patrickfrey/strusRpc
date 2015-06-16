@@ -651,7 +651,7 @@ sub packParameter
 		else
 		{
 			$rt .= "const RpcInterfaceStub* impl_$idx = dynamic_cast<const RpcInterfaceStub*>($id);\n";
-			$rt .= "if (!impl_$idx) throw std::runtime_error( \"passing non RPC interface object in RPC call\");\n";
+			$rt .= "if (!impl_$idx) throw std::runtime_error( \"passing non RPC interface object in RPC call ($objtype)\");\n";
 			$rt .= "msg.packObject( impl_" . $idx . "->classId(), impl_" . $idx . "->objId());";
 		}
 	}
@@ -678,6 +678,10 @@ sub packParameter
 	elsif ($type eq "float")
 	{
 		$rt .= "msg.packFloat( " . $id . ");";
+	}
+	elsif ($type eq "double")
+	{
+		$rt .= "msg.packDouble( " . $id . ");";
 	}
 	elsif ($type eq "bool")
 	{
@@ -853,6 +857,10 @@ sub unpackParameter
 	elsif ($type eq "float")
 	{
 		$rt .= "$id = serializedMsg.unpackFloat();";
+	}
+	elsif ($type eq "double")
+	{
+		$rt .= "$id = serializedMsg.unpackDouble();";
 	}
 	elsif ($type eq "bool")
 	{

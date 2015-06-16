@@ -58,24 +58,24 @@
 
 static void printUsage()
 {
-	std::cerr << "strusRpcServer [options] <storageconfig>" << std::endl;
-	std::cerr << "options:" << std::endl;
-	std::cerr << "-h|--help" << std::endl;
-	std::cerr << "   Print this usage and do nothing else" << std::endl;
-	std::cerr << "-v|--version" << std::endl;
-	std::cerr << "    Print the program version and do nothing else" << std::endl;
-	std::cerr << "-m|--module <MOD>" << std::endl;
-	std::cerr << "    Load components from module <MOD>" << std::endl;
-	std::cerr << "-M|--moduledir <DIR>" << std::endl;
-	std::cerr << "    Search modules to load first in <DIR>" << std::endl;
-	std::cerr << "-R|--resourcedir <DIR>" << std::endl;
-	std::cerr << "    Define a resource path <DIR> for the analyzer" << std::endl;
-	std::cerr << "-p|--port <PORT>" << std::endl;
-	std::cerr << "    Define the port to listen for requests as <PORT> (default 7181)" << std::endl;
-	std::cerr << "-s|--storage <CONFIG>" << std::endl;
-	std::cerr << "    Define configuration <CONFIG> of storage hosted by this server" << std::endl;
-	std::cerr << "-g|--globalstats <FILE>" << std::endl;
-	std::cerr << "    Load global statistics of peers from file <FILE>" << std::endl;
+	std::cout << "strusRpcServer [options]" << std::endl;
+	std::cout << "options:" << std::endl;
+	std::cout << "-h|--help" << std::endl;
+	std::cout << "   Print this usage and do nothing else" << std::endl;
+	std::cout << "-v|--version" << std::endl;
+	std::cout << "    Print the program version and do nothing else" << std::endl;
+	std::cout << "-m|--module <MOD>" << std::endl;
+	std::cout << "    Load components from module <MOD>" << std::endl;
+	std::cout << "-M|--moduledir <DIR>" << std::endl;
+	std::cout << "    Search modules to load first in <DIR>" << std::endl;
+	std::cout << "-R|--resourcedir <DIR>" << std::endl;
+	std::cout << "    Define a resource path <DIR> for the analyzer" << std::endl;
+	std::cout << "-p|--port <PORT>" << std::endl;
+	std::cout << "    Define the port to listen for requests as <PORT> (default 7181)" << std::endl;
+	std::cout << "-s|--storage <CONFIG>" << std::endl;
+	std::cout << "    Define configuration <CONFIG> of storage hosted by this server" << std::endl;
+	std::cout << "-g|--globalstats <FILE>" << std::endl;
+	std::cout << "    Load global statistics of peers from file <FILE>" << std::endl;
 }
 
 static strus::ModuleLoaderInterface* g_moduleLoader = 0;
