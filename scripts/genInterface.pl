@@ -679,6 +679,10 @@ sub packParameter
 	{
 		$rt .= "msg.packFloat( " . $id . ");";
 	}
+	elsif ($type eq "double")
+	{
+		$rt .= "msg.packDouble( " . $id . ");";
+	}
 	elsif ($type eq "bool")
 	{
 		$rt .= "msg.packBool( " . $id . ");";
@@ -853,6 +857,10 @@ sub unpackParameter
 	elsif ($type eq "float")
 	{
 		$rt .= "$id = serializedMsg.unpackFloat();";
+	}
+	elsif ($type eq "double")
+	{
+		$rt .= "$id = serializedMsg.unpackDouble();";
 	}
 	elsif ($type eq "bool")
 	{

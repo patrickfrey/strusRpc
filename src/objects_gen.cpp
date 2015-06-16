@@ -743,6 +743,19 @@ void DocumentAnalyzerImpl::defineMetaData( const std::string& p1, const std::str
 	}
 }
 
+void DocumentAnalyzerImpl::defineStatisticsMetaData( const std::string& p1, StatisticsFunctionInstanceInterface* p2)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineStatisticsMetaData);
+	msg.packString( p1);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (StatisticsFunctionInstance)");
+	msg.packObject( impl_2->classId(), impl_2->objId());
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
 void DocumentAnalyzerImpl::defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
 	RpcSerializer msg;
@@ -1505,11 +1518,11 @@ void QueryImpl::setMinRank( std::size_t p1)
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void QueryImpl::setUserName( const std::string& p1)
+void QueryImpl::addUserName( const std::string& p1)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_setUserName);
+	msg.packByte( Method_addUserName);
 	msg.packString( p1);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -1722,6 +1735,59 @@ SegmenterContextInterface* SegmenterImpl::createContext( ) const
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	SegmenterContextInterface* p0 = new SegmenterContextImpl( objId_0, ctx());
+	return p0;
+}
+
+StatisticsFunctionInstanceImpl::~StatisticsFunctionInstanceImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+double StatisticsFunctionInstanceImpl::evaluate( const analyzer::Document& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_evaluate);
+	msg.packAnalyzerDocument( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	double p0 = serializedMsg.unpackDouble();;
+	return p0;
+}
+
+StatisticsFunctionImpl::~StatisticsFunctionImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+const StatisticsFunctionInstanceInterface* StatisticsFunctionImpl::createInstance( const std::vector<std::string>& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createInstance);
+	msg.packSize( p1.size());
+	for (unsigned int ii=0; ii < p1.size(); ++ii) {
+		msg.packString( p1[ii]);
+	}
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StatisticsFunctionInstance;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	StatisticsFunctionInstanceImpl const_0( objId_0, ctx(), true);
+	const StatisticsFunctionInstanceInterface* p0 = (const StatisticsFunctionInstanceImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 }
 
@@ -2871,6 +2937,35 @@ void TextProcessorImpl::defineNormalizer( const std::string& p1, const Normalize
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+}
+
+void TextProcessorImpl::defineStatistics( const std::string& p1, const StatisticsFunctionInterface* p2)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineStatistics);
+	msg.packString( p1);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (StatisticsFunction)");
+	msg.packObject( impl_2->classId(), impl_2->objId());
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+const StatisticsFunctionInterface* TextProcessorImpl::getStatistics( const std::string& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getStatistics);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StatisticsFunction;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	StatisticsFunctionImpl const_0( objId_0, ctx(), true);
+	const StatisticsFunctionInterface* p0 = (const StatisticsFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
 }
 
 TokenizerFunctionContextImpl::~TokenizerFunctionContextImpl()
