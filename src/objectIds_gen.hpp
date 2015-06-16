@@ -630,10 +630,10 @@ public:
 		Method_getResourcePath,
 		Method_getTokenizer,
 		Method_getNormalizer,
+		Method_getStatistics,
 		Method_defineTokenizer,
 		Method_defineNormalizer,
-		Method_defineStatistics,
-		Method_getStatistics
+		Method_defineStatistics
 	};
 };
 

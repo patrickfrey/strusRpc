@@ -534,7 +534,7 @@ public:
 	StatisticsFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
 		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsFunction, objId_, ctx_, isConst_){}
 
-	virtual const StatisticsFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1) const;
+	virtual StatisticsFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1) const;
 };
 
 class StorageAlterMetaDataTableImpl
@@ -793,10 +793,10 @@ public:
 	virtual std::string getResourcePath( const std::string& p1) const;
 	virtual const TokenizerFunctionInterface* getTokenizer( const std::string& p1) const;
 	virtual const NormalizerFunctionInterface* getNormalizer( const std::string& p1) const;
+	virtual const StatisticsFunctionInterface* getStatistics( const std::string& p1) const;
 	virtual void defineTokenizer( const std::string& p1, const TokenizerFunctionInterface* p2);
 	virtual void defineNormalizer( const std::string& p1, const NormalizerFunctionInterface* p2);
 	virtual void defineStatistics( const std::string& p1, const StatisticsFunctionInterface* p2);
-	virtual const StatisticsFunctionInterface* getStatistics( const std::string& p1) const;
 };
 
 class TokenizerFunctionContextImpl
