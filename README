@@ -1,0 +1,6 @@
+This Project implements proxy classes for the strus storage and analyzer interfaces 
+that forward all calls to strus to an RPC server (strusRpcServer).
+
+Interface documentation at http://patrickfrey.github.io/strusRpc/doc/doxygen/html/index.html.
+
+Strus project homepage at http://project-strus.net.
