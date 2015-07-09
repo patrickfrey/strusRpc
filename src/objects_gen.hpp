@@ -207,6 +207,7 @@ public:
 	DatabaseImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
 		:RpcInterfaceStub( (unsigned char)ClassId_Database, objId_, ctx_, isConst_){}
 
+	virtual bool exists( const std::string& p1) const;
 	virtual DatabaseClientInterface* createClient( const std::string& p1) const;
 	virtual void createDatabase( const std::string& p1) const;
 	virtual void restoreDatabase( const std::string& p1, DatabaseBackupCursorInterface* p2) const;

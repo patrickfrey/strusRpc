@@ -803,6 +803,32 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case DatabaseConst::Method_exists:
+		{
+			RpcSerializer msg;
+			bool p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			try {
+				p0 = obj->exists(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case DatabaseConst::Method_createClient:
 		{
 			RpcSerializer msg;

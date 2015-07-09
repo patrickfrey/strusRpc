@@ -474,6 +474,20 @@ DatabaseImpl::~DatabaseImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+bool DatabaseImpl::exists( const std::string& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_exists);
+	msg.packString( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
+}
+
 DatabaseClientInterface* DatabaseImpl::createClient( const std::string& p1) const
 {
 	RpcSerializer msg;

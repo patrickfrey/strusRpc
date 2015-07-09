@@ -176,6 +176,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_exists,
 		Method_createClient,
 		Method_createDatabase,
 		Method_restoreDatabase,
