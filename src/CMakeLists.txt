@@ -45,7 +45,7 @@ add_library( strus_rpc_client SHARED ${client_source_files} libstrus_rpc_client.
 target_link_libraries( strus_rpc_client dl )
 
 add_library( strus_rpc_server SHARED ${server_source_files} libstrus_rpc_server.cpp )
-target_link_libraries( strus_rpc_server dl "${strusmodule_LIBRARIES}" "${Boost_LIBRARIES}"  )
+target_link_libraries( strus_rpc_server dl strus_utils "${strusmodule_LIBRARIES}" "${Boost_LIBRARIES}"  )
 
 set_target_properties(
     strus_rpc_client_socket

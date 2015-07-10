@@ -33,6 +33,7 @@
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/moduleLoaderInterface.hpp"
 #include "strus/versionRpc.hpp"
+#include "strus/private/configParser.hpp"
 #include "loadGlobalStatistics.hpp"
 #include "rpcSerializer.hpp"
 #include <cstring>
@@ -74,6 +75,8 @@ static void printUsage()
 	std::cout << "    Define the port to listen for requests as <PORT> (default 7181)" << std::endl;
 	std::cout << "-s|--storage <CONFIG>" << std::endl;
 	std::cout << "    Define configuration <CONFIG> of storage hosted by this server" << std::endl;
+	std::cout << "-s|--create <CONFIG>" << std::endl;
+	std::cout << "    Implicitely create storage with <CONFIG> if it does not exist yet" << std::endl;
 	std::cout << "-g|--globalstats <FILE>" << std::endl;
 	std::cout << "    Load global statistics of peers from file <FILE>" << std::endl;
 }
@@ -439,6 +442,38 @@ static int runServer( int port)
 	return 0;
 }
 
+static void createStorageIfNotExist( const std::string& cfg)
+{
+	const strus::DatabaseInterface* dbi = g_storageObjectBuilder->getDatabase( cfg);
+	if (dbi->exists( cfg)) return;
+	const strus::StorageInterface* sti = g_storageObjectBuilder->getStorage();
+
+	std::string databasecfg( cfg);
+	std::string dbname;
+	(void)strus::extractStringFromConfigString( dbname, databasecfg, "database");
+	std::string storagecfg( databasecfg);
+
+	strus::removeKeysFromConfigString(
+			databasecfg,
+			sti->getConfigParameters(
+				strus::StorageInterface::CmdCreateClient));
+	//... In database_cfg is now the pure database configuration without the storage settings
+
+	strus::removeKeysFromConfigString(
+			storagecfg,
+			dbi->getConfigParameters(
+				strus::DatabaseInterface::CmdCreateClient));
+	//... In storage_cfg is now the pure storage configuration without the database settings
+
+	dbi->createDatabase( databasecfg);
+
+	std::auto_ptr<strus::DatabaseClientInterface>
+		database( dbi->createClient( databasecfg));
+
+	sti->createStorage( storagecfg, database.get());
+}
+
+
 int main( int argc, const char* argv[])
 {
 	bool doExit = false;
@@ -448,6 +483,7 @@ int main( int argc, const char* argv[])
 	std::vector<std::string> resourcedirs;
 	std::vector<std::string> globalstatfiles;
 	std::string storageconfig;
+	bool doCreateIfNotExist = false;
 	int port = 7181; //... default port
 	try
 	{
@@ -500,6 +536,10 @@ int main( int argc, const char* argv[])
 				storageconfig.append( argv[argi]);
 				if (storageconfig.empty()) throw std::runtime_error("option --storage with empty argument");
 			}
+			else if (0==std::strcmp( argv[argi], "-c") || 0==std::strcmp( argv[argi], "--create"))
+			{
+				doCreateIfNotExist = true;
+			}
 			else if (0==std::strcmp( argv[argi], "-g") || 0==std::strcmp( argv[argi], "--globalstats"))
 			{
 				++argi;
@@ -550,8 +590,13 @@ int main( int argc, const char* argv[])
 
 		g_storageObjectBuilder = storageBuilder.get();
 		g_analyzerObjectBuilder = analyzerBuilder.get();
+		
 		if (!storageconfig.empty())
 		{
+			if (doCreateIfNotExist)
+			{
+				createStorageIfNotExist( storageconfig);
+			}
 			storageClient.reset( g_storageObjectBuilder->createStorageClient( storageconfig));
 			std::cerr << "strus RPC server is hosting storage '" << storageconfig << "'" << std::endl;
 			g_storageClient = storageClient.get();
