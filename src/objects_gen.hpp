@@ -33,6 +33,7 @@
 #include "strus/aggregatorFunctionInstanceInterface.hpp"
 #include "strus/aggregatorFunctionInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
+#include "strus/contentDescriptionInterface.hpp"
 #include "strus/documentAnalyzerContextInterface.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/normalizerFunctionContextInterface.hpp"
@@ -140,6 +141,20 @@ public:
 	virtual void skipDoc( const Index& p1);
 	virtual std::string getValue( const Index& p1) const;
 	virtual std::vector<std::string> getAttributeNames( ) const;
+};
+
+class ContentDescriptionImpl
+		:public RpcInterfaceStub
+		,public strus::ContentDescriptionInterface
+		,public strus::ContentDescriptionConst
+{
+public:
+	virtual ~ContentDescriptionImpl();
+
+	ContentDescriptionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_ContentDescription, objId_, ctx_, isConst_){}
+
+	virtual const char* getProperty( const ContentDescriptionInterface::Property& p1, int p2) const;
 };
 
 class DatabaseBackupCursorImpl
@@ -282,8 +297,8 @@ public:
 	virtual void defineAggregatedMetaData( const std::string& p1, AggregatorFunctionInstanceInterface* p2);
 	virtual void defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void defineSubDocument( const std::string& p1, const std::string& p2);
-	virtual analyzer::Document analyze( const std::string& p1) const;
-	virtual DocumentAnalyzerContextInterface* createContext( ) const;
+	virtual analyzer::Document analyze( const std::string& p1, const ContentDescriptionInterface* p2) const;
+	virtual DocumentAnalyzerContextInterface* createContext( const ContentDescriptionInterface* p1) const;
 };
 
 class ForwardIteratorImpl
@@ -535,7 +550,7 @@ public:
 
 	virtual void defineSelectorExpression( int p1, const std::string& p2);
 	virtual void defineSubSection( int p1, int p2, const std::string& p3);
-	virtual SegmenterContextInterface* createContext( ) const;
+	virtual SegmenterContextInterface* createContext( const ContentDescriptionInterface* p1) const;
 };
 
 class StorageAlterMetaDataTableImpl

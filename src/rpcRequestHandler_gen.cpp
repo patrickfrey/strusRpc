@@ -362,6 +362,47 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_ContentDescription:
+	{
+	ContentDescriptionInterface* obj = getObject<ContentDescriptionInterface>( classId, objId);
+	switch( (ContentDescriptionConst::MethodId)methodId)
+	{
+		case ContentDescriptionConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ContentDescriptionConst::Method_getProperty:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			ContentDescriptionInterface::Property p1;
+			int p2;
+			p1 = serializedMsg.unpackContentDescriptionProperty();
+			p2 = serializedMsg.unpackInt();
+			try {
+				p0 = obj->getProperty(p1,p2);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_DatabaseBackupCursor:
 	{
 	DatabaseBackupCursorInterface* obj = getObject<DatabaseBackupCursorInterface>( classId, objId);
@@ -1533,9 +1574,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			analyzer::Document p0;
 			std::string p1;
+			const ContentDescriptionInterface* p2;
 			p1 = serializedMsg.unpackString();
+			unsigned char classId_2; unsigned int objId_2;
+			serializedMsg.unpackObject( classId_2, objId_2);
+			if (classId_2 != ClassId_ContentDescription) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			p2 = getConstObject<ContentDescriptionInterface>( classId_2, objId_2);
 			try {
-				p0 = obj->analyze(p1);
+				p0 = obj->analyze(p1,p2);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -1558,10 +1604,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			DocumentAnalyzerContextInterface* p0;
+			const ContentDescriptionInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_ContentDescription) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			p1 = getConstObject<ContentDescriptionInterface>( classId_1, objId_1);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createContext();
+				p0 = obj->createContext(p1);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -3252,10 +3303,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			SegmenterContextInterface* p0;
+			const ContentDescriptionInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_ContentDescription) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			p1 = getConstObject<ContentDescriptionInterface>( classId_1, objId_1);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createContext();
+				p0 = obj->createContext(p1);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);

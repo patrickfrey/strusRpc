@@ -291,6 +291,11 @@ void RpcSerializer::packArithmeticVariant( const ArithmeticVariant& val)
 	}
 }
 
+void RpcSerializer::packContentDescriptionProperty( const ContentDescriptionInterface::Property& prop)
+{
+	packByte( (unsigned char) prop);
+}
+
 void RpcSerializer::packDatabaseOptions( const DatabaseOptions& val)
 {
 	packUint( val.opt());
@@ -607,6 +612,11 @@ ArithmeticVariant RpcDeserializer::unpackArithmeticVariant()
 		case ArithmeticVariant::Float: return ArithmeticVariant( unpackFloat());
 	}
 	throw std::runtime_error( "unknown type of arithmetic variant");
+}
+
+ContentDescriptionInterface::Property RpcDeserializer::unpackContentDescriptionProperty()
+{
+	return (ContentDescriptionInterface::Property)unpackByte();
 }
 
 bool RpcDeserializer::unpackCrc32()

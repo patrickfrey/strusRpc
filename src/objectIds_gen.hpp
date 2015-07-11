@@ -37,6 +37,7 @@ enum ClassId
 	ClassId_AggregatorFunction,
 	ClassId_AnalyzerObjectBuilder,
 	ClassId_AttributeReader,
+	ClassId_ContentDescription,
 	ClassId_DatabaseBackupCursor,
 	ClassId_DatabaseClient,
 	ClassId_DatabaseCursor,
@@ -125,6 +126,16 @@ public:
 		Method_skipDoc,
 		Method_getValue,
 		Method_getAttributeNames
+	};
+};
+
+class ContentDescriptionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getProperty
 	};
 };
 
