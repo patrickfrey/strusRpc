@@ -659,9 +659,9 @@ sub packParameter
 	{
 		$rt .= "msg.packArithmeticVariant( " . $id . ");";
 	}
-	elsif ($type eq "ContentDescriptionInterface::Property")
+	elsif ($type eq "segmenter::ContentDescription")
 	{
-		$rt .= "msg.packContentDescriptionProperty( " . $id . ");";
+		$rt .= "msg.packContentDescription( " . $id . ");";
 	}
 	elsif ($type eq "Index")
 	{
@@ -842,9 +842,9 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackArithmeticVariant();";
 	}
-	elsif ($type eq "ContentDescriptionInterface::Property")
+	elsif ($type eq "segmenter::ContentDescription")
 	{
-		$rt .= "$id = serializedMsg.unpackContentDescriptionProperty();";
+		$rt .= "$id = serializedMsg.unpackContentDescription();";
 	}
 	elsif ($type eq "Index")
 	{

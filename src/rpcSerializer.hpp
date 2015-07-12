@@ -31,7 +31,6 @@
 #include <string>
 #include "rpcInterfaceStub.hpp"
 #include "strus/index.hpp"
-#include "strus/contentDescriptionInterface.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/arithmeticVariant.hpp"
 #include "strus/postingIteratorInterface.hpp"
@@ -51,6 +50,7 @@
 #include "strus/analyzer/metaData.hpp"
 #include "strus/analyzer/attribute.hpp"
 #include "strus/analyzer/document.hpp"
+#include "strus/segmenter/contentDescription.hpp"
 
 namespace strus {
 
@@ -78,7 +78,7 @@ public:
 	void packDouble( double val);
 	void packSize( std::size_t size);
 	void packArithmeticVariant( const ArithmeticVariant& val);
-	void packContentDescriptionProperty( const ContentDescriptionInterface::Property& prop);
+	void packContentDescription( const segmenter::ContentDescription& prop);
 
 	void packDatabaseOptions( const DatabaseOptions& val);
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
@@ -139,7 +139,7 @@ public:
 	double unpackDouble();
 	std::size_t unpackSize();
 	ArithmeticVariant unpackArithmeticVariant();
-	ContentDescriptionInterface::Property unpackContentDescriptionProperty();
+	segmenter::ContentDescription unpackContentDescription();
 
 	DatabaseOptions unpackDatabaseOptions();
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();

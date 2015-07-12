@@ -291,9 +291,9 @@ void RpcSerializer::packArithmeticVariant( const ArithmeticVariant& val)
 	}
 }
 
-void RpcSerializer::packContentDescriptionProperty( const ContentDescriptionInterface::Property& prop)
+void RpcSerializer::packContentDescription( const segmenter::ContentDescription& descr)
 {
-	packByte( (unsigned char) prop);
+	packString( descr.serialize());
 }
 
 void RpcSerializer::packDatabaseOptions( const DatabaseOptions& val)
@@ -614,9 +614,9 @@ ArithmeticVariant RpcDeserializer::unpackArithmeticVariant()
 	throw std::runtime_error( "unknown type of arithmetic variant");
 }
 
-ContentDescriptionInterface::Property RpcDeserializer::unpackContentDescriptionProperty()
+segmenter::ContentDescription RpcDeserializer::unpackContentDescription()
 {
-	return (ContentDescriptionInterface::Property)unpackByte();
+	return segmenter::ContentDescription::deserialize( unpackString());
 }
 
 bool RpcDeserializer::unpackCrc32()
