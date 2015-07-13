@@ -35,6 +35,7 @@
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/documentAnalyzerContextInterface.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
+#include "strus/documentClassDetectorInterface.hpp"
 #include "strus/normalizerFunctionContextInterface.hpp"
 #include "strus/normalizerFunctionInstanceInterface.hpp"
 #include "strus/normalizerFunctionInterface.hpp"
@@ -282,8 +283,22 @@ public:
 	virtual void defineAggregatedMetaData( const std::string& p1, AggregatorFunctionInstanceInterface* p2);
 	virtual void defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void defineSubDocument( const std::string& p1, const std::string& p2);
-	virtual analyzer::Document analyze( const std::string& p1, const segmenter::ContentDescription& p2) const;
-	virtual DocumentAnalyzerContextInterface* createContext( const segmenter::ContentDescription& p1) const;
+	virtual analyzer::Document analyze( const std::string& p1, const DocumentClass& p2) const;
+	virtual DocumentAnalyzerContextInterface* createContext( const DocumentClass& p1) const;
+};
+
+class DocumentClassDetectorImpl
+		:public RpcInterfaceStub
+		,public strus::DocumentClassDetectorInterface
+		,public strus::DocumentClassDetectorConst
+{
+public:
+	virtual ~DocumentClassDetectorImpl();
+
+	DocumentClassDetectorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocumentClassDetector, objId_, ctx_, isConst_){}
+
+	virtual bool detect( DocumentClass& p1, const char* p2, std::size_t p3) const;
 };
 
 class ForwardIteratorImpl
@@ -535,7 +550,7 @@ public:
 
 	virtual void defineSelectorExpression( int p1, const std::string& p2);
 	virtual void defineSubSection( int p1, int p2, const std::string& p3);
-	virtual SegmenterContextInterface* createContext( const segmenter::ContentDescription& p1) const;
+	virtual SegmenterContextInterface* createContext( const DocumentClass& p1) const;
 };
 
 class StorageAlterMetaDataTableImpl
@@ -795,6 +810,8 @@ public:
 	virtual const TokenizerFunctionInterface* getTokenizer( const std::string& p1) const;
 	virtual const NormalizerFunctionInterface* getNormalizer( const std::string& p1) const;
 	virtual const AggregatorFunctionInterface* getAggregator( const std::string& p1) const;
+	virtual bool detectDocumentClass( DocumentClass& p1, const char* p2, std::size_t p3) const;
+	virtual void defineDocumentClassDetector( const DocumentClassDetectorInterface* p1);
 	virtual void defineTokenizer( const std::string& p1, const TokenizerFunctionInterface* p2);
 	virtual void defineNormalizer( const std::string& p1, const NormalizerFunctionInterface* p2);
 	virtual void defineAggregator( const std::string& p1, const AggregatorFunctionInterface* p2);

@@ -45,6 +45,7 @@ enum ClassId
 	ClassId_DocnoRangeAllocator,
 	ClassId_DocumentAnalyzerContext,
 	ClassId_DocumentAnalyzer,
+	ClassId_DocumentClassDetector,
 	ClassId_ForwardIterator,
 	ClassId_InvAclIterator,
 	ClassId_MetaDataReader,
@@ -237,6 +238,16 @@ public:
 		Method_defineSubDocument,
 		Method_analyze,
 		Method_createContext
+	};
+};
+
+class DocumentClassDetectorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_detect
 	};
 };
 
@@ -632,6 +643,8 @@ public:
 		Method_getTokenizer,
 		Method_getNormalizer,
 		Method_getAggregator,
+		Method_detectDocumentClass,
+		Method_defineDocumentClassDetector,
 		Method_defineTokenizer,
 		Method_defineNormalizer,
 		Method_defineAggregator

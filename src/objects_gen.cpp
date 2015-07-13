@@ -861,13 +861,13 @@ void DocumentAnalyzerImpl::defineSubDocument( const std::string& p1, const std::
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1, const segmenter::ContentDescription& p2) const
+analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1, const DocumentClass& p2) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_analyze);
 	msg.packString( p1);
-	msg.packContentDescription( p2);
+	msg.packDocumentClass( p2);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -876,18 +876,43 @@ analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1, const s
 	return p0;
 }
 
-DocumentAnalyzerContextInterface* DocumentAnalyzerImpl::createContext( const segmenter::ContentDescription& p1) const
+DocumentAnalyzerContextInterface* DocumentAnalyzerImpl::createContext( const DocumentClass& p1) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createContext);
-	msg.packContentDescription( p1);
+	msg.packDocumentClass( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzerContext;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	DocumentAnalyzerContextInterface* p0 = new DocumentAnalyzerContextImpl( objId_0, ctx());
+	return p0;
+}
+
+DocumentClassDetectorImpl::~DocumentClassDetectorImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+bool DocumentClassDetectorImpl::detect( DocumentClass& p1, const char* p2, std::size_t p3) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_detect);
+	msg.packBuffer( p2, p3);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	p1 = serializedMsg.unpackDocumentClass();
 	return p0;
 }
 
@@ -1792,12 +1817,12 @@ void SegmenterImpl::defineSubSection( int p1, int p2, const std::string& p3)
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-SegmenterContextInterface* SegmenterImpl::createContext( const segmenter::ContentDescription& p1) const
+SegmenterContextInterface* SegmenterImpl::createContext( const DocumentClass& p1) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createContext);
-	msg.packContentDescription( p1);
+	msg.packDocumentClass( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_SegmenterContext;
 	msg.packObject( classId_0, objId_0);
@@ -2943,6 +2968,33 @@ const AggregatorFunctionInterface* TextProcessorImpl::getAggregator( const std::
 	AggregatorFunctionImpl const_0( objId_0, ctx(), true);
 	const AggregatorFunctionInterface* p0 = (const AggregatorFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
+}
+
+bool TextProcessorImpl::detectDocumentClass( DocumentClass& p1, const char* p2, std::size_t p3) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_detectDocumentClass);
+	msg.packBuffer( p2, p3);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	p1 = serializedMsg.unpackDocumentClass();
+	return p0;
+}
+
+void TextProcessorImpl::defineDocumentClassDetector( const DocumentClassDetectorInterface* p1)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineDocumentClassDetector);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call (DocumentClassDetector)");
+	msg.packObject( impl_1->classId(), impl_1->objId());
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
 }
 
 void TextProcessorImpl::defineTokenizer( const std::string& p1, const TokenizerFunctionInterface* p2)

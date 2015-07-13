@@ -1533,9 +1533,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			analyzer::Document p0;
 			std::string p1;
-			segmenter::ContentDescription p2;
+			DocumentClass p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackContentDescription();
+			p2 = serializedMsg.unpackDocumentClass();
 			try {
 				p0 = obj->analyze(p1,p2);
 				msg.packByte( MsgTypeAnswer);
@@ -1560,8 +1560,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			DocumentAnalyzerContextInterface* p0;
-			segmenter::ContentDescription p1;
-			p1 = serializedMsg.unpackContentDescription();
+			DocumentClass p1;
+			p1 = serializedMsg.unpackDocumentClass();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
@@ -1583,6 +1583,48 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_DocumentClassDetector:
+	{
+	DocumentClassDetectorInterface* obj = getObject<DocumentClassDetectorInterface>( classId, objId);
+	switch( (DocumentClassDetectorConst::MethodId)methodId)
+	{
+		case DocumentClassDetectorConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case DocumentClassDetectorConst::Method_detect:
+		{
+			RpcSerializer msg;
+			bool p0;
+			DocumentClass p1;
+			const char* p2;
+			std::size_t p3;
+			serializedMsg.unpackBuffer( p2, p3);
+			try {
+				p0 = obj->detect(p1,p2,p3);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packBool( p0);
+			msg.packDocumentClass( p1);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -3256,8 +3298,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			SegmenterContextInterface* p0;
-			segmenter::ContentDescription p1;
-			p1 = serializedMsg.unpackContentDescription();
+			DocumentClass p1;
+			p1 = serializedMsg.unpackDocumentClass();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
@@ -5454,6 +5496,61 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			defineConstObject( classId_0, objId_0, p0);
 			
+			return std::string();
+		}
+		case TextProcessorConst::Method_detectDocumentClass:
+		{
+			RpcSerializer msg;
+			bool p0;
+			DocumentClass p1;
+			const char* p2;
+			std::size_t p3;
+			serializedMsg.unpackBuffer( p2, p3);
+			try {
+				p0 = obj->detectDocumentClass(p1,p2,p3);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packBool( p0);
+			msg.packDocumentClass( p1);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case TextProcessorConst::Method_defineDocumentClassDetector:
+		{
+			RpcSerializer msg;
+			const DocumentClassDetectorInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_DocumentClassDetector) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			p1 = getConstObject<DocumentClassDetectorInterface>( classId_1, objId_1);
+			try {
+				obj->defineDocumentClassDetector(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
 			return std::string();
 		}
 		case TextProcessorConst::Method_defineTokenizer:
