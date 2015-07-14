@@ -284,6 +284,7 @@ public:
 	virtual void defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void defineSubDocument( const std::string& p1, const std::string& p2);
 	virtual analyzer::Document analyze( const std::string& p1, const DocumentClass& p2) const;
+	virtual std::string mimeType( ) const;
 	virtual DocumentAnalyzerContextInterface* createContext( const DocumentClass& p1) const;
 };
 
@@ -548,6 +549,7 @@ public:
 	SegmenterImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
 		:RpcInterfaceStub( (unsigned char)ClassId_Segmenter, objId_, ctx_, isConst_){}
 
+	virtual std::string mimeType( ) const;
 	virtual void defineSelectorExpression( int p1, const std::string& p2);
 	virtual void defineSubSection( int p1, int p2, const std::string& p3);
 	virtual SegmenterContextInterface* createContext( const DocumentClass& p1) const;

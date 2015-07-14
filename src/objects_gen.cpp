@@ -876,6 +876,19 @@ analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1, const D
 	return p0;
 }
 
+std::string DocumentAnalyzerImpl::mimeType( ) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_mimeType);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+}
+
 DocumentAnalyzerContextInterface* DocumentAnalyzerImpl::createContext( const DocumentClass& p1) const
 {
 	RpcSerializer msg;
@@ -1792,6 +1805,19 @@ SegmenterImpl::~SegmenterImpl()
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+}
+
+std::string SegmenterImpl::mimeType( ) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_mimeType);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
 }
 
 void SegmenterImpl::defineSelectorExpression( int p1, const std::string& p2)

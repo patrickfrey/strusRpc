@@ -237,6 +237,7 @@ public:
 		Method_defineAttribute,
 		Method_defineSubDocument,
 		Method_analyze,
+		Method_mimeType,
 		Method_createContext
 	};
 };
@@ -437,6 +438,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_mimeType,
 		Method_defineSelectorExpression,
 		Method_defineSubSection,
 		Method_createContext
