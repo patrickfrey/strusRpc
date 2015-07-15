@@ -393,9 +393,15 @@ static void accept_error_cb( struct evconnlistener *listener, void *ctx)
 {
 	struct event_base *base = evconnlistener_get_base( listener);
 	int err = EVUTIL_SOCKET_ERROR();
-	std::cerr << "got an error " << err << " (" << evutil_socket_error_to_string(err) << ") on the listener, shutting down." << std::endl;
-
-	event_base_loopexit( base, NULL);
+	if (err == 24)
+	{
+		// Too many open connections
+	}
+	else
+	{
+		std::cerr << "got an error " << err << " (" << evutil_socket_error_to_string(err) << ") on the listener, shutting down." << std::endl;
+		event_base_loopexit( base, NULL);
+	}
 }
 
 // Run the server (the code that served as 'inspiration' for the strus rpc server can be found
