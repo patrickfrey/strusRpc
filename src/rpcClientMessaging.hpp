@@ -40,6 +40,7 @@ public:
 	virtual std::string sendRequest( const std::string& content);
 	virtual void sendMessage( const std::string& content);
 	virtual std::string synchronize();
+	virtual void close();
 
 private:
 	std::string errorstr( const char* msg);
@@ -48,7 +49,6 @@ private:
 
 private:
 	int m_sock;
-	void* m_recvbuf;
 	std::string m_messageBuffer;
 };
 

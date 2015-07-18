@@ -15,6 +15,16 @@ libevent
 --------
    3-clause BSD license (see http://libevent.org/LICENSE.txt)
 
+libuv
+-----
+   MIT License (https://github.com/libuv/libuv/blob/v1.x/LICENSE)
+
+libuv-cmake
+-----------
+   MIT License (https://github.com/aseprite/libuv-cmake/blob/master/LICENSE.txt)
+
+
+
 
 
 

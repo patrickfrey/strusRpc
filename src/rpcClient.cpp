@@ -43,4 +43,8 @@ AnalyzerObjectBuilderInterface* RpcClient::createAnalyzerObjectBuilder() const
 	return new AnalyzerObjectBuilderImpl( 0, m_ctx);
 }
 
+void RpcClient::close()
+{
+	m_ctx->rpc_close();
+}
 

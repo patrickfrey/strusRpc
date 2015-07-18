@@ -101,6 +101,7 @@ ServiceAddress::ServiceAddress( const char* config)
 }
 
 RpcClientMessaging::RpcClientMessaging( const char* config)
+	:m_sock(-1)
 {
 	struct addrinfo hints;
 	struct addrinfo *result, *rp;
@@ -130,7 +131,8 @@ RpcClientMessaging::RpcClientMessaging( const char* config)
 		{
 			break;
 		}
-		close( m_sock);
+		::shutdown( m_sock, SHUT_RDWR);
+		::close( m_sock);
 	}
 	if (!rp)
 	{
@@ -162,17 +164,25 @@ std::string RpcClientMessaging::errorstr( const char* msg)
 
 RpcClientMessaging::~RpcClientMessaging()
 {
-	close( m_sock);
+	if (m_sock >= 0)
+	{
+		::shutdown( m_sock, SHUT_RDWR);
+		::close( m_sock);
+	}
 }
 
 void RpcClientMessaging::send_req( const char* msg, std::size_t msgsize)
 {
 	uint32_t msgsizebuf = htonl( msgsize);
-	if (0>write( m_sock, &msgsizebuf, sizeof(msgsizebuf)))
+	if (0>m_sock)
+	{
+		throw std::runtime_error( "rpc client messaging error sending (socket invalid)");
+	}
+	if (0>::write( m_sock, &msgsizebuf, sizeof(msgsizebuf)))
 	{
 		throw std::runtime_error( errorstr("rpc client messaging error sending"));
 	}
-	int nn = write( m_sock, msg, msgsize);
+	int nn = ::write( m_sock, msg, msgsize);
 	if (nn < 0)
 	{
 		throw std::runtime_error( errorstr("rpc client messaging error sending"));
@@ -187,12 +197,16 @@ std::string RpcClientMessaging::recv_rep()
 	uint32_t msgsizebuf;
 	unsigned int msgsizebufpos = 0;
 
+	if (0>m_sock)
+	{
+		throw std::runtime_error( "rpc client messaging error receiving (socket invalid)");
+	}
 	while (msgsizebufpos < sizeof(msgsizebuf))
 	{
 #ifdef STRUS_LOWLEVEL_DEBUG
 		std::cerr << "read sizeof reply from server" << std::endl;
 #endif
-		int nn = read( m_sock, (char*)&msgsizebuf + msgsizebufpos, sizeof(msgsizebuf)-msgsizebufpos);
+		int nn = ::read( m_sock, (char*)&msgsizebuf + msgsizebufpos, sizeof(msgsizebuf)-msgsizebufpos);
 		if (nn <= 0)
 		{
 			if (nn == 0) break;
@@ -206,7 +220,7 @@ std::string RpcClientMessaging::recv_rep()
 #ifdef STRUS_LOWLEVEL_DEBUG
 		std::cerr << "read reply of server" << std::endl;
 #endif
-		int nn = read( m_sock, buf, bufsize);
+		int nn = ::read( m_sock, buf, bufsize);
 		if (nn <= 0)
 		{
 			if (nn == 0) break;
@@ -269,5 +283,15 @@ std::string RpcClientMessaging::synchronize()
 		return recv_rep();
 	}
 	return std::string();
+}
+
+void RpcClientMessaging::close()
+{
+	if (m_sock >= 0)
+	{
+		::shutdown( m_sock, SHUT_RDWR);
+		::close( m_sock);
+		m_sock = -1;
+	}
 }
 

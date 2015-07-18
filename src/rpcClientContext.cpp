@@ -44,6 +44,10 @@ RpcClientContext::RpcClientContext( const RpcClientContext& o)
 RpcClientContext::RpcClientContext()
 	:m_objIdCnt(0),m_messaging(0){}
 
+RpcClientContext::~RpcClientContext()
+{
+	delete m_messaging;
+}
 
 void RpcClientContext::handleError( const std::string& msgstr) const
 {
@@ -93,6 +97,10 @@ void RpcClientContext::rpc_synchronize() const
 	}
 }
 
+void RpcClientContext::rpc_close()
+{
+	m_messaging->close();
+}
 
 
 

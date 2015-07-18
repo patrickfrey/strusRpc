@@ -34,6 +34,7 @@
 #include "strus/moduleLoaderInterface.hpp"
 #include "strus/versionRpc.hpp"
 #include "strus/private/configParser.hpp"
+#include "private/utils.hpp"
 #include "loadGlobalStatistics.hpp"
 #include "rpcSerializer.hpp"
 #include <cstring>
@@ -48,12 +49,17 @@
 #include <memory>
 #include <stdint.h>
 #include <netinet/in.h>
+#include <event2/event.h>
 #include <event2/listener.h>
 #include <event2/bufferevent.h>
 #include <event2/buffer.h>
+#include <event2/visibility.h>
+#include <event2/event-config.h>
+#include <event2/thread.h>
 #include <arpa/inet.h>
 #include <errno.h>
 #include <signal.h>
+#include <sys/syscall.h>
 
 #undef STRUS_LOWLEVEL_DEBUG
 
@@ -185,14 +191,14 @@ static int handler_context_consume_input( handler_context* ctx, struct evbuffer 
 		}
 		if (res == 0) return 1;
 		if (res < 0) return -1;
-	
+
 		ctx->msgsize = ntohl( ctx->msgsizebuf);
 		if (!ctx->msgsize) return -1;
 	}
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "consumed input message size " << ctx->msgsize << std::endl;
 #endif
-	enum {bufsize=256};
+	enum {bufsize=2048};
 	char buf[ bufsize];
 	unsigned int fetchsize = bufsize;
 	if (ctx->msgsize < ctx->buf->size() + fetchsize)
@@ -304,7 +310,8 @@ static void handler_read_cb( struct bufferevent *bev, void *ctx_)
 	struct evbuffer *output = bufferevent_get_output( bev);
 
 #ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "handler got data" << std::endl;
+	pid_t tid = (pid_t) ::syscall( SYS_gettid);
+	std::cerr << "[" << (int)tid << "] handler got data" << std::endl;
 #endif
 	// Consume input:
 	int ec = handler_context_consume_input( ctx, input);
@@ -328,7 +335,7 @@ static void handler_read_cb( struct bufferevent *bev, void *ctx_)
 	}
 	if (0>bufferevent_write_buffer( bev, output))
 	{
-		perror( "error writing buffer with request answer");
+		::perror( "error writing buffer with request answer");
 		bufferevent_free( bev);
 		destroy_handler_context( ctx);
 		return;
@@ -341,15 +348,23 @@ static void handler_event_cb( struct bufferevent *bev, short events, void *ctx_)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "got event" << std::endl;
 #endif
-	handler_context* ctx = (handler_context*)ctx_;
-	if (events & BEV_EVENT_ERROR)
+	if ((events & (BEV_EVENT_EOF | BEV_EVENT_ERROR | BEV_EVENT_TIMEOUT)) != 0)
 	{
-		perror( "error from bufferevent");
-	}
-	if (events & (BEV_EVENT_EOF | BEV_EVENT_ERROR))
-	{
+		handler_context* ctx = (handler_context*)ctx_;
+		if (events & BEV_EVENT_ERROR)
+		{
+			::perror( "got error event");
+		}
+		else if (events & BEV_EVENT_TIMEOUT)
+		{
+			::perror( "got timeout event");
+		}
 #ifdef STRUS_LOWLEVEL_DEBUG
-		if (0!=(events & BEV_EVENT_EOF)) std::cerr << "got eof" << std::endl;
+		else if (events & BEV_EVENT_EOF)
+		{
+			pid_t tid = (pid_t) ::syscall( SYS_gettid);
+			std::cerr << "[" << (int)tid << "] got eof" << std::endl;
+		}
 #endif
 		bufferevent_free( bev);
 		destroy_handler_context( ctx);
@@ -369,6 +384,8 @@ static void accept_conn_cb(
 	evutil_socket_t fd, struct sockaddr *address, int socklen,
 	void* /*context for acceptor*/)
 {
+	evutil_make_socket_nonblocking( fd);
+
 	/* We got a new connection! Set up a bufferevent for it. */
 	struct event_base *base = evconnlistener_get_base( listener);
 	struct bufferevent *bev = bufferevent_socket_new( base, fd, BEV_OPT_CLOSE_ON_FREE);
@@ -382,7 +399,7 @@ static void accept_conn_cb(
 	else
 	{
 #ifdef STRUS_LOWLEVEL_DEBUG
-		std::cerr << "accept connection" << std::endl;
+		std::cerr << "accepted connection" << std::endl;
 #endif
 		bufferevent_setcb( bev, handler_read_cb, NULL, handler_event_cb, ctx);
 		bufferevent_enable( bev, EV_READ|EV_WRITE);
@@ -393,26 +410,37 @@ static void accept_error_cb( struct evconnlistener *listener, void *ctx)
 {
 	struct event_base *base = evconnlistener_get_base( listener);
 	int err = EVUTIL_SOCKET_ERROR();
-	if (err == 24)
+	if (err == 24 /*EMFILE: too many open files = too many open connections*/)
 	{
-		// Too many open connections
+#ifdef STRUS_LOWLEVEL_DEBUG
+		std::cerr << "refusing accept connection" << std::endl;
+#endif
+		return;
 	}
-	else
-	{
-		std::cerr << "got an error " << err << " (" << evutil_socket_error_to_string(err) << ") on the listener, shutting down." << std::endl;
-		event_base_loopexit( base, NULL);
-	}
+	std::cerr << "got an error " << err << " (" << evutil_socket_error_to_string(err) << ") on the listener, shutting down." << std::endl;
+	event_base_loopexit( base, NULL);
 }
 
+enum
+{
+	STRUS_ERR_EVBASE=1,
+	STRUS_ERR_LISTEN=2,
+	STRUS_ERR_SIGNALEV=3
+};
 // Run the server (the code that served as 'inspiration' for the strus rpc server can be found
 // at http://www.wangafu.net/~nickm/libevent-book/Ref8_listener.html
 static int runServer( int port)
 {
+#ifdef WIN32
+	evthread_use_windows_threads();
+#else
+	evthread_use_pthreads();
+#endif
 	struct event_base *base = event_base_new();
 	if (!base)
 	{
-		puts( "couldn't open event base");
-		return 1;
+		::perror( "couldn't create event base");
+		return STRUS_ERR_EVBASE;
 	}
 
 	struct sockaddr_in sin;
@@ -420,17 +448,17 @@ static int runServer( int port)
 	/* This is an INET address */
 	sin.sin_family = AF_INET;
 	/* Listen on 0.0.0.0 */
-	sin.sin_addr.s_addr = htonl(0);
+	sin.sin_addr.s_addr = 0;
 	/* Listen on the given port. */
 	sin.sin_port = htons(port);
 
 	struct evconnlistener *listener = evconnlistener_new_bind( base, accept_conn_cb, NULL,
-		LEV_OPT_CLOSE_ON_FREE|LEV_OPT_REUSEABLE, -1,
+		LEV_OPT_DEFERRED_ACCEPT|LEV_OPT_CLOSE_ON_FREE|LEV_OPT_REUSEABLE, -1,
 		(struct sockaddr*)&sin, sizeof(sin));
 	if (!listener)
 	{
 		perror( "couldn't create listener");
-		return 2;
+		return STRUS_ERR_LISTEN;
 	}
 	evconnlistener_set_error_cb( listener, accept_error_cb);
 
@@ -438,13 +466,10 @@ static int runServer( int port)
 	if (!signal_event || event_add( signal_event, NULL)<0)
 	{
 		perror( "could not create signal event");
-		return 3;
+		return STRUS_ERR_SIGNALEV;
 	}
 	std::cerr << "strus RPC server listening on port " << port << std::endl;
 	event_base_dispatch( base);
-	event_base_free( base);
-	std::free( signal_event);
-	std::free( listener);
 	return 0;
 }
 
@@ -596,7 +621,7 @@ int main( int argc, const char* argv[])
 
 		g_storageObjectBuilder = storageBuilder.get();
 		g_analyzerObjectBuilder = analyzerBuilder.get();
-		
+
 		if (!storageconfig.empty())
 		{
 			if (doCreateIfNotExist)

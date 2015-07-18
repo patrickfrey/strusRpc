@@ -26,40 +26,28 @@
 
 --------------------------------------------------------------------
 */
-#ifndef _STRUS_RPC_CLIENT_IMPLEMENTATION_HPP_INCLUDED
-#define _STRUS_RPC_CLIENT_IMPLEMENTATION_HPP_INCLUDED
-#include "strus/rpcClientInterface.hpp"
-#include "strus/reference.hpp"
-#include "rpcClientContext.hpp"
+#ifndef _STRUS_RPC_SERVERC_HPP_INCLUDED
+#define _STRUS_RPC_SERVERC_HPP_INCLUDED
+#include <uv.h>
+#include <stddef.h>
 
-namespace strus
+extern "C"
 {
+	typedef int (*request_handler_f)( 
+			strus_globalctx_t* glbctx,
+			unsigned char* readbuf,
+			size_t readbufsize,
+			unsigned char** writebuf,
+			size_t writebufsize);
 
-/// \brief Forward declaration
-class RpcClientMessagingInterface;
+	struct strus_globalctx_t
+	{
+		void* data;
+		request_handler_f request_handler;
+	};
 
-/// \brief Interface providing a mechanism to create complex objects
-class RpcClient
-	:public RpcClientInterface
-{
-public:
-	/// \brief Constructor
-	explicit RpcClient( RpcClientMessagingInterface* messaging_)
-		:m_ctx( new RpcClientContext( messaging_)){}
-
-	/// \brief Destructor
-	virtual ~RpcClient(){}
-
-	virtual StorageObjectBuilderInterface* createStorageObjectBuilder() const;
-
-	virtual AnalyzerObjectBuilderInterface* createAnalyzerObjectBuilder() const;
-
-	virtual void close();
-
-private:
-	Reference<RpcClientContext> m_ctx;
-};
-
-}//namespace
+	int strus_run_server( unsigned int nofThreads, strus_globalctx_t* glbctx);
+}
 #endif
+
 
