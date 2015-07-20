@@ -31,23 +31,40 @@
 #include <uv.h>
 #include <stddef.h>
 
-extern "C"
+struct strus_handlerdata_t;
+struct strus_globalctx_t;
+
+typedef int (*request_handler_f)(
+		struct strus_handlerdata_t* handlerdata,
+		unsigned char* readbuf,
+		size_t readbufsize,
+		unsigned char** output,
+		size_t* outputsize);
+
+typedef int (*init_handlerdata_f)(
+		struct strus_handlerdata_t* handler,
+		struct strus_globalctx_t* glbctx);
+
+typedef void (*done_handlerdata_f)(
+		struct strus_handlerdata_t* handler);
+
+
+typedef struct strus_handlerdata_t
 {
-	typedef int (*request_handler_f)( 
-			strus_globalctx_t* glbctx,
-			unsigned char* readbuf,
-			size_t readbufsize,
-			unsigned char** writebuf,
-			size_t writebufsize);
+	char _reserved[64];
+} strus_handlerdata_t;
 
-	struct strus_globalctx_t
-	{
-		void* data;
-		request_handler_f request_handler;
-	};
+typedef struct strus_globalctx_t
+{
+	void* data;
+	init_handlerdata_f init_handlerdata;
+	done_handlerdata_f done_handlerdata;
+	request_handler_f request_handler;
+	FILE* logf;
+} strus_globalctx_t;
 
-	int strus_run_server( unsigned int nofThreads, strus_globalctx_t* glbctx);
-}
+int strus_run_server( unsigned short port, unsigned int nofThreads, strus_globalctx_t* glbctx);
+
 #endif
 
 

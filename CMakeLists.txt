@@ -33,7 +33,7 @@ set_property(GLOBAL PROPERTY rule_launch_link ccache)
 if(CMAKE_COMPILER_IS_GNUCXX)
 set( STRUS_OPTIMIZATION_LEVEL "3" )
 set( CMAKE_CXX_FLAGS "-std=c++98  -Wall -pedantic -g -Wfatal-errors -Werror -fvisibility=hidden -fPIC -O${STRUS_OPTIMIZATION_LEVEL}" )
-set( CMAKE_C_FLAGS "-std=c99 -Wall -pedantic -Wfatal-errors -Werror -fPIC -O${STRUS_OPTIMIZATION_LEVEL}" )
+set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -Werror -fPIC -O${STRUS_OPTIMIZATION_LEVEL}" )
 endif()
 
 if(WIN32)
@@ -94,6 +94,7 @@ configure_file( "${PROJECT_SOURCE_DIR}/include/strus/versionRpc.hpp.in"  "${PROJ
 enable_testing()
 
 # Subdirectories:
+add_subdirectory( libuv-cmake )
 add_subdirectory( 3rdParty )
 add_subdirectory( src )
   

@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR )
 # SOURCES AND INCLUDES
 # --------------------------------------
 set( server_source_files
+	server.c
 	utils.cpp
 	loadGlobalStatistics.cpp
 	rpcSerializer.cpp
@@ -24,6 +25,7 @@ include_directories(
 	"${libevent_INCLUDE_DIRS}"
         "${Boost_INCLUDE_DIRS}"
 	"${PROJECT_SOURCE_DIR}/include"
+	"${PROJECT_SOURCE_DIR}/libuv-cmake/libuv/include"
 	"${strusmodule_INCLUDE_DIRS}"
 	"${strus_INCLUDE_DIRS}"
 	"${strusanalyzer_INCLUDE_DIRS}" )
@@ -31,6 +33,7 @@ include_directories(
 link_directories(
 	"${libevent_LIBRARY_DIRS}"
 	"${PROJECT_SOURCE_DIR}/src"
+	"${PROJECT_SOURCE_DIR}/libuv-cmake"
 	"${strusmodule_LIBRARY_DIRS}"
 )
 
@@ -45,7 +48,7 @@ add_library( strus_rpc_client SHARED ${client_source_files} libstrus_rpc_client.
 target_link_libraries( strus_rpc_client dl )
 
 add_library( strus_rpc_server SHARED ${server_source_files} libstrus_rpc_server.cpp )
-target_link_libraries( strus_rpc_server dl strus_utils "${strusmodule_LIBRARIES}" "${Boost_LIBRARIES}"  )
+target_link_libraries( strus_rpc_server dl strus_utils "${strusmodule_LIBRARIES}" "${Boost_LIBRARIES}" uv )
 
 set_target_properties(
     strus_rpc_client_socket
