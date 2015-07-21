@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR )
 # --------------------------------------
 set( server_source_files
 	server.c
+	hexdump.c
 	utils.cpp
 	loadGlobalStatistics.cpp
 	rpcSerializer.cpp
@@ -77,7 +78,7 @@ set_target_properties(
 # ------------------------------
 # PROGRAMS
 # ------------------------------
-add_executable( strusRpcServer strusRpcServer.cpp )
+add_executable( strusRpcServer strusRpcServer.cpp utils.cpp )
 target_link_libraries( strusRpcServer  "${libevent_LIBRARIES}"  "${strusmodule_LIBRARIES}"  strus_rpc_server )
 
 # ------------------------------

@@ -37,6 +37,10 @@
 #include "private/utils.hpp"
 #include "loadGlobalStatistics.hpp"
 #include "rpcSerializer.hpp"
+extern "C" {
+#include "server.h"
+#include "hexdump.h"
+}
 #include <cstring>
 #include <stdexcept>
 #include <string>
@@ -47,19 +51,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
-#include <stdint.h>
 #include <netinet/in.h>
-#include <event2/event.h>
-#include <event2/listener.h>
-#include <event2/bufferevent.h>
-#include <event2/buffer.h>
-#include <event2/visibility.h>
-#include <event2/event-config.h>
-#include <event2/thread.h>
-#include <arpa/inet.h>
-#include <errno.h>
-#include <signal.h>
-#include <sys/syscall.h>
 
 #undef STRUS_LOWLEVEL_DEBUG
 
@@ -81,7 +73,7 @@ static void printUsage()
 	std::cout << "    Define the port to listen for requests as <PORT> (default 7181)" << std::endl;
 	std::cout << "-s|--storage <CONFIG>" << std::endl;
 	std::cout << "    Define configuration <CONFIG> of storage hosted by this server" << std::endl;
-	std::cout << "-s|--create <CONFIG>" << std::endl;
+	std::cout << "-c|--create <CONFIG>" << std::endl;
 	std::cout << "    Implicitely create storage with <CONFIG> if it does not exist yet" << std::endl;
 	std::cout << "-g|--globalstats <FILE>" << std::endl;
 	std::cout << "    Load global statistics of peers from file <FILE>" << std::endl;
@@ -92,76 +84,17 @@ static strus::StorageObjectBuilderInterface* g_storageObjectBuilder = 0;
 static strus::AnalyzerObjectBuilderInterface* g_analyzerObjectBuilder = 0;
 static strus::StorageClientInterface* g_storageClient = 0;
 
-struct handler_context
+static strus_globalctx_t g_glbctx = {0,0,0,0};
+
+struct handler_context_t
 {
 	strus::RpcRequestHandlerInterface* obj;
-	std::string* buf;
-	uint32_t msgsize;
-	uint32_t msgsizebuf;
-	uint32_t msgsizepos;
+	std::string resultbuf;
 };
 
-static void destroy_handler_context( handler_context* ctx)
-{
-	if (ctx->obj)
-	{
-		delete ctx->obj;
-		ctx->obj = 0;
-	}
-	if (ctx->buf)
-	{
-		delete ctx->buf;
-		ctx->buf = 0;
-	}
-	std::free( ctx);
-}
+int g_static_assert_sizeof_handlerdata[ (sizeof(handler_context_t) > sizeof(strus_handlerdata_t)) ? 0 : 1];
 
-static void reset_handler_context_input( handler_context* ctx)
-{
-#ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "reset handler context input" << std::endl;
-#endif
-	ctx->buf->clear();
-	ctx->msgsize = 0;
-	ctx->msgsizebuf = 0;
-	ctx->msgsizepos = 0;
-}
-
-static int init_handler_context( handler_context* ctx)
-{
-	try
-	{
-		ctx->obj = strus::createRpcRequestHandler(
-				g_storageObjectBuilder, g_analyzerObjectBuilder, g_storageClient);
-		ctx->buf = new std::string();
-		ctx->msgsize = 0;
-		ctx->msgsizebuf = 0;
-		ctx->msgsizepos = 0;
-	}
-	catch (const std::runtime_error& err)
-	{
-		std::cout << "runtime error initializing handler context: " << err.what() << std::endl;
-		return 1;
-	}
-	catch (const std::bad_alloc& err)
-	{
-		std::cout << "memory allocation error initializing handler context: " << err.what() << std::endl;
-		return 2;
-	}
-	catch (const std::exception& err)
-	{
-		std::cout << "exception initializing handler context: " << err.what() << std::endl;
-		return 3;
-	}
-	catch (...)
-	{
-		std::cout << "unknown exception initializing handler context" << std::endl;
-		return 4;
-	}
-	return 0;
-}
-
-static uint32_t unpackMessageLen( char const*& itr, const char* end)
+static uint32_t unpackMessageLen( unsigned char const*& itr, const unsigned char* end)
 {
 	if (itr+4 > end) throw std::runtime_error( "message to small to encode message length");
 	uint32_t val;
@@ -170,82 +103,41 @@ static uint32_t unpackMessageLen( char const*& itr, const char* end)
 	return ntohl( val);
 }
 
-static int handler_context_consume_input( handler_context* ctx, struct evbuffer *input)
+static int request_handler(
+		struct strus_handlerdata_t* handlerdata,
+		const unsigned char* readbuf,
+		size_t readbufsize,
+		size_t outputhdrsize,
+		const unsigned char** output,
+		size_t* outputsize)
 {
-	int res = 0;
-	if (!ctx->obj)
-	{
-		int ec;
-		if (0!=(ec=init_handler_context( ctx)))
-		{
-			return 10+ec;
-		}
-	}
-	if (!ctx->msgsize)
-	{
-		while (ctx->msgsizepos < sizeof(ctx->msgsizebuf)
-			&& 0<(res=evbuffer_remove( input, (char*)&ctx->msgsizebuf + ctx->msgsizepos, sizeof(ctx->msgsizebuf)-ctx->msgsizepos)))
-		{
-			ctx->msgsizepos += res;
-			if (ctx->msgsizepos == sizeof(ctx->msgsizebuf)) break;
-		}
-		if (res == 0) return 1;
-		if (res < 0) return -1;
-
-		ctx->msgsize = ntohl( ctx->msgsizebuf);
-		if (!ctx->msgsize) return -1;
-	}
-#ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "consumed input message size " << ctx->msgsize << std::endl;
-#endif
-	enum {bufsize=2048};
-	char buf[ bufsize];
-	unsigned int fetchsize = bufsize;
-	if (ctx->msgsize < ctx->buf->size() + fetchsize)
-	{
-		fetchsize = ctx->msgsize - ctx->buf->size();
-	}
-#ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "consumed input fetch size " << fetchsize << std::endl;
-#endif
-	while (0<(res=evbuffer_remove( input, buf, fetchsize)))
-	{
-		ctx->buf->append( buf, res);
-		if (ctx->msgsize == ctx->buf->size()) break;
-#ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "consumed input buf size " << ctx->buf->size() << std::endl;
-#endif
-	}
-	if (res > 0) return 0;
-	if (res == 0) return 1;
-	return -1;
-}
-
-static int handler_context_process_input( handler_context* ctx, struct evbuffer *output)
-{
+	handler_context_t* ctx = reinterpret_cast<handler_context_t*>( handlerdata);
 	try
 	{
-#ifdef STRUS_LOWLEVEL_DEBUG
-		std::cerr << "got request [" << ctx->buf->size() << " bytes]" << std::endl;
-#endif
-		std::string answer;
-		if (ctx->buf->size() > 0 && ctx->buf->at(0) == (char)0xFF)
+		if (!ctx->obj)
+		{
+			ctx->obj = strus::createRpcRequestHandler(
+						g_storageObjectBuilder, g_analyzerObjectBuilder, g_storageClient);
+		}
+		ctx->resultbuf.clear();
+		ctx->resultbuf.append( "\0\0\0\0", sizeof( uint32_t));
+		if (readbufsize > 0 && readbuf[0] == 0xFF)
 		{
 #ifdef STRUS_LOWLEVEL_DEBUG
-			std::cerr << "got multipart request" << std::endl;
+			fprintf( g_glbctx.logf, "got multipart request [%u bytes]\n", readbufsize);
 #endif
-			char const* itr = ctx->buf->c_str()+1;
-			const char* end = itr + ctx->buf->size() -1;
+			unsigned char const* itr = readbuf+1;
+			unsigned const char* end = itr + readbufsize -1;
 			while (itr < end)
 			{
 				uint32_t msglen = unpackMessageLen( itr, end);
 #ifdef STRUS_LOWLEVEL_DEBUG
-				std::cerr << "call request handler [" << msglen << " bytes]" << std::endl;
+				fprintf( g_glbctx.logf, "call request handler [%u bytes]\n", msglen);
 #endif
-				answer = ctx->obj->handleRequest( itr, msglen);
-				if (answer.size() > 0)
+				ctx->resultbuf.append( ctx->obj->handleRequest( (const char*)itr, (std::size_t)msglen));
+				if (ctx->resultbuf.size() > sizeof(uint32_t))
 				{
-					if (answer[0] == (char)strus::MsgTypeAnswer && itr+msglen != end)
+					if (ctx->resultbuf[sizeof(uint32_t)] == (char)strus::MsgTypeAnswer && itr+msglen != end)
 					{
 						std::cerr << "got unexpected answer (protocol error) ... closing connection" << std::endl;
 						return 6;
@@ -258,167 +150,76 @@ static int handler_context_process_input( handler_context* ctx, struct evbuffer 
 		else
 		{
 #ifdef STRUS_LOWLEVEL_DEBUG
-			std::cerr << "call request handler [" << ctx->buf->size() << " bytes]" << std::endl;
+			fprintf( g_glbctx.logf, "got singlepart request [%u bytes]\n", readbufsize);
+			fprintf( g_glbctx.logf, "call request handler [%u bytes]\n", readbufsize);
 #endif
-			answer = ctx->obj->handleRequest( ctx->buf->c_str(), ctx->buf->size());
+			ctx->resultbuf.append( ctx->obj->handleRequest( (const char*)readbuf, (std::size_t)readbufsize));
 		}
-		uint32_t answersize = htonl( answer.size());
-		if (-1==evbuffer_add( output, &answersize, sizeof(answersize)))
-		{
-			std::cerr << "error when copying request answer to output ... closing connection" << std::endl;
-			return 7;
-		}
-		if (-1==evbuffer_add( output, answer.c_str(), answer.size()))
-		{
-			std::cerr << "error when copying request answer to output ... closing connection" << std::endl;
-			return 8;
-		}
-
-#ifdef STRUS_LOWLEVEL_DEBUG
-		std::cerr << "request reply [" << answer.size() << " bytes] sent back" << std::endl;
-#endif
-		return 0;
+		*output = (const unsigned char*)ctx->resultbuf.c_str();
+		*outputsize = ctx->resultbuf.size();
 	}
 	catch (const std::runtime_error& err)
 	{
-		std::cout << "unrecoverable runtime error processing input: " << err.what() << " ... closing connection now" << std::endl;
+		fprintf( g_glbctx.logf, "runtime error in request handler: %s\n", err.what());
 		return 1;
 	}
 	catch (const std::bad_alloc& err)
 	{
-		std::cout << "memory allocation processing input: " << err.what() << " ... closing connection now" << std::endl;
+		fprintf( g_glbctx.logf, "memory allocation error  in request handler\n");
 		return 2;
 	}
 	catch (const std::exception& err)
 	{
-		std::cout << "unrecoverable exception processing input: " << err.what() << " ... closing connection now" << std::endl;
+		fprintf( g_glbctx.logf, "exception in request handler: %s\n", err.what());
 		return 3;
 	}
 	catch (...)
 	{
-		std::cout << "unknown unrecoverable exception processing input" << std::endl;
+		fprintf( g_glbctx.logf, "unknown exception in request handler\n");
 		return 4;
 	}
 	return 0;
 }
 
-static void handler_read_cb( struct bufferevent *bev, void *ctx_)
+static int init_handlerdata( struct strus_handlerdata_t* handlerdata)
 {
-	/* This callback is invoked when there is data to read on bev. */
-	handler_context* ctx = (handler_context*)ctx_;
-	struct evbuffer *input = bufferevent_get_input( bev);
-	struct evbuffer *output = bufferevent_get_output( bev);
-
-#ifdef STRUS_LOWLEVEL_DEBUG
-	pid_t tid = (pid_t) ::syscall( SYS_gettid);
-	std::cerr << "[" << (int)tid << "] handler got data" << std::endl;
-#endif
-	// Consume input:
-	int ec = handler_context_consume_input( ctx, input);
-	if (ec < 0)
+	handler_context_t* ctx = reinterpret_cast<handler_context_t*>( handlerdata);
+	try
 	{
-		// ... got unrecoverable error
-		bufferevent_free( bev);
-		destroy_handler_context( ctx);
+		ctx->obj = 0;
+		new (&ctx->resultbuf) std::string();
 	}
-	if (ec > 0)
+	catch (const std::bad_alloc& err)
 	{
-		// ... input not yet complete
-		return;
+		fprintf( g_glbctx.logf, "memory allocation error initializing request handler object: %s\n", err.what());
+		return 1;
 	}
-	// Handle the request:
-	if (0!=handler_context_process_input( ctx, output))
+	catch (...)
 	{
-		bufferevent_free( bev);
-		destroy_handler_context( ctx);
-		return;
+		fprintf( g_glbctx.logf, "unknown exception initializing request handler object\n");
+		return 2;
 	}
-	if (0>bufferevent_write_buffer( bev, output))
-	{
-		::perror( "error writing buffer with request answer");
-		bufferevent_free( bev);
-		destroy_handler_context( ctx);
-		return;
-	}
-	reset_handler_context_input( ctx);
+	return 0;
 }
 
-static void handler_event_cb( struct bufferevent *bev, short events, void *ctx_)
+static void done_handlerdata( struct strus_handlerdata_t* handlerdata)
 {
-#ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "got event" << std::endl;
-#endif
-	if ((events & (BEV_EVENT_EOF | BEV_EVENT_ERROR | BEV_EVENT_TIMEOUT)) != 0)
+	handler_context_t* ctx = reinterpret_cast<handler_context_t*>( handlerdata);
+	if (ctx->obj)
 	{
-		handler_context* ctx = (handler_context*)ctx_;
-		if (events & BEV_EVENT_ERROR)
-		{
-			::perror( "got error event");
-		}
-		else if (events & BEV_EVENT_TIMEOUT)
-		{
-			::perror( "got timeout event");
-		}
-#ifdef STRUS_LOWLEVEL_DEBUG
-		else if (events & BEV_EVENT_EOF)
-		{
-			pid_t tid = (pid_t) ::syscall( SYS_gettid);
-			std::cerr << "[" << (int)tid << "] got eof" << std::endl;
-		}
-#endif
-		bufferevent_free( bev);
-		destroy_handler_context( ctx);
+		delete ctx->obj;
+		ctx->obj = 0;
 	}
+	typedef std::string string;
+	ctx->resultbuf.~string();
 }
 
-static void signal_cb( evutil_socket_t sig, short events, void *user_data)
+static void init_global_context()
 {
-	struct event_base* base = (struct event_base*)user_data;
-	std::cerr << "got an interrupt signal, exiting now" << std::endl;
-
-	event_base_loopexit( base, NULL);
-}
-
-static void accept_conn_cb(
-	struct evconnlistener *listener,
-	evutil_socket_t fd, struct sockaddr *address, int socklen,
-	void* /*context for acceptor*/)
-{
-	evutil_make_socket_nonblocking( fd);
-
-	/* We got a new connection! Set up a bufferevent for it. */
-	struct event_base *base = evconnlistener_get_base( listener);
-	struct bufferevent *bev = bufferevent_socket_new( base, fd, BEV_OPT_CLOSE_ON_FREE);
-
-	handler_context* ctx = (handler_context*)std::calloc( 1, sizeof( handler_context));
-	if (!ctx)
-	{
-		std::cerr << "out of memory on connection accept, refusing connection." << std::endl;
-		event_base_loopexit( base, NULL);
-	}
-	else
-	{
-#ifdef STRUS_LOWLEVEL_DEBUG
-		std::cerr << "accepted connection" << std::endl;
-#endif
-		bufferevent_setcb( bev, handler_read_cb, NULL, handler_event_cb, ctx);
-		bufferevent_enable( bev, EV_READ|EV_WRITE);
-	}
-}
-
-static void accept_error_cb( struct evconnlistener *listener, void *ctx)
-{
-	struct event_base *base = evconnlistener_get_base( listener);
-	int err = EVUTIL_SOCKET_ERROR();
-	if (err == 24 /*EMFILE: too many open files = too many open connections*/)
-	{
-#ifdef STRUS_LOWLEVEL_DEBUG
-		std::cerr << "refusing accept connection" << std::endl;
-#endif
-		return;
-	}
-	std::cerr << "got an error " << err << " (" << evutil_socket_error_to_string(err) << ") on the listener, shutting down." << std::endl;
-	event_base_loopexit( base, NULL);
+	g_glbctx.init_handlerdata = &init_handlerdata;
+	g_glbctx.done_handlerdata = &done_handlerdata;
+	g_glbctx.request_handler = &request_handler;
+	g_glbctx.logf = stderr;
 }
 
 enum
@@ -427,50 +228,13 @@ enum
 	STRUS_ERR_LISTEN=2,
 	STRUS_ERR_SIGNALEV=3
 };
-// Run the server (the code that served as 'inspiration' for the strus rpc server can be found
-// at http://www.wangafu.net/~nickm/libevent-book/Ref8_listener.html
-static int runServer( int port)
+
+static int runServer( int port, unsigned int nofThreads)
 {
-#ifdef WIN32
-	evthread_use_windows_threads();
-#else
-	evthread_use_pthreads();
-#endif
-	struct event_base *base = event_base_new();
-	if (!base)
-	{
-		::perror( "couldn't create event base");
-		return STRUS_ERR_EVBASE;
-	}
-
-	struct sockaddr_in sin;
-	memset(&sin, 0, sizeof(sin));
-	/* This is an INET address */
-	sin.sin_family = AF_INET;
-	/* Listen on 0.0.0.0 */
-	sin.sin_addr.s_addr = 0;
-	/* Listen on the given port. */
-	sin.sin_port = htons(port);
-
-	struct evconnlistener *listener = evconnlistener_new_bind( base, accept_conn_cb, NULL,
-		LEV_OPT_DEFERRED_ACCEPT|LEV_OPT_CLOSE_ON_FREE|LEV_OPT_REUSEABLE, -1,
-		(struct sockaddr*)&sin, sizeof(sin));
-	if (!listener)
-	{
-		perror( "couldn't create listener");
-		return STRUS_ERR_LISTEN;
-	}
-	evconnlistener_set_error_cb( listener, accept_error_cb);
-
-	struct event *signal_event = evsignal_new( base, SIGINT, signal_cb, (void *)base);
-	if (!signal_event || event_add( signal_event, NULL)<0)
-	{
-		perror( "could not create signal event");
-		return STRUS_ERR_SIGNALEV;
-	}
 	std::cerr << "strus RPC server listening on port " << port << std::endl;
-	event_base_dispatch( base);
-	return 0;
+	init_global_context();
+	int rt = strus_run_server( (unsigned short)(unsigned int)port, nofThreads, &g_glbctx);
+	return rt;
 }
 
 static void createStorageIfNotExist( const std::string& cfg)
@@ -515,7 +279,8 @@ int main( int argc, const char* argv[])
 	std::vector<std::string> globalstatfiles;
 	std::string storageconfig;
 	bool doCreateIfNotExist = false;
-	int port = 7181; //... default port
+	unsigned int nofThreads = 0;
+	unsigned int port = 7181; //... default port
 	try
 	{
 		// Parsing arguments:
@@ -553,10 +318,17 @@ int main( int argc, const char* argv[])
 			{
 				++argi;
 				if (argi == argc) throw std::runtime_error("option --port expects argument");
-				port = atoi( argv[argi]);
-				if (port <= 0 || port > 65535)
+				try
 				{
-					throw std::runtime_error( "invalid port");
+					port = strus::utils::touint( argv[argi]);
+					if (port == 0 || port > 65535)
+					{
+						throw std::runtime_error( "value out of range");
+					}
+				}
+				catch (const std::runtime_error& err)
+				{
+					throw std::runtime_error( std::string("illegal argument for option --port: ") + err.what());
 				}
 			}
 			else if (0==std::strcmp( argv[argi], "-s") || 0==std::strcmp( argv[argi], "--storage"))
@@ -576,6 +348,19 @@ int main( int argc, const char* argv[])
 				++argi;
 				if (argi == argc) throw std::runtime_error("option --storage expects argument (storage configuration string)");
 				globalstatfiles.push_back( argv[argi]);
+			}
+			else if (0==std::strcmp( argv[argi], "-t") || 0==std::strcmp( argv[argi], "--threads"))
+			{
+				++argi;
+				if (argi == argc) throw std::runtime_error("option --threads expects number as argument");
+				try
+				{
+					nofThreads = strus::utils::touint( argv[argi]);
+				}
+				catch (const std::runtime_error& err)
+				{
+					throw std::runtime_error( std::string("illegal argument for option --threads: ") + err.what());
+				}
 			}
 			else if (argv[argi][0] == '-')
 			{
@@ -658,9 +443,9 @@ int main( int argc, const char* argv[])
 
 		// Start server:
 		std::cerr << "strus RPC server is starting ..." << std::endl;
-		if (!!runServer( port))
+		if (!!runServer( port, nofThreads))
 		{
-			throw std::runtime_error( "failed to start server");
+			throw std::runtime_error( "server terminated with error (see logs)");
 		}
 		std::cerr << "strus RPC server terminated" << std::endl;
 		return 0;

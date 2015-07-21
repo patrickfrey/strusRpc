@@ -26,40 +26,12 @@
 
 --------------------------------------------------------------------
 */
-#include "private/utils.hpp"
-#include <boost/lexical_cast.hpp>
+#ifndef _STRUS_RPC_SERVER_HEXDUMP_HPP_INCLUDED
+#define _STRUS_RPC_SERVER_HEXDUMP_HPP_INCLUDED
+#include <stddef.h>
+#include <stdio.h>
 
-using namespace strus;
-using namespace strus::utils;
+void strus_hexdump( FILE* output, const char* title, const unsigned char* data, size_t datasize);
 
-uint32_t Crc32::calc( const char* blk, std::size_t blksize)
-{
-	boost::crc_32_type result;
-	result.process_bytes( blk, blksize);
-	return result.checksum();
-}
-
-std::string utils::tostring( int val)
-{
-	try
-	{
-		return boost::lexical_cast<std::string>( val);
-	}
-	catch (...)
-	{
-		throw std::runtime_error( "failed to convert number to string");
-	}
-}
-
-unsigned int utils::touint( const std::string& val)
-{
-	try
-	{
-		return boost::lexical_cast<unsigned int>( val);
-	}
-	catch (...)
-	{
-		throw std::runtime_error( "failed to convert string to number");
-	}
-}
+#endif
 

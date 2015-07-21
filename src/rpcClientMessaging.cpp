@@ -197,6 +197,9 @@ std::string RpcClientMessaging::recv_rep()
 	uint32_t msgsizebuf;
 	unsigned int msgsizebufpos = 0;
 
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "start reading reply from server" << std::endl;
+#endif
 	if (0>m_sock)
 	{
 		throw std::runtime_error( "rpc client messaging error receiving (socket invalid)");
@@ -218,7 +221,7 @@ std::string RpcClientMessaging::recv_rep()
 	while (rt.size() < msgsize)
 	{
 #ifdef STRUS_LOWLEVEL_DEBUG
-		std::cerr << "read reply of server" << std::endl;
+		std::cerr << "read reply from server" << std::endl;
 #endif
 		int nn = ::read( m_sock, buf, bufsize);
 		if (nn <= 0)

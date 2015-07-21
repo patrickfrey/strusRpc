@@ -50,7 +50,7 @@ public:
 };
 
 std::string tostring( int val);
-
+unsigned int touint( const std::string& val);
 
 template <class X>
 class SharedPtr

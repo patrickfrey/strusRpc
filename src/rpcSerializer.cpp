@@ -433,7 +433,7 @@ void RpcSerializer::packCrc32()
 {
 	uint32_t crc = utils::Crc32::calc( m_content.c_str(), m_content.size());
 #ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "packCrc32(" << crc << ")" << std::endl;
+	std::cerr << "packCrc32(" << crc << ") size=" << m_content.size() << std::endl;
 #endif
 	packScalar( m_content, crc);
 }
@@ -626,10 +626,11 @@ DocumentClass RpcDeserializer::unpackDocumentClass()
 
 bool RpcDeserializer::unpackCrc32()
 {
-	uint32_t crc = utils::Crc32::calc( m_start, (m_end - m_start) - 4);
+	uint32_t size = (m_end - m_start) - 4;
+	uint32_t crc = utils::Crc32::calc( m_start, size);
 	char const* ee = m_end-4;
 #ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "unpackCrc32(" << crc << ")" << std::endl;
+	std::cerr << "unpackCrc32(" << crc << ") size=" << size << std::endl;
 #endif
 	return crc == unpackScalar<uint32_t>( ee, m_end);
 }

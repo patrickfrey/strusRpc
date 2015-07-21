@@ -28,25 +28,28 @@
 */
 #ifndef _STRUS_RPC_SERVERC_HPP_INCLUDED
 #define _STRUS_RPC_SERVERC_HPP_INCLUDED
-#include <uv.h>
 #include <stddef.h>
+#include <stdio.h>
 
 struct strus_handlerdata_t;
 struct strus_globalctx_t;
 
+/* Request handler function */
 typedef int (*request_handler_f)(
-		struct strus_handlerdata_t* handlerdata,
-		unsigned char* readbuf,
-		size_t readbufsize,
-		unsigned char** output,
-		size_t* outputsize);
+		struct strus_handlerdata_t* handlerdata,	/* data of the request handler (this) */
+		const unsigned char* readbuf,			/* pointer to request input */
+		size_t readbufsize,				/* sizeof of readbuf in bytes */
+		size_t outputhdrsize,				/* number of bytes to reserve in the header of the output to be patched by the caller (server) */
+		const unsigned char** output,			/* returned pointer to output of the request handler */
+		size_t* outputsize);				/* returned size of the request answer in bytes */
 
+/* Create handler data */
 typedef int (*init_handlerdata_f)(
-		struct strus_handlerdata_t* handler,
-		struct strus_globalctx_t* glbctx);
+		struct strus_handlerdata_t* handler);		/* data of the request handler (this) to initialize */
 
+/* Dispose handler data */
 typedef void (*done_handlerdata_f)(
-		struct strus_handlerdata_t* handler);
+		struct strus_handlerdata_t* handler);		/* data of the request handler (this) to deinitialize */
 
 
 typedef struct strus_handlerdata_t
@@ -56,11 +59,10 @@ typedef struct strus_handlerdata_t
 
 typedef struct strus_globalctx_t
 {
-	void* data;
-	init_handlerdata_f init_handlerdata;
-	done_handlerdata_f done_handlerdata;
-	request_handler_f request_handler;
-	FILE* logf;
+	init_handlerdata_f init_handlerdata;			/* request handler constructor */
+	done_handlerdata_f done_handlerdata;			/* request handler destructor */
+	request_handler_f request_handler;			/* request handler function */
+	FILE* logf;						/* file to log to */
 } strus_globalctx_t;
 
 int strus_run_server( unsigned short port, unsigned int nofThreads, strus_globalctx_t* glbctx);
