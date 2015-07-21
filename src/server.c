@@ -5,7 +5,9 @@
 #include <stdint.h>
 #include <string.h>
 #include <uv.h>
+#include <uv-version.h>
 
+#define UV_VERSION_NUM (UV_VERSION_MAJOR*100 + UV_VERSION_MINOR)
 #undef STRUS_LOWLEVEL_DEBUG
 
 /* Shared global data */
@@ -102,8 +104,13 @@ static void log_message_conn( strus_connection_t* ctx, const char* msg)
 
 
 /* Forward declaration of callback functions: */
+#if (UV_VERSION_NUM>10)
 static void on_alloc( uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf);
 static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf);
+#else
+static uv_buf_t on_alloc( uv_handle_t* handle, size_t suggested_size);
+static void on_read( uv_stream_t* handle, ssize_t nread, uv_buf_t buf);
+#endif
 static void on_write( uv_write_t* req, int status);
 static void on_shutdown( uv_shutdown_t* handle, int status);
 static void on_close( uv_handle_t* handle);
@@ -116,6 +123,7 @@ static void on_complete_work( uv_work_t *req, int status);
 static void push_work_queue( strus_connection_t* conn);
 
 
+#if (UV_VERSION_NUM>10)
 static void on_alloc( uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf)
 {
 	strus_connection_t* conn = (strus_connection_t*)( handle->data);
@@ -130,6 +138,24 @@ static void on_alloc( uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf)
 	}
 	/* ... safe because our on_read() allocations never overlap */
 }
+#else
+static uv_buf_t on_alloc( uv_handle_t* handle, size_t suggested_size)
+{
+	uv_buf_t rt;
+	strus_connection_t* conn = (strus_connection_t*)( handle->data);
+	rt.base = conn->buf;
+	if (suggested_size < CONNECTION_BUFSIZE)
+	{
+		rt.len = suggested_size;
+	}
+	else
+	{
+		rt.len = CONNECTION_BUFSIZE;
+	}
+	/* ... safe because our on_read() allocations never overlap */
+	return rt;
+}
+#endif
 
 static void on_close( uv_handle_t* handle)
 {
@@ -162,8 +188,14 @@ static void on_write( uv_write_t* req, int status)
 	uv_read_start( (uv_stream_t*)&conn->tcp, on_alloc, on_read);
 }
 
+#if (UV_VERSION_NUM>10)
 static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 {
+#else
+static void on_read( uv_stream_t* handle, ssize_t nread, uv_buf_t bufstruct)
+{
+	const uv_buf_t* buf = &bufstruct;
+#endif
 	strus_connection_t* conn = (strus_connection_t*)( handle->data);
 	unsigned char* dp;
 	unsigned int nn;
@@ -422,8 +454,13 @@ int strus_run_server( unsigned short port, unsigned int nofThreads, strus_global
 		uv_signal_init( g_server.loop, &signal[ ii]);
 		uv_signal_start( &signal[ ii], on_signal, signalar[ ii]);
 	}
-	uv_ip4_addr("0.0.0.0", port, &addr);
+#if (UV_VERSION_NUM>10)
+	uv_ip4_addr( "0.0.0.0", port, &addr);
 	res = uv_tcp_bind( &g_server, (const struct sockaddr*) &addr, 0);
+#else
+	addr = uv_ip4_addr( "0.0.0.0", port);
+	res = uv_tcp_bind( &g_server, addr);
+#endif
 	if (res < 0)
 	{
 		log_error_sys( "error in bind", res);
@@ -440,7 +477,9 @@ int strus_run_server( unsigned short port, unsigned int nofThreads, strus_global
 	{
 		log_error( "server event loop was aborted");
 	}
+#if (UV_VERSION_NUM>10)
 	uv_loop_close( g_server.loop);
+#endif
 	g_glbctx = 0;
 	return res;
 }
