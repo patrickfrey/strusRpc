@@ -1,3 +1,0 @@
-[submodule "libuv-cmake"]
-	path = libuv-cmake
-	url = https://github.com/aseprite/libuv-cmake
