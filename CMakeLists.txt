@@ -94,7 +94,6 @@ configure_file( "${PROJECT_SOURCE_DIR}/include/strus/versionRpc.hpp.in"  "${PROJ
 enable_testing()
 
 # Subdirectories:
-add_subdirectory( libuv-cmake )
 add_subdirectory( 3rdParty )
 add_subdirectory( src )
   

@@ -5,24 +5,20 @@ Table of Contents
 -----------------
 
   boost
-  libevent
+  libuv
 
 boost
 -----
   http://www.boost.org/LICENSE_1_0.txt
-
-libevent
---------
-   3-clause BSD license (see http://libevent.org/LICENSE.txt)
 
 libuv
 -----
    MIT License (https://github.com/libuv/libuv/blob/v1.x/LICENSE)
 
 libuv-cmake
------------
+------------
+   The CMakeLists.txt of libuv for this project is a patched copy from the aseprite/libuv-cmake project.
    MIT License (https://github.com/aseprite/libuv-cmake/blob/master/LICENSE.txt)
-
 
 
 

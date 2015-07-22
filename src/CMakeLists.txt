@@ -26,7 +26,7 @@ include_directories(
 	"${libevent_INCLUDE_DIRS}"
         "${Boost_INCLUDE_DIRS}"
 	"${PROJECT_SOURCE_DIR}/include"
-	"${PROJECT_SOURCE_DIR}/libuv-cmake/libuv/include"
+	"${PROJECT_SOURCE_DIR}/libuv/include"
 	"${strusmodule_INCLUDE_DIRS}"
 	"${strus_INCLUDE_DIRS}"
 	"${strusanalyzer_INCLUDE_DIRS}" )
@@ -34,7 +34,7 @@ include_directories(
 link_directories(
 	"${libevent_LIBRARY_DIRS}"
 	"${PROJECT_SOURCE_DIR}/src"
-	"${PROJECT_SOURCE_DIR}/libuv-cmake"
+	"${PROJECT_SOURCE_DIR}/3rdParty/libuv"
 	"${strusmodule_LIBRARY_DIRS}"
 )
 
