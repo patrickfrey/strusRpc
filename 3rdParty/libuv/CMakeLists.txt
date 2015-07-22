@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
+set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-strict-aliasing" )
+
 #
 # This CMakeLists.txt file is a patched clone from the project https://github.com/aseprite/libuv-cmake
 # 
