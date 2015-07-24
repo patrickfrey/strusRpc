@@ -34,6 +34,7 @@
 #include "strus/moduleLoaderInterface.hpp"
 #include "strus/versionRpc.hpp"
 #include "strus/private/configParser.hpp"
+#include "strus/private/fileio.hpp"
 #include "private/utils.hpp"
 #include "loadGlobalStatistics.hpp"
 #include "rpcSerializer.hpp"
@@ -60,7 +61,7 @@ static void printUsage()
 	std::cout << "strusRpcServer [options]" << std::endl;
 	std::cout << "options:" << std::endl;
 	std::cout << "-h|--help" << std::endl;
-	std::cout << "   Print this usage and do nothing else" << std::endl;
+	std::cout << "    Print this usage and do nothing else" << std::endl;
 	std::cout << "-v|--version" << std::endl;
 	std::cout << "    Print the program version and do nothing else" << std::endl;
 	std::cout << "-m|--module <MOD>" << std::endl;
@@ -73,6 +74,8 @@ static void printUsage()
 	std::cout << "    Define the port to listen for requests as <PORT> (default 7181)" << std::endl;
 	std::cout << "-s|--storage <CONFIG>" << std::endl;
 	std::cout << "    Define configuration <CONFIG> of storage hosted by this server" << std::endl;
+	std::cout << "-S|--configfile <CFGFILE>" << std::endl;
+	std::cout << "    Define storage configuration as content of file <CFGFILE>" << std::endl;
 	std::cout << "-c|--create <CONFIG>" << std::endl;
 	std::cout << "    Implicitely create storage with <CONFIG> if it does not exist yet" << std::endl;
 	std::cout << "-g|--globalstats <FILE>" << std::endl;
@@ -333,11 +336,30 @@ int main( int argc, const char* argv[])
 			}
 			else if (0==std::strcmp( argv[argi], "-s") || 0==std::strcmp( argv[argi], "--storage"))
 			{
-				if (!storageconfig.empty()) throw std::runtime_error("option --storage specified twice");
+				if (!storageconfig.empty()) throw std::runtime_error("option --storage or --configfile specified twice");
 				++argi;
 				if (argi == argc) throw std::runtime_error("option --storage expects argument (storage configuration string)");
 				storageconfig.append( argv[argi]);
 				if (storageconfig.empty()) throw std::runtime_error("option --storage with empty argument");
+			}
+			else if (0==std::strcmp( argv[argi], "-S") || 0==std::strcmp( argv[argi], "--configfile"))
+			{
+				if (!storageconfig.empty()) throw std::runtime_error("option --storage or --configfile specified twice");
+				++argi;
+				if (argi == argc) throw std::runtime_error("option --configfile expects argument (storage configuration file)");
+				int ec = strus::readFile( argv[argi], storageconfig);
+				if (ec)
+				{
+					std::ostringstream msg;
+					msg << ec;
+					throw std::runtime_error( std::string("failed to read configuration file ") + argv[argi] + " (file system error " + msg.str() + ")");
+				}
+				std::string::iterator di = storageconfig.begin(), de = storageconfig.end();
+				for (; di != de; ++di)
+				{
+					if ((unsigned char)*di < 32) *di = ' ';
+				}
+				if (storageconfig.empty()) throw std::runtime_error( "option --configfile with empty file");
 			}
 			else if (0==std::strcmp( argv[argi], "-c") || 0==std::strcmp( argv[argi], "--create"))
 			{
