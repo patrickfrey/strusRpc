@@ -1122,8 +1122,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			msg.packCrc32();
-			return msg.content();
+			return std::string();
 		}
 		case DatabaseTransactionConst::Method_rollback:
 		{
@@ -2176,8 +2175,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			msg.packCrc32();
-			return msg.content();
+			return std::string();
 		}
 		case PeerStorageTransactionConst::Method_rollback:
 		{
@@ -3525,8 +3523,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			msg.packCrc32();
-			return msg.content();
+			return std::string();
 		}
 		case StorageAlterMetaDataTableConst::Method_rollback:
 		{
@@ -4234,8 +4231,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			msg.packCrc32();
-			return msg.content();
+			return std::string();
 		}
 	}
 	break;
@@ -4409,8 +4405,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			msg.packCrc32();
-			return msg.content();
+			return std::string();
 		}
 	}
 	break;
@@ -5128,8 +5123,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			msg.packCrc32();
-			return msg.content();
+			return std::string();
 		}
 		case StorageTransactionConst::Method_rollback:
 		{

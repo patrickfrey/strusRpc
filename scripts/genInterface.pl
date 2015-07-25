@@ -1373,8 +1373,7 @@ sub getMethodDeclarationSource
 			$sender_code .= "\tctx()->rpc_synchronize();\n";
 			$sender_code .= $sender_output;
 			$receiver_code .= $receiver_output;
-			$receiver_code .= "\tmsg.packCrc32();\n";
-			$receiver_code .= "\treturn msg.content();\n";
+			$receiver_code .= "\treturn std::string();\n";
 		}
 		else
 		{
