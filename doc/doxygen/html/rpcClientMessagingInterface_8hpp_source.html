@@ -105,13 +105,16 @@
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classstrus_1_1RpcClientMessagingInterface.html#a9835a577160450af6140a3a6210dfe5e">sendMessage</a>( <span class="keyword">const</span> std::string&amp; content)=0;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keyword">virtual</span> std::string <a class="code" href="classstrus_1_1RpcClientMessagingInterface.html#a8ccf9bd5574d33584ea8687098d69149">synchronize</a>()=0;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;};</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}<span class="comment">//namespace</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classstrus_1_1RpcClientMessagingInterface.html#a9c55e21d1ad885a572429399619694ac">close</a>()=0;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;};</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}<span class="comment">//namespace</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor"></span></div>
 <div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html_a9835a577160450af6140a3a6210dfe5e"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html#a9835a577160450af6140a3a6210dfe5e">strus::RpcClientMessagingInterface::sendMessage</a></div><div class="ttdeci">virtual void sendMessage(const std::string &amp;content)=0</div><div class="ttdoc">Send a message and do not wait for reply. </div></div>
 <div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html">strus::RpcClientMessagingInterface</a></div><div class="ttdoc">Interface providing a mechanism for the client to send and receive messages. </div><div class="ttdef"><b>Definition:</b> rpcClientMessagingInterface.hpp:40</div></div>
+<div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html_a9c55e21d1ad885a572429399619694ac"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html#a9c55e21d1ad885a572429399619694ac">strus::RpcClientMessagingInterface::close</a></div><div class="ttdeci">virtual void close()=0</div><div class="ttdoc">Explicit close of the connection. </div></div>
 <div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html_a46a656d724221babafd7784ccbd17890"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html#a46a656d724221babafd7784ccbd17890">strus::RpcClientMessagingInterface::~RpcClientMessagingInterface</a></div><div class="ttdeci">virtual ~RpcClientMessagingInterface()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> rpcClientMessagingInterface.hpp:44</div></div>
 <div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html_a8ccf9bd5574d33584ea8687098d69149"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html#a8ccf9bd5574d33584ea8687098d69149">strus::RpcClientMessagingInterface::synchronize</a></div><div class="ttdeci">virtual std::string synchronize()=0</div><div class="ttdoc">Get result of previous sendMessage(const std::string&amp;) calls. </div></div>
 <div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html_a88fc838bd8e95d131a687f2b1c262aaa"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html#a88fc838bd8e95d131a687f2b1c262aaa">strus::RpcClientMessagingInterface::sendRequest</a></div><div class="ttdeci">virtual std::string sendRequest(const std::string &amp;content)=0</div><div class="ttdoc">Send a message (request) and wait for reply. </div></div>
@@ -119,7 +122,7 @@
 <!-- HTML footer for doxygen 1.8.6-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 16 2015 13:56:02 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jul 25 2015 12:24:27 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -84,6 +84,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8ccf9bd5574d33584ea8687098d69149"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstrus_1_1RpcClientMessagingInterface.html#a8ccf9bd5574d33584ea8687098d69149">synchronize</a> ()=0</td></tr>
 <tr class="memdesc:a8ccf9bd5574d33584ea8687098d69149"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get result of previous <a class="el" href="classstrus_1_1RpcClientMessagingInterface.html#a9835a577160450af6140a3a6210dfe5e" title="Send a message and do not wait for reply. ">sendMessage(const std::string&amp;)</a> calls.  <a href="#a8ccf9bd5574d33584ea8687098d69149">More...</a><br/></td></tr>
 <tr class="separator:a8ccf9bd5574d33584ea8687098d69149"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c55e21d1ad885a572429399619694ac"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstrus_1_1RpcClientMessagingInterface.html#a9c55e21d1ad885a572429399619694ac">close</a> ()=0</td></tr>
+<tr class="memdesc:a9c55e21d1ad885a572429399619694ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Explicit close of the connection.  <a href="#a9c55e21d1ad885a572429399619694ac">More...</a><br/></td></tr>
+<tr class="separator:a9c55e21d1ad885a572429399619694ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface providing a mechanism for the client to send and receive messages. </p>
@@ -114,6 +117,31 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a9c55e21d1ad885a572429399619694ac"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void strus::RpcClientMessagingInterface::close </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Explicit close of the connection. </p>
+
+</div>
+</div>
 <a class="anchor" id="a9835a577160450af6140a3a6210dfe5e"></a>
 <div class="memitem">
 <div class="memproto">
@@ -211,7 +239,7 @@ Public Member Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.6-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 16 2015 13:56:02 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jul 25 2015 12:24:27 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -4,6 +4,11 @@
 <param name="FrameName" value="right">
 </OBJECT>
 <UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientInterface.html#a60ad30f4cbc39876b928fd07c8a22552"><param name="Name" value="close"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientInterface.html#a60ad30f4cbc39876b928fd07c8a22552"><param name="Name" value="strus::RpcClientInterface"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html#a9c55e21d1ad885a572429399619694ac"><param name="Name" value="strus::RpcClientMessagingInterface"></OBJECT>
+  </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientInterface.html#a841e19e2aa424df8e8bc3b7087c999c8"><param name="Name" value="createAnalyzerObjectBuilder"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="namespacestrus.html#afc0d24db5e4934276e762f6ac3a34787"><param name="Name" value="createRpcClient"></OBJECT>
   <UL>
@@ -30,12 +35,14 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="namespacestrus.html"><param name="Name" value="strus"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientInterface.html"><param name="Name" value="strus::RpcClientInterface"></OBJECT>
   <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientInterface.html#a60ad30f4cbc39876b928fd07c8a22552"><param name="Name" value="close"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientInterface.html#a841e19e2aa424df8e8bc3b7087c999c8"><param name="Name" value="createAnalyzerObjectBuilder"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientInterface.html#af512b463e2510d6abf3f946ffc2a499c"><param name="Name" value="createStorageObjectBuilder"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientInterface.html#ad00c39ec9e19bd3c25abf5b47f655899"><param name="Name" value="~RpcClientInterface"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html"><param name="Name" value="strus::RpcClientMessagingInterface"></OBJECT>
   <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html#a9c55e21d1ad885a572429399619694ac"><param name="Name" value="close"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html#a9835a577160450af6140a3a6210dfe5e"><param name="Name" value="sendMessage"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html#a88fc838bd8e95d131a687f2b1c262aaa"><param name="Name" value="sendRequest"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html#a8ccf9bd5574d33584ea8687098d69149"><param name="Name" value="synchronize"></OBJECT>
