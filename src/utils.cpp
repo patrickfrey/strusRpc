@@ -51,3 +51,15 @@ std::string utils::tostring( int val)
 	}
 }
 
+unsigned int utils::touint( const std::string& val)
+{
+	try
+	{
+		return boost::lexical_cast<unsigned int>( val);
+	}
+	catch (...)
+	{
+		throw std::runtime_error( "failed to convert string to number");
+	}
+}
+

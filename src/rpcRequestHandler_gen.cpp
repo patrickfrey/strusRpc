@@ -42,6 +42,90 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	methodId = serializedMsg.unpackByte();
 	switch( (ClassId)classId)
 	{
+	case ClassId_AggregatorFunctionInstance:
+	{
+	AggregatorFunctionInstanceInterface* obj = getObject<AggregatorFunctionInstanceInterface>( classId, objId);
+	switch( (AggregatorFunctionInstanceConst::MethodId)methodId)
+	{
+		case AggregatorFunctionInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case AggregatorFunctionInstanceConst::Method_evaluate:
+		{
+			RpcSerializer msg;
+			double p0;
+			analyzer::Document p1;
+			p1 = serializedMsg.unpackAnalyzerDocument();
+			try {
+				p0 = obj->evaluate(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packDouble( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_AggregatorFunction:
+	{
+	AggregatorFunctionInterface* obj = getObject<AggregatorFunctionInterface>( classId, objId);
+	switch( (AggregatorFunctionConst::MethodId)methodId)
+	{
+		case AggregatorFunctionConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case AggregatorFunctionConst::Method_createInstance:
+		{
+			RpcSerializer msg;
+			AggregatorFunctionInstanceInterface* p0;
+			std::vector<std::string> p1;
+			std::size_t n1 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n1; ++ii) {
+				std::string ee = serializedMsg.unpackString();
+				p1.push_back( ee);
+			}
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			try {
+				p0 = obj->createInstance(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+	}
+	break;
+	}
 	case ClassId_AnalyzerObjectBuilder:
 	{
 	AnalyzerObjectBuilderInterface* obj = getObject<AnalyzerObjectBuilderInterface>( classId, objId);
@@ -719,6 +803,32 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case DatabaseConst::Method_exists:
+		{
+			RpcSerializer msg;
+			bool p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			try {
+				p0 = obj->exists(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case DatabaseConst::Method_createClient:
 		{
 			RpcSerializer msg;
@@ -1320,18 +1430,18 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineStatisticsMetaData:
+		case DocumentAnalyzerConst::Method_defineAggregatedMetaData:
 		{
 			RpcSerializer msg;
 			std::string p1;
-			StatisticsFunctionInstanceInterface* p2;
+			AggregatorFunctionInstanceInterface* p2;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_StatisticsFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-			p2 = getObject<StatisticsFunctionInstanceInterface>( classId_2, objId_2);
+			if (classId_2 != ClassId_AggregatorFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			p2 = getObject<AggregatorFunctionInstanceInterface>( classId_2, objId_2);
 			try {
-				obj->defineStatisticsMetaData(p1,p2);
+				obj->defineAggregatedMetaData(p1,p2);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -1423,9 +1533,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			analyzer::Document p0;
 			std::string p1;
+			DocumentClass p2;
 			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDocumentClass();
 			try {
-				p0 = obj->analyze(p1);
+				p0 = obj->analyze(p1,p2);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -1444,14 +1556,40 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case DocumentAnalyzerConst::Method_mimeType:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			try {
+				p0 = obj->mimeType();
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case DocumentAnalyzerConst::Method_createContext:
 		{
 			RpcSerializer msg;
 			DocumentAnalyzerContextInterface* p0;
+			DocumentClass p1;
+			p1 = serializedMsg.unpackDocumentClass();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createContext();
+				p0 = obj->createContext(p1);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -1469,6 +1607,48 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_DocumentClassDetector:
+	{
+	DocumentClassDetectorInterface* obj = getObject<DocumentClassDetectorInterface>( classId, objId);
+	switch( (DocumentClassDetectorConst::MethodId)methodId)
+	{
+		case DocumentClassDetectorConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case DocumentClassDetectorConst::Method_detect:
+		{
+			RpcSerializer msg;
+			bool p0;
+			DocumentClass p1;
+			const char* p2;
+			std::size_t p3;
+			serializedMsg.unpackBuffer( p2, p3);
+			try {
+				p0 = obj->detect(p1,p2,p3);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packBool( p0);
+			msg.packDocumentClass( p1);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -3086,6 +3266,30 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case SegmenterConst::Method_mimeType:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			try {
+				p0 = obj->mimeType();
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case SegmenterConst::Method_defineSelectorExpression:
 		{
 			RpcSerializer msg;
@@ -3142,10 +3346,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			SegmenterContextInterface* p0;
+			DocumentClass p1;
+			p1 = serializedMsg.unpackDocumentClass();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			try {
-				p0 = obj->createContext();
+				p0 = obj->createContext(p1);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -3161,90 +3367,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-	}
-	break;
-	}
-	case ClassId_StatisticsFunctionInstance:
-	{
-	StatisticsFunctionInstanceInterface* obj = getObject<StatisticsFunctionInstanceInterface>( classId, objId);
-	switch( (StatisticsFunctionInstanceConst::MethodId)methodId)
-	{
-		case StatisticsFunctionInstanceConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case StatisticsFunctionInstanceConst::Method_evaluate:
-		{
-			RpcSerializer msg;
-			double p0;
-			analyzer::Document p1;
-			p1 = serializedMsg.unpackAnalyzerDocument();
-			try {
-				p0 = obj->evaluate(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			msg.packDouble( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-	}
-	break;
-	}
-	case ClassId_StatisticsFunction:
-	{
-	StatisticsFunctionInterface* obj = getObject<StatisticsFunctionInterface>( classId, objId);
-	switch( (StatisticsFunctionConst::MethodId)methodId)
-	{
-		case StatisticsFunctionConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case StatisticsFunctionConst::Method_createInstance:
-		{
-			RpcSerializer msg;
-			const StatisticsFunctionInstanceInterface* p0;
-			std::vector<std::string> p1;
-			std::size_t n1 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n1; ++ii) {
-				std::string ee = serializedMsg.unpackString();
-				p1.push_back( ee);
-			}
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createInstance(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
 		}
@@ -5396,6 +5518,89 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case TextProcessorConst::Method_getAggregator:
+		{
+			RpcSerializer msg;
+			const AggregatorFunctionInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			try {
+				p0 = obj->getAggregator(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case TextProcessorConst::Method_detectDocumentClass:
+		{
+			RpcSerializer msg;
+			bool p0;
+			DocumentClass p1;
+			const char* p2;
+			std::size_t p3;
+			serializedMsg.unpackBuffer( p2, p3);
+			try {
+				p0 = obj->detectDocumentClass(p1,p2,p3);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packBool( p0);
+			msg.packDocumentClass( p1);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case TextProcessorConst::Method_defineDocumentClassDetector:
+		{
+			RpcSerializer msg;
+			const DocumentClassDetectorInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_DocumentClassDetector) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			p1 = getConstObject<DocumentClassDetectorInterface>( classId_1, objId_1);
+			try {
+				obj->defineDocumentClassDetector(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			return std::string();
+		}
 		case TextProcessorConst::Method_defineTokenizer:
 		{
 			RpcSerializer msg;
@@ -5452,18 +5657,18 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			return std::string();
 		}
-		case TextProcessorConst::Method_defineStatistics:
+		case TextProcessorConst::Method_defineAggregator:
 		{
 			RpcSerializer msg;
 			std::string p1;
-			const StatisticsFunctionInterface* p2;
+			const AggregatorFunctionInterface* p2;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_StatisticsFunction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-			p2 = getConstObject<StatisticsFunctionInterface>( classId_2, objId_2);
+			if (classId_2 != ClassId_AggregatorFunction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			p2 = getConstObject<AggregatorFunctionInterface>( classId_2, objId_2);
 			try {
-				obj->defineStatistics(p1,p2);
+				obj->defineAggregator(p1,p2);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -5478,34 +5683,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			return std::string();
-		}
-		case TextProcessorConst::Method_getStatistics:
-		{
-			RpcSerializer msg;
-			const StatisticsFunctionInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->getStatistics(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			defineConstObject( classId_0, objId_0, p0);
-			
 			return std::string();
 		}
 	}

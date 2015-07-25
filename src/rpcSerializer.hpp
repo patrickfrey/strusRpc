@@ -31,6 +31,7 @@
 #include <string>
 #include "rpcInterfaceStub.hpp"
 #include "strus/index.hpp"
+#include "strus/documentClass.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/arithmeticVariant.hpp"
 #include "strus/postingIteratorInterface.hpp"
@@ -77,6 +78,7 @@ public:
 	void packDouble( double val);
 	void packSize( std::size_t size);
 	void packArithmeticVariant( const ArithmeticVariant& val);
+	void packDocumentClass( const DocumentClass& prop);
 
 	void packDatabaseOptions( const DatabaseOptions& val);
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
@@ -137,6 +139,7 @@ public:
 	double unpackDouble();
 	std::size_t unpackSize();
 	ArithmeticVariant unpackArithmeticVariant();
+	DocumentClass unpackDocumentClass();
 
 	DatabaseOptions unpackDatabaseOptions();
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();

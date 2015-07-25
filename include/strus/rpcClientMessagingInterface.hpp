@@ -54,6 +54,9 @@ public:
 
 	/// \brief Get result of previous sendMessage(const std::string&) calls
 	virtual std::string synchronize()=0;
+
+	/// \brief Explicit close of the connection
+	virtual void close()=0;
 };
 
 }//namespace

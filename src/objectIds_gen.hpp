@@ -33,6 +33,8 @@ namespace strus {
 
 enum ClassId
 {
+	ClassId_AggregatorFunctionInstance,
+	ClassId_AggregatorFunction,
 	ClassId_AnalyzerObjectBuilder,
 	ClassId_AttributeReader,
 	ClassId_DatabaseBackupCursor,
@@ -43,6 +45,7 @@ enum ClassId
 	ClassId_DocnoRangeAllocator,
 	ClassId_DocumentAnalyzerContext,
 	ClassId_DocumentAnalyzer,
+	ClassId_DocumentClassDetector,
 	ClassId_ForwardIterator,
 	ClassId_InvAclIterator,
 	ClassId_MetaDataReader,
@@ -58,8 +61,6 @@ enum ClassId
 	ClassId_QueryProcessor,
 	ClassId_SegmenterContext,
 	ClassId_Segmenter,
-	ClassId_StatisticsFunctionInstance,
-	ClassId_StatisticsFunction,
 	ClassId_StorageAlterMetaDataTable,
 	ClassId_StorageClient,
 	ClassId_StorageDocument,
@@ -80,6 +81,26 @@ enum ClassId
 	ClassId_WeightingFunctionContext,
 	ClassId_WeightingFunctionInstance,
 	ClassId_WeightingFunction
+};
+
+class AggregatorFunctionInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_evaluate
+	};
+};
+
+class AggregatorFunctionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createInstance
+	};
 };
 
 class AnalyzerObjectBuilderConst
@@ -156,6 +177,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_exists,
 		Method_createClient,
 		Method_createDatabase,
 		Method_restoreDatabase,
@@ -211,11 +233,22 @@ public:
 		Method_addSearchIndexFeature,
 		Method_addForwardIndexFeature,
 		Method_defineMetaData,
-		Method_defineStatisticsMetaData,
+		Method_defineAggregatedMetaData,
 		Method_defineAttribute,
 		Method_defineSubDocument,
 		Method_analyze,
+		Method_mimeType,
 		Method_createContext
+	};
+};
+
+class DocumentClassDetectorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_detect
 	};
 };
 
@@ -405,29 +438,10 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_mimeType,
 		Method_defineSelectorExpression,
 		Method_defineSubSection,
 		Method_createContext
-	};
-};
-
-class StatisticsFunctionInstanceConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_evaluate
-	};
-};
-
-class StatisticsFunctionConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_createInstance
 	};
 };
 
@@ -630,10 +644,12 @@ public:
 		Method_getResourcePath,
 		Method_getTokenizer,
 		Method_getNormalizer,
+		Method_getAggregator,
+		Method_detectDocumentClass,
+		Method_defineDocumentClassDetector,
 		Method_defineTokenizer,
 		Method_defineNormalizer,
-		Method_defineStatistics,
-		Method_getStatistics
+		Method_defineAggregator
 	};
 };
 

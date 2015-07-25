@@ -55,6 +55,9 @@ public:
 	/// \brief Creates an object builder for using the strus analyzer to be accessed via RPC calls
 	/// \return the analyzer object builder(with ownership returned)
 	virtual AnalyzerObjectBuilderInterface* createAnalyzerObjectBuilder() const=0;
+
+	/// \brief Explicit close of the connection
+	virtual void close()=0;
 };
 
 }//namespace

@@ -26,24 +26,12 @@
 
 --------------------------------------------------------------------
 */
-/// \brief Header with the version info of the strus rpc library
-/// \file versionRpc.hpp
-#ifndef _STRUS_RPC_VERSION_HPP_INCLUDED
-#define _STRUS_RPC_VERSION_HPP_INCLUDED
+#ifndef _STRUS_RPC_SERVER_HEXDUMP_HPP_INCLUDED
+#define _STRUS_RPC_SERVER_HEXDUMP_HPP_INCLUDED
+#include <stddef.h>
+#include <stdio.h>
 
-/// \brief Version number of the rpc library
-#define STRUS_RPC_VERSION (\
-	0 * 1000000\
-	+ 0 * 10000\
-	+ 1\
-)
-/// \brief Major version number of the rpc library
-#define STRUS_RPC_VERSION_MAJOR 0
-/// \brief Minor version number of the rpc library
-#define STRUS_RPC_VERSION_MINOR 1
-
-/// \brief The version of the rpc library as string
-#define STRUS_RPC_VERSION_STRING "0.1.6"
+void strus_hexdump( FILE* output, const char* title, const unsigned char* data, size_t datasize);
 
 #endif
 

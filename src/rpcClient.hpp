@@ -54,6 +54,8 @@ public:
 
 	virtual AnalyzerObjectBuilderInterface* createAnalyzerObjectBuilder() const;
 
+	virtual void close();
+
 private:
 	Reference<RpcClientContext> m_ctx;
 };

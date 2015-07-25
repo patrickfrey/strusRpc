@@ -177,6 +177,7 @@ $constResetMethodMap{"nextChunk"} = 1;
 my %alternativeClientImpl = ();
 $alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx());\n";
 
+# Set debug code generation ON/OFF:
 my $doGenerateDebugCode = 0;
 
 sub parseType
@@ -659,6 +660,10 @@ sub packParameter
 	{
 		$rt .= "msg.packArithmeticVariant( " . $id . ");";
 	}
+	elsif ($type eq "DocumentClass")
+	{
+		$rt .= "msg.packDocumentClass( " . $id . ");";
+	}
 	elsif ($type eq "Index")
 	{
 		$rt .= "msg.packIndex( " . $id . ");";
@@ -837,6 +842,10 @@ sub unpackParameter
 	elsif ($type eq "ArithmeticVariant")
 	{
 		$rt .= "$id = serializedMsg.unpackArithmeticVariant();";
+	}
+	elsif ($type eq "DocumentClass")
+	{
+		$rt .= "$id = serializedMsg.unpackDocumentClass();";
 	}
 	elsif ($type eq "Index")
 	{

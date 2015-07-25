@@ -31,6 +31,58 @@
 #include <iostream>
 using namespace strus;
 
+AggregatorFunctionInstanceImpl::~AggregatorFunctionInstanceImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+double AggregatorFunctionInstanceImpl::evaluate( const analyzer::Document& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_evaluate);
+	msg.packAnalyzerDocument( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	double p0 = serializedMsg.unpackDouble();;
+	return p0;
+}
+
+AggregatorFunctionImpl::~AggregatorFunctionImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+AggregatorFunctionInstanceInterface* AggregatorFunctionImpl::createInstance( const std::vector<std::string>& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createInstance);
+	msg.packSize( p1.size());
+	for (unsigned int ii=0; ii < p1.size(); ++ii) {
+		msg.packString( p1[ii]);
+	}
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_AggregatorFunctionInstance;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	AggregatorFunctionInstanceInterface* p0 = new AggregatorFunctionInstanceImpl( objId_0, ctx());
+	return p0;
+}
+
 AnalyzerObjectBuilderImpl::~AnalyzerObjectBuilderImpl()
 {
 	if (isConst()) return;
@@ -422,6 +474,20 @@ DatabaseImpl::~DatabaseImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+bool DatabaseImpl::exists( const std::string& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_exists);
+	msg.packString( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
+}
+
 DatabaseClientInterface* DatabaseImpl::createClient( const std::string& p1) const
 {
 	RpcSerializer msg;
@@ -743,14 +809,14 @@ void DocumentAnalyzerImpl::defineMetaData( const std::string& p1, const std::str
 	}
 }
 
-void DocumentAnalyzerImpl::defineStatisticsMetaData( const std::string& p1, StatisticsFunctionInstanceInterface* p2)
+void DocumentAnalyzerImpl::defineAggregatedMetaData( const std::string& p1, AggregatorFunctionInstanceInterface* p2)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineStatisticsMetaData);
+	msg.packByte( Method_defineAggregatedMetaData);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (StatisticsFunctionInstance)");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (AggregatorFunctionInstance)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -795,12 +861,13 @@ void DocumentAnalyzerImpl::defineSubDocument( const std::string& p1, const std::
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1) const
+analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1, const DocumentClass& p2) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_analyze);
 	msg.packString( p1);
+	msg.packDocumentClass( p2);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -809,17 +876,56 @@ analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1) const
 	return p0;
 }
 
-DocumentAnalyzerContextInterface* DocumentAnalyzerImpl::createContext( ) const
+std::string DocumentAnalyzerImpl::mimeType( ) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_mimeType);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+}
+
+DocumentAnalyzerContextInterface* DocumentAnalyzerImpl::createContext( const DocumentClass& p1) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createContext);
+	msg.packDocumentClass( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzerContext;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	DocumentAnalyzerContextInterface* p0 = new DocumentAnalyzerContextImpl( objId_0, ctx());
+	return p0;
+}
+
+DocumentClassDetectorImpl::~DocumentClassDetectorImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+bool DocumentClassDetectorImpl::detect( DocumentClass& p1, const char* p2, std::size_t p3) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_detect);
+	msg.packBuffer( p2, p3);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	p1 = serializedMsg.unpackDocumentClass();
 	return p0;
 }
 
@@ -1701,6 +1807,19 @@ SegmenterImpl::~SegmenterImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+std::string SegmenterImpl::mimeType( ) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_mimeType);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+}
+
 void SegmenterImpl::defineSelectorExpression( int p1, const std::string& p2)
 {
 	RpcSerializer msg;
@@ -1724,70 +1843,18 @@ void SegmenterImpl::defineSubSection( int p1, int p2, const std::string& p3)
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-SegmenterContextInterface* SegmenterImpl::createContext( ) const
+SegmenterContextInterface* SegmenterImpl::createContext( const DocumentClass& p1) const
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createContext);
+	msg.packDocumentClass( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_SegmenterContext;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	SegmenterContextInterface* p0 = new SegmenterContextImpl( objId_0, ctx());
-	return p0;
-}
-
-StatisticsFunctionInstanceImpl::~StatisticsFunctionInstanceImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-double StatisticsFunctionInstanceImpl::evaluate( const analyzer::Document& p1) const
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_evaluate);
-	msg.packAnalyzerDocument( p1);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	double p0 = serializedMsg.unpackDouble();;
-	return p0;
-}
-
-StatisticsFunctionImpl::~StatisticsFunctionImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-const StatisticsFunctionInstanceInterface* StatisticsFunctionImpl::createInstance( const std::vector<std::string>& p1) const
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createInstance);
-	msg.packSize( p1.size());
-	for (unsigned int ii=0; ii < p1.size(); ++ii) {
-		msg.packString( p1[ii]);
-	}
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_StatisticsFunctionInstance;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	StatisticsFunctionInstanceImpl const_0( objId_0, ctx(), true);
-	const StatisticsFunctionInstanceInterface* p0 = (const StatisticsFunctionInstanceImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 }
 
@@ -2913,6 +2980,49 @@ const NormalizerFunctionInterface* TextProcessorImpl::getNormalizer( const std::
 	return p0;
 }
 
+const AggregatorFunctionInterface* TextProcessorImpl::getAggregator( const std::string& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getAggregator);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_AggregatorFunction;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	AggregatorFunctionImpl const_0( objId_0, ctx(), true);
+	const AggregatorFunctionInterface* p0 = (const AggregatorFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
+}
+
+bool TextProcessorImpl::detectDocumentClass( DocumentClass& p1, const char* p2, std::size_t p3) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_detectDocumentClass);
+	msg.packBuffer( p2, p3);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	p1 = serializedMsg.unpackDocumentClass();
+	return p0;
+}
+
+void TextProcessorImpl::defineDocumentClassDetector( const DocumentClassDetectorInterface* p1)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineDocumentClassDetector);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call (DocumentClassDetector)");
+	msg.packObject( impl_1->classId(), impl_1->objId());
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
 void TextProcessorImpl::defineTokenizer( const std::string& p1, const TokenizerFunctionInterface* p2)
 {
 	RpcSerializer msg;
@@ -2939,33 +3049,17 @@ void TextProcessorImpl::defineNormalizer( const std::string& p1, const Normalize
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void TextProcessorImpl::defineStatistics( const std::string& p1, const StatisticsFunctionInterface* p2)
+void TextProcessorImpl::defineAggregator( const std::string& p1, const AggregatorFunctionInterface* p2)
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineStatistics);
+	msg.packByte( Method_defineAggregator);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (StatisticsFunction)");
+	if (!impl_2) throw std::runtime_error( "passing non RPC interface object in RPC call (AggregatorFunction)");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-}
-
-const StatisticsFunctionInterface* TextProcessorImpl::getStatistics( const std::string& p1) const
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_getStatistics);
-	msg.packString( p1);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_StatisticsFunction;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	StatisticsFunctionImpl const_0( objId_0, ctx(), true);
-	const StatisticsFunctionInterface* p0 = (const StatisticsFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
-	return p0;
 }
 
 TokenizerFunctionContextImpl::~TokenizerFunctionContextImpl()
