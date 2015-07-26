@@ -494,7 +494,7 @@ int main( int argc, const char* argv[])
 
 		// Start server:
 		std::cerr << "strus RPC server is starting ..." << std::endl;
-		if (!!runServer( port, nofThreads, logfile.c_str()))
+		if (!!runServer( port, nofThreads, logfile.empty()?0:logfile.c_str()))
 		{
 			throw std::runtime_error( "server terminated with error (see logs)");
 		}
