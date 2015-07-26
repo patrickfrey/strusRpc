@@ -23,7 +23,6 @@ set( client_source_files
 )
 
 include_directories(
-	"${libevent_INCLUDE_DIRS}"
         "${Boost_INCLUDE_DIRS}"
 	"${PROJECT_SOURCE_DIR}/include"
 	"${PROJECT_SOURCE_DIR}/libuv/include"
@@ -32,7 +31,6 @@ include_directories(
 	"${strusanalyzer_INCLUDE_DIRS}" )
 
 link_directories(
-	"${libevent_LIBRARY_DIRS}"
 	"${PROJECT_SOURCE_DIR}/src"
 	"${PROJECT_SOURCE_DIR}/3rdParty/libuv"
 	"${strusmodule_LIBRARY_DIRS}"
@@ -43,7 +41,7 @@ link_directories(
 # LIBRARY
 # -------------------------------------------
 add_library( strus_rpc_client_socket SHARED  rpcClientMessaging.cpp libstrus_rpc_client_socket.cpp )
-target_link_libraries( strus_rpc_client_socket dl "${libevent_LIBRARIES}" )
+target_link_libraries( strus_rpc_client_socket dl )
 
 add_library( strus_rpc_client SHARED ${client_source_files} libstrus_rpc_client.cpp )
 target_link_libraries( strus_rpc_client dl )
@@ -79,7 +77,7 @@ set_target_properties(
 # PROGRAMS
 # ------------------------------
 add_executable( strusRpcServer strusRpcServer.cpp utils.cpp )
-target_link_libraries( strusRpcServer  "${libevent_LIBRARIES}"  "${strusmodule_LIBRARIES}"  strus_rpc_server )
+target_link_libraries( strusRpcServer  "${strusmodule_LIBRARIES}"  strus_rpc_server )
 
 # ------------------------------
 # INSTALLATION

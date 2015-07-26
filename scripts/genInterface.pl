@@ -1257,7 +1257,14 @@ sub getMethodDeclarationSource
 		{
 			$receiver_code .= "\t\treleaseObjectsMarked();\n";
 		}
-		$receiver_code .= "\t\tmsg.packByte( MsgTypeAnswer);\n";
+		if ($syncMethods{$methodname})
+		{
+			$receiver_code .= "\t\tmsg.packByte( MsgTypeSynchronize);\n";
+		}
+		else
+		{
+			$receiver_code .= "\t\tmsg.packByte( MsgTypeAnswer);\n";
+		}
 		$receiver_code .= "\t} catch (const std::runtime_error& err) {\n";
 		if ($passOwnershipParams{$methodname})
 		{
@@ -1373,7 +1380,7 @@ sub getMethodDeclarationSource
 			$sender_code .= "\tctx()->rpc_synchronize();\n";
 			$sender_code .= $sender_output;
 			$receiver_code .= $receiver_output;
-			$receiver_code .= "\treturn std::string();\n";
+			$receiver_code .= "\treturn msg.content();\n";
 		}
 		else
 		{

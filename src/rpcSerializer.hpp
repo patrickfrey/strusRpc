@@ -113,7 +113,8 @@ enum RpcReturnType
 	MsgTypeException_BadAlloc,
 	MsgTypeException_RuntimeError,
 	MsgTypeException_LogicError,
-	MsgTypeAnswer
+	MsgTypeAnswer,
+	MsgTypeSynchronize
 };
 
 class RpcDeserializer

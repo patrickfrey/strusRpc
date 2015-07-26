@@ -1108,7 +1108,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			try {
 				obj->commit();
-				msg.packByte( MsgTypeAnswer);
+				msg.packByte( MsgTypeSynchronize);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
 				msg.packString( err.what());
@@ -1122,7 +1122,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			return std::string();
+			return msg.content();
 		}
 		case DatabaseTransactionConst::Method_rollback:
 		{
@@ -2161,7 +2161,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			try {
 				obj->commit();
-				msg.packByte( MsgTypeAnswer);
+				msg.packByte( MsgTypeSynchronize);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
 				msg.packString( err.what());
@@ -2175,7 +2175,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			return std::string();
+			return msg.content();
 		}
 		case PeerStorageTransactionConst::Method_rollback:
 		{
@@ -3509,7 +3509,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			try {
 				obj->commit();
-				msg.packByte( MsgTypeAnswer);
+				msg.packByte( MsgTypeSynchronize);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
 				msg.packString( err.what());
@@ -3523,7 +3523,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			return std::string();
+			return msg.content();
 		}
 		case StorageAlterMetaDataTableConst::Method_rollback:
 		{
@@ -4217,7 +4217,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			try {
 				obj->done();
-				msg.packByte( MsgTypeAnswer);
+				msg.packByte( MsgTypeSynchronize);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
 				msg.packString( err.what());
@@ -4231,7 +4231,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			return std::string();
+			return msg.content();
 		}
 	}
 	break;
@@ -4391,7 +4391,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			try {
 				obj->done();
-				msg.packByte( MsgTypeAnswer);
+				msg.packByte( MsgTypeSynchronize);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
 				msg.packString( err.what());
@@ -4405,7 +4405,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			return std::string();
+			return msg.content();
 		}
 	}
 	break;
@@ -5109,7 +5109,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			try {
 				obj->commit();
-				msg.packByte( MsgTypeAnswer);
+				msg.packByte( MsgTypeSynchronize);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
 				msg.packString( err.what());
@@ -5123,7 +5123,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			return std::string();
+			return msg.content();
 		}
 		case StorageTransactionConst::Method_rollback:
 		{

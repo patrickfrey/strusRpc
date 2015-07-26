@@ -80,6 +80,8 @@ static void printUsage()
 	std::cout << "    Implicitely create storage with <CONFIG> if it does not exist yet" << std::endl;
 	std::cout << "-g|--globalstats <FILE>" << std::endl;
 	std::cout << "    Load global statistics of peers from file <FILE>" << std::endl;
+	std::cout << "-l|--logfile <FILE>" << std::endl;
+	std::cout << "    Write logs to file <FILE>" << std::endl;
 }
 
 static strus::ModuleLoaderInterface* g_moduleLoader = 0;
@@ -217,12 +219,28 @@ static void done_handlerdata( struct strus_handlerdata_t* handlerdata)
 	ctx->resultbuf.~string();
 }
 
-static void init_global_context()
+static void init_global_context( const char* logfile)
 {
 	g_glbctx.init_handlerdata = &init_handlerdata;
 	g_glbctx.done_handlerdata = &done_handlerdata;
 	g_glbctx.request_handler = &request_handler;
-	g_glbctx.logf = stderr;
+	if (logfile)
+	{
+		g_glbctx.logf = ::fopen ( logfile, "a+");
+	}
+	else
+	{
+		g_glbctx.logf = stderr;
+	}
+}
+
+static void done_global_context()
+{
+	if (g_glbctx.logf != stderr)
+	{
+		fclose( g_glbctx.logf);
+		g_glbctx.logf = stderr;
+	}
 }
 
 enum
@@ -232,11 +250,13 @@ enum
 	STRUS_ERR_SIGNALEV=3
 };
 
-static int runServer( int port, unsigned int nofThreads)
+static int runServer( int port, unsigned int nofThreads, const char* logfile)
 {
 	std::cerr << "strus RPC server listening on port " << port << std::endl;
-	init_global_context();
+	if (logfile) std::cerr << "strus RPC server writing logs to file '" << logfile << "'" << std::endl;
+	init_global_context( logfile);
 	int rt = strus_run_server( (unsigned short)(unsigned int)port, nofThreads, &g_glbctx);
+	done_global_context();
 	return rt;
 }
 
@@ -276,6 +296,7 @@ int main( int argc, const char* argv[])
 {
 	bool doExit = false;
 	int argi = 1;
+	std::string logfile;
 	std::vector<std::string> moduledirs;
 	std::vector<std::string> modules;
 	std::vector<std::string> resourcedirs;
@@ -384,6 +405,14 @@ int main( int argc, const char* argv[])
 					throw std::runtime_error( std::string("illegal argument for option --threads: ") + err.what());
 				}
 			}
+			else if (0==std::strcmp( argv[argi], "-l") || 0==std::strcmp( argv[argi], "--logfile"))
+			{
+				if (logfile.size())throw std::runtime_error( "duplicate definition of option --logfile");
+				++argi;
+				if (argi == argc) throw std::runtime_error("option --logfile expects argument (log file path)");
+				logfile = argv[argi];
+				if (logfile.empty())throw std::runtime_error( "empty definition of option --logfile");
+			}
 			else if (argv[argi][0] == '-')
 			{
 				throw std::runtime_error( std::string( "unknown option ") + argv[argi]);
@@ -465,7 +494,7 @@ int main( int argc, const char* argv[])
 
 		// Start server:
 		std::cerr << "strus RPC server is starting ..." << std::endl;
-		if (!!runServer( port, nofThreads))
+		if (!!runServer( port, nofThreads, logfile.c_str()))
 		{
 			throw std::runtime_error( "server terminated with error (see logs)");
 		}
