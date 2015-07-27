@@ -49,6 +49,7 @@ private:
 
 private:
 	int m_sock;
+	double m_starttime;
 	std::string m_messageBuffer;
 };
 

@@ -6,9 +6,11 @@
 #include <string.h>
 #include <uv.h>
 #include <uv-version.h>
+#include <sys/time.h>
 
 #define UV_VERSION_NUM (UV_VERSION_MAJOR*100 + UV_VERSION_MINOR)
 #undef STRUS_LOWLEVEL_DEBUG
+#undef STRUS_LOG_REQUEST_TIME
 
 /* Shared global data */
 static strus_globalctx_t* g_glbctx=0;
@@ -40,6 +42,9 @@ typedef struct strus_connection_t
 	const unsigned char* output;		/* output of request */
 	size_t outputsize;			/* size of output of request */
 	char buf[ CONNECTION_BUFSIZE];		/* memory blocks served for malloc in read */
+#ifdef STRUS_LOG_REQUEST_TIME
+	double request_start;
+#endif
 } strus_connection_t;
 
 static void strus_free_connection( strus_connection_t* ctx)
@@ -359,7 +364,16 @@ static void on_work( uv_work_t *req)
 	memcpy( conn->write_reqbuf.base, &msghdr, sizeof( uint32_t));
 }
 
-void on_complete_work( uv_work_t *req, int status)
+#ifdef STRUS_LOG_REQUEST_TIME
+static double getTimeStamp()
+{
+	struct timeval now;
+	gettimeofday( &now, NULL);
+	return (double)now.tv_usec / 1000000.0 + now.tv_sec;
+}
+#endif
+
+static void on_complete_work( uv_work_t *req, int status)
 {
 	strus_connection_t* conn = (strus_connection_t*)( req->data);
 	if (status == UV_ECANCELED)
@@ -384,12 +398,19 @@ void on_complete_work( uv_work_t *req, int status)
 			log_error_conn_sys( conn, "write error", err);
 			uv_close( (uv_handle_t*)&conn->tcp, on_close);
 		}
-#ifdef STRUS_LOWLEVEL_DEBUG
 		else
 		{
+#ifdef STRUS_LOG_REQUEST_TIME
+			double request_time = getTimeStamp() - conn->request_start;
+			char msgbuf[ 256];
+			snprintf( msgbuf, sizeof(msgbuf), "completed request in %.4f seconds", (float)request_time);
+			log_message_conn( conn, msgbuf);
+#else
+#ifdef STRUS_LOWLEVEL_DEBUG
 			log_message_conn( conn, "completed request");
-		}
 #endif
+#endif
+		}
 	}
 }
 
@@ -397,6 +418,9 @@ static void push_work_queue( strus_connection_t* conn)
 {
 	memset( &conn->work_req, 0, sizeof(conn->work_req));
 	conn->work_req.data = (void*)conn;
+#ifdef STRUS_LOG_REQUEST_TIME
+	conn->request_start = getTimeStamp();
+#endif
 	uv_queue_work( g_server.loop, &conn->work_req, on_work, on_complete_work);
 }
 

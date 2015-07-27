@@ -35,13 +35,16 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <stdint.h>
 #include <errno.h>
+#include <iomanip>
 
 using namespace strus;
 
 #undef STRUS_LOWLEVEL_DEBUG
 #define DEFAULT_PORT "7181"
+#undef STRUS_LOG_REQUEST_TIME
 
 struct ServiceAddress
 {
@@ -101,7 +104,7 @@ ServiceAddress::ServiceAddress( const char* config)
 }
 
 RpcClientMessaging::RpcClientMessaging( const char* config)
-	:m_sock(-1)
+	:m_sock(-1),m_starttime(0.0)
 {
 	struct addrinfo hints;
 	struct addrinfo *result, *rp;
@@ -171,8 +174,20 @@ RpcClientMessaging::~RpcClientMessaging()
 	}
 }
 
+#ifdef STRUS_LOG_REQUEST_TIME
+static double getTimeStamp()
+{
+	struct timeval now;
+	gettimeofday( &now, NULL);
+	return (double)now.tv_usec / 1000000.0 + now.tv_sec;
+}
+#endif
+
 void RpcClientMessaging::send_req( const char* msg, std::size_t msgsize)
 {
+#ifdef STRUS_LOG_REQUEST_TIME
+	m_starttime = getTimeStamp();
+#endif
 	uint32_t msgsizebuf = htonl( msgsize);
 	if (0>m_sock)
 	{
@@ -234,6 +249,11 @@ std::string RpcClientMessaging::recv_rep()
 #endif
 		rt.append( buf, nn);
 	}
+#ifdef STRUS_LOG_REQUEST_TIME
+	double request_time = getTimeStamp() - m_starttime;
+	std::cerr << "client request time " << std::fixed << std::setw(6) << std::setprecision(4)
+			<< request_time << " seconds" << std::endl;
+#endif
 	return rt;
 }
 
