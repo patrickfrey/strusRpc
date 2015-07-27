@@ -19,6 +19,7 @@ set( CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE )
 
 # Project globals:
 project( StrusRpc )
+set( STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM 0 )
 set( STRUS_MAJOR_VERSION 0 )
 set( STRUS_MINOR_VERSION 1 )
 set( STRUS_PATCH_VERSION 7 )
@@ -77,6 +78,7 @@ ENDIF (${strusanalyzer_FOUND})
 set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
 set( CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON )
 configure_file( "${PROJECT_SOURCE_DIR}/include/strus/versionRpc.hpp.in"  "${PROJECT_SOURCE_DIR}/include/strus/versionRpc.hpp"  @ONLY )
+configure_file( "${PROJECT_SOURCE_DIR}/src/rpcProtocolDefines.hpp.in"  "${PROJECT_SOURCE_DIR}/src/rpcProtocolDefines.hpp"  @ONLY )
 
 enable_testing()
 

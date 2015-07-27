@@ -166,7 +166,6 @@ static void on_write( uv_write_t* req, int status)
 		uv_close( (uv_handle_t*)req->handle, on_close);
 	}
 	strus_init_request( conn);
-	uv_read_start( (uv_stream_t*)&conn->tcp, on_alloc, on_read);
 }
 
 static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)

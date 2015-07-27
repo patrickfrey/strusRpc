@@ -28,6 +28,7 @@
 */
 #include "rpcSerializer.hpp"
 #include "private/utils.hpp"
+#include "rpcProtocolDefines.hpp"
 #include <stdexcept>
 #include <cstring>
 #include <iostream>
@@ -431,11 +432,13 @@ void RpcSerializer::packDocumentStatisticsType( const StorageClientInterface::Do
 
 void RpcSerializer::packCrc32()
 {
+#if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM
 	uint32_t crc = utils::Crc32::calc( m_content.c_str(), m_content.size());
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packCrc32(" << crc << ") size=" << m_content.size() << std::endl;
 #endif
 	packScalar( m_content, crc);
+#endif
 }
 
 unsigned int RpcDeserializer::unpackSessionId()
@@ -626,6 +629,7 @@ DocumentClass RpcDeserializer::unpackDocumentClass()
 
 bool RpcDeserializer::unpackCrc32()
 {
+#if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM	
 	uint32_t size = (m_end - m_start) - 4;
 	uint32_t crc = utils::Crc32::calc( m_start, size);
 	char const* ee = m_end-4;
@@ -633,6 +637,9 @@ bool RpcDeserializer::unpackCrc32()
 	std::cerr << "unpackCrc32(" << crc << ") size=" << size << std::endl;
 #endif
 	return crc == unpackScalar<uint32_t>( ee, m_end);
+#else
+	return true;
+#endif
 }
 
 DatabaseOptions RpcDeserializer::unpackDatabaseOptions()

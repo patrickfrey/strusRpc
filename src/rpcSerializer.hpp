@@ -98,7 +98,6 @@ public:
 	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
 	void packCrc32();
-
 	const std::string& content() const
 	{
 		return m_content;
