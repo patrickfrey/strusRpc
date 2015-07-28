@@ -26,8 +26,8 @@
 
 --------------------------------------------------------------------
 */
-#ifndef _STRUS_RPC_SERVERC_HPP_INCLUDED
-#define _STRUS_RPC_SERVERC_HPP_INCLUDED
+#ifndef _STRUS_RPC_SERVER_H_INCLUDED
+#define _STRUS_RPC_SERVER_H_INCLUDED
 #include <stddef.h>
 #include <stdio.h>
 

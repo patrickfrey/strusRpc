@@ -236,7 +236,7 @@ static void init_global_context( const char* logfile)
 
 static void done_global_context()
 {
-	if (g_glbctx.logf != stderr)
+	if (g_glbctx.logf != NULL && g_glbctx.logf != stderr && g_glbctx.logf != stdout)
 	{
 		fclose( g_glbctx.logf);
 		g_glbctx.logf = stderr;

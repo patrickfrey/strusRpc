@@ -22,6 +22,11 @@ set( client_source_files
 	rpcClient.cpp
 )
 
+set( client_socket_source_files
+	client.c
+	rpcClientMessaging.cpp
+)
+
 include_directories(
         "${Boost_INCLUDE_DIRS}"
 	"${PROJECT_SOURCE_DIR}/include"
@@ -40,8 +45,8 @@ link_directories(
 # -------------------------------------------
 # LIBRARY
 # -------------------------------------------
-add_library( strus_rpc_client_socket SHARED  rpcClientMessaging.cpp libstrus_rpc_client_socket.cpp )
-target_link_libraries( strus_rpc_client_socket dl )
+add_library( strus_rpc_client_socket SHARED ${client_socket_source_files} libstrus_rpc_client_socket.cpp )
+target_link_libraries( strus_rpc_client_socket dl uv )
 
 add_library( strus_rpc_client SHARED ${client_source_files} libstrus_rpc_client.cpp )
 target_link_libraries( strus_rpc_client dl )
