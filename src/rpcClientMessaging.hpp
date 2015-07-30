@@ -28,6 +28,10 @@
 */
 #include "strus/rpcClientMessagingInterface.hpp"
 
+extern "C" {
+	struct strus_connection_t;
+}
+
 using namespace strus;
 
 class RpcClientMessaging
@@ -43,13 +47,14 @@ public:
 	virtual void close();
 
 private:
-	std::string errorstr( const char* msg);
+	static std::string errorstr( const char* msg, struct strus_connection_t* conn);
 	void send_req( const char* msg, std::size_t msgsize);
 	std::string recv_rep();
 
 private:
-	int m_sock;
+	struct strus_connection_t* m_conn;
 	double m_starttime;
 	std::string m_messageBuffer;
+	bool m_conn_open;
 };
 

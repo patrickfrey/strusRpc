@@ -24,6 +24,7 @@ set( client_source_files
 
 set( client_socket_source_files
 	client.c
+	hexdump.c
 	rpcClientMessaging.cpp
 )
 

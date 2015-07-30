@@ -771,6 +771,10 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerTerm( " . $id . ");";
 	}
+	elsif ($type eq "analyzer::TermVector")
+	{
+		$rt .= "msg.packAnalyzerTermVector( " . $id . ");";
+	}
 	elsif ($type eq "analyzer::Token")
 	{
 		$rt .= "msg.packAnalyzerToken( " . $id . ");";
@@ -786,6 +790,10 @@ sub packParameter
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
 		$rt .= "msg.packFeatureParameter( " . $id . ");";
+	}
+	elsif ($type eq "QueryAnalyzerInterface::Phrase")
+	{
+		$rt .= "msg.packPhrase( " . $id . ");";
 	}
 	elsif ($type eq "StorageClientInterface::DocumentStatisticsType")
 	{
@@ -998,6 +1006,10 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerTerm();";
 	}
+	elsif ($type eq "analyzer::TermVector")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerTermVector();";
+	}
 	elsif ($type eq "WeightedDocument")
 	{
 		$rt .= "$id = serializedMsg.unpackWeightedDocument();";
@@ -1009,6 +1021,10 @@ sub unpackParameter
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
 		$rt .= "$id = serializedMsg.unpackFeatureParameter();";
+	}
+	elsif ($type eq "QueryAnalyzerInterface::Phrase")
+	{
+		$rt .= "$id = serializedMsg.unpackPhrase();";
 	}
 	elsif ($type eq "StorageClientInterface::DocumentStatisticsType")
 	{

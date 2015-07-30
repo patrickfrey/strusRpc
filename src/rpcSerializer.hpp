@@ -33,6 +33,7 @@
 #include "strus/index.hpp"
 #include "strus/documentClass.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
+#include "strus/queryAnalyzerInterface.hpp"
 #include "strus/arithmeticVariant.hpp"
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/databaseOptions.hpp"
@@ -92,10 +93,12 @@ public:
 	void packAnalyzerAttribute( const analyzer::Attribute& val);
 	void packAnalyzerMetaData( const analyzer::MetaData& val);
 	void packAnalyzerTerm( const analyzer::Term& val);
+	void packAnalyzerTermVector( const analyzer::TermVector& val);
 	void packAnalyzerToken( const analyzer::Token& val);
 	void packWeightedDocument( const WeightedDocument& val);
 	void packResultDocument( const ResultDocument& val);
 	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
+	void packPhrase( const QueryAnalyzerInterface::Phrase& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
 	void packCrc32();
 	const std::string& content() const
@@ -152,10 +155,12 @@ public:
 	analyzer::Attribute unpackAnalyzerAttribute();
 	analyzer::MetaData unpackAnalyzerMetaData();
 	analyzer::Term unpackAnalyzerTerm();
+	analyzer::TermVector unpackAnalyzerTermVector();
 	analyzer::Token unpackAnalyzerToken();
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();
 	QueryEvalInterface::FeatureParameter unpackFeatureParameter();
+	QueryAnalyzerInterface::Phrase unpackPhrase();
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();
 	bool unpackCrc32();
 

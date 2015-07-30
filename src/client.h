@@ -29,11 +29,12 @@
 #ifndef _STRUS_RPC_CLIENT_H_INCLUDED
 #define _STRUS_RPC_CLIENT_H_INCLUDED
 #include <stddef.h>
+#include <stdio.h>
 
 struct strus_connection_t;
 
 struct strus_connection_t* strus_create_connection(
-		const char* addr, unsigned short port, int* errno_);
+		const char* serviceaddr, FILE* logf, int* errno_);
 
 void strus_close_connection(
 		struct strus_connection_t* conn);
@@ -44,7 +45,10 @@ void strus_destroy_connection(
 int strus_request(
 		struct strus_connection_t* conn,
 		const unsigned char* input, size_t inputsize,
-		const unsigned char** output, size_t* outputsize);
+		unsigned char** output, size_t* outputsize);
+
+const char* strus_lasterror(
+		struct strus_connection_t* conn);
 
 #endif
 

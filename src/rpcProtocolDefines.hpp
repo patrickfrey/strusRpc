@@ -32,7 +32,7 @@
 #define _STRUS_RPC_PROTOCOL_DEFINES_HPP_INCLUDED
 
 /// \brief Define if protocol uses CRC32 checksum for verification (switched on for testing)
-#define STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM  0
+#define STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM  1
 
 #endif
 

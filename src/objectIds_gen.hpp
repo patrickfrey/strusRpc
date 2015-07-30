@@ -367,7 +367,8 @@ public:
 	{
 		Method_Destructor,
 		Method_definePhraseType,
-		Method_analyzePhrase
+		Method_analyzePhrase,
+		Method_analyzePhraseBulk
 	};
 };
 

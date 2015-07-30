@@ -1415,6 +1415,28 @@ std::vector<analyzer::Term> QueryAnalyzerImpl::analyzePhrase( const std::string&
 	return p0;
 }
 
+std::vector<analyzer::TermVector> QueryAnalyzerImpl::analyzePhraseBulk( const std::vector<QueryAnalyzerInterface::Phrase>& p1) const
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_analyzePhraseBulk);
+	msg.packSize( p1.size());
+	for (unsigned int ii=0; ii < p1.size(); ++ii) {
+		msg.packPhrase( p1[ii]);
+	}
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<analyzer::TermVector> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		analyzer::TermVector elem_p0 = serializedMsg.unpackAnalyzerTermVector();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+}
+
 QueryEvalImpl::~QueryEvalImpl()
 {
 	if (isConst()) return;
