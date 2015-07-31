@@ -39,7 +39,7 @@
 #define CONNECTION_MAXBUFSIZE (1<<24)
 #define CONNECTION_BUFSIZE (1<<14)
 #undef STRUS_LOWLEVEL_DEBUG
-#define STRUS_LOG_REQUEST_TIME
+#undef STRUS_LOG_REQUEST_TIME
 
 typedef struct strus_connection_t
 {
