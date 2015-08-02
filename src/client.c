@@ -307,6 +307,7 @@ static void try_connect( strus_connection_t* conn)
 			}
 			if (conn->logf) fprintf( conn->logf, "getaddrinfo try IPv4 '%s'\n", addrbuf);
 #endif
+			memset( &conn->connect, 0, sizeof(conn->connect));
 			conn->connect.data = conn;
 			syerr = uv_tcp_connect( &conn->connect, &conn->tcp, address->ai_addr, on_connect);
 			if (syerr != 0)
@@ -329,6 +330,7 @@ static void try_connect( strus_connection_t* conn)
 			}
 			if (conn->logf) fprintf( conn->logf, "getaddrinfo try IPv6 '%s'\n", addrbuf);
 #endif
+			memset( &conn->connect, 0, sizeof(conn->connect));
 			conn->connect.data = conn;
 			syerr = uv_tcp_connect( &conn->connect, &conn->tcp, address->ai_addr, on_connect);
 			if (syerr != 0)
