@@ -199,6 +199,7 @@ strus_connection_t* strus_create_connection(
 
 ERROREXIT:
 	if (rt) strus_destroy_connection( rt);
+	if (*errno_ < 0) *errno_ = -*errno_;
 	return NULL;
 }
 
@@ -279,6 +280,7 @@ int strus_request(
 	conn->outputpos = 0;
 	conn->outputsize = 0;
 	conn->reqstart = 0.0;
+	if (conn->syserrno < 0) conn->syserrno = -conn->syserrno;
 	return conn->syserrno;
 }
 
