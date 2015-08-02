@@ -433,7 +433,10 @@ static void on_write( uv_write_t* req, int status)
 			conn->syserrno = status;
 		}
 		if (conn->logf) fprintf( conn->logf, "error in write (%s)\n", uv_strerror( status));
-		uv_close( (uv_handle_t*)req->handle, on_close);
+		if (!uv_is_closing((uv_handle_t*)req->handle))
+		{
+			uv_close( (uv_handle_t*)req->handle, on_close);
+		}
 		uv_stop( &conn->loop);
 	}
 	else
@@ -476,7 +479,10 @@ static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 				{
 					conn->syserrno = EINVAL;
 					if (conn->logf) fprintf( conn->logf, "request message size out of range\n");
-					uv_close( (uv_handle_t*)handle, on_close);
+					if (!uv_is_closing((uv_handle_t*)handle))
+					{
+						uv_close( (uv_handle_t*)handle, on_close);
+					}
 					uv_stop( &conn->loop);
 					return;
 				}
@@ -488,7 +494,10 @@ static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 				if (conn->output == NULL)
 				{
 					conn->syserrno = ENOMEM;
-					uv_close( (uv_handle_t*)handle, on_close);
+					if (!uv_is_closing((uv_handle_t*)handle))
+					{
+						uv_close( (uv_handle_t*)handle, on_close);
+					}
 					uv_stop( &conn->loop);
 					return;
 				}
@@ -511,7 +520,10 @@ static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 			fprintf( stderr, "REQUEST state=%d, nn=%d, pos=%d, size=%d\n", (int)conn->outputstate, (int)nn, (int)conn->outputpos, (int)conn->outputsize);
 			conn->syserrno = EINVAL;
 			if (conn->logf) fprintf( conn->logf, "data size mismatch in request\n");
-			uv_close( (uv_handle_t*)handle, on_close);
+			if (!uv_is_closing((uv_handle_t*)handle))
+			{
+				uv_close( (uv_handle_t*)handle, on_close);
+			}
 			uv_stop( &conn->loop);
 			return;
 		}
@@ -532,7 +544,10 @@ static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 			conn->syserrno = nread;
 		}
 		if (conn->logf) fprintf( conn->logf, "disconnected (%s)\n", uv_strerror((int)nread));
-		uv_close( (uv_handle_t*)handle, on_close);
+		if (!uv_is_closing((uv_handle_t*)handle))
+		{
+			uv_close( (uv_handle_t*)handle, on_close);
+		}
 		uv_stop( &conn->loop);
 	}
 }
@@ -543,8 +558,10 @@ static void on_walk_cleanup( uv_handle_t* handle, void* conn_)
 	strus_connection_t* conn = (strus_connection_t*)conn_;
 	if (conn->logf) fprintf( conn->logf, "called walk cleanup callback\n");
 #endif
-	/*if (!uv_is_closing((uv_handle_t*)handle))*/
-	uv_close( handle, on_close);
+	if (!uv_is_closing((uv_handle_t*)handle))
+	{
+		uv_close( handle, on_close);
+	}
 }
 
 
