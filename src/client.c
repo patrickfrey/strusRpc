@@ -47,6 +47,8 @@ typedef struct strus_connection_t
 	uv_tcp_t tcp;				/* tcp socket handle */
 	uv_connect_t connect;			/* connect structure */
 	uv_getaddrinfo_t addrinforeq;		/* request structure for getaddrinfo */
+	struct addrinfo* addrinfores;		/* result of getaddrinfo */
+	struct addrinfo* addrinfoitr;		/* getaddrinfo iterator */
 	uv_write_t writereq;			/* request structure for write */
 	int syserrno;				/* system errno in case of error */
 	FILE* logf;				/* where to log error and info messages */
@@ -286,22 +288,12 @@ const char* strus_lasterror(
 	return uv_strerror( conn->syserrno);
 }
 
-
-static void on_getaddrinfo( uv_getaddrinfo_t* req, int status, struct addrinfo* res)
+static void try_connect( strus_connection_t* conn)
 {
-	strus_connection_t* conn = (strus_connection_t*)( req->data);
-	struct addrinfo *address;
-#ifdef STRUS_LOWLEVEL_DEBUG
-	if (conn->logf) fprintf( conn->logf, "getaddrinfo callback called\n");
-#endif
-	if (status != 0)
-	{
-		uv_freeaddrinfo( res);
-		conn->syserrno = status;
-		uv_stop( &conn->loop);
-		return;
-	}
-	for (address = res; address; address = address->ai_next)
+	struct addrinfo *address = conn->addrinfoitr;
+	int syerr = 0;
+
+	for (; address; address = conn->addrinfoitr = address->ai_next)
 	{
 		if (address->ai_family == AF_INET)
 		{
@@ -314,8 +306,16 @@ static void on_getaddrinfo( uv_getaddrinfo_t* req, int status, struct addrinfo* 
 			if (conn->logf) fprintf( conn->logf, "getaddrinfo try IPv4 '%s'\n", addrbuf);
 #endif
 			conn->connect.data = conn;
-			conn->syserrno = uv_tcp_connect( &conn->connect, &conn->tcp, address->ai_addr, on_connect);
-			if (conn->syserrno == 0) break;
+			syerr = uv_tcp_connect( &conn->connect, &conn->tcp, address->ai_addr, on_connect);
+			if (syerr != 0)
+			{
+				conn->syserrno = syerr;
+				if (conn->logf) fprintf( conn->logf, "error trying to connect: %s\n", uv_strerror(syerr));
+			}
+			else
+			{
+				break;
+			}
 		}
 		else if (address->ai_family == AF_INET6)
 		{
@@ -328,16 +328,45 @@ static void on_getaddrinfo( uv_getaddrinfo_t* req, int status, struct addrinfo* 
 			if (conn->logf) fprintf( conn->logf, "getaddrinfo try IPv6 '%s'\n", addrbuf);
 #endif
 			conn->connect.data = conn;
-			conn->syserrno = uv_tcp_connect( &conn->connect, &conn->tcp, address->ai_addr, on_connect);
-			if (conn->syserrno == 0) break;
+			syerr = uv_tcp_connect( &conn->connect, &conn->tcp, address->ai_addr, on_connect);
+			if (syerr != 0)
+			{
+				conn->syserrno = syerr;
+				if (conn->logf) fprintf( conn->logf, "error trying to connect: %s\n", uv_strerror(syerr));
+			}
+			else
+			{
+				break;
+			}
 		}
 	}
-	conn->tcp.data = conn;
-	uv_freeaddrinfo( res);
+	if (!address)
+	{
 #ifdef STRUS_LOWLEVEL_DEBUG
-	if (!address && conn->logf) fprintf( conn->logf, "getaddrinfo failed to resolve address\n");
+		if (conn->logf) fprintf( conn->logf, "getaddrinfo failed to resolve address\n");
 #endif
-	uv_stop( &conn->loop);
+		uv_freeaddrinfo( conn->addrinfores);
+		uv_stop( &conn->loop);
+	}
+}
+
+static void on_getaddrinfo( uv_getaddrinfo_t* req, int status, struct addrinfo* res)
+{
+	strus_connection_t* conn = (strus_connection_t*)( req->data);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	if (conn->logf) fprintf( conn->logf, "getaddrinfo callback called\n");
+#endif
+	if (status != 0)
+	{
+		uv_freeaddrinfo( res);
+		conn->syserrno = status;
+		uv_stop( &conn->loop);
+		return;
+	}
+	conn->addrinfores = res;
+	conn->addrinfoitr = res;
+
+	try_connect( conn);
 }
 
 static void on_alloc( uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf)
@@ -365,6 +394,16 @@ void on_connect( uv_connect_t* connection, int status)
 	{
 		conn->syserrno = status;
 		if (conn->logf) fprintf( conn->logf, "error connecting: %s\n", uv_strerror( status));
+		try_connect( conn);
+	}
+	else
+	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		if (conn->logf) fprintf( conn->logf, "got connected\n");
+#endif
+		uv_freeaddrinfo( conn->addrinfores);
+		conn->tcp.data = conn;
+		uv_stop( &conn->loop);
 	}
 }
 

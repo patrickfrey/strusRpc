@@ -204,7 +204,10 @@ static void on_write( uv_write_t* req, int status)
 	if (status)
 	{
 		log_error_conn_sys( conn, "write error", status);
-		uv_close( (uv_handle_t*)req->handle, on_close);
+		if (!uv_is_closing((uv_handle_t*)req->handle))
+		{
+			uv_close( (uv_handle_t*)req->handle, on_close);
+		}
 	}
 	else
 	{
@@ -290,7 +293,10 @@ static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 				break;
 			case CTX_TERMINATED:
 				log_error_conn( conn, "got request data after termination");
-				uv_close( (uv_handle_t*)handle, on_close);
+				if (!uv_is_closing((uv_handle_t*)handle))
+				{
+					uv_close( (uv_handle_t*)handle, on_close);
+				}
 				break;
 		}
 	}
@@ -308,7 +314,10 @@ static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 		else
 		{
 			log_error_conn_sys( conn, "disconnected", nread);
-			uv_close( (uv_handle_t*)handle, on_close);
+			if (!uv_is_closing((uv_handle_t*)handle))
+			{
+				uv_close( (uv_handle_t*)handle, on_close);
+			}
 		}
 	}
 }
@@ -405,7 +414,10 @@ static void on_work( uv_work_t *req)
 	if (err)
 	{
 		log_error_request( conn, (char*)conn->output);
-		uv_close( (uv_handle_t*)&conn->tcp, on_close);
+		if (!uv_is_closing((uv_handle_t*)&conn->tcp))
+		{
+			uv_close( (uv_handle_t*)&conn->tcp, on_close);
+		}
 		return;
 	}
 	memset( &conn->write_req, 0, sizeof( conn->write_req));
@@ -425,12 +437,18 @@ static void on_complete_work( uv_work_t *req, int status)
 	if (status == UV_ECANCELED)
 	{
 		log_message_conn( conn, "request execution canceled");
-		uv_close( (uv_handle_t*)&conn->tcp, on_close);
+		if (!uv_is_closing((uv_handle_t*)&conn->tcp))
+		{
+			uv_close( (uv_handle_t*)&conn->tcp, on_close);
+		}
 	}
 	else if (status != 0)
 	{
 		log_error_conn( conn, "error in request, aborted");
-		uv_close( (uv_handle_t*)&conn->tcp, on_close);
+		if (!uv_is_closing((uv_handle_t*)&conn->tcp))
+		{
+			uv_close( (uv_handle_t*)&conn->tcp, on_close);
+		}
 	}
 	else
 	{
@@ -442,7 +460,10 @@ static void on_complete_work( uv_work_t *req, int status)
 		if (err)
 		{
 			log_error_conn_sys( conn, "write error", err);
-			uv_close( (uv_handle_t*)&conn->tcp, on_close);
+			if (!uv_is_closing((uv_handle_t*)&conn->tcp))
+			{
+				uv_close( (uv_handle_t*)&conn->tcp, on_close);
+			}
 		}
 		else
 		{
