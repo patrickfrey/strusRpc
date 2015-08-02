@@ -398,6 +398,8 @@ void on_connect( uv_connect_t* connection, int status)
 	{
 		conn->syserrno = status;
 		if (conn->logf) fprintf( conn->logf, "error connecting: %s\n", uv_strerror( status));
+
+		conn->addrinfoitr = conn->addrinfoitr->ai_next;
 		try_connect( conn);
 	}
 	else
