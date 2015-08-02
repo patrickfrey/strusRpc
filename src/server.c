@@ -56,7 +56,7 @@ static void log_error_request( strus_connection_t* ctx, const char* msg)
 
 static void log_error_conn_sys( strus_connection_t* ctx, const char* msg, int err)
 {
-	fprintf( g_glbctx->logf, "[conn %u] ERROR %s (%s)\n", ctx->id, msg, strerror(err));
+	fprintf( g_glbctx->logf, "[conn %u] ERROR %s (%s)\n", ctx->id, msg, uv_strerror(err));
 }
 
 static void log_error_conn( strus_connection_t* ctx, const char* msg)
@@ -66,7 +66,7 @@ static void log_error_conn( strus_connection_t* ctx, const char* msg)
 
 static void log_error_sys( const char* msg, int err)
 {
-	fprintf( g_glbctx->logf, "[server] ERROR %s (%s)\n", msg, strerror(err));
+	fprintf( g_glbctx->logf, "[server] ERROR %s (%s)\n", msg, uv_strerror(err));
 }
 
 static void log_error( const char* msg)
