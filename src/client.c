@@ -267,7 +267,7 @@ int strus_request(
 	}
 	else
 	{
-		if (conn->logf) fprintf( conn->logf, "error in request: %s", uv_strerror( conn->syserrno));
+		if (conn->logf) fprintf( conn->logf, "error in request: %s\n", uv_strerror( conn->syserrno));
 	}
 #ifdef STRUS_LOG_REQUEST_TIME
 	log_time( conn->logf, conn->reqstart, "request");
@@ -384,10 +384,12 @@ static void on_write( uv_write_t* req, int status)
 #endif
 	if (status)
 	{
-		conn->syserrno = status;
+		if (conn->syserrno == 0)
+		{
+			conn->syserrno = status;
+		}
 		if (conn->logf) fprintf( conn->logf, "error in write (%s)\n", uv_strerror( status));
 		uv_close( (uv_handle_t*)req->handle, on_close);
-		conn->syserrno = status;
 		uv_stop( &conn->loop);
 	}
 	else
@@ -481,7 +483,10 @@ static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 	}
 	else
 	{
-		conn->syserrno = nread;
+		if (conn->syserrno == 0)
+		{
+			conn->syserrno = nread;
+		}
 		if (conn->logf) fprintf( conn->logf, "disconnected (%s)\n", uv_strerror((int)nread));
 		uv_close( (uv_handle_t*)handle, on_close);
 		uv_stop( &conn->loop);
