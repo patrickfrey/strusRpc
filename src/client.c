@@ -45,7 +45,8 @@ typedef struct strus_connection_t
 {
 	uv_loop_t loop;				/* event loop */
 	uv_tcp_t tcp;				/* tcp socket handle */
-	uv_connect_t connect;			/* connect structure */
+	uv_connect_t connect_ipv4;		/* connect structure IPv4 */
+	uv_connect_t connect_ipv6;		/* connect structure IPv6 */
 	uv_getaddrinfo_t addrinforeq;		/* request structure for getaddrinfo */
 	struct addrinfo* addrinfores;		/* result of getaddrinfo */
 	struct addrinfo* addrinfoitr;		/* getaddrinfo iterator */
@@ -307,9 +308,8 @@ static void try_connect( strus_connection_t* conn)
 			}
 			if (conn->logf) fprintf( conn->logf, "getaddrinfo try IPv4 '%s'\n", addrbuf);
 #endif
-			memset( &conn->connect, 0, sizeof(conn->connect));
-			conn->connect.data = conn;
-			syerr = uv_tcp_connect( &conn->connect, &conn->tcp, address->ai_addr, on_connect);
+			conn->connect_ipv4.data = conn;
+			syerr = uv_tcp_connect( &conn->connect_ipv4, &conn->tcp, address->ai_addr, on_connect);
 			if (syerr != 0)
 			{
 				conn->syserrno = syerr;
@@ -330,9 +330,8 @@ static void try_connect( strus_connection_t* conn)
 			}
 			if (conn->logf) fprintf( conn->logf, "getaddrinfo try IPv6 '%s'\n", addrbuf);
 #endif
-			memset( &conn->connect, 0, sizeof(conn->connect));
-			conn->connect.data = conn;
-			syerr = uv_tcp_connect( &conn->connect, &conn->tcp, address->ai_addr, on_connect);
+			conn->connect_ipv6.data = conn;
+			syerr = uv_tcp_connect( &conn->connect_ipv6, &conn->tcp, address->ai_addr, on_connect);
 			if (syerr != 0)
 			{
 				conn->syserrno = syerr;
