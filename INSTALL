@@ -1,3 +1,17 @@
+GENERAL
+=======
+
+Update submodule libuv
+----------------------
+git submodule add https://github.com/libuv/libuv libuv
+cd libuv
+git checkout v1.6.1
+cd ..
+git add libuv
+git commit -m 'bumped submodule libuv to version 1.6.1'
+git push
+
+
 LINUX
 =====
 
@@ -13,4 +27,5 @@ For strusRpc to work you have to install strus, strusAnalyzer and strusModule fi
 strusRpc
 --------
 cmake CMakeLists.txt; make; sudo make install
+
 
