@@ -38,7 +38,7 @@
 #define DEFAULT_PORT 7181
 #define CONNECTION_MAXBUFSIZE (1<<24)
 #define CONNECTION_BUFSIZE (1<<14)
-#undef STRUS_LOWLEVEL_DEBUG
+#define STRUS_LOWLEVEL_DEBUG
 #undef STRUS_LOG_REQUEST_TIME
 
 typedef struct strus_connection_t
@@ -312,7 +312,7 @@ static void try_connect( strus_connection_t* conn)
 			if (syerr != 0)
 			{
 				conn->syserrno = syerr;
-				if (conn->logf) fprintf( conn->logf, "error trying to connect: %s\n", uv_strerror(syerr));
+				if (conn->logf) fprintf( conn->logf, "error trying to connect IPv4: %s\n", uv_strerror(syerr));
 			}
 			else
 			{
@@ -334,7 +334,7 @@ static void try_connect( strus_connection_t* conn)
 			if (syerr != 0)
 			{
 				conn->syserrno = syerr;
-				if (conn->logf) fprintf( conn->logf, "error trying to connect: %s\n", uv_strerror(syerr));
+				if (conn->logf) fprintf( conn->logf, "error trying to connect IPv6: %s\n", uv_strerror(syerr));
 			}
 			else
 			{
