@@ -427,8 +427,8 @@ void on_connect( uv_connect_t* connection, int status)
 #endif
 		conn->tcp.data = conn;
 		conn->addrset = 0;
+		uv_stop( &conn->loop);
 	}
-	uv_stop( &conn->loop);
 }
 
 static void on_close( uv_handle_t* handle)
