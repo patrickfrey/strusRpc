@@ -165,7 +165,7 @@ static void on_walk_cleanup( uv_handle_t* handle, void* null)
 #endif
 	if (!uv_is_closing((uv_handle_t*)handle))
 	{
-		uv_close( handle, 0);
+		uv_close( handle, NULL);
 	}
 }
 
@@ -529,15 +529,19 @@ int strus_run_server( unsigned short port, unsigned int nofThreads, strus_global
 		return -2;
 	}
 	uv_run( g_server.loop, UV_RUN_DEFAULT);
+
 	uv_walk( g_server.loop, on_walk_cleanup, NULL);
+	uv_run( g_server.loop, UV_RUN_DEFAULT);
 	do
 	{
-		uv_run( g_server.loop, UV_RUN_DEFAULT);
 		res = uv_loop_close( g_server.loop);
-	} while (-res == EBUSY);
-	if (res != 0 && g_glbctx->logf) fprintf( g_glbctx->logf, "failed to cleanup all connection handles (%d)\n", (int)res);
-
+		uv_run( g_server.loop, UV_RUN_DEFAULT);
+	} while (res == -EBUSY);
+	if (res)
+	{
+		log_error_sys( "close connection resources failed", res);
+	}
 	g_glbctx = 0;
-	return res;
+	return 0;
 }
 
