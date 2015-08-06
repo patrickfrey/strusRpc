@@ -52,7 +52,6 @@ enum ClassId
 	ClassId_NormalizerFunctionContext,
 	ClassId_NormalizerFunctionInstance,
 	ClassId_NormalizerFunction,
-	ClassId_PeerStorageTransaction,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
 	ClassId_QueryAnalyzer,
@@ -68,8 +67,6 @@ enum ClassId
 	ClassId_StorageDump,
 	ClassId_Storage,
 	ClassId_StorageObjectBuilder,
-	ClassId_StoragePeer,
-	ClassId_StoragePeerTransaction,
 	ClassId_StorageTransaction,
 	ClassId_SummarizerFunctionContext,
 	ClassId_SummarizerFunctionInstance,
@@ -320,19 +317,6 @@ public:
 	};
 };
 
-class PeerStorageTransactionConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_updateNofDocumentsInsertedChange,
-		Method_updateDocumentFrequencyChange,
-		Method_commit,
-		Method_rollback
-	};
-};
-
 class PostingIteratorConst
 {
 public:
@@ -484,7 +468,7 @@ public:
 		Method_createDocnoRangeAllocator,
 		Method_createTransaction,
 		Method_createPeerStorageTransaction,
-		Method_defineStoragePeerInterface,
+		Method_defineStoragePeerClient,
 		Method_createDocumentChecker,
 		Method_checkStorage,
 		Method_createDump
@@ -558,30 +542,6 @@ public:
 		Method_createStorageClient,
 		Method_createAlterMetaDataTable,
 		Method_createQueryEval
-	};
-};
-
-class StoragePeerConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_createTransaction
-	};
-};
-
-class StoragePeerTransactionConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_populateNofDocumentsInsertedChange,
-		Method_populateDocumentFrequencyChange,
-		Method_try_commit,
-		Method_final_commit,
-		Method_rollback
 	};
 };
 

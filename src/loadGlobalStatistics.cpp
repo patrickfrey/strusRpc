@@ -107,7 +107,7 @@ DLL_PUBLIC void strus::loadGlobalStatistics(
 					std::string termvalue = Protocol::decodeString( readToken( li, le));
 
 					transaction->updateDocumentFrequencyChange(
-							termtype.c_str(), termvalue.c_str(), df);
+							termtype.c_str(), termvalue.c_str(), df, true);
 				}
 				else if (tok == Constants::storage_statistics_number_of_documents())
 				{
@@ -124,7 +124,7 @@ DLL_PUBLIC void strus::loadGlobalStatistics(
 				throw std::runtime_error( "unconsumed characters at end of line");
 			}
 		}
-		transaction->commit();
+		(void)transaction->commit();
 	}
 	catch (const std::istream::failure& err)
 	{

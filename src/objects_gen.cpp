@@ -1183,57 +1183,6 @@ NormalizerFunctionInstanceInterface* NormalizerFunctionImpl::createInstance( con
 	return p0;
 }
 
-PeerStorageTransactionImpl::~PeerStorageTransactionImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-void PeerStorageTransactionImpl::updateNofDocumentsInsertedChange( const GlobalCounter& p1)
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_updateNofDocumentsInsertedChange);
-	msg.packGlobalCounter( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-void PeerStorageTransactionImpl::updateDocumentFrequencyChange( const char* p1, const char* p2, const GlobalCounter& p3)
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_updateDocumentFrequencyChange);
-	msg.packCharp( p1);
-	msg.packCharp( p2);
-	msg.packGlobalCounter( p3);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-void PeerStorageTransactionImpl::commit( )
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_commit);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	ctx()->rpc_synchronize();
-}
-
-void PeerStorageTransactionImpl::rollback( )
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_rollback);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
 PostingIteratorImpl::~PostingIteratorImpl()
 {
 	if (isConst()) return;
@@ -2185,29 +2134,12 @@ StorageTransactionInterface* StorageClientImpl::createTransaction( )
 
 PeerStorageTransactionInterface* StorageClientImpl::createPeerStorageTransaction( )
 {
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createPeerStorageTransaction);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_PeerStorageTransaction;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	PeerStorageTransactionInterface* p0 = new PeerStorageTransactionImpl( objId_0, ctx());
-	return p0;
+	throw std::runtime_error("the method 'createPeerStorageTransaction' is not implemented for RPC");
 }
 
-void StorageClientImpl::defineStoragePeerInterface( const StoragePeerInterface* p1, bool p2)
+void StorageClientImpl::defineStoragePeerClient( const StoragePeerClientInterface* p1, bool p2)
 {
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineStoragePeerInterface);
-	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw std::runtime_error( "passing non RPC interface object in RPC call (StoragePeer)");
-	msg.packObject( impl_1->classId(), impl_1->objId());
-	msg.packBool( p2);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
+	throw std::runtime_error("the method 'defineStoragePeerClient' is not implemented for RPC");
 }
 
 StorageDocumentInterface* StorageClientImpl::createDocumentChecker( const std::string& p1, const std::string& p2) const
@@ -2620,90 +2552,6 @@ QueryEvalInterface* StorageObjectBuilderImpl::createQueryEval( ) const
 	ctx()->rpc_sendMessage( msg.content());
 	QueryEvalInterface* p0 = new QueryEvalImpl( objId_0, ctx());
 	return p0;
-}
-
-StoragePeerImpl::~StoragePeerImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-StoragePeerTransactionInterface* StoragePeerImpl::createTransaction( ) const
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createTransaction);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_StoragePeerTransaction;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	StoragePeerTransactionInterface* p0 = new StoragePeerTransactionImpl( objId_0, ctx());
-	return p0;
-}
-
-StoragePeerTransactionImpl::~StoragePeerTransactionImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-void StoragePeerTransactionImpl::populateNofDocumentsInsertedChange( int p1)
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_populateNofDocumentsInsertedChange);
-	msg.packInt( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-void StoragePeerTransactionImpl::populateDocumentFrequencyChange( const char* p1, const char* p2, int p3, bool p4)
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_populateDocumentFrequencyChange);
-	msg.packCharp( p1);
-	msg.packCharp( p2);
-	msg.packInt( p3);
-	msg.packBool( p4);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-void StoragePeerTransactionImpl::try_commit( )
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_try_commit);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-void StoragePeerTransactionImpl::final_commit( )
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_final_commit);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-void StoragePeerTransactionImpl::rollback( )
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_rollback);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
 }
 
 StorageTransactionImpl::~StorageTransactionImpl()

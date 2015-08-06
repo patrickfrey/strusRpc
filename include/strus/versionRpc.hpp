@@ -43,7 +43,7 @@
 #define STRUS_RPC_VERSION_MINOR 1
 
 /// \brief The version of the rpc library as string
-#define STRUS_RPC_VERSION_STRING "0.1.8"
+#define STRUS_RPC_VERSION_STRING "0.1.9"
 
 #endif
 
