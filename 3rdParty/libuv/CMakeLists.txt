@@ -6,7 +6,7 @@ set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-strict-aliasing" )
 #
 # This CMakeLists.txt file is a patched clone from the project https://github.com/aseprite/libuv-cmake
 # 
-set( LIBUVDIR ${PROJECT_SOURCE_DIR}/libuv )
+set( LIBUVDIR ${PROJECT_SOURCE_DIR}/3rdParty/libuv/libuv-1.x )
 
 include_directories(${LIBUVDIR}/include ${LIBUVDIR}/src)
 set(SOURCES

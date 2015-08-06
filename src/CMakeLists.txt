@@ -31,7 +31,7 @@ set( client_socket_source_files
 include_directories(
         "${Boost_INCLUDE_DIRS}"
 	"${PROJECT_SOURCE_DIR}/include"
-	"${PROJECT_SOURCE_DIR}/libuv/include"
+	"${PROJECT_SOURCE_DIR}/3rdParty/libuv/libuv-1.x/include"
 	"${strusmodule_INCLUDE_DIRS}"
 	"${strus_INCLUDE_DIRS}"
 	"${strusanalyzer_INCLUDE_DIRS}" )
