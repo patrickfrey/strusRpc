@@ -146,15 +146,13 @@ my %notImplMethods = ();
 $notImplMethods{"checkStorage"} = 1;                  # ...ostream reference input cannot be handled
 $notImplMethods{"subExpressions"} = 1;                # ...vector of const object return can not be handled
 $notImplMethods{"createResultIterator"} = 1;          # ...vector of object references as passed argument can not be handled
-$notImplMethods{"createPeerStorageTransaction"} = 1;  # ...peer storage transactions are inernal
-$notImplMethods{"defineStoragePeerClient"} = 1;       # ...peer storage interfaces are internal
+$notImplMethods{"definePeerMessageProcessor"} = 1;  # ...peer message processor is internal
 
 # List of interfaces that are not implemented for RPC:
 my %notImplInterfaces = ();
-$notImplInterfaces{"PeerStorageTransactionInterface"} = 1;  # ...peer storage transactions are inernal
-$notImplInterfaces{"StoragePeerInterface"} = 1;             # ...peer storage interfaces are internal
-$notImplInterfaces{"StoragePeerClientInterface"} = 1;       # ...peer storage interfaces are internal
-$notImplInterfaces{"StoragePeerTransactionInterface"} = 1;  # ...peer storage interfaces are internal
+$notImplInterfaces{"PeerMessageProcessorInterface"} = 1;  # ...peer storage interfaces are internal
+$notImplInterfaces{"PeerMessageBuilderInterface"} = 1;  # ...peer storage interfaces are internal
+$notImplInterfaces{"PeerMessageViewerInterface"} = 1;  # ...peer storage interfaces are internal
 
 # List of methods that pass interface params with ownership:
 my %passOwnershipParams = ();

@@ -36,7 +36,6 @@
 #include "strus/private/configParser.hpp"
 #include "strus/private/fileio.hpp"
 #include "private/utils.hpp"
-#include "loadGlobalStatistics.hpp"
 #include "rpcSerializer.hpp"
 extern "C" {
 #include "server.h"
@@ -475,21 +474,15 @@ int main( int argc, const char* argv[])
 		for (; gi != ge; ++gi)
 		{
 			std::cerr << "strus RPC server loading global statistics from file '" << *gi << "'" << std::endl;
-			std::ifstream file;
-			file.exceptions( std::ifstream::failbit | std::ifstream::badbit);
-			try 
+			std::string content;
+			unsigned int ec = strus::readFile( *gi, content);
+			if (ec)
 			{
-				file.open( gi->c_str(), std::fstream::in);
-				strus::loadGlobalStatistics( *g_storageClient, file);
+				std::ostringstream msg;
+				msg << ec;
+				throw std::runtime_error( std::string( "error reading global statistics file '") + *gi + "' (system error code " + msg.str() + ")");
 			}
-			catch (const std::ifstream::failure& err)
-			{
-				throw std::runtime_error( std::string( "failed to read global statistics from file '") + *gi + "': " + err.what());
-			}
-			catch (const std::runtime_error& err)
-			{
-				throw std::runtime_error( std::string( "failed to read global statistics from file '") + *gi + "': " + err.what());
-			}
+			storageClient->pushPeerMessage( content.c_str(), content.size());
 		}
 
 		// Start server:

@@ -56,7 +56,9 @@
 #include "strus/forwardIteratorInterface.hpp"
 #include "strus/invAclIteratorInterface.hpp"
 #include "strus/metaDataReaderInterface.hpp"
-#include "strus/peerStorageTransactionInterface.hpp"
+#include "strus/peerMessageBuilderInterface.hpp"
+#include "strus/peerMessageProcessorInterface.hpp"
+#include "strus/peerMessageViewerInterface.hpp"
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/postingJoinOperatorInterface.hpp"
 #include "strus/queryEvalInterface.hpp"
@@ -69,9 +71,6 @@
 #include "strus/storageDumpInterface.hpp"
 #include "strus/storageInterface.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
-#include "strus/storagePeerClientInterface.hpp"
-#include "strus/storagePeerInterface.hpp"
-#include "strus/storagePeerTransactionInterface.hpp"
 #include "strus/storageTransactionInterface.hpp"
 #include "strus/summarizerFunctionContextInterface.hpp"
 #include "strus/summarizerFunctionInstanceInterface.hpp"
@@ -586,8 +585,11 @@ public:
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual DocnoRangeAllocatorInterface* createDocnoRangeAllocator( );
 	virtual StorageTransactionInterface* createTransaction( );
-	virtual PeerStorageTransactionInterface* createPeerStorageTransaction( );
-	virtual void defineStoragePeerClient( const StoragePeerClientInterface* p1, bool p2);
+	virtual void definePeerMessageProcessor( const PeerMessageProcessorInterface* p1);
+	virtual void startPeerInit( );
+	virtual void pushPeerMessage( const char* p1, std::size_t p2);
+	virtual bool fetchPeerReply( const char*& p1, std::size_t& p2);
+	virtual bool fetchPeerMessage( const char*& p1, std::size_t& p2);
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
 	virtual void checkStorage( std::ostream& p1) const;
 	virtual StorageDumpInterface* createDump( ) const;

@@ -2132,14 +2132,60 @@ StorageTransactionInterface* StorageClientImpl::createTransaction( )
 	return p0;
 }
 
-PeerStorageTransactionInterface* StorageClientImpl::createPeerStorageTransaction( )
+void StorageClientImpl::definePeerMessageProcessor( const PeerMessageProcessorInterface* p1)
 {
-	throw std::runtime_error("the method 'createPeerStorageTransaction' is not implemented for RPC");
+	throw std::runtime_error("the method 'definePeerMessageProcessor' is not implemented for RPC");
 }
 
-void StorageClientImpl::defineStoragePeerClient( const StoragePeerClientInterface* p1, bool p2)
+void StorageClientImpl::startPeerInit( )
 {
-	throw std::runtime_error("the method 'defineStoragePeerClient' is not implemented for RPC");
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_startPeerInit);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void StorageClientImpl::pushPeerMessage( const char* p1, std::size_t p2)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_pushPeerMessage);
+	msg.packBuffer( p1, p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+bool StorageClientImpl::fetchPeerReply( const char*& p1, std::size_t& p2)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_fetchPeerReply);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	const char* bp1;
+	serializedMsg.unpackBuffer( bp1, p2);
+	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
+	return p0;
+}
+
+bool StorageClientImpl::fetchPeerMessage( const char*& p1, std::size_t& p2)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_fetchPeerMessage);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	const char* bp1;
+	serializedMsg.unpackBuffer( bp1, p2);
+	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
+	return p0;
 }
 
 StorageDocumentInterface* StorageClientImpl::createDocumentChecker( const std::string& p1, const std::string& p2) const

@@ -467,8 +467,11 @@ public:
 		Method_createAttributeReader,
 		Method_createDocnoRangeAllocator,
 		Method_createTransaction,
-		Method_createPeerStorageTransaction,
-		Method_defineStoragePeerClient,
+		Method_definePeerMessageProcessor,
+		Method_startPeerInit,
+		Method_pushPeerMessage,
+		Method_fetchPeerReply,
+		Method_fetchPeerMessage,
 		Method_createDocumentChecker,
 		Method_checkStorage,
 		Method_createDump

@@ -10,7 +10,6 @@ set( server_source_files
 	server.c
 	hexdump.c
 	utils.cpp
-	loadGlobalStatistics.cpp
 	rpcSerializer.cpp
 	rpcRequestHandler.cpp
 	rpcRequestHandler_gen.cpp
