@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR )
 
+# Patch for server.c/client.c to compile (not C99 because of non POSIX extensions)
+set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -fPIC -O${STRUS_OPTIMIZATION_LEVEL}" )
+
 # --------------------------------------
 # SOURCES AND INCLUDES
 # --------------------------------------
@@ -7,7 +10,6 @@ set( server_source_files
 	server.c
 	hexdump.c
 	utils.cpp
-	loadGlobalStatistics.cpp
 	rpcSerializer.cpp
 	rpcRequestHandler.cpp
 	rpcRequestHandler_gen.cpp
@@ -22,17 +24,21 @@ set( client_source_files
 	rpcClient.cpp
 )
 
+set( client_socket_source_files
+	client.c
+	hexdump.c
+	rpcClientMessaging.cpp
+)
+
 include_directories(
-	"${libevent_INCLUDE_DIRS}"
         "${Boost_INCLUDE_DIRS}"
 	"${PROJECT_SOURCE_DIR}/include"
-	"${PROJECT_SOURCE_DIR}/libuv/include"
+	"${PROJECT_SOURCE_DIR}/3rdParty/libuv/libuv-1.x/include"
 	"${strusmodule_INCLUDE_DIRS}"
 	"${strus_INCLUDE_DIRS}"
 	"${strusanalyzer_INCLUDE_DIRS}" )
 
 link_directories(
-	"${libevent_LIBRARY_DIRS}"
 	"${PROJECT_SOURCE_DIR}/src"
 	"${PROJECT_SOURCE_DIR}/3rdParty/libuv"
 	"${strusmodule_LIBRARY_DIRS}"
@@ -42,14 +48,14 @@ link_directories(
 # -------------------------------------------
 # LIBRARY
 # -------------------------------------------
-add_library( strus_rpc_client_socket SHARED  rpcClientMessaging.cpp libstrus_rpc_client_socket.cpp )
-target_link_libraries( strus_rpc_client_socket dl "${libevent_LIBRARIES}" )
+add_library( strus_rpc_client_socket SHARED ${client_socket_source_files} libstrus_rpc_client_socket.cpp )
+target_link_libraries( strus_rpc_client_socket dl uv )
 
 add_library( strus_rpc_client SHARED ${client_source_files} libstrus_rpc_client.cpp )
 target_link_libraries( strus_rpc_client dl )
 
 add_library( strus_rpc_server SHARED ${server_source_files} libstrus_rpc_server.cpp )
-target_link_libraries( strus_rpc_server dl strus_utils "${strusmodule_LIBRARIES}" "${Boost_LIBRARIES}" uv )
+target_link_libraries( strus_rpc_server dl strus_utils strus_module "${Boost_LIBRARIES}" uv )
 
 set_target_properties(
     strus_rpc_client_socket
@@ -79,7 +85,7 @@ set_target_properties(
 # PROGRAMS
 # ------------------------------
 add_executable( strusRpcServer strusRpcServer.cpp utils.cpp )
-target_link_libraries( strusRpcServer  "${libevent_LIBRARIES}"  "${strusmodule_LIBRARIES}"  strus_rpc_server )
+target_link_libraries( strusRpcServer  "${strusmodule_LIBRARIES}"  strus_rpc_server )
 
 # ------------------------------
 # INSTALLATION

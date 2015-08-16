@@ -56,7 +56,9 @@
 #include "strus/forwardIteratorInterface.hpp"
 #include "strus/invAclIteratorInterface.hpp"
 #include "strus/metaDataReaderInterface.hpp"
-#include "strus/peerStorageTransactionInterface.hpp"
+#include "strus/peerMessageBuilderInterface.hpp"
+#include "strus/peerMessageProcessorInterface.hpp"
+#include "strus/peerMessageViewerInterface.hpp"
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/postingJoinOperatorInterface.hpp"
 #include "strus/queryEvalInterface.hpp"
@@ -69,8 +71,6 @@
 #include "strus/storageDumpInterface.hpp"
 #include "strus/storageInterface.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
-#include "strus/storagePeerInterface.hpp"
-#include "strus/storagePeerTransactionInterface.hpp"
 #include "strus/storageTransactionInterface.hpp"
 #include "strus/summarizerFunctionContextInterface.hpp"
 #include "strus/summarizerFunctionInstanceInterface.hpp"
@@ -394,23 +394,6 @@ public:
 	virtual NormalizerFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
 };
 
-class PeerStorageTransactionImpl
-		:public RpcInterfaceStub
-		,public strus::PeerStorageTransactionInterface
-		,public strus::PeerStorageTransactionConst
-{
-public:
-	virtual ~PeerStorageTransactionImpl();
-
-	PeerStorageTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_PeerStorageTransaction, objId_, ctx_, isConst_){}
-
-	virtual void updateNofDocumentsInsertedChange( const GlobalCounter& p1);
-	virtual void updateDocumentFrequencyChange( const char* p1, const char* p2, const GlobalCounter& p3);
-	virtual void commit( );
-	virtual void rollback( );
-};
-
 class PostingIteratorImpl
 		:public RpcInterfaceStub
 		,public strus::PostingIteratorInterface
@@ -459,6 +442,7 @@ public:
 
 	virtual void definePhraseType( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual std::vector<analyzer::Term> analyzePhrase( const std::string& p1, const std::string& p2) const;
+	virtual std::vector<analyzer::TermVector> analyzePhraseBulk( const std::vector<QueryAnalyzerInterface::Phrase>& p1) const;
 };
 
 class QueryEvalImpl
@@ -601,8 +585,11 @@ public:
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual DocnoRangeAllocatorInterface* createDocnoRangeAllocator( );
 	virtual StorageTransactionInterface* createTransaction( );
-	virtual PeerStorageTransactionInterface* createPeerStorageTransaction( );
-	virtual void defineStoragePeerInterface( const StoragePeerInterface* p1, bool p2);
+	virtual void definePeerMessageProcessor( const PeerMessageProcessorInterface* p1);
+	virtual void startPeerInit( );
+	virtual void pushPeerMessage( const char* p1, std::size_t p2);
+	virtual bool fetchPeerReply( const char*& p1, std::size_t& p2);
+	virtual bool fetchPeerMessage( const char*& p1, std::size_t& p2);
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
 	virtual void checkStorage( std::ostream& p1) const;
 	virtual StorageDumpInterface* createDump( ) const;
@@ -696,38 +683,6 @@ public:
 	virtual StorageClientInterface* createStorageClient( const std::string& p1) const;
 	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( const std::string& p1) const;
 	virtual QueryEvalInterface* createQueryEval( ) const;
-};
-
-class StoragePeerImpl
-		:public RpcInterfaceStub
-		,public strus::StoragePeerInterface
-		,public strus::StoragePeerConst
-{
-public:
-	virtual ~StoragePeerImpl();
-
-	StoragePeerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_StoragePeer, objId_, ctx_, isConst_){}
-
-	virtual StoragePeerTransactionInterface* createTransaction( ) const;
-};
-
-class StoragePeerTransactionImpl
-		:public RpcInterfaceStub
-		,public strus::StoragePeerTransactionInterface
-		,public strus::StoragePeerTransactionConst
-{
-public:
-	virtual ~StoragePeerTransactionImpl();
-
-	StoragePeerTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_StoragePeerTransaction, objId_, ctx_, isConst_){}
-
-	virtual void populateNofDocumentsInsertedChange( int p1);
-	virtual void populateDocumentFrequencyChange( const char* p1, const char* p2, int p3, bool p4);
-	virtual void try_commit( );
-	virtual void final_commit( );
-	virtual void rollback( );
 };
 
 class StorageTransactionImpl

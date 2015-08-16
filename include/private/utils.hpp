@@ -38,7 +38,6 @@
 #include <boost/lockfree/queue.hpp>
 #include <boost/lockfree/policies.hpp>
 #include <boost/thread/condition_variable.hpp> 
-#include <boost/crc.hpp>
 
 namespace strus {
 namespace utils {

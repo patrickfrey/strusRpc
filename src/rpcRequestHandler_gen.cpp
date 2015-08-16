@@ -1108,7 +1108,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			try {
 				obj->commit();
-				msg.packByte( MsgTypeAnswer);
+				msg.packByte( MsgTypeSynchronize);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
 				msg.packString( err.what());
@@ -1122,7 +1122,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			msg.packCrc32();
 			return msg.content();
 		}
 		case DatabaseTransactionConst::Method_rollback:
@@ -2097,112 +2096,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_PeerStorageTransaction:
-	{
-	PeerStorageTransactionInterface* obj = getObject<PeerStorageTransactionInterface>( classId, objId);
-	switch( (PeerStorageTransactionConst::MethodId)methodId)
-	{
-		case PeerStorageTransactionConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case PeerStorageTransactionConst::Method_updateNofDocumentsInsertedChange:
-		{
-			RpcSerializer msg;
-			GlobalCounter p1;
-			p1 = serializedMsg.unpackGlobalCounter();
-			try {
-				obj->updateNofDocumentsInsertedChange(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			return std::string();
-		}
-		case PeerStorageTransactionConst::Method_updateDocumentFrequencyChange:
-		{
-			RpcSerializer msg;
-			const char* p1;
-			const char* p2;
-			GlobalCounter p3;
-			p1 = serializedMsg.unpackConstCharp();
-			p2 = serializedMsg.unpackConstCharp();
-			p3 = serializedMsg.unpackGlobalCounter();
-			try {
-				obj->updateDocumentFrequencyChange(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			return std::string();
-		}
-		case PeerStorageTransactionConst::Method_commit:
-		{
-			RpcSerializer msg;
-			try {
-				obj->commit();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case PeerStorageTransactionConst::Method_rollback:
-		{
-			RpcSerializer msg;
-			try {
-				obj->rollback();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			return std::string();
-		}
-	}
-	break;
-	}
 	case ClassId_PostingIterator:
 	{
 	PostingIteratorInterface* obj = getObject<PostingIteratorInterface>( classId, objId);
@@ -2499,6 +2392,39 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
 				msg.packAnalyzerTerm( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case QueryAnalyzerConst::Method_analyzePhraseBulk:
+		{
+			RpcSerializer msg;
+			std::vector<analyzer::TermVector> p0;
+			std::vector<QueryAnalyzerInterface::Phrase> p1;
+			std::size_t n1 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n1; ++ii) {
+				QueryAnalyzerInterface::Phrase ee = serializedMsg.unpackPhrase();
+				p1.push_back( ee);
+			}
+			try {
+				p0 = obj->analyzePhraseBulk(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packAnalyzerTermVector( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();
@@ -3511,7 +3437,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			try {
 				obj->commit();
-				msg.packByte( MsgTypeAnswer);
+				msg.packByte( MsgTypeSynchronize);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
 				msg.packString( err.what());
@@ -3525,7 +3451,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			msg.packCrc32();
 			return msg.content();
 		}
 		case StorageAlterMetaDataTableConst::Method_rollback:
@@ -3957,14 +3882,19 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case StorageClientConst::Method_createPeerStorageTransaction:
+		case StorageClientConst::Method_definePeerMessageProcessor:
 		{
 			RpcSerializer msg;
-			PeerStorageTransactionInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
+			(void)(obj);
+			msg.packByte( MsgTypeException_RuntimeError);
+			msg.packString( "the method 'definePeerMessageProcessor' is not implemented for RPC");
+			return msg.content();
+		}
+		case StorageClientConst::Method_startPeerInit:
+		{
+			RpcSerializer msg;
 			try {
-				p0 = obj->createPeerStorageTransaction();
+				obj->startPeerInit();
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -3979,22 +3909,16 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			defineObject( classId_0, objId_0, p0);
-			
 			return std::string();
 		}
-		case StorageClientConst::Method_defineStoragePeerInterface:
+		case StorageClientConst::Method_pushPeerMessage:
 		{
 			RpcSerializer msg;
-			const StoragePeerInterface* p1;
-			bool p2;
-			unsigned char classId_1; unsigned int objId_1;
-			serializedMsg.unpackObject( classId_1, objId_1);
-			if (classId_1 != ClassId_StoragePeer) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
-			p1 = getConstObject<StoragePeerInterface>( classId_1, objId_1);
-			p2 = serializedMsg.unpackBool();
+			const char* p1;
+			std::size_t p2;
+			serializedMsg.unpackBuffer( p1, p2);
 			try {
-				obj->defineStoragePeerInterface(p1,p2);
+				obj->pushPeerMessage(p1,p2);
 				msg.packByte( MsgTypeAnswer);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
@@ -4010,6 +3934,60 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			return std::string();
+		}
+		case StorageClientConst::Method_fetchPeerReply:
+		{
+			RpcSerializer msg;
+			bool p0;
+			const char* p1;
+			std::size_t p2;
+			try {
+				p0 = obj->fetchPeerReply(p1,p2);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packBool( p0);
+			msg.packBuffer( p1, p2);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StorageClientConst::Method_fetchPeerMessage:
+		{
+			RpcSerializer msg;
+			bool p0;
+			const char* p1;
+			std::size_t p2;
+			try {
+				p0 = obj->fetchPeerMessage(p1,p2);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			msg.packBool( p0);
+			msg.packBuffer( p1, p2);
+			msg.packCrc32();
+			return msg.content();
 		}
 		case StorageClientConst::Method_createDocumentChecker:
 		{
@@ -4220,7 +4198,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			try {
 				obj->done();
-				msg.packByte( MsgTypeAnswer);
+				msg.packByte( MsgTypeSynchronize);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
 				msg.packString( err.what());
@@ -4234,7 +4212,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			msg.packCrc32();
 			return msg.content();
 		}
 	}
@@ -4395,7 +4372,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			try {
 				obj->done();
-				msg.packByte( MsgTypeAnswer);
+				msg.packByte( MsgTypeSynchronize);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
 				msg.packString( err.what());
@@ -4409,7 +4386,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			msg.packCrc32();
 			return msg.content();
 		}
 	}
@@ -4801,173 +4777,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_StoragePeer:
-	{
-	StoragePeerInterface* obj = getObject<StoragePeerInterface>( classId, objId);
-	switch( (StoragePeerConst::MethodId)methodId)
-	{
-		case StoragePeerConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case StoragePeerConst::Method_createTransaction:
-		{
-			RpcSerializer msg;
-			StoragePeerTransactionInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createTransaction();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-	}
-	break;
-	}
-	case ClassId_StoragePeerTransaction:
-	{
-	StoragePeerTransactionInterface* obj = getObject<StoragePeerTransactionInterface>( classId, objId);
-	switch( (StoragePeerTransactionConst::MethodId)methodId)
-	{
-		case StoragePeerTransactionConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case StoragePeerTransactionConst::Method_populateNofDocumentsInsertedChange:
-		{
-			RpcSerializer msg;
-			int p1;
-			p1 = serializedMsg.unpackInt();
-			try {
-				obj->populateNofDocumentsInsertedChange(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			return std::string();
-		}
-		case StoragePeerTransactionConst::Method_populateDocumentFrequencyChange:
-		{
-			RpcSerializer msg;
-			const char* p1;
-			const char* p2;
-			int p3;
-			bool p4;
-			p1 = serializedMsg.unpackConstCharp();
-			p2 = serializedMsg.unpackConstCharp();
-			p3 = serializedMsg.unpackInt();
-			p4 = serializedMsg.unpackBool();
-			try {
-				obj->populateDocumentFrequencyChange(p1,p2,p3,p4);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			return std::string();
-		}
-		case StoragePeerTransactionConst::Method_try_commit:
-		{
-			RpcSerializer msg;
-			try {
-				obj->try_commit();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			return std::string();
-		}
-		case StoragePeerTransactionConst::Method_final_commit:
-		{
-			RpcSerializer msg;
-			try {
-				obj->final_commit();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			return std::string();
-		}
-		case StoragePeerTransactionConst::Method_rollback:
-		{
-			RpcSerializer msg;
-			try {
-				obj->rollback();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
-				return msg.content();
-			}
-			return std::string();
-		}
-	}
-	break;
-	}
 	case ClassId_StorageTransaction:
 	{
 	StorageTransactionInterface* obj = getObject<StorageTransactionInterface>( classId, objId);
@@ -5114,7 +4923,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			try {
 				obj->commit();
-				msg.packByte( MsgTypeAnswer);
+				msg.packByte( MsgTypeSynchronize);
 			} catch (const std::runtime_error& err) {
 				msg.packByte( MsgTypeException_RuntimeError);
 				msg.packString( err.what());
@@ -5128,7 +4937,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				msg.packString( err.what());
 				return msg.content();
 			}
-			msg.packCrc32();
 			return msg.content();
 		}
 		case StorageTransactionConst::Method_rollback:

@@ -26,19 +26,30 @@
 
 --------------------------------------------------------------------
 */
-#ifndef _STRUS_RPC_LOAD_GLOBAL_STATISTICS_HPP_INCLUDED
-#define _STRUS_RPC_LOAD_GLOBAL_STATISTICS_HPP_INCLUDED
-#include <iostream>
+#ifndef _STRUS_RPC_CLIENT_H_INCLUDED
+#define _STRUS_RPC_CLIENT_H_INCLUDED
+#include <stddef.h>
+#include <stdio.h>
 
-namespace strus {
+struct strus_connection_t;
 
-/// \brief Forward declaration
-class StorageClientInterface;
+struct strus_connection_t* strus_create_connection(
+		const char* serviceaddr, FILE* logf, int* errno_);
 
-void loadGlobalStatistics(
-		StorageClientInterface& storage,
-		std::istream& stream);
+void strus_close_connection(
+		struct strus_connection_t* conn);
 
-}
+void strus_destroy_connection(
+		struct strus_connection_t* conn);
+
+int strus_request(
+		struct strus_connection_t* conn,
+		const unsigned char* input, size_t inputsize,
+		unsigned char** output, size_t* outputsize);
+
+const char* strus_lasterror(
+		struct strus_connection_t* conn);
+
 #endif
+
 

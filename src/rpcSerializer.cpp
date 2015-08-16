@@ -28,6 +28,7 @@
 */
 #include "rpcSerializer.hpp"
 #include "private/utils.hpp"
+#include "rpcProtocolDefines.hpp"
 #include <stdexcept>
 #include <cstring>
 #include <iostream>
@@ -83,7 +84,10 @@ void pack<4>( std::string& buf, const void* ptr)
 template <>
 void unpack<4>( char const*& itr, const char* end, void* ptr)
 {
-	if (itr+4 > end) throw std::runtime_error( "message to small to encode next dword");
+	if (itr+4 > end)
+	{
+		throw std::runtime_error( "message to small to encode next dword");
+	}
 	uint32_t val;
 	std::memcpy( &val, itr, 4);
 	itr += 4;
@@ -387,7 +391,17 @@ void RpcSerializer::packAnalyzerTerm( const analyzer::Term& val)
 {
 	packString( val.type());
 	packString( val.value());
-	packUint( val.pos());
+	packIndex( val.pos());
+}
+
+void RpcSerializer::packAnalyzerTermVector( const analyzer::TermVector& val)
+{
+	analyzer::TermVector::const_iterator ti = val.begin(), te = val.end();
+	packSize( te-ti);
+	for (; ti != te; ++ti)
+	{
+		packAnalyzerTerm( *ti);
+	}
 }
 
 void RpcSerializer::packAnalyzerToken( const analyzer::Token& val)
@@ -423,6 +437,12 @@ void RpcSerializer::packFeatureParameter( const QueryEvalInterface::FeatureParam
 	packString( val.featureSet());
 }
 
+void RpcSerializer::packPhrase( const QueryAnalyzerInterface::Phrase& val)
+{
+	packString( val.type());
+	packString( val.content());
+}
+
 void RpcSerializer::packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val)
 {
 	packByte( val);
@@ -431,11 +451,13 @@ void RpcSerializer::packDocumentStatisticsType( const StorageClientInterface::Do
 
 void RpcSerializer::packCrc32()
 {
+#if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM
 	uint32_t crc = utils::Crc32::calc( m_content.c_str(), m_content.size());
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packCrc32(" << crc << ") size=" << m_content.size() << std::endl;
 #endif
 	packScalar( m_content, crc);
+#endif
 }
 
 unsigned int RpcDeserializer::unpackSessionId()
@@ -626,6 +648,7 @@ DocumentClass RpcDeserializer::unpackDocumentClass()
 
 bool RpcDeserializer::unpackCrc32()
 {
+#if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM	
 	uint32_t size = (m_end - m_start) - 4;
 	uint32_t crc = utils::Crc32::calc( m_start, size);
 	char const* ee = m_end-4;
@@ -633,6 +656,9 @@ bool RpcDeserializer::unpackCrc32()
 	std::cerr << "unpackCrc32(" << crc << ") size=" << size << std::endl;
 #endif
 	return crc == unpackScalar<uint32_t>( ee, m_end);
+#else
+	return true;
+#endif
 }
 
 DatabaseOptions RpcDeserializer::unpackDatabaseOptions()
@@ -728,8 +754,19 @@ analyzer::Term RpcDeserializer::unpackAnalyzerTerm()
 {
 	std::string type = unpackString();
 	std::string value = unpackString();
-	unsigned int pos = unpackUint();
+	unsigned int pos = (unsigned int)unpackIndex();
 	return analyzer::Term( type, value, pos);
+}
+
+analyzer::TermVector RpcDeserializer::unpackAnalyzerTermVector()
+{
+	analyzer::TermVector rt;
+	std::size_t ii = 0, size = unpackSize();
+	for (; ii<size; ++ii)
+	{
+		rt.push_back( unpackAnalyzerTerm());
+	}
+	return rt;
 }
 
 analyzer::Token RpcDeserializer::unpackAnalyzerToken()
@@ -759,6 +796,13 @@ ResultDocument RpcDeserializer::unpackResultDocument()
 		rt.addAttribute( name, value, weight);
 	}
 	return rt;
+}
+
+QueryAnalyzerInterface::Phrase RpcDeserializer::unpackPhrase()
+{
+	std::string type = unpackString();
+	std::string content = unpackString();
+	return QueryAnalyzerInterface::Phrase( type, content);
 }
 
 QueryEvalInterface::FeatureParameter RpcDeserializer::unpackFeatureParameter()

@@ -65,6 +65,8 @@ void RpcClientContext::handleError( const std::string& msgstr) const
 			throw std::runtime_error( std::string("method call failed: ") + msg.unpackString());
 		case MsgTypeException_LogicError:
 			throw std::logic_error( std::string("method call failed: ") + msg.unpackString());
+		case MsgTypeSynchronize:
+			break;
 		case MsgTypeAnswer:
 			if (!msg.unpackCrc32())
 			{
@@ -91,7 +93,7 @@ void RpcClientContext::rpc_synchronize() const
 	std::string answer = m_messaging->synchronize();
 	if (answer.empty()) return;
 	handleError( answer);
-	if (answer.size() > 0)
+	if (answer.size() > 1)
 	{
 		throw std::runtime_error("got unexpected (non empty) answer from server calling rpc_synchronize");
 	}

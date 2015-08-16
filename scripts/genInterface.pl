@@ -143,9 +143,16 @@ $syncMethods{"commit"} = 1;
 
 # List of methods that are not implemented for RPC:
 my %notImplMethods = ();
-$notImplMethods{"checkStorage"} = 1;           # ...ostream reference input cannot be handled
-$notImplMethods{"subExpressions"} = 1;         # ...vector of const object return can not be handled
-$notImplMethods{"createResultIterator"} = 1;   # ...vector of object references as passed argument can not be handled
+$notImplMethods{"checkStorage"} = 1;                  # ...ostream reference input cannot be handled
+$notImplMethods{"subExpressions"} = 1;                # ...vector of const object return can not be handled
+$notImplMethods{"createResultIterator"} = 1;          # ...vector of object references as passed argument can not be handled
+$notImplMethods{"definePeerMessageProcessor"} = 1;  # ...peer message processor is internal
+
+# List of interfaces that are not implemented for RPC:
+my %notImplInterfaces = ();
+$notImplInterfaces{"PeerMessageProcessorInterface"} = 1;  # ...peer storage interfaces are internal
+$notImplInterfaces{"PeerMessageBuilderInterface"} = 1;  # ...peer storage interfaces are internal
+$notImplInterfaces{"PeerMessageViewerInterface"} = 1;  # ...peer storage interfaces are internal
 
 # List of methods that pass interface params with ownership:
 my %passOwnershipParams = ();
@@ -410,7 +417,7 @@ foreach $inputfile( @inputfiles)
 			my $interfacename = nextToken();
 			if (nextToken() eq "{")
 			{
-				if ($interfacename =~ m/Interface$/)
+				if ($interfacename =~ m/Interface$/ && not $notImplInterfaces{ $interfacename} )
 				{
 					parseInterface( $interfacename);
 				}
@@ -771,6 +778,10 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerTerm( " . $id . ");";
 	}
+	elsif ($type eq "analyzer::TermVector")
+	{
+		$rt .= "msg.packAnalyzerTermVector( " . $id . ");";
+	}
 	elsif ($type eq "analyzer::Token")
 	{
 		$rt .= "msg.packAnalyzerToken( " . $id . ");";
@@ -786,6 +797,10 @@ sub packParameter
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
 		$rt .= "msg.packFeatureParameter( " . $id . ");";
+	}
+	elsif ($type eq "QueryAnalyzerInterface::Phrase")
+	{
+		$rt .= "msg.packPhrase( " . $id . ");";
 	}
 	elsif ($type eq "StorageClientInterface::DocumentStatisticsType")
 	{
@@ -998,6 +1013,10 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerTerm();";
 	}
+	elsif ($type eq "analyzer::TermVector")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerTermVector();";
+	}
 	elsif ($type eq "WeightedDocument")
 	{
 		$rt .= "$id = serializedMsg.unpackWeightedDocument();";
@@ -1009,6 +1028,10 @@ sub unpackParameter
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
 		$rt .= "$id = serializedMsg.unpackFeatureParameter();";
+	}
+	elsif ($type eq "QueryAnalyzerInterface::Phrase")
+	{
+		$rt .= "$id = serializedMsg.unpackPhrase();";
 	}
 	elsif ($type eq "StorageClientInterface::DocumentStatisticsType")
 	{
@@ -1257,7 +1280,14 @@ sub getMethodDeclarationSource
 		{
 			$receiver_code .= "\t\treleaseObjectsMarked();\n";
 		}
-		$receiver_code .= "\t\tmsg.packByte( MsgTypeAnswer);\n";
+		if ($syncMethods{$methodname})
+		{
+			$receiver_code .= "\t\tmsg.packByte( MsgTypeSynchronize);\n";
+		}
+		else
+		{
+			$receiver_code .= "\t\tmsg.packByte( MsgTypeAnswer);\n";
+		}
 		$receiver_code .= "\t} catch (const std::runtime_error& err) {\n";
 		if ($passOwnershipParams{$methodname})
 		{
@@ -1373,7 +1403,6 @@ sub getMethodDeclarationSource
 			$sender_code .= "\tctx()->rpc_synchronize();\n";
 			$sender_code .= $sender_output;
 			$receiver_code .= $receiver_output;
-			$receiver_code .= "\tmsg.packCrc32();\n";
 			$receiver_code .= "\treturn msg.content();\n";
 		}
 		else

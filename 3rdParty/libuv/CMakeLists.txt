@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
 
-# Fix for libuv to compile
-set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-strict-aliasing" )
+# Patch for libuv to compile (not C99 because of non POSIX extensions and no-strict-aliasing)
+set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -fPIC -fno-strict-aliasing -O${STRUS_OPTIMIZATION_LEVEL}" )
 
 #
 # This CMakeLists.txt file is a patched clone from the project https://github.com/aseprite/libuv-cmake
 # 
-set( LIBUVDIR ${PROJECT_SOURCE_DIR}/libuv )
+set( LIBUVDIR ${PROJECT_SOURCE_DIR}/3rdParty/libuv/libuv-1.x )
 
 include_directories(${LIBUVDIR}/include ${LIBUVDIR}/src)
 set(SOURCES
