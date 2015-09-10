@@ -51,6 +51,7 @@ RpcClientMessaging::RpcClientMessaging( const char* config)
 	int syserr = 0;
 	m_conn = strus_create_connection( config, stderr, &syserr);
 	if (!m_conn) throw std::runtime_error( std::string( "could not connect to server: ") + strerror(syserr));
+	m_conn_open = true;
 }
 
 RpcClientMessaging::~RpcClientMessaging()
@@ -158,7 +159,7 @@ void RpcClientMessaging::close()
 	if (m_conn)
 	{
 		strus_close_connection( m_conn);
-		m_conn_open = true;
+		m_conn_open = false;
 	}
 }
 
