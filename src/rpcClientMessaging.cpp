@@ -156,7 +156,7 @@ std::string RpcClientMessaging::synchronize()
 
 void RpcClientMessaging::close()
 {
-	if (m_conn)
+	if (m_conn && m_conn_open)
 	{
 		strus_close_connection( m_conn);
 		m_conn_open = false;

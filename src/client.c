@@ -270,6 +270,7 @@ void strus_close_connection(
 	{
 		if (conn->logf) fprintf( conn->logf, "close connection resources failed: %s\n", uv_strerror( rt_close));
 	}
+	conn->closed = 1/*true*/;
 }
 
 void strus_destroy_connection(
@@ -279,7 +280,6 @@ void strus_destroy_connection(
 	if (!conn->closed)
 	{
 		strus_close_connection( conn);
-		conn->closed = 1/*true*/;
 	}
 	if (conn->output != NULL)
 	{
