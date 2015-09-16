@@ -47,6 +47,9 @@ public:
 	explicit RpcClient( RpcClientMessagingInterface* messaging_)
 		:m_ctx( new RpcClientContext( messaging_)){}
 
+	RpcClient( const RpcClient& o)
+		:m_ctx(o.m_ctx){}
+
 	/// \brief Destructor
 	virtual ~RpcClient(){}
 

@@ -42,8 +42,6 @@ public:
 
 	/// \brief Constructor
 	explicit RpcClientContext( RpcClientMessagingInterface* messaging_);
-	/// \brief Copy constructor
-	RpcClientContext( const RpcClientContext& o);
 	/// \brief Default constructor
 	RpcClientContext();
 

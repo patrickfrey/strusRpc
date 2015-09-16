@@ -38,9 +38,6 @@ RpcClientContext::RpcClientContext( RpcClientMessagingInterface* messaging_)
 	:m_objIdCnt(0),m_messaging(messaging_)
 {}
 
-RpcClientContext::RpcClientContext( const RpcClientContext& o)
-	:m_objIdCnt(o.m_objIdCnt),m_messaging(o.m_messaging){}
-
 RpcClientContext::RpcClientContext()
 	:m_objIdCnt(0),m_messaging(0){}
 
