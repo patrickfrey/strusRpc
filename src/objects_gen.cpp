@@ -1575,6 +1575,19 @@ void QueryImpl::defineMetaDataRestriction( QueryInterface::CompareOperator p1, c
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+void QueryImpl::addDocumentEvaluationSet( const std::vector<Index>& p1)
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addDocumentEvaluationSet);
+	msg.packSize( p1.size());
+	for (unsigned int ii=0; ii < p1.size(); ++ii) {
+		msg.packIndex( p1[ii]);
+	}
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
 void QueryImpl::setMaxNofRanks( std::size_t p1)
 {
 	RpcSerializer msg;

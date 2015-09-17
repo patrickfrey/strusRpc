@@ -384,6 +384,7 @@ public:
 		Method_attachVariable,
 		Method_defineFeature,
 		Method_defineMetaDataRestriction,
+		Method_addDocumentEvaluationSet,
 		Method_setMaxNofRanks,
 		Method_setMinRank,
 		Method_addUserName,

@@ -2817,6 +2817,33 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			return std::string();
 		}
+		case QueryConst::Method_addDocumentEvaluationSet:
+		{
+			RpcSerializer msg;
+			std::vector<Index> p1;
+			std::size_t n1 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n1; ++ii) {
+				Index ee = serializedMsg.unpackIndex();
+				p1.push_back( ee);
+			}
+			try {
+				obj->addDocumentEvaluationSet(p1);
+				msg.packByte( MsgTypeAnswer);
+			} catch (const std::runtime_error& err) {
+				msg.packByte( MsgTypeException_RuntimeError);
+				msg.packString( err.what());
+				return msg.content();
+			} catch (const std::bad_alloc& err) {
+				msg.packByte( MsgTypeException_BadAlloc);
+				msg.packString( "memory allocation error");
+				return msg.content();
+			} catch (const std::logic_error& err) {
+				msg.packByte( MsgTypeException_LogicError);
+				msg.packString( err.what());
+				return msg.content();
+			}
+			return std::string();
+		}
 		case QueryConst::Method_setMaxNofRanks:
 		{
 			RpcSerializer msg;

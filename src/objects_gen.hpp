@@ -482,6 +482,7 @@ public:
 	virtual void attachVariable( const std::string& p1);
 	virtual void defineFeature( const std::string& p1, float p2);
 	virtual void defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
+	virtual void addDocumentEvaluationSet( const std::vector<Index>& p1);
 	virtual void setMaxNofRanks( std::size_t p1);
 	virtual void setMinRank( std::size_t p1);
 	virtual void addUserName( const std::string& p1);
