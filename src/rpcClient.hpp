@@ -37,6 +37,8 @@ namespace strus
 
 /// \brief Forward declaration
 class RpcClientMessagingInterface;
+/// \brief Forward declaration
+class ErrorBufferInterface;
 
 /// \brief Interface providing a mechanism to create complex objects
 class RpcClient
@@ -44,11 +46,11 @@ class RpcClient
 {
 public:
 	/// \brief Constructor
-	explicit RpcClient( RpcClientMessagingInterface* messaging_)
-		:m_ctx( new RpcClientContext( messaging_)){}
+	RpcClient( RpcClientMessagingInterface* messaging_, ErrorBufferInterface* errorhnd_)
+		:m_ctx( new RpcClientContext( messaging_)),m_errorhnd(errorhnd_){}
 
 	RpcClient( const RpcClient& o)
-		:m_ctx(o.m_ctx){}
+		:m_ctx(o.m_ctx),m_errorhnd(o.m_errorhnd){}
 
 	/// \brief Destructor
 	virtual ~RpcClient(){}
@@ -61,6 +63,7 @@ public:
 
 private:
 	Reference<RpcClientContext> m_ctx;
+	ErrorBufferInterface* m_errorhnd;
 };
 
 }//namespace

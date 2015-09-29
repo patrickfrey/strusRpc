@@ -36,12 +36,16 @@ namespace strus {
 
 /// \brief Forward declaration
 class RpcClientMessagingInterface;
+/// \brief Forward declaration
+class ErrorBufferInterface;
 
 /// \brief Create a messaging interface for the strus RPC Client based on sockets
 /// \param[in] config configuration string for connecting to the server
+/// \param[in] errorhnd buffer for reporting errors
 RpcClientMessagingInterface*
 	createRpcClientMessaging(
-		const char* config);
+		const char* config,
+		ErrorBufferInterface* errorhnd);
 
 }//namespace
 #endif

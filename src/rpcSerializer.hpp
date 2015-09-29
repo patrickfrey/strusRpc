@@ -47,6 +47,8 @@
 #include "strus/queryEvalInterface.hpp"
 #include "strus/weightedDocument.hpp"
 #include "strus/resultDocument.hpp"
+#include "strus/peerMessageProcessorInterface.hpp"
+#include "strus/peerMessageViewerInterface.hpp"
 #include "strus/analyzer/token.hpp"
 #include "strus/analyzer/term.hpp"
 #include "strus/analyzer/metaData.hpp"
@@ -100,6 +102,8 @@ public:
 	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
 	void packPhrase( const QueryAnalyzerInterface::Phrase& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
+	void packPeerMessageProcessorBuilderOptions( const PeerMessageProcessorInterface::BuilderOptions& val);
+	void packPeerMessageViewerDocumentFrequencyChange( const PeerMessageViewerInterface::DocumentFrequencyChange& val);
 	void packCrc32();
 	const std::string& content() const
 	{
@@ -162,6 +166,8 @@ public:
 	QueryEvalInterface::FeatureParameter unpackFeatureParameter();
 	QueryAnalyzerInterface::Phrase unpackPhrase();
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();
+	PeerMessageProcessorInterface::BuilderOptions unpackPeerMessageProcessorBuilderOptions();
+	PeerMessageViewerInterface::DocumentFrequencyChange unpackPeerMessageViewerDocumentFrequencyChange();
 	bool unpackCrc32();
 
 	std::size_t position() const

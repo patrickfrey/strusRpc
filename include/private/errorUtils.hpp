@@ -26,31 +26,47 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc_client_socket.hpp"
-#include "strus/rpcClientMessagingInterface.hpp"
-#include "strus/errorBufferInterface.hpp"
-#include "rpcClientMessaging.hpp"
+/// \brief Macros, classes and functions supporting error handling
+/// \file errorUtils.hpp
+#ifndef _STRUS_STORAGE_ERROR_UTILITIES_HPP_INCLUDED
+#define _STRUS_STORAGE_ERROR_UTILITIES_HPP_INCLUDED
+#include <stdexcept>
 #include "private/internationalization.hpp"
-#include "private/errorUtils.hpp"
-#include "private/dll_tags.hpp"
 
-DLL_PUBLIC strus::RpcClientMessagingInterface*
-	strus::createRpcClientMessaging(
-		const char* config,
-		ErrorBufferInterface* errorhnd)
+/// \brief strus toplevel namespace
+namespace strus
 {
-	try
-	{
-		static bool intl_initialized = false;
-		if (!intl_initialized)
-		{
-			strus::initMessageTextDomain();
-			intl_initialized = true;
-		}
-		return new RpcClientMessaging( config, errorhnd);
+
+#define CATCH_ERROR_MAP( contextExplainText, errorBuffer)\
+	catch (const std::bad_alloc&)\
+	{\
+		(errorBuffer).report( _TXT("memory allocation error"));\
+	}\
+	catch (const std::runtime_error& err)\
+	{\
+		(errorBuffer).report( contextExplainText, err.what());\
+	}\
+	catch (const std::exception& err)\
+	{\
+		(errorBuffer).report( _TXT("uncaught exception: %s"), err.what());\
 	}
-	CATCH_ERROR_MAP_RETURN( _TXT("error creating RPC messaging client: %s"), *errorhnd, 0);
-}
 
+#define CATCH_ERROR_MAP_RETURN( contextExplainText, errorBuffer, errorReturnValue)\
+	catch (const std::bad_alloc&)\
+	{\
+		(errorBuffer).report( _TXT("memory allocation error"));\
+		return errorReturnValue;\
+	}\
+	catch (const std::runtime_error& err)\
+	{\
+		(errorBuffer).report( contextExplainText, err.what());\
+		return errorReturnValue;\
+	}\
+	catch (const std::exception& err)\
+	{\
+		(errorBuffer).report( _TXT("uncaught exception: %s"), err.what());\
+		return errorReturnValue;\
+	}
 
-
+}//namespace
+#endif

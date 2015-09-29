@@ -28,7 +28,10 @@
 */
 #include "strus/lib/rpc_server.hpp"
 #include "strus/rpcRequestHandlerInterface.hpp"
+#include "strus/errorBufferInterface.hpp"
 #include "rpcRequestHandler.hpp"
+#include "private/internationalization.hpp"
+#include "private/errorUtils.hpp"
 #include "private/dll_tags.hpp"
 
 using namespace strus;
@@ -37,8 +40,20 @@ DLL_PUBLIC RpcRequestHandlerInterface*
 	strus::createRpcRequestHandler(
 		StorageObjectBuilderInterface* storageBuilder_,
 		AnalyzerObjectBuilderInterface* analyzerBuilder_,
-		StorageClientInterface* hostedStorageClient_)
+		StorageClientInterface* hostedStorageClient_,
+		ErrorBufferInterface* errorhnd_)
 {
-	return new RpcRequestHandler( storageBuilder_, analyzerBuilder_, hostedStorageClient_);
+	try
+	{
+		static bool intl_initialized = false;
+		if (!intl_initialized)
+		{
+			strus::initMessageTextDomain();
+			intl_initialized = true;
+		}
+		return new RpcRequestHandler( storageBuilder_, analyzerBuilder_, hostedStorageClient_, errorhnd_);
+	}
+	CATCH_ERROR_MAP_RETURN( _TXT("error creating RPC request handler: %s"), *errorhnd_, 0);
 }
+
 

@@ -26,31 +26,29 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc_client_socket.hpp"
-#include "strus/rpcClientMessagingInterface.hpp"
-#include "strus/errorBufferInterface.hpp"
-#include "rpcClientMessaging.hpp"
-#include "private/internationalization.hpp"
-#include "private/errorUtils.hpp"
-#include "private/dll_tags.hpp"
+#ifndef _STRUS_INTERNATIONALIZATION_HPP_INCLUDED
+#define _STRUS_INTERNATIONALIZATION_HPP_INCLUDED
+#include <libintl.h>
+#include <stdexcept>
 
-DLL_PUBLIC strus::RpcClientMessagingInterface*
-	strus::createRpcClientMessaging(
-		const char* config,
-		ErrorBufferInterface* errorhnd)
+#define _TXT(STRING) gettext(STRING)
+
+namespace strus
 {
-	try
-	{
-		static bool intl_initialized = false;
-		if (!intl_initialized)
-		{
-			strus::initMessageTextDomain();
-			intl_initialized = true;
-		}
-		return new RpcClientMessaging( config, errorhnd);
-	}
-	CATCH_ERROR_MAP_RETURN( _TXT("error creating RPC messaging client: %s"), *errorhnd, 0);
-}
 
+/// \brief Substitute for std::runtime_error with arguments
+/// \param[in] msg c printf format string
+/// \param[in] nofargs number of arguments passed to be substituted in the format string
+std::runtime_error runtime_error( const char* format, ...);
 
+/// \brief Substitute for std::logic_error with arguments
+/// \param[in] msg c printf format string
+/// \param[in] nofargs number of arguments passed to be substituted in the format string
+std::logic_error logic_error( const char* format, ...);
+
+/// \brief Declare the message domain used by this package for the exception constructors declared in this module for gettext
+void initMessageTextDomain();
+
+}//namespace
+#endif
 

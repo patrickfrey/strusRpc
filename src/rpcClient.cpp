@@ -30,21 +30,48 @@
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "objects_gen.hpp"
+#include "private/dll_tags.hpp"
+#include "private/errorUtils.hpp"
+#include "private/internationalization.hpp"
 
 using namespace strus;
 
+static bool g_intl_initialized = false;
+
 StorageObjectBuilderInterface* RpcClient::createStorageObjectBuilder() const
 {
-	return new StorageObjectBuilderImpl( 0, m_ctx);
+	try
+	{
+		if (!g_intl_initialized)
+		{
+			strus::initMessageTextDomain();
+			g_intl_initialized = true;
+		}
+		return new StorageObjectBuilderImpl( 0, m_ctx);
+	}
+	CATCH_ERROR_MAP_RETURN( _TXT("error creating storage object builder: %s"), *m_errorhnd, 0);
 }
 
 AnalyzerObjectBuilderInterface* RpcClient::createAnalyzerObjectBuilder() const
 {
-	return new AnalyzerObjectBuilderImpl( 0, m_ctx);
+	try
+	{
+		if (!g_intl_initialized)
+		{
+			strus::initMessageTextDomain();
+			g_intl_initialized = true;
+		}
+		return new AnalyzerObjectBuilderImpl( 0, m_ctx);
+	}
+	CATCH_ERROR_MAP_RETURN( _TXT("error creating analyzer object builder: %s"), *m_errorhnd, 0);
 }
 
 void RpcClient::close()
 {
-	m_ctx->rpc_close();
+	try
+	{
+		m_ctx->rpc_close();
+	}
+	CATCH_ERROR_MAP( _TXT("error closing RPC client connection: %s"), *m_errorhnd);
 }
 

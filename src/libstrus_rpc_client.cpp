@@ -29,14 +29,27 @@
 #include "strus/lib/rpc_client.hpp"
 #include "strus/rpcClientInterface.hpp"
 #include "strus/rpcClientMessagingInterface.hpp"
+#include "strus/errorBufferInterface.hpp"
 #include "rpcClient.hpp"
 #include "private/dll_tags.hpp"
+#include "private/errorUtils.hpp"
+#include "private/internationalization.hpp"
 
 using namespace strus;
 
-DLL_PUBLIC RpcClientInterface* strus::createRpcClient( RpcClientMessagingInterface* connector)
+DLL_PUBLIC RpcClientInterface* strus::createRpcClient( RpcClientMessagingInterface* connector, ErrorBufferInterface* errorhnd)
 {
-	return new RpcClient( connector);
+	try
+	{
+		static bool intl_initialized = false;
+		if (!intl_initialized)
+		{
+			strus::initMessageTextDomain();
+			intl_initialized = true;
+		}
+		return new RpcClient( connector, errorhnd);
+	}
+	CATCH_ERROR_MAP_RETURN( _TXT("error creating RPC client: %s"), *errorhnd, 0);
 }
 
 

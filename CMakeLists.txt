@@ -26,6 +26,10 @@ set( CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON )
 configure_file( "${PROJECT_SOURCE_DIR}/include/strus/versionRpc.hpp.in"  "${PROJECT_SOURCE_DIR}/include/strus/versionRpc.hpp"  @ONLY )
 configure_file( "${PROJECT_SOURCE_DIR}/src/rpcProtocolDefines.hpp.in"  "${PROJECT_SOURCE_DIR}/src/rpcProtocolDefines.hpp"  @ONLY )
 
+set( STRUS_GETTEXT_PACKAGE "strus-dom" )	#... 1st parameter of bindtextdomain(...)
+set( STRUS_GETTEXT_LOCALEDIR "" )			#... 2nd parameter of bindtextdomain(...)
+configure_file( "${PROJECT_SOURCE_DIR}/src/internationalization.cpp.in"  "${PROJECT_SOURCE_DIR}/src/internationalization.cpp"  @ONLY )
+
 enable_testing()
 
 # Subdirectories:

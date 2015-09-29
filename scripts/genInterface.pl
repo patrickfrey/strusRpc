@@ -139,35 +139,43 @@ $typeRewriteMap{"const_PostingIteratorInterface*"} = "const PostingIteratorInter
 # List of methods that do not return anything, but still issue a request to get possible errors from previous method calls:
 my %syncMethods = ();
 $syncMethods{"done"} = 1;
-$syncMethods{"commit"} = 1;
 
 # List of methods that are not implemented for RPC:
 my %notImplMethods = ();
-$notImplMethods{"checkStorage"} = 1;                  # ...ostream reference input cannot be handled
-$notImplMethods{"subExpressions"} = 1;                # ...vector of const object return can not be handled
-$notImplMethods{"createResultIterator"} = 1;          # ...vector of object references as passed argument can not be handled
-$notImplMethods{"definePeerMessageProcessor"} = 1;  # ...peer message processor is internal
+$notImplMethods{"checkStorage"} = 1;				# ...ostream reference input cannot be handled
+$notImplMethods{"subExpressions"} = 1;				# ...vector of const object return can not be handled
+$notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
+$notImplMethods{"definePeerMessageProcessor"} = 1;		# ...peer message processor is internal
 
 # List of interfaces that are not implemented for RPC:
 my %notImplInterfaces = ();
-$notImplInterfaces{"PeerMessageProcessorInterface"} = 1;  # ...peer storage interfaces are internal
-$notImplInterfaces{"PeerMessageBuilderInterface"} = 1;  # ...peer storage interfaces are internal
-$notImplInterfaces{"PeerMessageViewerInterface"} = 1;  # ...peer storage interfaces are internal
+$notImplInterfaces{"ErrorBufferInterface"} = 1;			# ...buffers for reporting errors are internal
+$notImplInterfaces{"AnalyzerErrorBufferInterface"} = 1;		# ...buffers for reporting errors are internal
 
 # List of methods that pass interface params with ownership:
 my %passOwnershipParams = ();
 $passOwnershipParams{"definePostingJoinOperator"} = 1;
 $passOwnershipParams{"defineWeightingFunction"} = 1;
 $passOwnershipParams{"defineSummarizerFunction"} = 1;
+
+$passOwnershipParams{"defineDocumentClassDetector"} = 1;
+$passOwnershipParams{"defineTokenizer"} = 1;
+$passOwnershipParams{"defineNormalizer"} = 1;
+$passOwnershipParams{"defineAggregator"} = 1;
+
+$passOwnershipParams{"definePhraseType"} = 1;
+
 $passOwnershipParams{"createClient"} = 1;
 $passOwnershipParams{"createAlterMetaDataTable"} = 1;
+
 $passOwnershipParams{"addSearchIndexFeature"} = 1;
 $passOwnershipParams{"addForwardIndexFeature"} = 1;
 $passOwnershipParams{"defineMetaData"} = 1;
+$passOwnershipParams{"defineAggregatedMetaData"} = 1;
 $passOwnershipParams{"defineAttribute"} = 1;
+
 $passOwnershipParams{"addWeightingFunction"} = 1;
 $passOwnershipParams{"addSummarizerFunction"} = 1;
-$passOwnershipParams{"definePhraseType"} = 1;
 
 # List of methods that reset the constants map (except long living)
 my %constResetMethodMap = ();
@@ -185,7 +193,7 @@ my %alternativeClientImpl = ();
 $alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx());\n";
 
 # Set debug code generation ON/OFF:
-my $doGenerateDebugCode = 0;
+my $doGenerateDebugCode = 1;
 
 sub parseType
 {
@@ -806,6 +814,14 @@ sub packParameter
 	{
 		$rt .= "msg.packDocumentStatisticsType( " . $id . ");";
 	}
+	elsif ($type eq "PeerMessageProcessorInterface::BuilderOptions")
+	{
+		$rt .= "msg.packPeerMessageProcessorBuilderOptions( " . $id . ");";
+	}
+	elsif ($type eq "PeerMessageViewerInterface::DocumentFrequencyChange")
+	{
+		$rt .= "msg.packPeerMessageViewerDocumentFrequencyChange( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -1037,6 +1053,14 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackDocumentStatisticsType();";
 	}
+	elsif ($type eq "PeerMessageProcessorInterface::BuilderOptions")
+	{
+		$rt .= "$id = serializedMsg.unpackPeerMessageProcessorBuilderOptions();";
+	}
+	elsif ($type eq "PeerMessageViewerInterface::DocumentFrequencyChange")
+	{
+		$rt .= "$id = serializedMsg.unpackPeerMessageViewerDocumentFrequencyChange();";
+	}
 	else
 	{
 		die "no deserialization defined for type \"$type\"";
@@ -1049,6 +1073,7 @@ sub inputParameterPackFunctionCall
 	my ($sender_code,$receiver_code) = ("","");
 	my ($classname, $methodname, $param, $idx) = @_;
 	my ($paramtype, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $param);
+
 	if ($passbyref && ($isconst == 0 || $indirection > 0))
 	{
 		if ($paramtype =~ m/^(.*)Interface$/ && $indirection == 1 && $isconst == 0)

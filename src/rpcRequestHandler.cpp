@@ -42,7 +42,9 @@ using namespace strus;
 RpcRequestHandler::RpcRequestHandler(
 			StorageObjectBuilderInterface* storageBuilder_,
 			AnalyzerObjectBuilderInterface* analyzerBuilder_,
-			StorageClientInterface* storage_)
+			StorageClientInterface* storage_,
+			ErrorBufferInterface* errorhnd_)
+		:m_errorhnd(errorhnd_)
 {
 	if (storageBuilder_)
 	{

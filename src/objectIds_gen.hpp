@@ -52,6 +52,9 @@ enum ClassId
 	ClassId_NormalizerFunctionContext,
 	ClassId_NormalizerFunctionInstance,
 	ClassId_NormalizerFunction,
+	ClassId_PeerMessageBuilder,
+	ClassId_PeerMessageProcessor,
+	ClassId_PeerMessageViewer,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
 	ClassId_QueryAnalyzer,
@@ -59,6 +62,7 @@ enum ClassId
 	ClassId_Query,
 	ClassId_QueryProcessor,
 	ClassId_SegmenterContext,
+	ClassId_SegmenterInstance,
 	ClassId_Segmenter,
 	ClassId_StorageAlterMetaDataTable,
 	ClassId_StorageClient,
@@ -234,7 +238,6 @@ public:
 		Method_defineAttribute,
 		Method_defineSubDocument,
 		Method_analyze,
-		Method_mimeType,
 		Method_createContext
 	};
 };
@@ -314,6 +317,42 @@ public:
 	{
 		Method_Destructor,
 		Method_createInstance
+	};
+};
+
+class PeerMessageBuilderConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_setNofDocumentsInsertedChange,
+		Method_addDfChange,
+		Method_start,
+		Method_rollback,
+		Method_fetchMessage
+	};
+};
+
+class PeerMessageProcessorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createViewer,
+		Method_createBuilder
+	};
+};
+
+class PeerMessageViewerConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_nofDocumentsInsertedChange,
+		Method_nextDfChange
 	};
 };
 
@@ -418,6 +457,18 @@ public:
 	};
 };
 
+class SegmenterInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_defineSelectorExpression,
+		Method_defineSubSection,
+		Method_createContext
+	};
+};
+
 class SegmenterConst
 {
 public:
@@ -425,9 +476,7 @@ public:
 	{
 		Method_Destructor,
 		Method_mimeType,
-		Method_defineSelectorExpression,
-		Method_defineSubSection,
-		Method_createContext
+		Method_createInstance
 	};
 };
 

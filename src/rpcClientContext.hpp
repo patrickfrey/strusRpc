@@ -33,6 +33,8 @@
 #include <string>
 
 namespace strus {
+/// \brief Forward declaration
+class ErrorBufferInterface;
 
 class RpcClientContext
 {
@@ -41,9 +43,9 @@ public:
 	virtual ~RpcClientContext();
 
 	/// \brief Constructor
-	explicit RpcClientContext( RpcClientMessagingInterface* messaging_);
+	RpcClientContext( RpcClientMessagingInterface* messaging_);
 	/// \brief Default constructor
-	RpcClientContext();
+	explicit RpcClientContext();
 
 	/// \brief Get the constructor for constants on the server
 	ConstConstructor* constConstructor() const			{return &m_constConstructor;}

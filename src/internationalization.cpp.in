@@ -26,31 +26,48 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc_client_socket.hpp"
-#include "strus/rpcClientMessagingInterface.hpp"
-#include "strus/errorBufferInterface.hpp"
-#include "rpcClientMessaging.hpp"
-#include "private/internationalization.hpp"
-#include "private/errorUtils.hpp"
 #include "private/dll_tags.hpp"
+#include "private/internationalization.hpp"
+#include <stdio.h>
+#include <stdlib.h>
+#include <libintl.h>
+#include <locale.h>
+#include <cstdarg>
 
-DLL_PUBLIC strus::RpcClientMessagingInterface*
-	strus::createRpcClientMessaging(
-		const char* config,
-		ErrorBufferInterface* errorhnd)
+#define STRUS_GETTEXT_PACKAGE		"@STRUS_GETTEXT_PACKAGE@"
+#define STRUS_GETTEXT_LOCALEDIR		"@STRUS_GETTEXT_LOCALEDIR@"
+
+std::runtime_error strus::runtime_error( const char* format, ...)
 {
-	try
-	{
-		static bool intl_initialized = false;
-		if (!intl_initialized)
-		{
-			strus::initMessageTextDomain();
-			intl_initialized = true;
-		}
-		return new RpcClientMessaging( config, errorhnd);
-	}
-	CATCH_ERROR_MAP_RETURN( _TXT("error creating RPC messaging client: %s"), *errorhnd, 0);
+	char buffer[ 1024];
+	va_list args;
+	va_start( args, format);
+	const char* formatTranslation = ::dgettext( STRUS_GETTEXT_PACKAGE, format);
+	int buffersize = vsnprintf( buffer, sizeof(buffer), formatTranslation, args);
+	buffer[ sizeof(buffer)-1] = 0;
+	std::runtime_error rt( std::string( buffer, buffersize));
+	va_end (args);
+	return rt;
 }
 
+std::logic_error strus::logic_error( const char* format, ...)
+{
+	char buffer[ 1024];
+	va_list args;
+	va_start( args, format);
+	const char* formatTranslation = ::dgettext( STRUS_GETTEXT_PACKAGE, format);
+	int buffersize = vsnprintf( buffer, sizeof(buffer), formatTranslation, args);
+	buffer[ sizeof(buffer)-1] = 0;
+	std::logic_error rt( std::string( buffer, buffersize));
+	va_end (args);
+	return rt;
+}
+
+DLL_PUBLIC void strus::initMessageTextDomain()
+{
+#ifdef ENABLE_NLS
+	::bindtextdomain( STRUS_GETTEXT_PACKAGE, STRUS_GETTEXT_LOCALEDIR);
+#endif
+}
 
 

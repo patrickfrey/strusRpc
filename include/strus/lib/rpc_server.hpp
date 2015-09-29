@@ -42,16 +42,20 @@ class AnalyzerObjectBuilderInterface;
 class StorageClientInterface;
 /// \brief Forward declaration
 class RpcRequestHandlerInterface;
+/// \brief Forward declaration
+class ErrorBufferInterface;
 
 /// \brief Creates an RPC request handler object to be used by a server implementation
 /// \param[in] storageBuilder_ storage builder (singleton, ownership hold by caller)
 /// \param[in] analyzerBuilder_ analyzer builder reference (singleton, ownership hold by caller)
 /// \param[in] storageClient_ storage client reference for the storage instance hosted by the server (singleton, ownership hold by caller)
+/// \param[in] errorhnd_ buffer for reporting errors
 RpcRequestHandlerInterface*
 	createRpcRequestHandler(
 		StorageObjectBuilderInterface* storageBuilder_,
 		AnalyzerObjectBuilderInterface* analyzerBuilder_,
-		StorageClientInterface* storageClient_);
+		StorageClientInterface* storageClient_,
+		ErrorBufferInterface* errorhnd_);
 
 }//namespace
 #endif

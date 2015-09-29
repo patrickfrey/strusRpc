@@ -448,6 +448,20 @@ void RpcSerializer::packDocumentStatisticsType( const StorageClientInterface::Do
 	packByte( val);
 }
 
+void RpcSerializer::packPeerMessageProcessorBuilderOptions( const PeerMessageProcessorInterface::BuilderOptions& val)
+{
+	packUint( val.maxBlockSize);
+	packByte( val.set);
+}
+
+void RpcSerializer::packPeerMessageViewerDocumentFrequencyChange( const PeerMessageViewerInterface::DocumentFrequencyChange& val)
+{
+	packCharp( val.type);
+	packCharp( val.value);
+	packInt( val.increment);
+	packBool( val.isnew);
+}
+
 
 void RpcSerializer::packCrc32()
 {
@@ -817,4 +831,22 @@ StorageClientInterface::DocumentStatisticsType RpcDeserializer::unpackDocumentSt
 	return (StorageClientInterface::DocumentStatisticsType)unpackByte();
 }
 
+PeerMessageProcessorInterface::BuilderOptions RpcDeserializer::unpackPeerMessageProcessorBuilderOptions()
+{
+	unsigned int maxBlockSize = unpackUint();
+	typedef PeerMessageProcessorInterface::BuilderOptions::Set Set;
+	Set set = (Set)unpackByte();
+	return PeerMessageProcessorInterface::BuilderOptions( set, maxBlockSize);
+}
+
+PeerMessageViewerInterface::DocumentFrequencyChange RpcDeserializer::unpackPeerMessageViewerDocumentFrequencyChange()
+{
+	typedef PeerMessageViewerInterface::DocumentFrequencyChange DocumentFrequencyChange;
+	DocumentFrequencyChange rt;
+	rt.type = unpackConstCharp();
+	rt.value = unpackConstCharp();
+	rt.increment = unpackInt();
+	rt.isnew = unpackBool();
+	return rt;
+}
 

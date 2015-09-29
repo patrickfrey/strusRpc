@@ -26,19 +26,24 @@
 
 --------------------------------------------------------------------
 */
+#ifndef _STRUS_RPC_CLIENT_MESSAGING_HPP_INCLUDED
+#define _STRUS_RPC_CLIENT_MESSAGING_HPP_INCLUDED
 #include "strus/rpcClientMessagingInterface.hpp"
 
 extern "C" {
 	struct strus_connection_t;
 }
 
-using namespace strus;
+namespace strus
+{
+/// \brief Forward declaration
+class ErrorBufferInterface;
 
 class RpcClientMessaging
 	:public RpcClientMessagingInterface
 {
 public:
-	RpcClientMessaging( const char* config);
+	RpcClientMessaging( const char* config, ErrorBufferInterface* errorhnd_);
 	virtual ~RpcClientMessaging();
 
 	virtual std::string sendRequest( const std::string& content);
@@ -56,5 +61,9 @@ private:
 	double m_starttime;
 	std::string m_messageBuffer;
 	bool m_conn_open;
+	ErrorBufferInterface* m_errorhnd;
 };
+
+}
+#endif
 
