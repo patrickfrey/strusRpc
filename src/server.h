@@ -67,6 +67,8 @@ typedef struct strus_globalctx_t
 
 int strus_run_server( unsigned short port, unsigned int nofThreads, strus_globalctx_t* glbctx);
 
+unsigned int strus_threadpool_size();
+
 #endif
 
 

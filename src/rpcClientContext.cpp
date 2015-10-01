@@ -57,20 +57,10 @@ void RpcClientContext::handleError( const std::string& msgstr) const
 	RpcReturnType returntype = (RpcReturnType)msg.unpackByte();
 	switch (returntype)
 	{
-		case MsgTypeException_BadAlloc:
+		case MsgTypeError:
 		{
-			std::string methodname( msg.unpackString());
-			throw strus::runtime_error( _TXT("method call failed: %s"), methodname.c_str());
-		}
-		case MsgTypeException_RuntimeError:
-		{
-			std::string methodname( msg.unpackString());
-			throw strus::runtime_error( _TXT("method call failed: %s"), methodname.c_str());
-		}
-		case MsgTypeException_LogicError:
-		{
-			std::string methodname( msg.unpackString());
-			throw strus::runtime_error( _TXT("method call failed: %s"), methodname.c_str());
+			std::string errorstr( msg.unpackString());
+			throw strus::runtime_error( _TXT("method call failed: %s"), errorstr.c_str());
 		}
 		case MsgTypeSynchronize:
 			break;

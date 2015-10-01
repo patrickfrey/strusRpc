@@ -44,6 +44,7 @@ extern "C" {
 #include <errno.h>
 #include <arpa/inet.h>
 
+
 using namespace strus;
 
 #undef STRUS_LOWLEVEL_DEBUG
@@ -53,7 +54,7 @@ RpcClientMessaging::RpcClientMessaging( const char* config, ErrorBufferInterface
 {
 	int syserr = 0;
 	m_conn = strus_create_connection( config, stderr, &syserr);
-	if (!m_conn) throw std::runtime_error( std::string( "could not connect to server: ") + strerror(syserr));
+	if (!m_conn) throw strus::runtime_error( _TXT("could not connect to server: %s"), strerror(syserr));
 	m_conn_open = true;
 }
 
@@ -107,7 +108,7 @@ std::string RpcClientMessaging::sendRequest( const std::string& content)
 					&result, &resultsize);
 	
 			m_messageBuffer.clear();
-			if (ec) throw std::runtime_error( std::string( "send request failed: ") + strus_lasterror( m_conn));
+			if (ec) throw strus::runtime_error( _TXT("send request failed: %s"), strus_lasterror( m_conn));
 			return resultString( result, resultsize);
 		}
 		else
@@ -120,7 +121,7 @@ std::string RpcClientMessaging::sendRequest( const std::string& content)
 					(const unsigned char*)content.c_str(), content.size(),
 					&result, &resultsize);
 	
-			if (ec) throw std::runtime_error( std::string( "send request failed: ") + strus_lasterror( m_conn));
+			if (ec) throw strus::runtime_error( _TXT( "send request failed: %s"), strus_lasterror( m_conn));
 			return resultString( result, resultsize);
 		}
 	}

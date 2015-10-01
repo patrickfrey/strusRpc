@@ -34,15 +34,17 @@
 #include <string>
 
 namespace strus {
+/// \brief Forward declaration
+class ErrorBufferInterface;
 
 class RpcInterfaceStub
 {
 public:
 	virtual ~RpcInterfaceStub(){}
 
-	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false);
+	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_);
 	RpcInterfaceStub( const RpcInterfaceStub& o);
-	RpcInterfaceStub();
+	RpcInterfaceStub( ErrorBufferInterface* errorhnd_);
 
 	unsigned char classId() const					{return m_classId;}
 	unsigned int objId() const					{return m_objId;}
@@ -51,11 +53,15 @@ public:
 	bool isConst() const						{return m_isConst;}
 	void release()							{m_isConst = true;}
 
+protected:
+	ErrorBufferInterface* errorhnd() const				{return m_errorhnd;}
+
 private:
 	unsigned char m_classId;
 	unsigned int m_objId;
 	Reference<RpcClientContext> m_ctx;
 	bool m_isConst;
+	ErrorBufferInterface* m_errorhnd;
 };
 
 }//namespace

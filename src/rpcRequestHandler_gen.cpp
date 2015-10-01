@@ -29,6 +29,7 @@
 #include "rpcRequestHandler.hpp"
 #include "rpcSerializer.hpp"
 #include "objectIds_gen.hpp"
+#include "private/internationalization.hpp"
 #include "private/dll_tags.hpp"
 #include <string>
 
@@ -36,7 +37,7 @@ using namespace strus;
 std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsize)
 {
 	RpcDeserializer serializedMsg( src, srcsize);
-	if (!serializedMsg.unpackCrc32()) throw std::runtime_error("message CRC32 check failed");
+	if (!serializedMsg.unpackCrc32()) throw strus::runtime_error(_TXT("message CRC32 check failed"));
 	unsigned char classId; unsigned int objId; unsigned char methodId;
 	serializedMsg.unpackObject( classId, objId);
 	methodId = serializedMsg.unpackByte();
@@ -60,22 +61,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			double p0;
 			analyzer::Document p1;
 			p1 = serializedMsg.unpackAnalyzerDocument();
-			try {
-				p0 = obj->evaluate(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->evaluate(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packDouble( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -107,22 +101,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createInstance(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createInstance(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -148,22 +135,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const TextProcessorInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->getTextProcessor();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getTextProcessor();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -177,22 +157,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createSegmenter(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createSegmenter(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -206,22 +179,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createDocumentAnalyzer(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createDocumentAnalyzer(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -233,22 +199,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			QueryAnalyzerInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createQueryAnalyzer();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createQueryAnalyzer();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -274,22 +233,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			Index p0;
 			const char* p1;
 			p1 = serializedMsg.unpackConstCharp();
-			try {
-				p0 = obj->elementHandle(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->elementHandle(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -300,22 +252,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				obj->skipDoc(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->skipDoc(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case AttributeReaderConst::Method_getValue:
@@ -325,22 +270,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				p0 = obj->getValue(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getValue(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packString( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -350,22 +288,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method AttributeReaderImpl::getAttributeNames [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::vector<std::string> p0;
-			try {
-				p0 = obj->getAttributeNames();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getAttributeNames();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
 				msg.packString( p0[ii]);
@@ -396,22 +327,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::size_t p2;
 			const char* p3;
 			std::size_t p4;
-			try {
-				p0 = obj->fetch(p1,p2,p3,p4);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->fetch(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packBuffer( p1, p2);
 			msg.packBuffer( p3, p4);
@@ -436,22 +360,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			std::cerr << "called method DatabaseClientImpl::close [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
-			try {
-				obj->close();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->close();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DatabaseClientConst::Method_createTransaction:
@@ -461,22 +378,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			DatabaseTransactionInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createTransaction();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createTransaction();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -490,22 +400,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackDatabaseOptions();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createCursor(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createCursor(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -517,22 +420,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			DatabaseBackupCursorInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createBackupCursor();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createBackupCursor();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -547,22 +443,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::size_t p4;
 			serializedMsg.unpackBuffer( p1, p2);
 			serializedMsg.unpackBuffer( p3, p4);
-			try {
-				obj->writeImm(p1,p2,p3,p4);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->writeImm(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DatabaseClientConst::Method_removeImm:
@@ -572,22 +461,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p1;
 			std::size_t p2;
 			serializedMsg.unpackBuffer( p1, p2);
-			try {
-				obj->removeImm(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->removeImm(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DatabaseClientConst::Method_readValue:
@@ -601,22 +483,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			DatabaseOptions p4;
 			serializedMsg.unpackBuffer( p1, p2);
 			p4 = serializedMsg.unpackDatabaseOptions();
-			try {
-				p0 = obj->readValue(p1,p2,p3,p4);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->readValue(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packString( p3);
 			msg.packCrc32();
@@ -646,22 +521,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::size_t p3;
 			serializedMsg.unpackBuffer( p1, p2);
 			p3 = serializedMsg.unpackSize();
-			try {
-				p0 = obj->seekUpperBound(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->seekUpperBound(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSlice( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -674,22 +542,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p1;
 			std::size_t p2;
 			serializedMsg.unpackBuffer( p1, p2);
-			try {
-				p0 = obj->seekFirst(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->seekFirst(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSlice( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -702,22 +563,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p1;
 			std::size_t p2;
 			serializedMsg.unpackBuffer( p1, p2);
-			try {
-				p0 = obj->seekLast(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->seekLast(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSlice( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -727,22 +581,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method DatabaseCursorImpl::seekNext [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
-			try {
-				p0 = obj->seekNext();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->seekNext();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSlice( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -752,22 +599,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method DatabaseCursorImpl::seekPrev [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
-			try {
-				p0 = obj->seekPrev();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->seekPrev();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSlice( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -777,22 +617,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method DatabaseCursorImpl::key [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
-			try {
-				p0 = obj->key();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->key();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSlice( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -802,22 +635,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method DatabaseCursorImpl::value [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			DatabaseCursorInterface::Slice p0;
-			try {
-				p0 = obj->value();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->value();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSlice( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -843,22 +669,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			bool p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				p0 = obj->exists(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->exists(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -872,26 +691,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createClient(p1);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			p0 = obj->createClient(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -903,22 +713,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			bool p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				p0 = obj->createDatabase(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createDatabase(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -933,24 +736,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_DatabaseBackupCursor) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_DatabaseBackupCursor) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<DatabaseBackupCursorInterface>( classId_2, objId_2);
-			try {
-				p0 = obj->restoreDatabase(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->restoreDatabase(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -962,22 +758,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			bool p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				p0 = obj->destroyDatabase(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->destroyDatabase(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -989,22 +778,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p0;
 			DatabaseInterface::ConfigType p1;
 			p1 = serializedMsg.unpackDatabaseConfigType();
-			try {
-				p0 = obj->getConfigDescription(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getConfigDescription(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1016,22 +798,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char** p0;
 			DatabaseInterface::ConfigType p1;
 			p1 = serializedMsg.unpackDatabaseConfigType();
-			try {
-				p0 = obj->getConfigParameters(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getConfigParameters(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packCharpp( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1059,22 +834,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackDatabaseOptions();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createCursor(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createCursor(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -1089,22 +857,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::size_t p4;
 			serializedMsg.unpackBuffer( p1, p2);
 			serializedMsg.unpackBuffer( p3, p4);
-			try {
-				obj->write(p1,p2,p3,p4);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->write(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DatabaseTransactionConst::Method_remove:
@@ -1114,22 +875,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p1;
 			std::size_t p2;
 			serializedMsg.unpackBuffer( p1, p2);
-			try {
-				obj->remove(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->remove(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DatabaseTransactionConst::Method_removeSubTree:
@@ -1139,22 +893,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p1;
 			std::size_t p2;
 			serializedMsg.unpackBuffer( p1, p2);
-			try {
-				obj->removeSubTree(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->removeSubTree(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DatabaseTransactionConst::Method_commit:
@@ -1162,22 +909,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method DatabaseTransactionImpl::commit [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			bool p0;
-			try {
-				p0 = obj->commit();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->commit();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1186,22 +926,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			std::cerr << "called method DatabaseTransactionImpl::rollback [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
-			try {
-				obj->rollback();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->rollback();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 	}
@@ -1225,22 +958,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			Index p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				p0 = obj->allocDocnoRange(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->allocDocnoRange(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1254,22 +980,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			Index p2;
 			p1 = serializedMsg.unpackIndex();
 			p2 = serializedMsg.unpackIndex();
-			try {
-				p0 = obj->deallocDocnoRange(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->deallocDocnoRange(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1297,22 +1016,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			bool p3;
 			serializedMsg.unpackBuffer( p1, p2);
 			p3 = serializedMsg.unpackBool();
-			try {
-				obj->putInput(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->putInput(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DocumentAnalyzerContextConst::Method_analyzeNext:
@@ -1321,22 +1033,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			bool p0;
 			analyzer::Document p1;
-			try {
-				p0 = obj->analyzeNext(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->analyzeNext(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packAnalyzerDocument( p1);
 			msg.packCrc32();
@@ -1369,39 +1074,30 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
-			if (classId_3 != ClassId_TokenizerFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_3 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<TokenizerFunctionInstanceInterface>( classId_3, objId_3);
 			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				unsigned char classId_; unsigned int objId_;
 				serializedMsg.unpackObject( classId_, objId_);
-				if (classId_ != ClassId_NormalizerFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
 			p5 = serializedMsg.unpackFeatureOptions();
-			try {
-				obj->addSearchIndexFeature(p1,p2,p3,p4,p5);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->addSearchIndexFeature(p1,p2,p3,p4,p5);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DocumentAnalyzerConst::Method_addForwardIndexFeature:
@@ -1417,39 +1113,30 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
-			if (classId_3 != ClassId_TokenizerFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_3 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<TokenizerFunctionInstanceInterface>( classId_3, objId_3);
 			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				unsigned char classId_; unsigned int objId_;
 				serializedMsg.unpackObject( classId_, objId_);
-				if (classId_ != ClassId_NormalizerFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
 			p5 = serializedMsg.unpackFeatureOptions();
-			try {
-				obj->addForwardIndexFeature(p1,p2,p3,p4,p5);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->addForwardIndexFeature(p1,p2,p3,p4,p5);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DocumentAnalyzerConst::Method_defineMetaData:
@@ -1464,38 +1151,29 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
-			if (classId_3 != ClassId_TokenizerFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_3 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<TokenizerFunctionInstanceInterface>( classId_3, objId_3);
 			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				unsigned char classId_; unsigned int objId_;
 				serializedMsg.unpackObject( classId_, objId_);
-				if (classId_ != ClassId_NormalizerFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			try {
-				obj->defineMetaData(p1,p2,p3,p4);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->defineMetaData(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DocumentAnalyzerConst::Method_defineAggregatedMetaData:
@@ -1507,29 +1185,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_AggregatorFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_AggregatorFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<AggregatorFunctionInstanceInterface>( classId_2, objId_2);
 			markObjectToRelease( classId_2, objId_2);
-			try {
-				obj->defineAggregatedMetaData(p1,p2);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->defineAggregatedMetaData(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DocumentAnalyzerConst::Method_defineAttribute:
@@ -1544,38 +1213,29 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
-			if (classId_3 != ClassId_TokenizerFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_3 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<TokenizerFunctionInstanceInterface>( classId_3, objId_3);
 			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				unsigned char classId_; unsigned int objId_;
 				serializedMsg.unpackObject( classId_, objId_);
-				if (classId_ != ClassId_NormalizerFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			try {
-				obj->defineAttribute(p1,p2,p3,p4);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->defineAttribute(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DocumentAnalyzerConst::Method_defineSubDocument:
@@ -1586,22 +1246,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			try {
-				obj->defineSubDocument(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->defineSubDocument(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case DocumentAnalyzerConst::Method_analyze:
@@ -1613,22 +1266,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			DocumentClass p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackDocumentClass();
-			try {
-				p0 = obj->analyze(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->analyze(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packAnalyzerDocument( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1642,22 +1288,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackDocumentClass();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createContext(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createContext(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -1685,22 +1324,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p2;
 			std::size_t p3;
 			serializedMsg.unpackBuffer( p2, p3);
-			try {
-				p0 = obj->detect(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->detect(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packDocumentClass( p1);
 			msg.packCrc32();
@@ -1726,22 +1358,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				obj->skipDoc(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->skipDoc(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case ForwardIteratorConst::Method_skipPos:
@@ -1751,22 +1376,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			Index p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				p0 = obj->skipPos(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->skipPos(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1776,22 +1394,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method ForwardIteratorImpl::fetch [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p0;
-			try {
-				p0 = obj->fetch();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->fetch();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packString( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1817,22 +1428,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			Index p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				p0 = obj->skipDoc(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->skipDoc(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1858,22 +1462,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			bool p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				p0 = obj->hasElement(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->hasElement(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1885,22 +1482,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			Index p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				p0 = obj->elementHandle(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->elementHandle(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1910,22 +1500,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method MetaDataReaderImpl::nofElements [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
-			try {
-				p0 = obj->nofElements();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->nofElements();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1936,22 +1519,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				obj->skipDoc(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->skipDoc(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case MetaDataReaderConst::Method_getValue:
@@ -1961,22 +1537,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			ArithmeticVariant p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				p0 = obj->getValue(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getValue(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packArithmeticVariant( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -1988,22 +1557,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				p0 = obj->getType(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getType(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -2015,22 +1577,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				p0 = obj->getName(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getName(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -2057,22 +1612,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p1;
 			std::size_t p2;
 			serializedMsg.unpackBuffer( p1, p2);
-			try {
-				p0 = obj->normalize(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->normalize(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packString( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -2098,22 +1646,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			NormalizerFunctionContextInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createFunctionContext();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createFunctionContext();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -2146,26 +1687,19 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_TextProcessor) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_TextProcessor) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getConstObject<TextProcessorInterface>( classId_2, objId_2);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createInstance(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createInstance(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -2190,22 +1724,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			int p1;
 			p1 = serializedMsg.unpackInt();
-			try {
-				obj->setNofDocumentsInsertedChange(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->setNofDocumentsInsertedChange(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case PeerMessageBuilderConst::Method_addDfChange:
@@ -2220,66 +1747,45 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p2 = serializedMsg.unpackConstCharp();
 			p3 = serializedMsg.unpackInt();
 			p4 = serializedMsg.unpackBool();
-			try {
-				obj->addDfChange(p1,p2,p3,p4);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addDfChange(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case PeerMessageBuilderConst::Method_start:
 		{
 			std::cerr << "called method PeerMessageBuilderImpl::start [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
-			try {
-				obj->start();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->start();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case PeerMessageBuilderConst::Method_rollback:
 		{
 			std::cerr << "called method PeerMessageBuilderImpl::rollback [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
-			try {
-				obj->rollback();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->rollback();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case PeerMessageBuilderConst::Method_fetchMessage:
@@ -2289,22 +1795,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			bool p0;
 			const char* p1;
 			std::size_t p2;
-			try {
-				p0 = obj->fetchMessage(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->fetchMessage(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packBuffer( p1, p2);
 			msg.packCrc32();
@@ -2334,22 +1833,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackBuffer( p1, p2);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createViewer(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createViewer(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -2363,22 +1855,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackPeerMessageProcessorBuilderOptions();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createBuilder(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createBuilder(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -2402,22 +1887,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method PeerMessageViewerImpl::nofDocumentsInsertedChange [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			int p0;
-			try {
-				p0 = obj->nofDocumentsInsertedChange();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->nofDocumentsInsertedChange();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packInt( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -2428,22 +1906,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			bool p0;
 			PeerMessageViewerInterface::DocumentFrequencyChange p1;
-			try {
-				p0 = obj->nextDfChange(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->nextDfChange(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packPeerMessageViewerDocumentFrequencyChange( p1);
 			msg.packCrc32();
@@ -2470,22 +1941,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			Index p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				p0 = obj->skipDoc(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->skipDoc(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -2497,22 +1961,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			Index p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				p0 = obj->skipPos(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->skipPos(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -2522,22 +1979,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method PostingIteratorImpl::featureid [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p0;
-			try {
-				p0 = obj->featureid();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->featureid();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -2547,7 +1997,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method PostingIteratorImpl::subExpressions [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			(void)(obj);
-			msg.packByte( MsgTypeException_RuntimeError);
+			msg.packByte( MsgTypeError);
 			msg.packString( "the method 'subExpressions' is not implemented for RPC");
 			return msg.content();
 		}
@@ -2556,22 +2006,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method PostingIteratorImpl::documentFrequency [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			GlobalCounter p0;
-			try {
-				p0 = obj->documentFrequency();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->documentFrequency();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packGlobalCounter( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -2581,22 +2024,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method PostingIteratorImpl::frequency [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			unsigned int p0;
-			try {
-				p0 = obj->frequency();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->frequency();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packUint( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -2606,22 +2042,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method PostingIteratorImpl::docno [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
-			try {
-				p0 = obj->docno();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->docno();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -2631,22 +2060,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method PostingIteratorImpl::posno [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
-			try {
-				p0 = obj->posno();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->posno();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -2670,7 +2092,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method PostingJoinOperatorImpl::createResultIterator [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			(void)(obj);
-			msg.packByte( MsgTypeException_RuntimeError);
+			msg.packByte( MsgTypeError);
 			msg.packString( "the method 'createResultIterator' is not implemented for RPC");
 			return msg.content();
 		}
@@ -2700,38 +2122,29 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
-			if (classId_3 != ClassId_TokenizerFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_3 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<TokenizerFunctionInstanceInterface>( classId_3, objId_3);
 			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				unsigned char classId_; unsigned int objId_;
 				serializedMsg.unpackObject( classId_, objId_);
-				if (classId_ != ClassId_NormalizerFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			try {
-				obj->definePhraseType(p1,p2,p3,p4);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->definePhraseType(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryAnalyzerConst::Method_analyzePhrase:
@@ -2743,22 +2156,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			try {
-				p0 = obj->analyzePhrase(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->analyzePhrase(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
 				msg.packAnalyzerTerm( p0[ii]);
@@ -2777,22 +2183,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				QueryAnalyzerInterface::Phrase ee = serializedMsg.unpackPhrase();
 				p1.push_back( ee);
 			}
-			try {
-				p0 = obj->analyzePhraseBulk(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->analyzePhraseBulk(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
 				msg.packAnalyzerTermVector( p0[ii]);
@@ -2824,22 +2223,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackString();
-			try {
-				obj->addTerm(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addTerm(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryEvalConst::Method_addSelectionFeature:
@@ -2848,22 +2240,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->addSelectionFeature(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addSelectionFeature(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryEvalConst::Method_addRestrictionFeature:
@@ -2872,22 +2257,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->addRestrictionFeature(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addRestrictionFeature(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryEvalConst::Method_addExclusionFeature:
@@ -2896,22 +2274,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->addExclusionFeature(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addExclusionFeature(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryEvalConst::Method_addSummarizerFunction:
@@ -2925,7 +2296,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_SummarizerFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_SummarizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<SummarizerFunctionInstanceInterface>( classId_2, objId_2);
 			markObjectToRelease( classId_2, objId_2);
 			std::size_t n3 = serializedMsg.unpackSize();
@@ -2934,26 +2305,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p3.push_back( ee);
 			}
 			p4 = serializedMsg.unpackString();
-			try {
-				obj->addSummarizerFunction(p1,p2,p3,p4);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->addSummarizerFunction(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryEvalConst::Method_addWeightingFunction:
@@ -2967,7 +2329,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_WeightingFunctionInstance) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_WeightingFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<WeightingFunctionInstanceInterface>( classId_2, objId_2);
 			markObjectToRelease( classId_2, objId_2);
 			std::size_t n3 = serializedMsg.unpackSize();
@@ -2976,26 +2338,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p3.push_back( ee);
 			}
 			p4 = serializedMsg.unpackFloat();
-			try {
-				obj->addWeightingFunction(p1,p2,p3,p4);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->addWeightingFunction(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryEvalConst::Method_createQuery:
@@ -3006,26 +2359,19 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const StorageClientInterface* p1;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
-			if (classId_1 != ClassId_StorageClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_1 != ClassId_StorageClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getConstObject<StorageClientInterface>( classId_1, objId_1);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createQuery(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createQuery(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -3052,22 +2398,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			try {
-				obj->pushTerm(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->pushTerm(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryConst::Method_pushExpression:
@@ -3079,48 +2418,34 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			int p3;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
-			if (classId_1 != ClassId_PostingJoinOperator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_1 != ClassId_PostingJoinOperator) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getConstObject<PostingJoinOperatorInterface>( classId_1, objId_1);
 			p2 = serializedMsg.unpackSize();
 			p3 = serializedMsg.unpackInt();
-			try {
-				obj->pushExpression(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->pushExpression(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryConst::Method_pushDuplicate:
 		{
 			std::cerr << "called method QueryImpl::pushDuplicate [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
-			try {
-				obj->pushDuplicate();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->pushDuplicate();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryConst::Method_attachVariable:
@@ -3129,22 +2454,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->attachVariable(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->attachVariable(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryConst::Method_defineFeature:
@@ -3155,22 +2473,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			float p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackFloat();
-			try {
-				obj->defineFeature(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->defineFeature(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryConst::Method_defineMetaDataRestriction:
@@ -3185,22 +2496,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackArithmeticVariant();
 			p4 = serializedMsg.unpackBool();
-			try {
-				obj->defineMetaDataRestriction(p1,p2,p3,p4);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->defineMetaDataRestriction(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryConst::Method_addDocumentEvaluationSet:
@@ -3213,22 +2517,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				Index ee = serializedMsg.unpackIndex();
 				p1.push_back( ee);
 			}
-			try {
-				obj->addDocumentEvaluationSet(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addDocumentEvaluationSet(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryConst::Method_setMaxNofRanks:
@@ -3237,22 +2534,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::size_t p1;
 			p1 = serializedMsg.unpackSize();
-			try {
-				obj->setMaxNofRanks(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->setMaxNofRanks(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryConst::Method_setMinRank:
@@ -3261,22 +2551,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::size_t p1;
 			p1 = serializedMsg.unpackSize();
-			try {
-				obj->setMinRank(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->setMinRank(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryConst::Method_addUserName:
@@ -3285,22 +2568,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->addUserName(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addUserName(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryConst::Method_evaluate:
@@ -3308,22 +2584,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method QueryImpl::evaluate [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::vector<ResultDocument> p0;
-			try {
-				p0 = obj->evaluate();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->evaluate();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
 				msg.packResultDocument( p0[ii]);
@@ -3354,29 +2623,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_PostingJoinOperator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_PostingJoinOperator) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PostingJoinOperatorInterface>( classId_2, objId_2);
 			markObjectToRelease( classId_2, objId_2);
-			try {
-				obj->definePostingJoinOperator(p1,p2);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->definePostingJoinOperator(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryProcessorConst::Method_getPostingJoinOperator:
@@ -3388,22 +2648,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->getPostingJoinOperator(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getPostingJoinOperator(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -3417,29 +2670,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_WeightingFunction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_WeightingFunction) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<WeightingFunctionInterface>( classId_2, objId_2);
 			markObjectToRelease( classId_2, objId_2);
-			try {
-				obj->defineWeightingFunction(p1,p2);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->defineWeightingFunction(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryProcessorConst::Method_getWeightingFunction:
@@ -3451,22 +2695,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->getWeightingFunction(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getWeightingFunction(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -3480,29 +2717,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_SummarizerFunction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_SummarizerFunction) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<SummarizerFunctionInterface>( classId_2, objId_2);
 			markObjectToRelease( classId_2, objId_2);
-			try {
-				obj->defineSummarizerFunction(p1,p2);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->defineSummarizerFunction(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryProcessorConst::Method_getSummarizerFunction:
@@ -3514,22 +2742,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->getSummarizerFunction(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getSummarizerFunction(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -3557,22 +2778,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			bool p3;
 			serializedMsg.unpackBuffer( p1, p2);
 			p3 = serializedMsg.unpackBool();
-			try {
-				obj->putInput(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->putInput(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case SegmenterContextConst::Method_getNext:
@@ -3584,22 +2798,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			SegmenterPosition p2;
 			const char* p3;
 			std::size_t p4;
-			try {
-				p0 = obj->getNext(p1,p2,p3,p4);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getNext(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packInt( p1);
 			msg.packGlobalCounter( p2);
@@ -3629,22 +2836,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			p1 = serializedMsg.unpackInt();
 			p2 = serializedMsg.unpackString();
-			try {
-				obj->defineSelectorExpression(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->defineSelectorExpression(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case SegmenterInstanceConst::Method_defineSubSection:
@@ -3657,22 +2857,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackInt();
 			p2 = serializedMsg.unpackInt();
 			p3 = serializedMsg.unpackString();
-			try {
-				obj->defineSubSection(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->defineSubSection(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case SegmenterInstanceConst::Method_createContext:
@@ -3684,22 +2877,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackDocumentClass();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createContext(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createContext(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -3723,22 +2909,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method SegmenterImpl::mimeType [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			const char* p0;
-			try {
-				p0 = obj->mimeType();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->mimeType();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -3750,22 +2929,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			SegmenterInstanceInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createInstance();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createInstance();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -3792,22 +2964,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			try {
-				obj->addElement(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addElement(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageAlterMetaDataTableConst::Method_alterElement:
@@ -3820,22 +2985,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackString();
-			try {
-				obj->alterElement(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->alterElement(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageAlterMetaDataTableConst::Method_renameElement:
@@ -3846,22 +3004,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			try {
-				obj->renameElement(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->renameElement(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageAlterMetaDataTableConst::Method_deleteElement:
@@ -3870,22 +3021,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->deleteElement(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->deleteElement(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageAlterMetaDataTableConst::Method_clearElement:
@@ -3894,22 +3038,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->clearElement(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->clearElement(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageAlterMetaDataTableConst::Method_commit:
@@ -3917,22 +3054,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method StorageAlterMetaDataTableImpl::commit [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			bool p0;
-			try {
-				p0 = obj->commit();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->commit();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -3941,22 +3071,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			std::cerr << "called method StorageAlterMetaDataTableImpl::rollback [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
-			try {
-				obj->rollback();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->rollback();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 	}
@@ -3977,22 +3100,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			std::cerr << "called method StorageClientImpl::close [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
-			try {
-				obj->close();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->close();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageClientConst::Method_createTermPostingIterator:
@@ -4006,22 +3122,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createTermPostingIterator(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createTermPostingIterator(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -4035,22 +3144,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createForwardIterator(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createForwardIterator(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -4064,22 +3166,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createInvAclIterator(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createInvAclIterator(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -4089,22 +3184,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method StorageClientImpl::globalNofDocumentsInserted [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			GlobalCounter p0;
-			try {
-				p0 = obj->globalNofDocumentsInserted();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->globalNofDocumentsInserted();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packGlobalCounter( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -4114,22 +3202,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method StorageClientImpl::localNofDocumentsInserted [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
-			try {
-				p0 = obj->localNofDocumentsInserted();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->localNofDocumentsInserted();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -4143,22 +3224,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			try {
-				p0 = obj->globalDocumentFrequency(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->globalDocumentFrequency(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packGlobalCounter( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -4172,22 +3246,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			try {
-				p0 = obj->localDocumentFrequency(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->localDocumentFrequency(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -4197,22 +3264,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method StorageClientImpl::maxDocumentNumber [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			Index p0;
-			try {
-				p0 = obj->maxDocumentNumber();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->maxDocumentNumber();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -4224,22 +3284,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			Index p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				p0 = obj->documentNumber(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->documentNumber(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -4255,22 +3308,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackIndex();
 			p2 = serializedMsg.unpackDocumentStatisticsType();
 			p3 = serializedMsg.unpackString();
-			try {
-				p0 = obj->documentStatistics(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->documentStatistics(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -4282,22 +3328,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			MetaDataReaderInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createMetaDataReader();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createMetaDataReader();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -4309,22 +3348,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			AttributeReaderInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createAttributeReader();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createAttributeReader();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -4336,22 +3368,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			DocnoRangeAllocatorInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createDocnoRangeAllocator();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createDocnoRangeAllocator();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -4363,22 +3388,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			StorageTransactionInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createTransaction();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createTransaction();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -4388,7 +3406,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method StorageClientImpl::definePeerMessageProcessor [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			(void)(obj);
-			msg.packByte( MsgTypeException_RuntimeError);
+			msg.packByte( MsgTypeError);
 			msg.packString( "the method 'definePeerMessageProcessor' is not implemented for RPC");
 			return msg.content();
 		}
@@ -4396,22 +3414,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			std::cerr << "called method StorageClientImpl::startPeerInit [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
-			try {
-				obj->startPeerInit();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->startPeerInit();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageClientConst::Method_pushPeerMessage:
@@ -4421,22 +3432,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p1;
 			std::size_t p2;
 			serializedMsg.unpackBuffer( p1, p2);
-			try {
-				obj->pushPeerMessage(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->pushPeerMessage(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageClientConst::Method_fetchPeerReply:
@@ -4446,22 +3450,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			bool p0;
 			const char* p1;
 			std::size_t p2;
-			try {
-				p0 = obj->fetchPeerReply(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->fetchPeerReply(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packBuffer( p1, p2);
 			msg.packCrc32();
@@ -4474,22 +3471,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			bool p0;
 			const char* p1;
 			std::size_t p2;
-			try {
-				p0 = obj->fetchPeerMessage(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->fetchPeerMessage(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packBuffer( p1, p2);
 			msg.packCrc32();
@@ -4506,22 +3496,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createDocumentChecker(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createDocumentChecker(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -4531,7 +3514,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method StorageClientImpl::checkStorage [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			(void)(obj);
-			msg.packByte( MsgTypeException_RuntimeError);
+			msg.packByte( MsgTypeError);
 			msg.packString( "the method 'checkStorage' is not implemented for RPC");
 			return msg.content();
 		}
@@ -4542,22 +3525,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			StorageDumpInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createDump();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createDump();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -4586,22 +3562,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackIndex();
-			try {
-				obj->addSearchIndexTerm(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addSearchIndexTerm(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageDocumentConst::Method_addForwardIndexTerm:
@@ -4614,22 +3583,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackIndex();
-			try {
-				obj->addForwardIndexTerm(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addForwardIndexTerm(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageDocumentConst::Method_setMetaData:
@@ -4640,22 +3602,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			ArithmeticVariant p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackArithmeticVariant();
-			try {
-				obj->setMetaData(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->setMetaData(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageDocumentConst::Method_setAttribute:
@@ -4666,22 +3621,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			try {
-				obj->setAttribute(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->setAttribute(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageDocumentConst::Method_setUserAccessRight:
@@ -4690,44 +3638,30 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->setUserAccessRight(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->setUserAccessRight(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageDocumentConst::Method_done:
 		{
 			std::cerr << "called method StorageDocumentImpl::done [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
-			try {
-				obj->done();
-				msg.packByte( MsgTypeSynchronize);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->done();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeSynchronize);
 			return msg.content();
 		}
 	}
@@ -4752,22 +3686,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			ArithmeticVariant p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackArithmeticVariant();
-			try {
-				obj->setMetaData(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->setMetaData(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageDocumentUpdateConst::Method_setAttribute:
@@ -4778,22 +3705,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			try {
-				obj->setAttribute(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->setAttribute(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageDocumentUpdateConst::Method_clearAttribute:
@@ -4802,22 +3722,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->clearAttribute(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->clearAttribute(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageDocumentUpdateConst::Method_setUserAccessRight:
@@ -4826,22 +3739,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->setUserAccessRight(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->setUserAccessRight(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageDocumentUpdateConst::Method_clearUserAccessRight:
@@ -4850,66 +3756,45 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->clearUserAccessRight(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->clearUserAccessRight(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageDocumentUpdateConst::Method_clearUserAccessRights:
 		{
 			std::cerr << "called method StorageDocumentUpdateImpl::clearUserAccessRights [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
-			try {
-				obj->clearUserAccessRights();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->clearUserAccessRights();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageDocumentUpdateConst::Method_done:
 		{
 			std::cerr << "called method StorageDocumentUpdateImpl::done [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
-			try {
-				obj->done();
-				msg.packByte( MsgTypeSynchronize);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->done();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeSynchronize);
 			return msg.content();
 		}
 	}
@@ -4933,22 +3818,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			bool p0;
 			const char* p1;
 			std::size_t p2;
-			try {
-				p0 = obj->nextChunk(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->nextChunk(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packBuffer( p1, p2);
 			msg.packCrc32();
@@ -4978,31 +3856,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_DatabaseClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_DatabaseClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<DatabaseClientInterface>( classId_2, objId_2);
 			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createClient(p1,p2);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			p0 = obj->createClient(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5016,24 +3885,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_DatabaseClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_DatabaseClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<DatabaseClientInterface>( classId_2, objId_2);
-			try {
-				obj->createStorage(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->createStorage(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageConst::Method_createAlterMetaDataTable:
@@ -5044,31 +3906,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			DatabaseClientInterface* p1;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
-			if (classId_1 != ClassId_DatabaseClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_1 != ClassId_DatabaseClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getObject<DatabaseClientInterface>( classId_1, objId_1);
 			markObjectToRelease( classId_1, objId_1);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createAlterMetaDataTable(p1);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			p0 = obj->createAlterMetaDataTable(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5080,22 +3933,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p0;
 			StorageInterface::ConfigType p1;
 			p1 = serializedMsg.unpackStorageConfigType();
-			try {
-				p0 = obj->getConfigDescription(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getConfigDescription(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -5107,22 +3953,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char** p0;
 			StorageInterface::ConfigType p1;
 			p1 = serializedMsg.unpackStorageConfigType();
-			try {
-				p0 = obj->getConfigParameters(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getConfigParameters(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packCharpp( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -5148,22 +3987,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const StorageInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->getStorage();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getStorage();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5177,22 +4009,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->getDatabase(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getDatabase(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5204,22 +4029,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const QueryProcessorInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->getQueryProcessor();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getQueryProcessor();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5233,22 +4051,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createStorageClient(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createStorageClient(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5262,26 +4073,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createAlterMetaDataTable(p1);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			p0 = obj->createAlterMetaDataTable(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5293,22 +4095,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			QueryEvalInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createQueryEval();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createQueryEval();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5338,22 +4133,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p2 = serializedMsg.unpackIndex();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createDocument(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createDocument(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5367,22 +4155,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackIndex();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createDocumentUpdate(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createDocumentUpdate(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5393,22 +4174,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->deleteDocument(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->deleteDocument(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageTransactionConst::Method_deleteUserAccessRights:
@@ -5417,22 +4191,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->deleteUserAccessRights(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->deleteUserAccessRights(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageTransactionConst::Method_updateMetaData:
@@ -5445,22 +4212,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackIndex();
 			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackArithmeticVariant();
-			try {
-				obj->updateMetaData(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->updateMetaData(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageTransactionConst::Method_commit:
@@ -5468,22 +4228,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method StorageTransactionImpl::commit [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			bool p0;
-			try {
-				p0 = obj->commit();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->commit();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -5492,22 +4245,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			std::cerr << "called method StorageTransactionImpl::rollback [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
-			try {
-				obj->rollback();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->rollback();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 	}
@@ -5534,7 +4280,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_PostingIterator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_PostingIterator) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PostingIteratorInterface>( classId_2, objId_2);
 			std::size_t n3 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n3; ++ii) {
@@ -5546,22 +4292,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				
 				p3.push_back( ee);
 			}
-			try {
-				obj->addSummarizationFeature(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addSummarizationFeature(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case SummarizerFunctionContextConst::Method_getSummary:
@@ -5571,22 +4310,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::vector<SummarizerFunctionContextInterface::SummaryElement> p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				p0 = obj->getSummary(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getSummary(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
 				msg.packSummaryElement( p0[ii]);
@@ -5616,22 +4348,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			try {
-				obj->addStringParameter(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addStringParameter(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case SummarizerFunctionInstanceConst::Method_addNumericParameter:
@@ -5642,22 +4367,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			ArithmeticVariant p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackArithmeticVariant();
-			try {
-				obj->addNumericParameter(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addNumericParameter(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case SummarizerFunctionInstanceConst::Method_createFunctionContext:
@@ -5669,30 +4387,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			MetaDataReaderInterface* p2;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
-			if (classId_1 != ClassId_StorageClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_1 != ClassId_StorageClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getConstObject<StorageClientInterface>( classId_1, objId_1);
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_MetaDataReader) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_MetaDataReader) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<MetaDataReaderInterface>( classId_2, objId_2);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createFunctionContext(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createFunctionContext(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5702,22 +4413,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method SummarizerFunctionInstanceImpl::tostring [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p0;
-			try {
-				p0 = obj->tostring();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->tostring();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packString( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -5744,26 +4448,19 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const QueryProcessorInterface* p1;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
-			if (classId_1 != ClassId_QueryProcessor) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_1 != ClassId_QueryProcessor) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getConstObject<QueryProcessorInterface>( classId_1, objId_1);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createInstance(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createInstance(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5788,22 +4485,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				obj->addResourcePath(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addResourcePath(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case TextProcessorConst::Method_getResourcePath:
@@ -5813,22 +4503,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			try {
-				p0 = obj->getResourcePath(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getResourcePath(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packString( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -5842,22 +4525,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->getTokenizer(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getTokenizer(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5871,22 +4547,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->getNormalizer(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getNormalizer(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5900,22 +4569,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->getAggregator(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->getAggregator(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -5929,22 +4591,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p2;
 			std::size_t p3;
 			serializedMsg.unpackBuffer( p2, p3);
-			try {
-				p0 = obj->detectDocumentClass(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->detectDocumentClass(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packDocumentClass( p1);
 			msg.packCrc32();
@@ -5957,29 +4612,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			DocumentClassDetectorInterface* p1;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
-			if (classId_1 != ClassId_DocumentClassDetector) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_1 != ClassId_DocumentClassDetector) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getObject<DocumentClassDetectorInterface>( classId_1, objId_1);
 			markObjectToRelease( classId_1, objId_1);
-			try {
-				obj->defineDocumentClassDetector(p1);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->defineDocumentClassDetector(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case TextProcessorConst::Method_defineTokenizer:
@@ -5991,29 +4637,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_TokenizerFunction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_TokenizerFunction) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<TokenizerFunctionInterface>( classId_2, objId_2);
 			markObjectToRelease( classId_2, objId_2);
-			try {
-				obj->defineTokenizer(p1,p2);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->defineTokenizer(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case TextProcessorConst::Method_defineNormalizer:
@@ -6025,29 +4662,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_NormalizerFunction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_NormalizerFunction) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<NormalizerFunctionInterface>( classId_2, objId_2);
 			markObjectToRelease( classId_2, objId_2);
-			try {
-				obj->defineNormalizer(p1,p2);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->defineNormalizer(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case TextProcessorConst::Method_defineAggregator:
@@ -6059,29 +4687,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_AggregatorFunction) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_AggregatorFunction) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<AggregatorFunctionInterface>( classId_2, objId_2);
 			markObjectToRelease( classId_2, objId_2);
-			try {
-				obj->defineAggregator(p1,p2);
-				releaseObjectsMarked();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
+			obj->defineAggregator(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
 				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 	}
@@ -6106,22 +4725,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p1;
 			std::size_t p2;
 			serializedMsg.unpackBuffer( p1, p2);
-			try {
-				p0 = obj->tokenize(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->tokenize(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
 				msg.packAnalyzerToken( p0[ii]);
@@ -6148,22 +4760,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method TokenizerFunctionInstanceImpl::concatBeforeTokenize [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			bool p0;
-			try {
-				p0 = obj->concatBeforeTokenize();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->concatBeforeTokenize();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -6175,22 +4780,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			TokenizerFunctionContextInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createFunctionContext();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createFunctionContext();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -6223,26 +4821,19 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_TextProcessor) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_TextProcessor) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getConstObject<TextProcessorInterface>( classId_2, objId_2);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createInstance(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createInstance(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -6271,25 +4862,18 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_PostingIterator) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_PostingIterator) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PostingIteratorInterface>( classId_2, objId_2);
 			p3 = serializedMsg.unpackFloat();
-			try {
-				obj->addWeightingFeature(p1,p2,p3);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addWeightingFeature(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case WeightingFunctionContextConst::Method_call:
@@ -6299,22 +4883,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			float p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			try {
-				p0 = obj->call(p1);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->call(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packFloat( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -6341,22 +4918,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			try {
-				obj->addStringParameter(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addStringParameter(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case WeightingFunctionInstanceConst::Method_addNumericParameter:
@@ -6367,22 +4937,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			ArithmeticVariant p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackArithmeticVariant();
-			try {
-				obj->addNumericParameter(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			obj->addNumericParameter(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case WeightingFunctionInstanceConst::Method_createFunctionContext:
@@ -6394,30 +4957,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			MetaDataReaderInterface* p2;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
-			if (classId_1 != ClassId_StorageClient) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_1 != ClassId_StorageClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getConstObject<StorageClientInterface>( classId_1, objId_1);
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_MetaDataReader) throw std::runtime_error("error in RPC serialzed message: output parameter object type mismatch");
+			if (classId_2 != ClassId_MetaDataReader) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<MetaDataReaderInterface>( classId_2, objId_2);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createFunctionContext(p1,p2);
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createFunctionContext(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -6427,22 +4983,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::cerr << "called method WeightingFunctionInstanceImpl::tostring [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
 			std::string p0;
-			try {
-				p0 = obj->tostring();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->tostring();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			msg.packString( p0);
 			msg.packCrc32();
 			return msg.content();
@@ -6468,22 +5017,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			WeightingFunctionInstanceInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			try {
-				p0 = obj->createInstance();
-				msg.packByte( MsgTypeAnswer);
-			} catch (const std::runtime_error& err) {
-				msg.packByte( MsgTypeException_RuntimeError);
-				msg.packString( err.what());
-				return msg.content();
-			} catch (const std::bad_alloc& err) {
-				msg.packByte( MsgTypeException_BadAlloc);
-				msg.packString( "memory allocation error");
-				return msg.content();
-			} catch (const std::logic_error& err) {
-				msg.packByte( MsgTypeException_LogicError);
-				msg.packString( err.what());
+			p0 = obj->createInstance();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
 				return msg.content();
 			}
+			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
@@ -6492,5 +5034,5 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	break;
 	}
 	}
-	throw std::runtime_error("calling undefined request handler");
+	throw strus::runtime_error(_TXT("calling undefined request handler"));
 }

@@ -47,7 +47,7 @@ StorageObjectBuilderInterface* RpcClient::createStorageObjectBuilder() const
 			strus::initMessageTextDomain();
 			g_intl_initialized = true;
 		}
-		return new StorageObjectBuilderImpl( 0, m_ctx);
+		return new StorageObjectBuilderImpl( 0, m_ctx, false, m_errorhnd);
 	}
 	CATCH_ERROR_MAP_RETURN( _TXT("error creating storage object builder: %s"), *m_errorhnd, 0);
 }
@@ -61,7 +61,7 @@ AnalyzerObjectBuilderInterface* RpcClient::createAnalyzerObjectBuilder() const
 			strus::initMessageTextDomain();
 			g_intl_initialized = true;
 		}
-		return new AnalyzerObjectBuilderImpl( 0, m_ctx);
+		return new AnalyzerObjectBuilderImpl( 0, m_ctx, false, m_errorhnd);
 	}
 	CATCH_ERROR_MAP_RETURN( _TXT("error creating analyzer object builder: %s"), *m_errorhnd, 0);
 }

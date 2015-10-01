@@ -26,10 +26,9 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc_server.hpp"
 #include "strus/lib/module.hpp"
 #include "strus/lib/error.hpp"
-#include "strus/rpcRequestHandlerInterface.hpp"
+#include "rpcRequestHandler.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/moduleLoaderInterface.hpp"
@@ -97,7 +96,7 @@ static strus_globalctx_t g_glbctx = {0,0,0,0};
 
 struct handler_context_t
 {
-	strus::RpcRequestHandlerInterface* obj;
+	strus::RpcRequestHandler* obj;
 	std::string resultbuf;
 };
 
@@ -125,8 +124,8 @@ static int request_handler(
 	{
 		if (!ctx->obj)
 		{
-			ctx->obj = strus::createRpcRequestHandler(
-						g_storageObjectBuilder, g_analyzerObjectBuilder, g_storageClient, g_errorBuffer);
+			ctx->obj = new strus::RpcRequestHandler(
+					g_storageObjectBuilder, g_analyzerObjectBuilder, g_storageClient, g_errorBuffer);
 		}
 		ctx->resultbuf.clear();
 		ctx->resultbuf.append( "\0\0\0\0", sizeof( uint32_t));
@@ -282,7 +281,10 @@ static void createStorageIfNotExist( const std::string& cfg)
 
 	std::auto_ptr<strus::DatabaseClientInterface>
 		database( dbi->createClient( databasecfg));
-
+	if (!database.get())
+	{
+		throw strus::runtime_error(_TXT("error creating database client"));
+	}
 	sti->createStorage( storagecfg, database.get());
 }
 
@@ -417,13 +419,14 @@ int main( int argc, const char* argv[])
 		}
 		if (doExit) return 0;
 		init_global_context( logfile.empty()?0:logfile.c_str());
-		g_errorBuffer = strus::createErrorBuffer_standard( g_glbctx.logf);
+		g_errorBuffer = strus::createErrorBuffer_standard( g_glbctx.logf, strus_threadpool_size()+1);
 		if (!g_errorBuffer) throw strus::runtime_error( _TXT("failed to create error buffer"));
 
 		// Create the global context:
 		std::auto_ptr<strus::ModuleLoaderInterface>
 			moduleLoader( strus::createModuleLoader( g_errorBuffer));
 		g_moduleLoader = moduleLoader.get();
+		if (!g_moduleLoader) throw strus::runtime_error( _TXT("failed to create module loader"));
 
 		std::vector<std::string>::const_iterator
 			di = moduledirs.begin(), de = moduledirs.end();
@@ -447,8 +450,16 @@ int main( int argc, const char* argv[])
 
 		std::auto_ptr<strus::StorageObjectBuilderInterface>
 			storageBuilder( g_moduleLoader->createStorageObjectBuilder());
+		if (!storageBuilder.get())
+		{
+			throw strus::runtime_error( _TXT("failed to create storage builder"));
+		}
 		std::auto_ptr<strus::AnalyzerObjectBuilderInterface>
 			analyzerBuilder( g_moduleLoader->createAnalyzerObjectBuilder());
+		if (!analyzerBuilder.get())
+		{
+			throw strus::runtime_error( _TXT("failed to create analyzer builder"));
+		}
 		std::auto_ptr<strus::StorageClientInterface> storageClient;
 
 		g_storageObjectBuilder = storageBuilder.get();
@@ -461,6 +472,10 @@ int main( int argc, const char* argv[])
 				createStorageIfNotExist( storageconfig);
 			}
 			storageClient.reset( g_storageObjectBuilder->createStorageClient( storageconfig));
+			if (!storageClient.get())
+			{
+				throw strus::runtime_error( _TXT("failed to create storage client"), storageconfig.c_str());
+			}
 			std::cerr << _TXT("strus RPC server is hosting storage ") << "'" << storageconfig << "'" << std::endl;
 			g_storageClient = storageClient.get();
 		}
@@ -498,7 +513,15 @@ int main( int argc, const char* argv[])
 	}
 	catch (const std::exception& e)
 	{
-		std::cerr << e.what() << std::endl;
+		const char* errormsg = g_errorBuffer?g_errorBuffer->fetchError():0;
+		if (errormsg)
+		{
+			std::cerr << e.what() << ": " << errormsg << std::endl;
+		}
+		else
+		{
+			std::cerr << e.what() << std::endl;
+		}
 	}
 	std::cerr << _TXT("strus RPC server terminated") << std::endl;
 	if (g_errorBuffer) delete g_errorBuffer;

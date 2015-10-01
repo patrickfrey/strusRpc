@@ -116,9 +116,7 @@ private:
 
 enum RpcReturnType
 {
-	MsgTypeException_BadAlloc,
-	MsgTypeException_RuntimeError,
-	MsgTypeException_LogicError,
+	MsgTypeError,
 	MsgTypeAnswer,
 	MsgTypeSynchronize
 };

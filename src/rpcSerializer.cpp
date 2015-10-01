@@ -28,6 +28,7 @@
 */
 #include "rpcSerializer.hpp"
 #include "private/utils.hpp"
+#include "private/internationalization.hpp"
 #include "rpcProtocolDefines.hpp"
 #include <stdexcept>
 #include <cstring>
@@ -55,7 +56,7 @@ void pack<1>( std::string& buf, const void* ptr)
 template <>
 void unpack<1>( char const*& itr, const char* end, void* ptr)
 {
-	if (itr+1 > end) throw std::runtime_error( "message to small to encode next byte");
+	if (itr+1 > end) throw strus::runtime_error( _TXT("message to small to encode next byte"));
 	*(char*)ptr = *itr++;
 }
 
@@ -68,7 +69,7 @@ void pack<2>( std::string& buf, const void* ptr)
 template <>
 void unpack<2>( char const*& itr, const char* end, void* ptr)
 {
-	if (itr+2 > end) throw std::runtime_error( "message to small to encode next word");
+	if (itr+2 > end) throw strus::runtime_error( _TXT("message to small to encode next word"));
 	uint16_t val;
 	std::memcpy( &val, itr, 2);
 	itr += 2;
@@ -86,7 +87,7 @@ void unpack<4>( char const*& itr, const char* end, void* ptr)
 {
 	if (itr+4 > end)
 	{
-		throw std::runtime_error( "message to small to encode next dword");
+		throw strus::runtime_error( _TXT("message to small to encode next dword"));
 	}
 	uint32_t val;
 	std::memcpy( &val, itr, 4);
@@ -106,7 +107,7 @@ void pack<8>( std::string& buf, const void* ptr)
 template <>
 void unpack<8>( char const*& itr, const char* end, void* ptr)
 {
-	if (itr+8 > end) throw std::runtime_error( "message to small to encode next qword");
+	if (itr+8 > end) throw strus::runtime_error( _TXT("message to small to encode next qword"));
 	uint32_t vlo;
 	uint32_t vhi;
 	unpack<4>( itr, end, &vhi);
@@ -143,7 +144,7 @@ void RpcSerializer::packObject( unsigned char classId_, unsigned int objId_)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packObject (" << (unsigned int)classId_ << ", " << objId_ << ")" << std::endl;
 #endif
-	if (objId_ > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "object id out of range");
+	if (objId_ > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( _TXT("object id out of range"));
 	packScalar( m_content, classId_);
 	packScalar( m_content, (uint32_t)objId_);
 }
@@ -153,7 +154,7 @@ void RpcSerializer::packString( const std::string& str)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packString ('" << str << "')" << std::endl;
 #endif
-	if (str.size() > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "string size out of range");
+	if (str.size() > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( _TXT("string size out of range"));
 	packScalar( m_content, (uint32_t)str.size());
 	m_content.append( str);
 	
@@ -202,7 +203,7 @@ void RpcSerializer::packBuffer( const char* buf, std::size_t size)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packBuffer('" << std::string(buf,size) << "')" << std::endl;
 #endif
-	if (size > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "buffer size out of range");
+	if (size > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( _TXT("buffer size out of range"));
 	packScalar( m_content, (uint32_t)size);
 	m_content.append( buf, size);
 }
@@ -244,7 +245,7 @@ void RpcSerializer::packUint( unsigned int val)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packUint (" << (unsigned int)val << ")" << std::endl;
 #endif
-	if (val > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "packed uint out of range");
+	if (val > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( _TXT("packed uint out of range"));
 	packScalar( m_content, (uint32_t)val);
 }
 
@@ -254,7 +255,7 @@ void RpcSerializer::packInt( int val)
 	std::cerr << "packInt (" << (signed int)val << ")" << std::endl;
 #endif
 	if (val > std::numeric_limits<int32_t>::max()
-	||  val < std::numeric_limits<int32_t>::min()) throw std::runtime_error( "packed int out of range");
+	||  val < std::numeric_limits<int32_t>::min()) throw strus::runtime_error( _TXT("packed int out of range"));
 	packScalar( m_content, (int32_t)val);
 }
 
@@ -279,7 +280,7 @@ void RpcSerializer::packSize( std::size_t size)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packSize (" << (std::size_t)size << ")" << std::endl;
 #endif
-	if (size > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( "packed size out of range");
+	if (size > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( _TXT("packed size out of range"));
 	packScalar( m_content, (uint32_t)size);
 }
 
@@ -337,7 +338,7 @@ void RpcSerializer::packSummarizationVariable( const SummarizationVariable& val)
 {
 	packString( val.name());
 	const RpcInterfaceStub* so = dynamic_cast<const RpcInterfaceStub*>( val.itr());
-	if (!so) throw std::runtime_error( "passing non RPC interface object in RPC call (summarization variable)");
+	if (!so) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (summarization variable)"));
 	packObject( so->classId(), so->objId());
 }
 
@@ -498,7 +499,7 @@ std::string RpcDeserializer::unpackString()
 	uint32_t size = unpackScalar<uint32_t>( m_itr, m_end);
 	if (m_itr+size > m_end)
 	{
-		throw std::runtime_error( "message to small to encode next string");
+		throw strus::runtime_error( _TXT("message to small to encode next string"));
 	}
 	rt.append( m_itr, size);
 	m_itr += size;
@@ -514,7 +515,7 @@ const char* RpcDeserializer::unpackConstCharp()
 	while (m_itr < m_end && *m_itr) ++m_itr;
 	if (m_itr == m_end)
 	{
-		throw std::runtime_error( "message to small to encode next C string");
+		throw strus::runtime_error( _TXT("message to small to encode next C string"));
 	}
 	++m_itr;
 #ifdef STRUS_LOWLEVEL_DEBUG
@@ -649,7 +650,7 @@ ArithmeticVariant RpcDeserializer::unpackArithmeticVariant()
 		case ArithmeticVariant::UInt: return ArithmeticVariant( unpackUint());
 		case ArithmeticVariant::Float: return ArithmeticVariant( unpackFloat());
 	}
-	throw std::runtime_error( "unknown type of arithmetic variant");
+	throw strus::runtime_error( _TXT("unknown type of arithmetic variant"));
 }
 
 DocumentClass RpcDeserializer::unpackDocumentClass()

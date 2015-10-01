@@ -60,9 +60,6 @@ target_link_libraries( strus_rpc_client_socket strus_private_utils dl uv )
 add_library( strus_rpc_client SHARED ${client_source_files} libstrus_rpc_client.cpp )
 target_link_libraries( strus_rpc_client strus_private_utils dl )
 
-add_library( strus_rpc_server SHARED ${server_source_files} libstrus_rpc_server.cpp )
-target_link_libraries( strus_rpc_server strus_private_utils strus_utils strus_module "${Boost_LIBRARIES}" uv dl )
-
 set_target_properties(
     strus_rpc_client_socket
     PROPERTIES
@@ -79,19 +76,11 @@ set_target_properties(
     VERSION ${STRUS_VERSION}
 )
 
-set_target_properties(
-    strus_rpc_server
-    PROPERTIES
-    DEBUG_POSTFIX "_d"
-    SOVERSION "${STRUS_MAJOR_VERSION}.${STRUS_MINOR_VERSION}"
-    VERSION ${STRUS_VERSION}
-)
-
 # ------------------------------
 # PROGRAMS
 # ------------------------------
-add_executable( strusRpcServer strusRpcServer.cpp utils.cpp )
-target_link_libraries( strusRpcServer  "${strusmodule_LIBRARIES}"  strus_rpc_server strus_error )
+add_executable( strusRpcServer strusRpcServer.cpp utils.cpp ${server_source_files} )
+target_link_libraries( strusRpcServer  "${Boost_LIBRARIES}" strus_private_utils strus_error strus_utils strus_module uv dl )
 
 # ------------------------------
 # INSTALLATION
@@ -100,9 +89,6 @@ install( TARGETS strus_rpc_client_socket
            LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strus )
 
 install( TARGETS strus_rpc_client
-           LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strus )
-
-install( TARGETS strus_rpc_server
            LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strus )
 
 install( TARGETS strusRpcServer

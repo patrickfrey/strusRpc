@@ -28,7 +28,6 @@
 */
 #ifndef _STRUS_RPC_REQUEST_HANDLER_IMPLEMENTATION_HPP_INCLUDED
 #define _STRUS_RPC_REQUEST_HANDLER_IMPLEMENTATION_HPP_INCLUDED
-#include "strus/rpcRequestHandlerInterface.hpp"
 #include "objects_gen.hpp"
 #include <string>
 #include <map>
@@ -54,7 +53,6 @@ public:
 };
 
 class RpcRequestHandler
-	:public RpcRequestHandlerInterface
 {
 public:
 	RpcRequestHandler(

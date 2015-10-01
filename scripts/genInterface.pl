@@ -190,7 +190,7 @@ $constResetMethodMap{"nextChunk"} = 1;
 
 # List of hacks (client code inserted at the beginning of a method call):
 my %alternativeClientImpl = ();
-$alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx());\n";
+$alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx(), false, errorhnd());\n";
 
 # Set debug code generation ON/OFF:
 my $doGenerateDebugCode = 1;
@@ -667,7 +667,7 @@ sub packParameter
 		else
 		{
 			$rt .= "const RpcInterfaceStub* impl_$idx = dynamic_cast<const RpcInterfaceStub*>($id);\n";
-			$rt .= "if (!impl_$idx) throw std::runtime_error( \"passing non RPC interface object in RPC call ($objtype)\");\n";
+			$rt .= "if (!impl_$idx) throw strus::runtime_error( _TXT(\"passing non RPC interface object in RPC call (%s)\"), \"$objtype\");\n";
 			$rt .= "msg.packObject( impl_" . $idx . "->classId(), impl_" . $idx . "->objId());";
 		}
 	}
@@ -846,7 +846,7 @@ sub unpackParameter
 		{
 			$rt .= "unsigned char classId_$idx; unsigned int objId_$idx;\n";
 			$rt .= "serializedMsg.unpackObject( classId_$idx, objId_$idx);\n";
-			$rt .= "if (classId_$idx != " . getInterfaceEnumName( $type) .") throw std::runtime_error(\"error in RPC serialzed message: output parameter object type mismatch\");\n";
+			$rt .= "if (classId_$idx != " . getInterfaceEnumName( $type) .") throw strus::runtime_error(_TXT(\"error in RPC serialzed message: output parameter object type mismatch\"));\n";
 			if ($isconst)
 			{
 				$rt .= "$id = getConstObject<$type>( classId_$idx, objId_$idx);";
@@ -861,12 +861,12 @@ sub unpackParameter
 			my $implname = interfaceImplementationClassName( $type);
 			if ($isconst)
 			{
-				$rt .= "$implname const_$idx( objId_$idx, ctx(), true);\n";
+				$rt .= "$implname const_$idx( objId_$idx, ctx(), true, errorhnd());\n";
 				$rt .= "$id = (const $implname*)ctx()->constConstructor()->getLongLiving( &const_$idx, sizeof(const_$idx));";
 			}
 			else
 			{
-				$rt .= "$id = new $implname( objId_$idx, ctx());";
+				$rt .= "$id = new $implname( objId_$idx, ctx(), false, errorhnd());";
 			}
 		}
 	}
@@ -1215,17 +1215,39 @@ sub getMethodDeclarationSource
 	$sender_code .= "\n{\n";
 	$receiver_code .= "RpcSerializer msg;\n";
 
+	my $retvalnull_decl = getMethodParamDeclarationSource( $classname, $retval);
+	my $retvalnull_return = "";
+	if ($retvalnull_decl =~ m/^(.*)[\*]$/)
+	{
+		$retvalnull_return = "return 0;"
+	}
+	elsif ($retvalnull_decl =~ m/^(double|int|float|Index|unsigned int)$/)
+	{
+		$retvalnull_return = "return 0;"
+	}
+	elsif ($retvalnull_decl =~ m/^bool$/)
+	{
+		$retvalnull_return = "return false;"
+	}
+	else
+	{
+		$retvalnull_return = "return $retvalnull_decl();";
+	}
+
 	if ($notImplMethods{$methodname})
 	{
-		$sender_code .= "\tthrow std::runtime_error(\"the method '$methodname' is not implemented for RPC\");\n";
+		$sender_code .= "\terrorhnd()->report(_TXT(\"the method '%s' is not implemented for RPC\"),\"$methodname\");\n";
+		$sender_code .= "\t$retvalnull_return\n";
 
 		$receiver_code .= "\t(void)(obj);\n";
-		$receiver_code .= "\tmsg.packByte( MsgTypeException_RuntimeError);\n";
+		$receiver_code .= "\tmsg.packByte( MsgTypeError);\n";
 		$receiver_code .= "\tmsg.packString( \"the method '$methodname' is not implemented for RPC\");\n";
 		$receiver_code .= "\treturn msg.content();\n";
 	}
 	else
 	{
+		$sender_code .= "try\n";
+		$sender_code .= "{\n";
 		if ($doGenerateDebugCode)
 		{
 			$sender_code .= "\tstd::cerr << \"calling method $classname" . "::" . "$methodname\" << std::endl;\n";
@@ -1299,46 +1321,30 @@ sub getMethodDeclarationSource
 				}
 			}
 		}
-		$receiver_code .= "\ttry {\n";
-		$receiver_code .= "\t\t$retvalassigner" . "obj->" . $methodname . "(" . $receiver_paramlist . ");\n";
+		$receiver_code .= "\t$retvalassigner" . "obj->" . $methodname . "(" . $receiver_paramlist . ");\n";
+		$receiver_code .= "\tconst char* err = m_errorhnd->fetchError();\n";
+		$receiver_code .= "\tif (err)\n";
+		$receiver_code .= "\t{\n";
 		if ($passOwnershipParams{$methodname})
 		{
-			$receiver_code .= "\t\treleaseObjectsMarked();\n";
+			$receiver_code .= "\t\tunmarkObjectsToRelease();\n";
+		}
+		$receiver_code .= "\t\tmsg.packByte( MsgTypeError);\n";
+		$receiver_code .= "\t\tmsg.packCharp( err);\n";
+		$receiver_code .= "\t\treturn msg.content();\n";
+		$receiver_code .= "\t}\n";
+		if ($passOwnershipParams{$methodname})
+		{
+			$receiver_code .= "\treleaseObjectsMarked();\n";
 		}
 		if ($syncMethods{$methodname})
 		{
-			$receiver_code .= "\t\tmsg.packByte( MsgTypeSynchronize);\n";
+			$receiver_code .= "\tmsg.packByte( MsgTypeSynchronize);\n";
 		}
 		else
 		{
-			$receiver_code .= "\t\tmsg.packByte( MsgTypeAnswer);\n";
+			$receiver_code .= "\tmsg.packByte( MsgTypeAnswer);\n";
 		}
-		$receiver_code .= "\t} catch (const std::runtime_error& err) {\n";
-		if ($passOwnershipParams{$methodname})
-		{
-			$receiver_code .= "\t\tunmarkObjectsToRelease();\n";
-		}
-		$receiver_code .= "\t\tmsg.packByte( MsgTypeException_RuntimeError);\n";
-		$receiver_code .= "\t\tmsg.packString( err.what());\n";
-		$receiver_code .= "\t\treturn msg.content();\n";
-		$receiver_code .= "\t} catch (const std::bad_alloc& err) {\n";
-		if ($passOwnershipParams{$methodname})
-		{
-			$receiver_code .= "\t\tunmarkObjectsToRelease();\n";
-		}
-		$receiver_code .= "\t\tmsg.packByte( MsgTypeException_BadAlloc);\n";
-		$receiver_code .= "\t\tmsg.packString( \"memory allocation error\");\n";
-		$receiver_code .= "\t\treturn msg.content();\n";
-		$receiver_code .= "\t} catch (const std::logic_error& err) {\n";
-		if ($passOwnershipParams{$methodname})
-		{
-			$receiver_code .= "\t\tunmarkObjectsToRelease();\n";
-		}
-		$receiver_code .= "\t\tmsg.packByte( MsgTypeException_LogicError);\n";
-		$receiver_code .= "\t\tmsg.packString( err.what());\n";
-		$receiver_code .= "\t\treturn msg.content();\n";
-		$receiver_code .= "\t}\n";
-
 		my ($sender_output,$receiver_output) = ("","");
 		if ($retval ne "void")
 		{
@@ -1477,6 +1483,13 @@ sub getMethodDeclarationSource
 		{
 			$sender_code .= "\treturn p0;\n";
 		}
+		$sender_code .= "} catch (const std::bad_alloc&) {\n";
+		$sender_code .= "\terrorhnd()->report(_TXT(\"out of memory calling method '%s'\"), \"$classname" . "::$methodname\");\n";
+		$sender_code .= "\t$retvalnull_return\n";
+		$sender_code .= "} catch (const std::exception& err) {\n";
+		$sender_code .= "\terrorhnd()->report(_TXT(\"error calling method '%s': %s\"), \"$classname" . "::$methodname\", err.what());\n";
+		$sender_code .= "\t$retvalnull_return\n";
+		$sender_code .= "}\n";
 	}
 	$sender_code .= "}\n";
 	return ($sender_code,$receiver_code);
@@ -1525,7 +1538,7 @@ sub getClassHeaderSource
 		my @mth = split('%');
 		shift( @mth);
 		$rt .= "\n\tvirtual ~$classname();\n";
-		$rt .= "\n\t$classname( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, ctx_, isConst_){}\n";
+		$rt .= "\n\t$classname( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, ctx_, isConst_, errorhnd_){}\n";
 		my $mm;
 		foreach $mm( @mth)
 		{
@@ -1543,7 +1556,7 @@ sub getClassImplementationSource
 	my $ii = 0;
 
 	$receiver_code .= "\tRpcDeserializer serializedMsg( src, srcsize);\n";
-	$receiver_code .= "\tif (!serializedMsg.unpackCrc32()) throw std::runtime_error(\"message CRC32 check failed\");\n";
+	$receiver_code .= "\tif (!serializedMsg.unpackCrc32()) throw strus::runtime_error(_TXT(\"message CRC32 check failed\"));\n";
 	$receiver_code .= "\tunsigned char classId; unsigned int objId; unsigned char methodId;\n";
 	$receiver_code .= "\tserializedMsg.unpackObject( classId, objId);\n";
 	$receiver_code .= "\tmethodId = serializedMsg.unpackByte();\n";
@@ -1613,7 +1626,7 @@ sub getClassImplementationSource
 		$receiver_code .= "\t}\n";
 	}
 	$receiver_code .= "\t}\n";
-	$receiver_code .= "\tthrow std::runtime_error(\"calling undefined request handler\");\n";
+	$receiver_code .= "\tthrow strus::runtime_error(_TXT(\"calling undefined request handler\"));\n";
 	return ($sender_code,$receiver_code);
 }
 
@@ -1760,6 +1773,9 @@ print SRCFILE <<EOF;
 */
 #include "objects_gen.hpp"
 #include "rpcSerializer.hpp"
+#include "strus/errorBufferInterface.hpp"
+#include "private/errorUtils.hpp"
+#include "private/internationalization.hpp"
 #include <iostream>
 using namespace strus;
 EOF
@@ -1808,6 +1824,7 @@ print SRCFILE <<EOF;
 #include "rpcRequestHandler.hpp"
 #include "rpcSerializer.hpp"
 #include "objectIds_gen.hpp"
+#include "private/internationalization.hpp"
 #include "private/dll_tags.hpp"
 #include <string>
 

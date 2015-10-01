@@ -31,6 +31,7 @@
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/storageClientInterface.hpp"
+#include "private/internationalization.hpp"
 #include <iostream>
 #include <string>
 #include <map>
@@ -101,6 +102,10 @@ void* RpcRequestHandler::getObjectPtr( unsigned char classId_, unsigned int objI
 #ifdef STRUS_LOWLEVEL_DEBUG
 		std::cerr << "get object classid=" << (unsigned int)classId_ << " objid=" << objId_ << " ptr=" << (uintptr_t)oi->second.ptr << std::endl;
 #endif
+		if (!oi->second.ptr)
+		{
+			throw strus::runtime_error( _TXT("accessing object NULL pointer"));
+		}
 		return oi->second.ptr;
 	}
 	else
@@ -108,7 +113,7 @@ void* RpcRequestHandler::getObjectPtr( unsigned char classId_, unsigned int objI
 #ifdef STRUS_LOWLEVEL_DEBUG
 		std::cerr << "object not found classid=" << (unsigned int)classId_ << " objid=" << objId_ << " ptr=" << std::endl;
 #endif
-		throw std::runtime_error( "accessing non existing object (invalid reference)");
+		throw strus::runtime_error( _TXT("accessing non existing object (invalid reference)"));
 	}
 }
 
@@ -124,12 +129,15 @@ void RpcRequestHandler::deleteObject( unsigned char classId_, unsigned int objId
 		// ... objId_ == 0 is reserved for constant objects that cannot be deleted
 		ObjKey objkey( classId_, objId_);
 		ObjMap::iterator oi = m_objmap.find( objkey);
-		if (oi != m_objmap.end() && oi->second.deleter)
+		if (oi != m_objmap.end())
 		{
+			if (oi->second.deleter && oi->second.ptr)
+			{
 #ifdef STRUS_LOWLEVEL_DEBUG
-			std::cerr << "delete object classid=" << (unsigned int)classId_ << " objid=" << objId_ << std::endl;
+				std::cerr << "delete object classid=" << (unsigned int)classId_ << " objid=" << objId_ << std::endl;
 #endif
-			oi->second.deleter( oi->second.ptr);
+				oi->second.deleter( oi->second.ptr);
+			}
 			m_objmap.erase( objkey);
 		}
 	}
@@ -164,7 +172,10 @@ void RpcRequestHandler::clear()
 	{
 		if (oi->second.deleter)
 		{
-			oi->second.deleter( oi->second.ptr);
+			if (oi->second.ptr)
+			{
+				oi->second.deleter( oi->second.ptr);
+			}
 			oi->second.ptr = 0;
 			oi->second.deleter = 0;
 		}

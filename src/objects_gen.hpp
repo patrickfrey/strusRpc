@@ -92,8 +92,8 @@ class AggregatorFunctionInstanceImpl
 public:
 	virtual ~AggregatorFunctionInstanceImpl();
 
-	AggregatorFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunctionInstance, objId_, ctx_, isConst_){}
+	AggregatorFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual double evaluate( const analyzer::Document& p1) const;
 };
@@ -106,8 +106,8 @@ class AggregatorFunctionImpl
 public:
 	virtual ~AggregatorFunctionImpl();
 
-	AggregatorFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunction, objId_, ctx_, isConst_){}
+	AggregatorFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual AggregatorFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1) const;
 };
@@ -120,8 +120,8 @@ class AnalyzerObjectBuilderImpl
 public:
 	virtual ~AnalyzerObjectBuilderImpl();
 
-	AnalyzerObjectBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_AnalyzerObjectBuilder, objId_, ctx_, isConst_){}
+	AnalyzerObjectBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_AnalyzerObjectBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual const TextProcessorInterface* getTextProcessor( ) const;
 	virtual SegmenterInterface* createSegmenter( const std::string& p1) const;
@@ -137,8 +137,8 @@ class AttributeReaderImpl
 public:
 	virtual ~AttributeReaderImpl();
 
-	AttributeReaderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_AttributeReader, objId_, ctx_, isConst_){}
+	AttributeReaderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_AttributeReader, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual Index elementHandle( const char* p1) const;
 	virtual void skipDoc( const Index& p1);
@@ -154,8 +154,8 @@ class DatabaseBackupCursorImpl
 public:
 	virtual ~DatabaseBackupCursorImpl();
 
-	DatabaseBackupCursorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseBackupCursor, objId_, ctx_, isConst_){}
+	DatabaseBackupCursorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseBackupCursor, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual bool fetch( const char*& p1, std::size_t& p2, const char*& p3, std::size_t& p4);
 };
@@ -168,8 +168,8 @@ class DatabaseClientImpl
 public:
 	virtual ~DatabaseClientImpl();
 
-	DatabaseClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseClient, objId_, ctx_, isConst_){}
+	DatabaseClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseClient, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void close( );
 	virtual DatabaseTransactionInterface* createTransaction( );
@@ -188,8 +188,8 @@ class DatabaseCursorImpl
 public:
 	virtual ~DatabaseCursorImpl();
 
-	DatabaseCursorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseCursor, objId_, ctx_, isConst_){}
+	DatabaseCursorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseCursor, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual DatabaseCursorInterface::Slice seekUpperBound( const char* p1, std::size_t p2, std::size_t p3);
 	virtual DatabaseCursorInterface::Slice seekFirst( const char* p1, std::size_t p2);
@@ -208,8 +208,8 @@ class DatabaseImpl
 public:
 	virtual ~DatabaseImpl();
 
-	DatabaseImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_Database, objId_, ctx_, isConst_){}
+	DatabaseImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_Database, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual bool exists( const std::string& p1) const;
 	virtual DatabaseClientInterface* createClient( const std::string& p1) const;
@@ -228,8 +228,8 @@ class DatabaseTransactionImpl
 public:
 	virtual ~DatabaseTransactionImpl();
 
-	DatabaseTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseTransaction, objId_, ctx_, isConst_){}
+	DatabaseTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseTransaction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual DatabaseCursorInterface* createCursor( const DatabaseOptions& p1) const;
 	virtual void write( const char* p1, std::size_t p2, const char* p3, std::size_t p4);
@@ -247,8 +247,8 @@ class DocnoRangeAllocatorImpl
 public:
 	virtual ~DocnoRangeAllocatorImpl();
 
-	DocnoRangeAllocatorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_DocnoRangeAllocator, objId_, ctx_, isConst_){}
+	DocnoRangeAllocatorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocnoRangeAllocator, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual Index allocDocnoRange( const Index& p1);
 	virtual bool deallocDocnoRange( const Index& p1, const Index& p2);
@@ -262,8 +262,8 @@ class DocumentAnalyzerContextImpl
 public:
 	virtual ~DocumentAnalyzerContextImpl();
 
-	DocumentAnalyzerContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzerContext, objId_, ctx_, isConst_){}
+	DocumentAnalyzerContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzerContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void putInput( const char* p1, std::size_t p2, bool p3);
 	virtual bool analyzeNext( analyzer::Document& p1);
@@ -277,8 +277,8 @@ class DocumentAnalyzerImpl
 public:
 	virtual ~DocumentAnalyzerImpl();
 
-	DocumentAnalyzerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzer, objId_, ctx_, isConst_){}
+	DocumentAnalyzerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzer, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
 	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
@@ -298,8 +298,8 @@ class DocumentClassDetectorImpl
 public:
 	virtual ~DocumentClassDetectorImpl();
 
-	DocumentClassDetectorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_DocumentClassDetector, objId_, ctx_, isConst_){}
+	DocumentClassDetectorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocumentClassDetector, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual bool detect( DocumentClass& p1, const char* p2, std::size_t p3) const;
 };
@@ -312,8 +312,8 @@ class ForwardIteratorImpl
 public:
 	virtual ~ForwardIteratorImpl();
 
-	ForwardIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_ForwardIterator, objId_, ctx_, isConst_){}
+	ForwardIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_ForwardIterator, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void skipDoc( const Index& p1);
 	virtual Index skipPos( const Index& p1);
@@ -328,8 +328,8 @@ class InvAclIteratorImpl
 public:
 	virtual ~InvAclIteratorImpl();
 
-	InvAclIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_InvAclIterator, objId_, ctx_, isConst_){}
+	InvAclIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_InvAclIterator, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual Index skipDoc( const Index& p1);
 };
@@ -342,8 +342,8 @@ class MetaDataReaderImpl
 public:
 	virtual ~MetaDataReaderImpl();
 
-	MetaDataReaderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataReader, objId_, ctx_, isConst_){}
+	MetaDataReaderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataReader, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual bool hasElement( const std::string& p1) const;
 	virtual Index elementHandle( const std::string& p1) const;
@@ -362,8 +362,8 @@ class NormalizerFunctionContextImpl
 public:
 	virtual ~NormalizerFunctionContextImpl();
 
-	NormalizerFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunctionContext, objId_, ctx_, isConst_){}
+	NormalizerFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual std::string normalize( const char* p1, std::size_t p2);
 };
@@ -376,8 +376,8 @@ class NormalizerFunctionInstanceImpl
 public:
 	virtual ~NormalizerFunctionInstanceImpl();
 
-	NormalizerFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunctionInstance, objId_, ctx_, isConst_){}
+	NormalizerFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual NormalizerFunctionContextInterface* createFunctionContext( ) const;
 };
@@ -390,8 +390,8 @@ class NormalizerFunctionImpl
 public:
 	virtual ~NormalizerFunctionImpl();
 
-	NormalizerFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunction, objId_, ctx_, isConst_){}
+	NormalizerFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual NormalizerFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
 };
@@ -404,8 +404,8 @@ class PeerMessageBuilderImpl
 public:
 	virtual ~PeerMessageBuilderImpl();
 
-	PeerMessageBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_PeerMessageBuilder, objId_, ctx_, isConst_){}
+	PeerMessageBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PeerMessageBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void setNofDocumentsInsertedChange( int p1);
 	virtual void addDfChange( const char* p1, const char* p2, int p3, bool p4);
@@ -422,8 +422,8 @@ class PeerMessageProcessorImpl
 public:
 	virtual ~PeerMessageProcessorImpl();
 
-	PeerMessageProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_PeerMessageProcessor, objId_, ctx_, isConst_){}
+	PeerMessageProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PeerMessageProcessor, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual PeerMessageViewerInterface* createViewer( const char* p1, std::size_t p2) const;
 	virtual PeerMessageBuilderInterface* createBuilder( const PeerMessageProcessorInterface::BuilderOptions& p1) const;
@@ -437,8 +437,8 @@ class PeerMessageViewerImpl
 public:
 	virtual ~PeerMessageViewerImpl();
 
-	PeerMessageViewerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_PeerMessageViewer, objId_, ctx_, isConst_){}
+	PeerMessageViewerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PeerMessageViewer, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual int nofDocumentsInsertedChange( );
 	virtual bool nextDfChange( PeerMessageViewerInterface::DocumentFrequencyChange& p1);
@@ -452,8 +452,8 @@ class PostingIteratorImpl
 public:
 	virtual ~PostingIteratorImpl();
 
-	PostingIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_PostingIterator, objId_, ctx_, isConst_){}
+	PostingIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PostingIterator, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual Index skipDoc( const Index& p1);
 	virtual Index skipPos( const Index& p1);
@@ -473,8 +473,8 @@ class PostingJoinOperatorImpl
 public:
 	virtual ~PostingJoinOperatorImpl();
 
-	PostingJoinOperatorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_PostingJoinOperator, objId_, ctx_, isConst_){}
+	PostingJoinOperatorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PostingJoinOperator, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual PostingIteratorInterface* createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2) const;
 };
@@ -487,8 +487,8 @@ class QueryAnalyzerImpl
 public:
 	virtual ~QueryAnalyzerImpl();
 
-	QueryAnalyzerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzer, objId_, ctx_, isConst_){}
+	QueryAnalyzerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzer, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void definePhraseType( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual std::vector<analyzer::Term> analyzePhrase( const std::string& p1, const std::string& p2) const;
@@ -503,8 +503,8 @@ class QueryEvalImpl
 public:
 	virtual ~QueryEvalImpl();
 
-	QueryEvalImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_QueryEval, objId_, ctx_, isConst_){}
+	QueryEvalImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_QueryEval, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addTerm( const std::string& p1, const std::string& p2, const std::string& p3);
 	virtual void addSelectionFeature( const std::string& p1);
@@ -523,8 +523,8 @@ class QueryImpl
 public:
 	virtual ~QueryImpl();
 
-	QueryImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_Query, objId_, ctx_, isConst_){}
+	QueryImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_Query, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void pushTerm( const std::string& p1, const std::string& p2);
 	virtual void pushExpression( const PostingJoinOperatorInterface* p1, std::size_t p2, int p3);
@@ -547,8 +547,8 @@ class QueryProcessorImpl
 public:
 	virtual ~QueryProcessorImpl();
 
-	QueryProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_QueryProcessor, objId_, ctx_, isConst_){}
+	QueryProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_QueryProcessor, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void definePostingJoinOperator( const std::string& p1, PostingJoinOperatorInterface* p2);
 	virtual const PostingJoinOperatorInterface* getPostingJoinOperator( const std::string& p1) const;
@@ -566,8 +566,8 @@ class SegmenterContextImpl
 public:
 	virtual ~SegmenterContextImpl();
 
-	SegmenterContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_SegmenterContext, objId_, ctx_, isConst_){}
+	SegmenterContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SegmenterContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void putInput( const char* p1, std::size_t p2, bool p3);
 	virtual bool getNext( int& p1, SegmenterPosition& p2, const char*& p3, std::size_t& p4);
@@ -581,8 +581,8 @@ class SegmenterInstanceImpl
 public:
 	virtual ~SegmenterInstanceImpl();
 
-	SegmenterInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_SegmenterInstance, objId_, ctx_, isConst_){}
+	SegmenterInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SegmenterInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void defineSelectorExpression( int p1, const std::string& p2);
 	virtual void defineSubSection( int p1, int p2, const std::string& p3);
@@ -597,8 +597,8 @@ class SegmenterImpl
 public:
 	virtual ~SegmenterImpl();
 
-	SegmenterImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_Segmenter, objId_, ctx_, isConst_){}
+	SegmenterImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_Segmenter, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual const char* mimeType( ) const;
 	virtual SegmenterInstanceInterface* createInstance( ) const;
@@ -612,8 +612,8 @@ class StorageAlterMetaDataTableImpl
 public:
 	virtual ~StorageAlterMetaDataTableImpl();
 
-	StorageAlterMetaDataTableImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_StorageAlterMetaDataTable, objId_, ctx_, isConst_){}
+	StorageAlterMetaDataTableImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageAlterMetaDataTable, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addElement( const std::string& p1, const std::string& p2);
 	virtual void alterElement( const std::string& p1, const std::string& p2, const std::string& p3);
@@ -632,8 +632,8 @@ class StorageClientImpl
 public:
 	virtual ~StorageClientImpl();
 
-	StorageClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_StorageClient, objId_, ctx_, isConst_){}
+	StorageClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageClient, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void close( );
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2) const;
@@ -668,8 +668,8 @@ class StorageDocumentImpl
 public:
 	virtual ~StorageDocumentImpl();
 
-	StorageDocumentImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocument, objId_, ctx_, isConst_){}
+	StorageDocumentImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocument, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
 	virtual void addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
@@ -687,8 +687,8 @@ class StorageDocumentUpdateImpl
 public:
 	virtual ~StorageDocumentUpdateImpl();
 
-	StorageDocumentUpdateImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocumentUpdate, objId_, ctx_, isConst_){}
+	StorageDocumentUpdateImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocumentUpdate, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void setMetaData( const std::string& p1, const ArithmeticVariant& p2);
 	virtual void setAttribute( const std::string& p1, const std::string& p2);
@@ -707,8 +707,8 @@ class StorageDumpImpl
 public:
 	virtual ~StorageDumpImpl();
 
-	StorageDumpImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_StorageDump, objId_, ctx_, isConst_){}
+	StorageDumpImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageDump, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual bool nextChunk( const char*& p1, std::size_t& p2);
 };
@@ -721,8 +721,8 @@ class StorageImpl
 public:
 	virtual ~StorageImpl();
 
-	StorageImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_Storage, objId_, ctx_, isConst_){}
+	StorageImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_Storage, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual StorageClientInterface* createClient( const std::string& p1, DatabaseClientInterface* p2) const;
 	virtual void createStorage( const std::string& p1, DatabaseClientInterface* p2) const;
@@ -739,8 +739,8 @@ class StorageObjectBuilderImpl
 public:
 	virtual ~StorageObjectBuilderImpl();
 
-	StorageObjectBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_StorageObjectBuilder, objId_, ctx_, isConst_){}
+	StorageObjectBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageObjectBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual const StorageInterface* getStorage( ) const;
 	virtual const DatabaseInterface* getDatabase( const std::string& p1) const;
@@ -758,8 +758,8 @@ class StorageTransactionImpl
 public:
 	virtual ~StorageTransactionImpl();
 
-	StorageTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_StorageTransaction, objId_, ctx_, isConst_){}
+	StorageTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageTransaction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual StorageDocumentInterface* createDocument( const std::string& p1, const Index& p2);
 	virtual StorageDocumentUpdateInterface* createDocumentUpdate( const Index& p1);
@@ -778,8 +778,8 @@ class SummarizerFunctionContextImpl
 public:
 	virtual ~SummarizerFunctionContextImpl();
 
-	SummarizerFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunctionContext, objId_, ctx_, isConst_){}
+	SummarizerFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3);
 	virtual std::vector<SummarizerFunctionContextInterface::SummaryElement> getSummary( const Index& p1);
@@ -793,8 +793,8 @@ class SummarizerFunctionInstanceImpl
 public:
 	virtual ~SummarizerFunctionInstanceImpl();
 
-	SummarizerFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunctionInstance, objId_, ctx_, isConst_){}
+	SummarizerFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addStringParameter( const std::string& p1, const std::string& p2);
 	virtual void addNumericParameter( const std::string& p1, const ArithmeticVariant& p2);
@@ -810,8 +810,8 @@ class SummarizerFunctionImpl
 public:
 	virtual ~SummarizerFunctionImpl();
 
-	SummarizerFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunction, objId_, ctx_, isConst_){}
+	SummarizerFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual SummarizerFunctionInstanceInterface* createInstance( const QueryProcessorInterface* p1) const;
 };
@@ -824,8 +824,8 @@ class TextProcessorImpl
 public:
 	virtual ~TextProcessorImpl();
 
-	TextProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_TextProcessor, objId_, ctx_, isConst_){}
+	TextProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_TextProcessor, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addResourcePath( const std::string& p1);
 	virtual std::string getResourcePath( const std::string& p1) const;
@@ -847,8 +847,8 @@ class TokenizerFunctionContextImpl
 public:
 	virtual ~TokenizerFunctionContextImpl();
 
-	TokenizerFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerFunctionContext, objId_, ctx_, isConst_){}
+	TokenizerFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual std::vector<analyzer::Token> tokenize( const char* p1, std::size_t p2);
 };
@@ -861,8 +861,8 @@ class TokenizerFunctionInstanceImpl
 public:
 	virtual ~TokenizerFunctionInstanceImpl();
 
-	TokenizerFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerFunctionInstance, objId_, ctx_, isConst_){}
+	TokenizerFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual bool concatBeforeTokenize( ) const;
 	virtual TokenizerFunctionContextInterface* createFunctionContext( ) const;
@@ -876,8 +876,8 @@ class TokenizerFunctionImpl
 public:
 	virtual ~TokenizerFunctionImpl();
 
-	TokenizerFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerFunction, objId_, ctx_, isConst_){}
+	TokenizerFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual TokenizerFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
 };
@@ -890,8 +890,8 @@ class WeightingFunctionContextImpl
 public:
 	virtual ~WeightingFunctionContextImpl();
 
-	WeightingFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunctionContext, objId_, ctx_, isConst_){}
+	WeightingFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3);
 	virtual float call( const Index& p1);
@@ -905,8 +905,8 @@ class WeightingFunctionInstanceImpl
 public:
 	virtual ~WeightingFunctionInstanceImpl();
 
-	WeightingFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunctionInstance, objId_, ctx_, isConst_){}
+	WeightingFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addStringParameter( const std::string& p1, const std::string& p2);
 	virtual void addNumericParameter( const std::string& p1, const ArithmeticVariant& p2);
@@ -922,8 +922,8 @@ class WeightingFunctionImpl
 public:
 	virtual ~WeightingFunctionImpl();
 
-	WeightingFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)
-		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunction, objId_, ctx_, isConst_){}
+	WeightingFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual WeightingFunctionInstanceInterface* createInstance( ) const;
 };
