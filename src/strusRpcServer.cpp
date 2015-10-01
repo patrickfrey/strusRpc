@@ -419,7 +419,7 @@ int main( int argc, const char* argv[])
 		}
 		if (doExit) return 0;
 		init_global_context( logfile.empty()?0:logfile.c_str());
-		g_errorBuffer = strus::createErrorBuffer_standard( g_glbctx.logf, strus_threadpool_size()+1);
+		g_errorBuffer = strus::createErrorBuffer_standard( g_glbctx.logf, strus_threadpool_size()+2);
 		if (!g_errorBuffer) throw strus::runtime_error( _TXT("failed to create error buffer"));
 
 		// Create the global context:
