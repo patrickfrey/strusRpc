@@ -4251,7 +4251,7 @@ try
 }
 }
 
-void StorageImpl::createStorage( const std::string& p1, DatabaseClientInterface* p2) const
+bool StorageImpl::createStorage( const std::string& p1, DatabaseClientInterface* p2) const
 {
 try
 {
@@ -4264,13 +4264,17 @@ try
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "DatabaseClient");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageImpl::createStorage");
-	return void();
+	return false;
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageImpl::createStorage", err.what());
-	return void();
+	return false;
 }
 }
 

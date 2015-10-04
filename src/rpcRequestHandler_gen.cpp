@@ -3880,6 +3880,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			std::cerr << "called method StorageImpl::createStorage [" << serializedMsg.size() << " bytes]" << std::endl;
 			RpcSerializer msg;
+			bool p0;
 			std::string p1;
 			DatabaseClientInterface* p2;
 			p1 = serializedMsg.unpackString();
@@ -3887,7 +3888,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_DatabaseClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<DatabaseClientInterface>( classId_2, objId_2);
-			obj->createStorage(p1,p2);
+			p0 = obj->createStorage(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3896,7 +3897,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			return std::string();
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 		case StorageConst::Method_createAlterMetaDataTable:
 		{

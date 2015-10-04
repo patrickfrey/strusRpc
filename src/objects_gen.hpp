@@ -725,7 +725,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_Storage, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual StorageClientInterface* createClient( const std::string& p1, DatabaseClientInterface* p2) const;
-	virtual void createStorage( const std::string& p1, DatabaseClientInterface* p2) const;
+	virtual bool createStorage( const std::string& p1, DatabaseClientInterface* p2) const;
 	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( DatabaseClientInterface* p1) const;
 	virtual const char* getConfigDescription( StorageInterface::ConfigType p1) const;
 	virtual const char** getConfigParameters( StorageInterface::ConfigType p1) const;
