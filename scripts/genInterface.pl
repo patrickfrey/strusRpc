@@ -154,28 +154,28 @@ $notImplInterfaces{"AnalyzerErrorBufferInterface"} = 1;		# ...buffers for report
 
 # List of methods that pass interface params with ownership:
 my %passOwnershipParams = ();
-$passOwnershipParams{"definePostingJoinOperator"} = 1;
-$passOwnershipParams{"defineWeightingFunction"} = 1;
-$passOwnershipParams{"defineSummarizerFunction"} = 1;
+$passOwnershipParams{"definePostingJoinOperator"} = 1;		# QueryProcessor
+$passOwnershipParams{"defineWeightingFunction"} = 1;		# QueryProcessor
+$passOwnershipParams{"defineSummarizerFunction"} = 1;		# QueryProcessor
 
-$passOwnershipParams{"defineDocumentClassDetector"} = 1;
-$passOwnershipParams{"defineTokenizer"} = 1;
-$passOwnershipParams{"defineNormalizer"} = 1;
-$passOwnershipParams{"defineAggregator"} = 1;
+$passOwnershipParams{"defineDocumentClassDetector"} = 1;	# TextProcessor
+$passOwnershipParams{"defineTokenizer"} = 1;			# TextProcessor
+$passOwnershipParams{"defineNormalizer"} = 1;			# TextProcessor
+$passOwnershipParams{"defineAggregator"} = 1;			# TextProcessor
 
-$passOwnershipParams{"definePhraseType"} = 1;
+$passOwnershipParams{"createClient"} = 1;			# Storage
+$passOwnershipParams{"createAlterMetaDataTable"} = 1;		# Storage
 
-$passOwnershipParams{"createClient"} = 1;
-$passOwnershipParams{"createAlterMetaDataTable"} = 1;
+$passOwnershipParams{"definePhraseType"} = 1;			# QueryAnalyzer
 
-$passOwnershipParams{"addSearchIndexFeature"} = 1;
-$passOwnershipParams{"addForwardIndexFeature"} = 1;
-$passOwnershipParams{"defineMetaData"} = 1;
-$passOwnershipParams{"defineAggregatedMetaData"} = 1;
-$passOwnershipParams{"defineAttribute"} = 1;
+$passOwnershipParams{"addSearchIndexFeature"} = 1;		# DocumentAnalyzer
+$passOwnershipParams{"addForwardIndexFeature"} = 1;		# DocumentAnalyzer
+$passOwnershipParams{"defineMetaData"} = 1;			# DocumentAnalyzer
+$passOwnershipParams{"defineAggregatedMetaData"} = 1;		# DocumentAnalyzer
+$passOwnershipParams{"defineAttribute"} = 1;			# DocumentAnalyzer
 
-$passOwnershipParams{"addWeightingFunction"} = 1;
-$passOwnershipParams{"addSummarizerFunction"} = 1;
+$passOwnershipParams{"addWeightingFunction"} = 1;		# QueryEval
+$passOwnershipParams{"addSummarizerFunction"} = 1;		# QueryEval
 
 # List of methods that reset the constants map (except long living)
 my %constResetMethodMap = ();
