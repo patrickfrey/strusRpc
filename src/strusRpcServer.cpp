@@ -294,6 +294,14 @@ static void createStorageIfNotExist( const std::string& cfg)
 
 int main( int argc, const char* argv[])
 {
+	std::auto_ptr<strus::ErrorBufferInterface> errorBuffer( strus::createErrorBuffer_standard( 0, 2));
+	if (!errorBuffer.get())
+	{
+		std::cerr << _TXT("failed to create error buffer") << std::endl;
+		return -1;
+	}
+	g_errorBuffer = errorBuffer.get();
+
 	bool doExit = false;
 	int argi = 1;
 	std::string logfile;
@@ -422,9 +430,9 @@ int main( int argc, const char* argv[])
 		}
 		if (doExit) return 0;
 		init_global_context( logfile.empty()?0:logfile.c_str());
-		g_errorBuffer = strus::createErrorBuffer_standard( g_glbctx.logf, strus_threadpool_size()+2);
-		if (!g_errorBuffer) throw strus::runtime_error( _TXT("failed to create error buffer"));
-
+		g_errorBuffer->setLogFile( g_glbctx.logf);
+		g_errorBuffer->setMaxNofThreads( strus_threadpool_size()+2);
+		
 		// Create the global context:
 		std::auto_ptr<strus::ModuleLoaderInterface>
 			moduleLoader( strus::createModuleLoader( g_errorBuffer));
@@ -510,7 +518,6 @@ int main( int argc, const char* argv[])
 		std::cerr << _TXT("strus RPC server terminated") << std::endl;
 
 		// Cleanup when done:
-		if (g_errorBuffer) delete g_errorBuffer;
 		done_global_context();
 		return 0;
 	}
@@ -527,7 +534,6 @@ int main( int argc, const char* argv[])
 		}
 	}
 	std::cerr << _TXT("strus RPC server terminated") << std::endl;
-	if (g_errorBuffer) delete g_errorBuffer;
 	done_global_context();
 	return -1;
 }
