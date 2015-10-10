@@ -28,7 +28,6 @@
 */
 #ifndef _STRUS_RPC_REQUEST_HANDLER_IMPLEMENTATION_HPP_INCLUDED
 #define _STRUS_RPC_REQUEST_HANDLER_IMPLEMENTATION_HPP_INCLUDED
-#include "strus/rpcRequestHandlerInterface.hpp"
 #include "objects_gen.hpp"
 #include <string>
 #include <map>
@@ -54,13 +53,13 @@ public:
 };
 
 class RpcRequestHandler
-	:public RpcRequestHandlerInterface
 {
 public:
 	RpcRequestHandler(
 			StorageObjectBuilderInterface* storageBuilder_,
 			AnalyzerObjectBuilderInterface* analyzerBuilder_,
-			StorageClientInterface* storageClient_);
+			StorageClientInterface* storageClient_,
+			ErrorBufferInterface* errorhnd_);
 	virtual ~RpcRequestHandler();
 
 	virtual std::string handleRequest( const char* msg, std::size_t msgsize);
@@ -146,6 +145,7 @@ private:
 	typedef std::map<ObjKey,Object> ObjMap;
 	ObjMap m_objmap;
 	std::vector<ObjKey> m_objsMarkedToRelease;
+	ErrorBufferInterface* m_errorhnd;
 };
 }
 #endif

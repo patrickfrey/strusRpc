@@ -26,29 +26,47 @@
 
 --------------------------------------------------------------------
 */
-/// \brief Interface for the server for handling RPC requests
-/// \file rpcRequestHandlerInterface.hpp
-#ifndef _STRUS_RPC_REQUEST_HANDLER_INTERFACE_HPP_INCLUDED
-#define _STRUS_RPC_REQUEST_HANDLER_INTERFACE_HPP_INCLUDED
-#include <string>
+/// \brief Macros, classes and functions supporting error handling
+/// \file errorUtils.hpp
+#ifndef _STRUS_STORAGE_ERROR_UTILITIES_HPP_INCLUDED
+#define _STRUS_STORAGE_ERROR_UTILITIES_HPP_INCLUDED
+#include <stdexcept>
+#include "private/internationalization.hpp"
 
 /// \brief strus toplevel namespace
 namespace strus
 {
 
-/// \brief RPC server side request handler, executing a serialized request
-class RpcRequestHandlerInterface
-{
-public:
-	/// \brief Destructor
-	virtual ~RpcRequestHandlerInterface(){}
+#define CATCH_ERROR_MAP( contextExplainText, errorBuffer)\
+	catch (const std::bad_alloc&)\
+	{\
+		(errorBuffer).report( _TXT("memory allocation error"));\
+	}\
+	catch (const std::runtime_error& err)\
+	{\
+		(errorBuffer).report( contextExplainText, err.what());\
+	}\
+	catch (const std::exception& err)\
+	{\
+		(errorBuffer).report( _TXT("uncaught exception: %s"), err.what());\
+	}
 
-	/// \brief Handle a serialized request
-	/// \param[in] msg pointer to message to process
-	/// \param[in] msgsize size of message in bytes
-	virtual std::string handleRequest( const char* msg, std::size_t msgsize)=0;
-};
+#define CATCH_ERROR_MAP_RETURN( contextExplainText, errorBuffer, errorReturnValue)\
+	catch (const std::bad_alloc&)\
+	{\
+		(errorBuffer).report( _TXT("memory allocation error"));\
+		return errorReturnValue;\
+	}\
+	catch (const std::runtime_error& err)\
+	{\
+		(errorBuffer).report( contextExplainText, err.what());\
+		return errorReturnValue;\
+	}\
+	catch (const std::exception& err)\
+	{\
+		(errorBuffer).report( _TXT("uncaught exception: %s"), err.what());\
+		return errorReturnValue;\
+	}
 
 }//namespace
 #endif
-

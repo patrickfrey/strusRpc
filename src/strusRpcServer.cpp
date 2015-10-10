@@ -26,15 +26,18 @@
 
 --------------------------------------------------------------------
 */
-#include "strus/lib/rpc_server.hpp"
 #include "strus/lib/module.hpp"
-#include "strus/rpcRequestHandlerInterface.hpp"
+#include "strus/lib/error.hpp"
+#include "rpcRequestHandler.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/moduleLoaderInterface.hpp"
+#include "strus/errorBufferInterface.hpp"
 #include "strus/versionRpc.hpp"
 #include "strus/private/configParser.hpp"
 #include "strus/private/fileio.hpp"
+#include "private/errorUtils.hpp"
+#include "private/internationalization.hpp"
 #include "private/utils.hpp"
 #include "rpcSerializer.hpp"
 extern "C" {
@@ -60,29 +63,30 @@ static void printUsage()
 	std::cout << "strusRpcServer [options]" << std::endl;
 	std::cout << "options:" << std::endl;
 	std::cout << "-h|--help" << std::endl;
-	std::cout << "    Print this usage and do nothing else" << std::endl;
+	std::cout << "    " << _TXT("Print this usage and do nothing else") << std::endl;
 	std::cout << "-v|--version" << std::endl;
-	std::cout << "    Print the program version and do nothing else" << std::endl;
+	std::cout << "    " << _TXT("Print the program version and do nothing else") << std::endl;
 	std::cout << "-m|--module <MOD>" << std::endl;
-	std::cout << "    Load components from module <MOD>" << std::endl;
+	std::cout << "    " << _TXT("Load components from module <MOD>") << std::endl;
 	std::cout << "-M|--moduledir <DIR>" << std::endl;
-	std::cout << "    Search modules to load first in <DIR>" << std::endl;
+	std::cout << "    " << _TXT("Search modules to load first in <DIR>") << std::endl;
 	std::cout << "-R|--resourcedir <DIR>" << std::endl;
-	std::cout << "    Define a resource path <DIR> for the analyzer" << std::endl;
+	std::cout << "    " << _TXT("Define a resource path <DIR> for the analyzer") << std::endl;
 	std::cout << "-p|--port <PORT>" << std::endl;
-	std::cout << "    Define the port to listen for requests as <PORT> (default 7181)" << std::endl;
+	std::cout << "    " << _TXT("Define the port to listen for requests as <PORT> (default 7181)") << std::endl;
 	std::cout << "-s|--storage <CONFIG>" << std::endl;
-	std::cout << "    Define configuration <CONFIG> of storage hosted by this server" << std::endl;
+	std::cout << "    " << _TXT("Define configuration <CONFIG> of storage hosted by this server") << std::endl;
 	std::cout << "-S|--configfile <CFGFILE>" << std::endl;
-	std::cout << "    Define storage configuration as content of file <CFGFILE>" << std::endl;
+	std::cout << "    " << _TXT("Define storage configuration as content of file <CFGFILE>") << std::endl;
 	std::cout << "-c|--create <CONFIG>" << std::endl;
-	std::cout << "    Implicitely create storage with <CONFIG> if it does not exist yet" << std::endl;
+	std::cout << "    " << _TXT("Implicitely create storage with <CONFIG> if it does not exist yet") << std::endl;
 	std::cout << "-g|--globalstats <FILE>" << std::endl;
-	std::cout << "    Load global statistics of peers from file <FILE>" << std::endl;
+	std::cout << "    " << _TXT("Load global statistics of peers from file <FILE>") << std::endl;
 	std::cout << "-l|--logfile <FILE>" << std::endl;
-	std::cout << "    Write logs to file <FILE>" << std::endl;
+	std::cout << "    " << _TXT("Write logs to file <FILE>") << std::endl;
 }
 
+static strus::ErrorBufferInterface* g_errorBuffer = 0;
 static strus::ModuleLoaderInterface* g_moduleLoader = 0;
 static strus::StorageObjectBuilderInterface* g_storageObjectBuilder = 0;
 static strus::AnalyzerObjectBuilderInterface* g_analyzerObjectBuilder = 0;
@@ -92,7 +96,7 @@ static strus_globalctx_t g_glbctx = {0,0,0,0};
 
 struct handler_context_t
 {
-	strus::RpcRequestHandlerInterface* obj;
+	strus::RpcRequestHandler* obj;
 	std::string resultbuf;
 };
 
@@ -100,7 +104,7 @@ int g_static_assert_sizeof_handlerdata[ (sizeof(handler_context_t) > sizeof(stru
 
 static uint32_t unpackMessageLen( unsigned char const*& itr, const unsigned char* end)
 {
-	if (itr+4 > end) throw std::runtime_error( "message to small to encode message length");
+	if (itr+4 > end) throw strus::runtime_error( _TXT("message to small to encode message length"));
 	uint32_t val;
 	std::memcpy( &val, itr, 4);
 	itr += 4;
@@ -120,15 +124,15 @@ static int request_handler(
 	{
 		if (!ctx->obj)
 		{
-			ctx->obj = strus::createRpcRequestHandler(
-						g_storageObjectBuilder, g_analyzerObjectBuilder, g_storageClient);
+			ctx->obj = new strus::RpcRequestHandler(
+					g_storageObjectBuilder, g_analyzerObjectBuilder, g_storageClient, g_errorBuffer);
 		}
 		ctx->resultbuf.clear();
 		ctx->resultbuf.append( "\0\0\0\0", sizeof( uint32_t));
 		if (readbufsize > 0 && readbuf[0] == 0xFF)
 		{
 #ifdef STRUS_LOWLEVEL_DEBUG
-			fprintf( g_glbctx.logf, "got multipart request [%u bytes]\n", readbufsize);
+			fprintf( g_glbctx.logf, _TXT("got multipart request [%u bytes]\n"), readbufsize);
 #endif
 			unsigned char const* itr = readbuf+1;
 			unsigned const char* end = itr + readbufsize -1;
@@ -136,14 +140,14 @@ static int request_handler(
 			{
 				uint32_t msglen = unpackMessageLen( itr, end);
 #ifdef STRUS_LOWLEVEL_DEBUG
-				fprintf( g_glbctx.logf, "call request handler [%u bytes]\n", msglen);
+				fprintf( g_glbctx.logf, _TXT("call request handler [%u bytes]\n"), msglen);
 #endif
 				ctx->resultbuf.append( ctx->obj->handleRequest( (const char*)itr, (std::size_t)msglen));
 				if (ctx->resultbuf.size() > sizeof(uint32_t))
 				{
 					if (ctx->resultbuf[sizeof(uint32_t)] == (char)strus::MsgTypeAnswer && itr+msglen != end)
 					{
-						std::cerr << "got unexpected answer (protocol error) ... closing connection" << std::endl;
+						fprintf( g_glbctx.logf, _TXT("got unexpected answer (protocol error) ... closing connection\n"));
 						return 6;
 					}
 					break;
@@ -154,8 +158,8 @@ static int request_handler(
 		else
 		{
 #ifdef STRUS_LOWLEVEL_DEBUG
-			fprintf( g_glbctx.logf, "got singlepart request [%u bytes]\n", readbufsize);
-			fprintf( g_glbctx.logf, "call request handler [%u bytes]\n", readbufsize);
+			fprintf( g_glbctx.logf, _TXT("got singlepart request [%u bytes]\n"), readbufsize);
+			fprintf( g_glbctx.logf, _TXT("call request handler [%u bytes]\n"), readbufsize);
 #endif
 			ctx->resultbuf.append( ctx->obj->handleRequest( (const char*)readbuf, (std::size_t)readbufsize));
 		}
@@ -164,22 +168,22 @@ static int request_handler(
 	}
 	catch (const std::runtime_error& err)
 	{
-		fprintf( g_glbctx.logf, "runtime error in request handler: %s\n", err.what());
+		fprintf( g_glbctx.logf, _TXT("runtime error in request handler: %s\n"), err.what());
 		return 1;
 	}
 	catch (const std::bad_alloc& err)
 	{
-		fprintf( g_glbctx.logf, "memory allocation error  in request handler\n");
+		fprintf( g_glbctx.logf, _TXT("memory allocation error in request handler\n"));
 		return 2;
 	}
 	catch (const std::exception& err)
 	{
-		fprintf( g_glbctx.logf, "exception in request handler: %s\n", err.what());
+		fprintf( g_glbctx.logf, _TXT("exception in request handler: %s\n"), err.what());
 		return 3;
 	}
 	catch (...)
 	{
-		fprintf( g_glbctx.logf, "unknown exception in request handler\n");
+		fprintf( g_glbctx.logf, _TXT("unknown exception in request handler\n"));
 		return 4;
 	}
 	return 0;
@@ -195,7 +199,7 @@ static int init_handlerdata( struct strus_handlerdata_t* handlerdata)
 	}
 	catch (const std::bad_alloc& err)
 	{
-		fprintf( g_glbctx.logf, "memory allocation error initializing request handler object: %s\n", err.what());
+		fprintf( g_glbctx.logf, _TXT("memory allocation error initializing request handler object: %s\n"), err.what());
 		return 1;
 	}
 	catch (...)
@@ -225,7 +229,8 @@ static void init_global_context( const char* logfile)
 	g_glbctx.request_handler = &request_handler;
 	if (logfile)
 	{
-		g_glbctx.logf = ::fopen ( logfile, "a+");
+		std::cerr << _TXT("strus RPC server writing logs to file '") << logfile << "'" << std::endl;
+		g_glbctx.logf = ::fopen( logfile, "a+");
 	}
 	else
 	{
@@ -249,16 +254,6 @@ enum
 	STRUS_ERR_SIGNALEV=3
 };
 
-static int runServer( int port, unsigned int nofThreads, const char* logfile)
-{
-	std::cerr << "strus RPC server listening on port " << port << std::endl;
-	if (logfile) std::cerr << "strus RPC server writing logs to file '" << logfile << "'" << std::endl;
-	init_global_context( logfile);
-	int rt = strus_run_server( (unsigned short)(unsigned int)port, nofThreads, &g_glbctx);
-	done_global_context();
-	return rt;
-}
-
 static void createStorageIfNotExist( const std::string& cfg)
 {
 	const strus::DatabaseInterface* dbi = g_storageObjectBuilder->getDatabase( cfg);
@@ -267,32 +262,46 @@ static void createStorageIfNotExist( const std::string& cfg)
 
 	std::string databasecfg( cfg);
 	std::string dbname;
-	(void)strus::extractStringFromConfigString( dbname, databasecfg, "database");
+	(void)strus::extractStringFromConfigString( dbname, databasecfg, "database", g_errorBuffer);
 	std::string storagecfg( databasecfg);
 
 	strus::removeKeysFromConfigString(
 			databasecfg,
 			sti->getConfigParameters(
-				strus::StorageInterface::CmdCreateClient));
+				strus::StorageInterface::CmdCreateClient), g_errorBuffer);
 	//... In database_cfg is now the pure database configuration without the storage settings
 
 	strus::removeKeysFromConfigString(
 			storagecfg,
 			dbi->getConfigParameters(
-				strus::DatabaseInterface::CmdCreateClient));
+				strus::DatabaseInterface::CmdCreateClient), g_errorBuffer);
 	//... In storage_cfg is now the pure storage configuration without the database settings
-
+	if (g_errorBuffer->hasError())
+	{
+		throw strus::runtime_error(_TXT("error creating storage"));
+	}
 	dbi->createDatabase( databasecfg);
 
 	std::auto_ptr<strus::DatabaseClientInterface>
 		database( dbi->createClient( databasecfg));
-
+	if (!database.get())
+	{
+		throw strus::runtime_error(_TXT("error creating storage"));
+	}
 	sti->createStorage( storagecfg, database.get());
 }
 
 
 int main( int argc, const char* argv[])
 {
+	std::auto_ptr<strus::ErrorBufferInterface> errorBuffer( strus::createErrorBuffer_standard( 0, 2));
+	if (!errorBuffer.get())
+	{
+		std::cerr << _TXT("failed to create error buffer") << std::endl;
+		return -1;
+	}
+	g_errorBuffer = errorBuffer.get();
+
 	bool doExit = false;
 	int argi = 1;
 	std::string logfile;
@@ -322,64 +331,62 @@ int main( int argc, const char* argv[])
 			else if (0==std::strcmp( argv[argi], "-m") || 0==std::strcmp( argv[argi], "--module"))
 			{
 				++argi;
-				if (argi == argc) throw std::runtime_error("option --module expects argument");
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--module");
 				modules.push_back( argv[argi]);
 			}
 			else if (0==std::strcmp( argv[argi], "-M") || 0==std::strcmp( argv[argi], "--moduledir"))
 			{
 				++argi;
-				if (argi == argc) throw std::runtime_error("option --moduledir expects argument");
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--moduledir");
 				moduledirs.push_back( argv[argi]);
 			}
 			else if (0==std::strcmp( argv[argi], "-R") || 0==std::strcmp( argv[argi], "--resourcedir"))
 			{
 				++argi;
-				if (argi == argc) throw std::runtime_error("option --resourcedir expects argument");
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--resourcedir");
 				resourcedirs.push_back( argv[argi]);
 			}
 			else if (0==std::strcmp( argv[argi], "-p") || 0==std::strcmp( argv[argi], "--port"))
 			{
 				++argi;
-				if (argi == argc) throw std::runtime_error("option --port expects argument");
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--port");
 				try
 				{
 					port = strus::utils::touint( argv[argi]);
 					if (port == 0 || port > 65535)
 					{
-						throw std::runtime_error( "value out of range");
+						throw strus::runtime_error( _TXT("value out of range"));
 					}
 				}
 				catch (const std::runtime_error& err)
 				{
-					throw std::runtime_error( std::string("illegal argument for option --port: ") + err.what());
+					throw strus::runtime_error( _TXT("illegal argument for option %s: %s"), "--port", err.what());
 				}
 			}
 			else if (0==std::strcmp( argv[argi], "-s") || 0==std::strcmp( argv[argi], "--storage"))
 			{
-				if (!storageconfig.empty()) throw std::runtime_error("option --storage or --configfile specified twice");
+				if (!storageconfig.empty()) throw strus::runtime_error( _TXT("option %s or %s specified twice"), "--storage","--configfile");
 				++argi;
-				if (argi == argc) throw std::runtime_error("option --storage expects argument (storage configuration string)");
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--storage");
 				storageconfig.append( argv[argi]);
-				if (storageconfig.empty()) throw std::runtime_error("option --storage with empty argument");
+				if (storageconfig.empty()) throw strus::runtime_error(_TXT("option %s with empty argument"), "--storage");
 			}
 			else if (0==std::strcmp( argv[argi], "-S") || 0==std::strcmp( argv[argi], "--configfile"))
 			{
-				if (!storageconfig.empty()) throw std::runtime_error("option --storage or --configfile specified twice");
+				if (!storageconfig.empty()) throw strus::runtime_error( _TXT("option %s or %s specified twice"), "--storage","--configfile");
 				++argi;
-				if (argi == argc) throw std::runtime_error("option --configfile expects argument (storage configuration file)");
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--configfile");
 				int ec = strus::readFile( argv[argi], storageconfig);
 				if (ec)
 				{
-					std::ostringstream msg;
-					msg << ec;
-					throw std::runtime_error( std::string("failed to read configuration file ") + argv[argi] + " (file system error " + msg.str() + ")");
+					throw strus::runtime_error(_TXT("failed to read configuration file %s (file system error %u)"), argv[argi], ec);
 				}
 				std::string::iterator di = storageconfig.begin(), de = storageconfig.end();
 				for (; di != de; ++di)
 				{
 					if ((unsigned char)*di < 32) *di = ' ';
 				}
-				if (storageconfig.empty()) throw std::runtime_error( "option --configfile with empty file");
+				if (storageconfig.empty()) throw strus::runtime_error(_TXT("option %s with empty file"), "--configfile");
 			}
 			else if (0==std::strcmp( argv[argi], "-c") || 0==std::strcmp( argv[argi], "--create"))
 			{
@@ -388,45 +395,49 @@ int main( int argc, const char* argv[])
 			else if (0==std::strcmp( argv[argi], "-g") || 0==std::strcmp( argv[argi], "--globalstats"))
 			{
 				++argi;
-				if (argi == argc) throw std::runtime_error("option --storage expects argument (storage configuration string)");
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--storage");
 				globalstatfiles.push_back( argv[argi]);
 			}
 			else if (0==std::strcmp( argv[argi], "-t") || 0==std::strcmp( argv[argi], "--threads"))
 			{
 				++argi;
-				if (argi == argc) throw std::runtime_error("option --threads expects number as argument");
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects number as argument"), "--threads");
 				try
 				{
 					nofThreads = strus::utils::touint( argv[argi]);
 				}
 				catch (const std::runtime_error& err)
 				{
-					throw std::runtime_error( std::string("illegal argument for option --threads: ") + err.what());
+					throw strus::runtime_error(_TXT("illegal argument for option %s: %s"),"--threads", err.what());
 				}
 			}
 			else if (0==std::strcmp( argv[argi], "-l") || 0==std::strcmp( argv[argi], "--logfile"))
 			{
-				if (logfile.size())throw std::runtime_error( "duplicate definition of option --logfile");
+				if (logfile.size()) throw strus::runtime_error(_TXT("duplicate definition of option %s"), "--logfile");
 				++argi;
-				if (argi == argc) throw std::runtime_error("option --logfile expects argument (log file path)");
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--logfile");
 				logfile = argv[argi];
-				if (logfile.empty())throw std::runtime_error( "empty definition of option --logfile");
+				if (logfile.empty()) throw strus::runtime_error(_TXT("empty definition of option %s"), "--logfile");
 			}
 			else if (argv[argi][0] == '-')
 			{
-				throw std::runtime_error( std::string( "unknown option ") + argv[argi]);
+				throw strus::runtime_error(_TXT("unknown option %s"), argv[argi]);
 			}
 			else
 			{
-				throw std::runtime_error( "no arguments expected (only options)");
+				throw strus::runtime_error( _TXT("no arguments expected (only options)"));
 			}
 		}
 		if (doExit) return 0;
-
+		init_global_context( logfile.empty()?0:logfile.c_str());
+		g_errorBuffer->setLogFile( g_glbctx.logf);
+		g_errorBuffer->setMaxNofThreads( strus_threadpool_size()+2);
+		
 		// Create the global context:
 		std::auto_ptr<strus::ModuleLoaderInterface>
-			moduleLoader( strus::createModuleLoader());
+			moduleLoader( strus::createModuleLoader( g_errorBuffer));
 		g_moduleLoader = moduleLoader.get();
+		if (!g_moduleLoader) throw strus::runtime_error( _TXT("failed to create module loader"));
 
 		std::vector<std::string>::const_iterator
 			di = moduledirs.begin(), de = moduledirs.end();
@@ -450,8 +461,16 @@ int main( int argc, const char* argv[])
 
 		std::auto_ptr<strus::StorageObjectBuilderInterface>
 			storageBuilder( g_moduleLoader->createStorageObjectBuilder());
+		if (!storageBuilder.get())
+		{
+			throw strus::runtime_error( _TXT("failed to create storage builder"));
+		}
 		std::auto_ptr<strus::AnalyzerObjectBuilderInterface>
 			analyzerBuilder( g_moduleLoader->createAnalyzerObjectBuilder());
+		if (!analyzerBuilder.get())
+		{
+			throw strus::runtime_error( _TXT("failed to create analyzer builder"));
+		}
 		std::auto_ptr<strus::StorageClientInterface> storageClient;
 
 		g_storageObjectBuilder = storageBuilder.get();
@@ -464,7 +483,11 @@ int main( int argc, const char* argv[])
 				createStorageIfNotExist( storageconfig);
 			}
 			storageClient.reset( g_storageObjectBuilder->createStorageClient( storageconfig));
-			std::cerr << "strus RPC server is hosting storage '" << storageconfig << "'" << std::endl;
+			if (!storageClient.get())
+			{
+				throw strus::runtime_error( _TXT("failed to create storage client"), storageconfig.c_str());
+			}
+			std::cerr << _TXT("strus RPC server is hosting storage ") << "'" << storageconfig << "'" << std::endl;
 			g_storageClient = storageClient.get();
 		}
 
@@ -473,36 +496,45 @@ int main( int argc, const char* argv[])
 			gi = globalstatfiles.begin(), ge = globalstatfiles.end();
 		for (; gi != ge; ++gi)
 		{
-			std::cerr << "strus RPC server loading global statistics from file '" << *gi << "'" << std::endl;
+			std::cerr << _TXT("strus RPC server loading global statistics from file: ") << *gi << std::endl;
 			std::string content;
 			unsigned int ec = strus::readFile( *gi, content);
 			if (ec)
 			{
 				std::ostringstream msg;
 				msg << ec;
-				throw std::runtime_error( std::string( "error reading global statistics file '") + *gi + "' (system error code " + msg.str() + ")");
+				throw strus::runtime_error( _TXT( "error reading global statistics file '%s' (system error code %u)"), gi->c_str(), ec);
 			}
 			storageClient->pushPeerMessage( content.c_str(), content.size());
 		}
 
 		// Start server:
-		std::cerr << "strus RPC server is starting ..." << std::endl;
-		if (!!runServer( port, nofThreads, logfile.empty()?0:logfile.c_str()))
+		std::cerr << "strus RPC server listening on port " << port << std::endl;
+		int err = strus_run_server( (unsigned short)(unsigned int)port, nofThreads, &g_glbctx);
+		if (err)
 		{
-			throw std::runtime_error( "server terminated with error (see logs)");
+			throw strus::runtime_error( _TXT("server terminated with error (see logs)"));
 		}
-		std::cerr << "strus RPC server terminated" << std::endl;
+		std::cerr << _TXT("strus RPC server terminated") << std::endl;
+
+		// Cleanup when done:
+		done_global_context();
 		return 0;
-	}
-	catch (const std::runtime_error& e)
-	{
-		std::cerr << "ERROR " << e.what() << std::endl;
 	}
 	catch (const std::exception& e)
 	{
-		std::cerr << "EXCEPTION " << e.what() << std::endl;
+		const char* errormsg = g_errorBuffer?g_errorBuffer->fetchError():0;
+		if (errormsg)
+		{
+			std::cerr << e.what() << ": " << errormsg << std::endl;
+		}
+		else
+		{
+			std::cerr << e.what() << std::endl;
+		}
 	}
-	std::cerr << "strus RPC server terminated" << std::endl;
+	std::cerr << _TXT("strus RPC server terminated") << std::endl;
+	done_global_context();
 	return -1;
 }
 

@@ -27,6 +27,7 @@
 --------------------------------------------------------------------
 */
 #include "private/utils.hpp"
+#include "private/internationalization.hpp"
 #include "rpcClientContext.hpp"
 #include "rpcSerializer.hpp"
 #include <stdexcept>
@@ -37,9 +38,6 @@ using namespace strus;
 RpcClientContext::RpcClientContext( RpcClientMessagingInterface* messaging_)
 	:m_objIdCnt(0),m_messaging(messaging_)
 {}
-
-RpcClientContext::RpcClientContext( const RpcClientContext& o)
-	:m_objIdCnt(o.m_objIdCnt),m_messaging(o.m_messaging){}
 
 RpcClientContext::RpcClientContext()
 	:m_objIdCnt(0),m_messaging(0){}
@@ -53,24 +51,23 @@ void RpcClientContext::handleError( const std::string& msgstr) const
 {
 	if (msgstr.empty())
 	{
-		throw std::runtime_error( "got no answer from server");
+		throw strus::runtime_error( _TXT("got no answer from server"));
 	}
 	RpcDeserializer msg( msgstr.c_str(), msgstr.size());
 	RpcReturnType returntype = (RpcReturnType)msg.unpackByte();
 	switch (returntype)
 	{
-		case MsgTypeException_BadAlloc:
-			throw std::runtime_error( std::string("method call failed: ") + msg.unpackString());
-		case MsgTypeException_RuntimeError:
-			throw std::runtime_error( std::string("method call failed: ") + msg.unpackString());
-		case MsgTypeException_LogicError:
-			throw std::logic_error( std::string("method call failed: ") + msg.unpackString());
+		case MsgTypeError:
+		{
+			std::string errorstr( msg.unpackString());
+			throw strus::runtime_error( _TXT("method call failed: %s"), errorstr.c_str());
+		}
 		case MsgTypeSynchronize:
 			break;
 		case MsgTypeAnswer:
 			if (!msg.unpackCrc32())
 			{
-				throw std::runtime_error( "answer CRC32 check failed");
+				throw strus::runtime_error( _TXT("answer CRC32 check failed"));
 			}
 			break;
 	}
@@ -95,7 +92,7 @@ void RpcClientContext::rpc_synchronize() const
 	handleError( answer);
 	if (answer.size() > 1)
 	{
-		throw std::runtime_error("got unexpected (non empty) answer from server calling rpc_synchronize");
+		throw strus::runtime_error( _TXT("got unexpected (non empty) answer from server calling rpc_synchronize"));
 	}
 }
 

@@ -26,32 +26,28 @@
 
 --------------------------------------------------------------------
 */
-/// \brief Exported functions of the strus rpc server library
-/// \file rpc_server.hpp
-#ifndef _STRUS_LIB_RPC_SERVER_HPP_INCLUDED
-#define _STRUS_LIB_RPC_SERVER_HPP_INCLUDED
+#ifndef _STRUS_INTERNATIONALIZATION_HPP_INCLUDED
+#define _STRUS_INTERNATIONALIZATION_HPP_INCLUDED
+#include <libintl.h>
+#include <stdexcept>
 
-/// \brief strus toplevel namespace
-namespace strus {
+#define _TXT(STRING) gettext(STRING)
 
-/// \brief Forward declaration
-class StorageObjectBuilderInterface;
-/// \brief Forward declaration
-class AnalyzerObjectBuilderInterface;
-/// \brief Forward declaration
-class StorageClientInterface;
-/// \brief Forward declaration
-class RpcRequestHandlerInterface;
+namespace strus
+{
 
-/// \brief Creates an RPC request handler object to be used by a server implementation
-/// \param[in] storageBuilder_ storage builder (singleton, ownership hold by caller)
-/// \param[in] analyzerBuilder_ analyzer builder reference (singleton, ownership hold by caller)
-/// \param[in] storageClient_ storage client reference for the storage instance hosted by the server (singleton, ownership hold by caller)
-RpcRequestHandlerInterface*
-	createRpcRequestHandler(
-		StorageObjectBuilderInterface* storageBuilder_,
-		AnalyzerObjectBuilderInterface* analyzerBuilder_,
-		StorageClientInterface* storageClient_);
+/// \brief Substitute for std::runtime_error with arguments
+/// \param[in] msg c printf format string
+/// \param[in] nofargs number of arguments passed to be substituted in the format string
+std::runtime_error runtime_error( const char* format, ...);
+
+/// \brief Substitute for std::logic_error with arguments
+/// \param[in] msg c printf format string
+/// \param[in] nofargs number of arguments passed to be substituted in the format string
+std::logic_error logic_error( const char* format, ...);
+
+/// \brief Declare the message domain used by this package for the exception constructors declared in this module for gettext
+void initMessageTextDomain();
 
 }//namespace
 #endif

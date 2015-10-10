@@ -545,3 +545,27 @@ int strus_run_server( unsigned short port, unsigned int nofThreads, strus_global
 	return 0;
 }
 
+unsigned int strus_threadpool_size()
+{
+	/* Inspired by source code of libuv. The number is not publicly available */
+	#define MAX_THREADPOOL_SIZE 128
+	#define MIN_THREADPOOL_SIZE 1
+	#define DEFAULT_THREADPOOL_SIZE 4
+
+	unsigned int nthreads = DEFAULT_THREADPOOL_SIZE;
+	char* val = getenv("UV_THREADPOOL_SIZE");
+	if (val != NULL)
+	{
+		nthreads = atoi(val);
+	}
+	if (nthreads < MIN_THREADPOOL_SIZE)
+	{
+		nthreads = MIN_THREADPOOL_SIZE;
+	}
+	if (nthreads > MAX_THREADPOOL_SIZE)
+	{
+		nthreads = MAX_THREADPOOL_SIZE;
+	}
+	return nthreads;
+}
+

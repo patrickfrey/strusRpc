@@ -27,6 +27,9 @@
 --------------------------------------------------------------------
 */
 #include "rpcClientMessaging.hpp"
+#include "private/errorUtils.hpp"
+#include "private/internationalization.hpp"
+#include "strus/errorBufferInterface.hpp"
 extern "C" {
 #include "client.h"
 #include "hexdump.h"
@@ -41,16 +44,18 @@ extern "C" {
 #include <errno.h>
 #include <arpa/inet.h>
 
+
 using namespace strus;
 
 #undef STRUS_LOWLEVEL_DEBUG
 
-RpcClientMessaging::RpcClientMessaging( const char* config)
-	:m_conn(0),m_starttime(0.0),m_conn_open(false)
+RpcClientMessaging::RpcClientMessaging( const char* config, ErrorBufferInterface* errorhnd_)
+	:m_conn(0),m_starttime(0.0),m_conn_open(false),m_errorhnd(errorhnd_)
 {
 	int syserr = 0;
 	m_conn = strus_create_connection( config, stderr, &syserr);
-	if (!m_conn) throw std::runtime_error( std::string( "could not connect to server: ") + strerror(syserr));
+	if (!m_conn) throw strus::runtime_error( _TXT("could not connect to server: %s"), strerror(syserr));
+	m_conn_open = true;
 }
 
 RpcClientMessaging::~RpcClientMessaging()
@@ -85,80 +90,92 @@ static std::string resultString( unsigned char* result, std::size_t resultsize)
 
 std::string RpcClientMessaging::sendRequest( const std::string& content)
 {
-	unsigned char* result = 0;
-	std::size_t resultsize = 0;
-
-	if (m_messageBuffer.size() > 1)
+	try
 	{
-		packMessageLen( m_messageBuffer, content.size());
-		m_messageBuffer.append( content);
+		unsigned char* result = 0;
+		std::size_t resultsize = 0;
+	
+		if (m_messageBuffer.size() > 1)
+		{
+			packMessageLen( m_messageBuffer, content.size());
+			m_messageBuffer.append( content);
 #ifdef STRUS_LOWLEVEL_DEBUG
-		std::cerr << "send multipart request to server [" << m_messageBuffer.size() << " bytes]" << std::endl;
+			std::cerr << "send multipart request to server [" << m_messageBuffer.size() << " bytes]" << std::endl;
 #endif
-		int ec = strus_request(
-				m_conn,
-				(const unsigned char*)m_messageBuffer.c_str(), m_messageBuffer.size(),
-				&result, &resultsize);
-
-		m_messageBuffer.clear();
-		if (ec) throw std::runtime_error( std::string( "send request failed: ") + strus_lasterror( m_conn));
-		return resultString( result, resultsize);
-	}
-	else
-	{
+			int ec = strus_request(
+					m_conn,
+					(const unsigned char*)m_messageBuffer.c_str(), m_messageBuffer.size(),
+					&result, &resultsize);
+	
+			m_messageBuffer.clear();
+			if (ec) throw strus::runtime_error( _TXT("send request failed: %s"), strus_lasterror( m_conn));
+			return resultString( result, resultsize);
+		}
+		else
+		{
 #ifdef STRUS_LOWLEVEL_DEBUG
-		std::cerr << "send request to server [" << content.size() << " bytes]" << std::endl;
+			std::cerr << "send request to server [" << content.size() << " bytes]" << std::endl;
 #endif
-		int ec = strus_request(
-				m_conn,
-				(const unsigned char*)content.c_str(), content.size(),
-				&result, &resultsize);
-
-		if (ec) throw std::runtime_error( std::string( "send request failed: ") + strus_lasterror( m_conn));
-		return resultString( result, resultsize);
+			int ec = strus_request(
+					m_conn,
+					(const unsigned char*)content.c_str(), content.size(),
+					&result, &resultsize);
+	
+			if (ec) throw strus::runtime_error( _TXT( "send request failed: %s"), strus_lasterror( m_conn));
+			return resultString( result, resultsize);
+		}
 	}
+	CATCH_ERROR_MAP_RETURN( _TXT("error in send request of RPC client: %s"), *m_errorhnd, std::string());
 }
 
 void RpcClientMessaging::sendMessage( const std::string& content)
 {
-	if (m_messageBuffer.size() == 0)
+	try
 	{
-		m_messageBuffer.push_back( (unsigned char)0xFF);
-	}
-	packMessageLen( m_messageBuffer, content.size());
+		if (m_messageBuffer.size() == 0)
+		{
+			m_messageBuffer.push_back( (unsigned char)0xFF);
+		}
+		packMessageLen( m_messageBuffer, content.size());
 #ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "append request to out buffer [" << content.size() << " bytes]" << std::endl;
+		std::cerr << "append request to out buffer [" << content.size() << " bytes]" << std::endl;
 #endif
-	m_messageBuffer.append( content);
+		m_messageBuffer.append( content);
+	}
+	CATCH_ERROR_MAP( _TXT("error in send message of RPC client: %s"), *m_errorhnd);
 }
 
 std::string RpcClientMessaging::synchronize()
 {
-	unsigned char* result = 0;
-	std::size_t resultsize = 0;
-	if (m_messageBuffer.size() > 0)
+	try
 	{
+		unsigned char* result = 0;
+		std::size_t resultsize = 0;
+		if (m_messageBuffer.size() > 0)
+		{
 #ifdef STRUS_LOWLEVEL_DEBUG
-		std::cerr << "send synchronize request to server [" << m_messageBuffer.size() << " bytes]" << std::endl;
+			std::cerr << _TXT("send synchronize request to server ") << "[" << m_messageBuffer.size() << " bytes]" << std::endl;
 #endif
-		int ec = strus_request(
-				m_conn,
-				(const unsigned char*)m_messageBuffer.c_str(), m_messageBuffer.size(),
-				&result, &resultsize);
-
-		m_messageBuffer.clear();
-		if (ec) throw std::runtime_error( std::string( "send synchronize failed: ") + strus_lasterror( m_conn));
-		return resultString( result, resultsize);
+			int ec = strus_request(
+					m_conn,
+					(const unsigned char*)m_messageBuffer.c_str(), m_messageBuffer.size(),
+					&result, &resultsize);
+	
+			m_messageBuffer.clear();
+			if (ec) throw strus::runtime_error( _TXT("send synchronize failed: "), strus_lasterror( m_conn));
+			return resultString( result, resultsize);
+		}
+		return std::string();
 	}
-	return std::string();
+	CATCH_ERROR_MAP_RETURN( _TXT("error in send synchronize of RPC client: %s"), *m_errorhnd, std::string());
 }
 
 void RpcClientMessaging::close()
 {
-	if (m_conn)
+	if (m_conn && m_conn_open)
 	{
 		strus_close_connection( m_conn);
-		m_conn_open = true;
+		m_conn_open = false;
 	}
 }
 

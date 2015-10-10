@@ -139,35 +139,43 @@ $typeRewriteMap{"const_PostingIteratorInterface*"} = "const PostingIteratorInter
 # List of methods that do not return anything, but still issue a request to get possible errors from previous method calls:
 my %syncMethods = ();
 $syncMethods{"done"} = 1;
-$syncMethods{"commit"} = 1;
 
 # List of methods that are not implemented for RPC:
 my %notImplMethods = ();
-$notImplMethods{"checkStorage"} = 1;                  # ...ostream reference input cannot be handled
-$notImplMethods{"subExpressions"} = 1;                # ...vector of const object return can not be handled
-$notImplMethods{"createResultIterator"} = 1;          # ...vector of object references as passed argument can not be handled
-$notImplMethods{"definePeerMessageProcessor"} = 1;  # ...peer message processor is internal
+$notImplMethods{"checkStorage"} = 1;				# ...ostream reference input cannot be handled
+$notImplMethods{"subExpressions"} = 1;				# ...vector of const object return can not be handled
+$notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
+$notImplMethods{"definePeerMessageProcessor"} = 1;		# ...peer message processor is internal
 
 # List of interfaces that are not implemented for RPC:
 my %notImplInterfaces = ();
-$notImplInterfaces{"PeerMessageProcessorInterface"} = 1;  # ...peer storage interfaces are internal
-$notImplInterfaces{"PeerMessageBuilderInterface"} = 1;  # ...peer storage interfaces are internal
-$notImplInterfaces{"PeerMessageViewerInterface"} = 1;  # ...peer storage interfaces are internal
+$notImplInterfaces{"ErrorBufferInterface"} = 1;			# ...buffers for reporting errors are internal
+$notImplInterfaces{"AnalyzerErrorBufferInterface"} = 1;		# ...buffers for reporting errors are internal
 
 # List of methods that pass interface params with ownership:
 my %passOwnershipParams = ();
-$passOwnershipParams{"definePostingJoinOperator"} = 1;
-$passOwnershipParams{"defineWeightingFunction"} = 1;
-$passOwnershipParams{"defineSummarizerFunction"} = 1;
-$passOwnershipParams{"createClient"} = 1;
-$passOwnershipParams{"createAlterMetaDataTable"} = 1;
-$passOwnershipParams{"addSearchIndexFeature"} = 1;
-$passOwnershipParams{"addForwardIndexFeature"} = 1;
-$passOwnershipParams{"defineMetaData"} = 1;
-$passOwnershipParams{"defineAttribute"} = 1;
-$passOwnershipParams{"addWeightingFunction"} = 1;
-$passOwnershipParams{"addSummarizerFunction"} = 1;
-$passOwnershipParams{"definePhraseType"} = 1;
+$passOwnershipParams{"definePostingJoinOperator"} = 1;		# QueryProcessor
+$passOwnershipParams{"defineWeightingFunction"} = 1;		# QueryProcessor
+$passOwnershipParams{"defineSummarizerFunction"} = 1;		# QueryProcessor
+
+$passOwnershipParams{"defineDocumentClassDetector"} = 1;	# TextProcessor
+$passOwnershipParams{"defineTokenizer"} = 1;			# TextProcessor
+$passOwnershipParams{"defineNormalizer"} = 1;			# TextProcessor
+$passOwnershipParams{"defineAggregator"} = 1;			# TextProcessor
+
+$passOwnershipParams{"createClient"} = 1;			# Storage
+$passOwnershipParams{"createAlterMetaDataTable"} = 1;		# Storage
+
+$passOwnershipParams{"definePhraseType"} = 1;			# QueryAnalyzer
+
+$passOwnershipParams{"addSearchIndexFeature"} = 1;		# DocumentAnalyzer
+$passOwnershipParams{"addForwardIndexFeature"} = 1;		# DocumentAnalyzer
+$passOwnershipParams{"defineMetaData"} = 1;			# DocumentAnalyzer
+$passOwnershipParams{"defineAggregatedMetaData"} = 1;		# DocumentAnalyzer
+$passOwnershipParams{"defineAttribute"} = 1;			# DocumentAnalyzer
+
+$passOwnershipParams{"addWeightingFunction"} = 1;		# QueryEval
+$passOwnershipParams{"addSummarizerFunction"} = 1;		# QueryEval
 
 # List of methods that reset the constants map (except long living)
 my %constResetMethodMap = ();
@@ -182,10 +190,10 @@ $constResetMethodMap{"nextChunk"} = 1;
 
 # List of hacks (client code inserted at the beginning of a method call):
 my %alternativeClientImpl = ();
-$alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx());\n";
+$alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx(), false, errorhnd());\n";
 
 # Set debug code generation ON/OFF:
-my $doGenerateDebugCode = 0;
+my $doGenerateDebugCode = 1;
 
 sub parseType
 {
@@ -659,7 +667,7 @@ sub packParameter
 		else
 		{
 			$rt .= "const RpcInterfaceStub* impl_$idx = dynamic_cast<const RpcInterfaceStub*>($id);\n";
-			$rt .= "if (!impl_$idx) throw std::runtime_error( \"passing non RPC interface object in RPC call ($objtype)\");\n";
+			$rt .= "if (!impl_$idx) throw strus::runtime_error( _TXT(\"passing non RPC interface object in RPC call (%s)\"), \"$objtype\");\n";
 			$rt .= "msg.packObject( impl_" . $idx . "->classId(), impl_" . $idx . "->objId());";
 		}
 	}
@@ -806,6 +814,14 @@ sub packParameter
 	{
 		$rt .= "msg.packDocumentStatisticsType( " . $id . ");";
 	}
+	elsif ($type eq "PeerMessageProcessorInterface::BuilderOptions")
+	{
+		$rt .= "msg.packPeerMessageProcessorBuilderOptions( " . $id . ");";
+	}
+	elsif ($type eq "PeerMessageViewerInterface::DocumentFrequencyChange")
+	{
+		$rt .= "msg.packPeerMessageViewerDocumentFrequencyChange( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -830,7 +846,7 @@ sub unpackParameter
 		{
 			$rt .= "unsigned char classId_$idx; unsigned int objId_$idx;\n";
 			$rt .= "serializedMsg.unpackObject( classId_$idx, objId_$idx);\n";
-			$rt .= "if (classId_$idx != " . getInterfaceEnumName( $type) .") throw std::runtime_error(\"error in RPC serialzed message: output parameter object type mismatch\");\n";
+			$rt .= "if (classId_$idx != " . getInterfaceEnumName( $type) .") throw strus::runtime_error(_TXT(\"error in RPC serialzed message: output parameter object type mismatch\"));\n";
 			if ($isconst)
 			{
 				$rt .= "$id = getConstObject<$type>( classId_$idx, objId_$idx);";
@@ -845,12 +861,12 @@ sub unpackParameter
 			my $implname = interfaceImplementationClassName( $type);
 			if ($isconst)
 			{
-				$rt .= "$implname const_$idx( objId_$idx, ctx(), true);\n";
+				$rt .= "$implname const_$idx( objId_$idx, ctx(), true, errorhnd());\n";
 				$rt .= "$id = (const $implname*)ctx()->constConstructor()->getLongLiving( &const_$idx, sizeof(const_$idx));";
 			}
 			else
 			{
-				$rt .= "$id = new $implname( objId_$idx, ctx());";
+				$rt .= "$id = new $implname( objId_$idx, ctx(), false, errorhnd());";
 			}
 		}
 	}
@@ -1037,6 +1053,14 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackDocumentStatisticsType();";
 	}
+	elsif ($type eq "PeerMessageProcessorInterface::BuilderOptions")
+	{
+		$rt .= "$id = serializedMsg.unpackPeerMessageProcessorBuilderOptions();";
+	}
+	elsif ($type eq "PeerMessageViewerInterface::DocumentFrequencyChange")
+	{
+		$rt .= "$id = serializedMsg.unpackPeerMessageViewerDocumentFrequencyChange();";
+	}
 	else
 	{
 		die "no deserialization defined for type \"$type\"";
@@ -1049,6 +1073,7 @@ sub inputParameterPackFunctionCall
 	my ($sender_code,$receiver_code) = ("","");
 	my ($classname, $methodname, $param, $idx) = @_;
 	my ($paramtype, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $param);
+
 	if ($passbyref && ($isconst == 0 || $indirection > 0))
 	{
 		if ($paramtype =~ m/^(.*)Interface$/ && $indirection == 1 && $isconst == 0)
@@ -1190,17 +1215,39 @@ sub getMethodDeclarationSource
 	$sender_code .= "\n{\n";
 	$receiver_code .= "RpcSerializer msg;\n";
 
+	my $retvalnull_decl = getMethodParamDeclarationSource( $classname, $retval);
+	my $retvalnull_return = "";
+	if ($retvalnull_decl =~ m/^(.*)[\*]$/)
+	{
+		$retvalnull_return = "return 0;"
+	}
+	elsif ($retvalnull_decl =~ m/^(double|int|float|Index|unsigned int)$/)
+	{
+		$retvalnull_return = "return 0;"
+	}
+	elsif ($retvalnull_decl =~ m/^bool$/)
+	{
+		$retvalnull_return = "return false;"
+	}
+	else
+	{
+		$retvalnull_return = "return $retvalnull_decl();";
+	}
+
 	if ($notImplMethods{$methodname})
 	{
-		$sender_code .= "\tthrow std::runtime_error(\"the method '$methodname' is not implemented for RPC\");\n";
+		$sender_code .= "\terrorhnd()->report(_TXT(\"the method '%s' is not implemented for RPC\"),\"$methodname\");\n";
+		$sender_code .= "\t$retvalnull_return\n";
 
 		$receiver_code .= "\t(void)(obj);\n";
-		$receiver_code .= "\tmsg.packByte( MsgTypeException_RuntimeError);\n";
+		$receiver_code .= "\tmsg.packByte( MsgTypeError);\n";
 		$receiver_code .= "\tmsg.packString( \"the method '$methodname' is not implemented for RPC\");\n";
 		$receiver_code .= "\treturn msg.content();\n";
 	}
 	else
 	{
+		$sender_code .= "try\n";
+		$sender_code .= "{\n";
 		if ($doGenerateDebugCode)
 		{
 			$sender_code .= "\tstd::cerr << \"calling method $classname" . "::" . "$methodname\" << std::endl;\n";
@@ -1274,46 +1321,30 @@ sub getMethodDeclarationSource
 				}
 			}
 		}
-		$receiver_code .= "\ttry {\n";
-		$receiver_code .= "\t\t$retvalassigner" . "obj->" . $methodname . "(" . $receiver_paramlist . ");\n";
+		$receiver_code .= "\t$retvalassigner" . "obj->" . $methodname . "(" . $receiver_paramlist . ");\n";
+		$receiver_code .= "\tconst char* err = m_errorhnd->fetchError();\n";
+		$receiver_code .= "\tif (err)\n";
+		$receiver_code .= "\t{\n";
 		if ($passOwnershipParams{$methodname})
 		{
-			$receiver_code .= "\t\treleaseObjectsMarked();\n";
+			$receiver_code .= "\t\tunmarkObjectsToRelease();\n";
+		}
+		$receiver_code .= "\t\tmsg.packByte( MsgTypeError);\n";
+		$receiver_code .= "\t\tmsg.packCharp( err);\n";
+		$receiver_code .= "\t\treturn msg.content();\n";
+		$receiver_code .= "\t}\n";
+		if ($passOwnershipParams{$methodname})
+		{
+			$receiver_code .= "\treleaseObjectsMarked();\n";
 		}
 		if ($syncMethods{$methodname})
 		{
-			$receiver_code .= "\t\tmsg.packByte( MsgTypeSynchronize);\n";
+			$receiver_code .= "\tmsg.packByte( MsgTypeSynchronize);\n";
 		}
 		else
 		{
-			$receiver_code .= "\t\tmsg.packByte( MsgTypeAnswer);\n";
+			$receiver_code .= "\tmsg.packByte( MsgTypeAnswer);\n";
 		}
-		$receiver_code .= "\t} catch (const std::runtime_error& err) {\n";
-		if ($passOwnershipParams{$methodname})
-		{
-			$receiver_code .= "\t\tunmarkObjectsToRelease();\n";
-		}
-		$receiver_code .= "\t\tmsg.packByte( MsgTypeException_RuntimeError);\n";
-		$receiver_code .= "\t\tmsg.packString( err.what());\n";
-		$receiver_code .= "\t\treturn msg.content();\n";
-		$receiver_code .= "\t} catch (const std::bad_alloc& err) {\n";
-		if ($passOwnershipParams{$methodname})
-		{
-			$receiver_code .= "\t\tunmarkObjectsToRelease();\n";
-		}
-		$receiver_code .= "\t\tmsg.packByte( MsgTypeException_BadAlloc);\n";
-		$receiver_code .= "\t\tmsg.packString( \"memory allocation error\");\n";
-		$receiver_code .= "\t\treturn msg.content();\n";
-		$receiver_code .= "\t} catch (const std::logic_error& err) {\n";
-		if ($passOwnershipParams{$methodname})
-		{
-			$receiver_code .= "\t\tunmarkObjectsToRelease();\n";
-		}
-		$receiver_code .= "\t\tmsg.packByte( MsgTypeException_LogicError);\n";
-		$receiver_code .= "\t\tmsg.packString( err.what());\n";
-		$receiver_code .= "\t\treturn msg.content();\n";
-		$receiver_code .= "\t}\n";
-
 		my ($sender_output,$receiver_output) = ("","");
 		if ($retval ne "void")
 		{
@@ -1452,6 +1483,13 @@ sub getMethodDeclarationSource
 		{
 			$sender_code .= "\treturn p0;\n";
 		}
+		$sender_code .= "} catch (const std::bad_alloc&) {\n";
+		$sender_code .= "\terrorhnd()->report(_TXT(\"out of memory calling method '%s'\"), \"$classname" . "::$methodname\");\n";
+		$sender_code .= "\t$retvalnull_return\n";
+		$sender_code .= "} catch (const std::exception& err) {\n";
+		$sender_code .= "\terrorhnd()->report(_TXT(\"error calling method '%s': %s\"), \"$classname" . "::$methodname\", err.what());\n";
+		$sender_code .= "\t$retvalnull_return\n";
+		$sender_code .= "}\n";
 	}
 	$sender_code .= "}\n";
 	return ($sender_code,$receiver_code);
@@ -1500,7 +1538,7 @@ sub getClassHeaderSource
 		my @mth = split('%');
 		shift( @mth);
 		$rt .= "\n\tvirtual ~$classname();\n";
-		$rt .= "\n\t$classname( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_=false)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, ctx_, isConst_){}\n";
+		$rt .= "\n\t$classname( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)\n\t\t:RpcInterfaceStub( (unsigned char)" . getInterfaceEnumName($interfacename) .", objId_, ctx_, isConst_, errorhnd_){}\n";
 		my $mm;
 		foreach $mm( @mth)
 		{
@@ -1518,7 +1556,7 @@ sub getClassImplementationSource
 	my $ii = 0;
 
 	$receiver_code .= "\tRpcDeserializer serializedMsg( src, srcsize);\n";
-	$receiver_code .= "\tif (!serializedMsg.unpackCrc32()) throw std::runtime_error(\"message CRC32 check failed\");\n";
+	$receiver_code .= "\tif (!serializedMsg.unpackCrc32()) throw strus::runtime_error(_TXT(\"message CRC32 check failed\"));\n";
 	$receiver_code .= "\tunsigned char classId; unsigned int objId; unsigned char methodId;\n";
 	$receiver_code .= "\tserializedMsg.unpackObject( classId, objId);\n";
 	$receiver_code .= "\tmethodId = serializedMsg.unpackByte();\n";
@@ -1588,7 +1626,7 @@ sub getClassImplementationSource
 		$receiver_code .= "\t}\n";
 	}
 	$receiver_code .= "\t}\n";
-	$receiver_code .= "\tthrow std::runtime_error(\"calling undefined request handler\");\n";
+	$receiver_code .= "\tthrow strus::runtime_error(_TXT(\"calling undefined request handler\"));\n";
 	return ($sender_code,$receiver_code);
 }
 
@@ -1735,6 +1773,9 @@ print SRCFILE <<EOF;
 */
 #include "objects_gen.hpp"
 #include "rpcSerializer.hpp"
+#include "strus/errorBufferInterface.hpp"
+#include "private/errorUtils.hpp"
+#include "private/internationalization.hpp"
 #include <iostream>
 using namespace strus;
 EOF
@@ -1783,6 +1824,7 @@ print SRCFILE <<EOF;
 #include "rpcRequestHandler.hpp"
 #include "rpcSerializer.hpp"
 #include "objectIds_gen.hpp"
+#include "private/internationalization.hpp"
 #include "private/dll_tags.hpp"
 #include <string>
 
