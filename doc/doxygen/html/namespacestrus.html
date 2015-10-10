@@ -71,26 +71,20 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstrus_1_1RpcClientMessagingInterface.html">RpcClientMessagingInterface</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface providing a mechanism for the client to send and receive messages.  <a href="classstrus_1_1RpcClientMessagingInterface.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstrus_1_1RpcRequestHandlerInterface.html">RpcRequestHandlerInterface</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC server side request handler, executing a serialized request.  <a href="classstrus_1_1RpcRequestHandlerInterface.html#details">More...</a><br/></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afc0d24db5e4934276e762f6ac3a34787"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classstrus_1_1RpcClientInterface.html">RpcClientInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestrus.html#afc0d24db5e4934276e762f6ac3a34787">createRpcClient</a> (<a class="el" href="classstrus_1_1RpcClientMessagingInterface.html">RpcClientMessagingInterface</a> *connector)</td></tr>
-<tr class="memdesc:afc0d24db5e4934276e762f6ac3a34787"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an RPC Client connection to the server.  <a href="#afc0d24db5e4934276e762f6ac3a34787">More...</a><br/></td></tr>
-<tr class="separator:afc0d24db5e4934276e762f6ac3a34787"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a422a9a164d7975c77d8752266160775c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classstrus_1_1RpcClientMessagingInterface.html">RpcClientMessagingInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestrus.html#a422a9a164d7975c77d8752266160775c">createRpcClientMessaging</a> (const char *config)</td></tr>
-<tr class="memdesc:a422a9a164d7975c77d8752266160775c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a messaging interface for the strus RPC Client based on sockets.  <a href="#a422a9a164d7975c77d8752266160775c">More...</a><br/></td></tr>
-<tr class="separator:a422a9a164d7975c77d8752266160775c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1501236a5e734025cf9dffad4de94f64"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classstrus_1_1RpcRequestHandlerInterface.html">RpcRequestHandlerInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestrus.html#a1501236a5e734025cf9dffad4de94f64">createRpcRequestHandler</a> (StorageObjectBuilderInterface *storageBuilder_, AnalyzerObjectBuilderInterface *analyzerBuilder_, StorageClientInterface *storageClient_)</td></tr>
-<tr class="memdesc:a1501236a5e734025cf9dffad4de94f64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an RPC request handler object to be used by a server implementation.  <a href="#a1501236a5e734025cf9dffad4de94f64">More...</a><br/></td></tr>
-<tr class="separator:a1501236a5e734025cf9dffad4de94f64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add6d83fccff903e4287f8fcb390bb76a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classstrus_1_1RpcClientInterface.html">RpcClientInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestrus.html#add6d83fccff903e4287f8fcb390bb76a">createRpcClient</a> (<a class="el" href="classstrus_1_1RpcClientMessagingInterface.html">RpcClientMessagingInterface</a> *connector, ErrorBufferInterface *errorhnd)</td></tr>
+<tr class="memdesc:add6d83fccff903e4287f8fcb390bb76a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an RPC Client connection to the server.  <a href="#add6d83fccff903e4287f8fcb390bb76a">More...</a><br/></td></tr>
+<tr class="separator:add6d83fccff903e4287f8fcb390bb76a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a257c874970f680e5fb7593dfc45772ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classstrus_1_1RpcClientMessagingInterface.html">RpcClientMessagingInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestrus.html#a257c874970f680e5fb7593dfc45772ae">createRpcClientMessaging</a> (const char *config, ErrorBufferInterface *errorhnd)</td></tr>
+<tr class="memdesc:a257c874970f680e5fb7593dfc45772ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a messaging interface for the strus RPC Client based on sockets.  <a href="#a257c874970f680e5fb7593dfc45772ae">More...</a><br/></td></tr>
+<tr class="separator:a257c874970f680e5fb7593dfc45772ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>strus toplevel namespace </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="afc0d24db5e4934276e762f6ac3a34787"></a>
+<a class="anchor" id="add6d83fccff903e4287f8fcb390bb76a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -98,67 +92,13 @@ Functions</h2></td></tr>
           <td class="memname"><a class="el" href="classstrus_1_1RpcClientInterface.html">RpcClientInterface</a>* strus::createRpcClient </td>
           <td>(</td>
           <td class="paramtype">RpcClientMessagingInterface *&#160;</td>
-          <td class="paramname"><em>connector</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Creates an RPC Client connection to the server. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">connector</td><td>interface (passed with ownership) to use for sending and receiving messages to and from the server </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a422a9a164d7975c77d8752266160775c"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classstrus_1_1RpcClientMessagingInterface.html">RpcClientMessagingInterface</a>* strus::createRpcClientMessaging </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>config</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Create a messaging interface for the strus RPC Client based on sockets. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">config</td><td>configuration string for connecting to the server </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a1501236a5e734025cf9dffad4de94f64"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classstrus_1_1RpcRequestHandlerInterface.html">RpcRequestHandlerInterface</a>* strus::createRpcRequestHandler </td>
-          <td>(</td>
-          <td class="paramtype">StorageObjectBuilderInterface *&#160;</td>
-          <td class="paramname"><em>storageBuilder_</em>, </td>
+          <td class="paramname"><em>connector</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">AnalyzerObjectBuilderInterface *&#160;</td>
-          <td class="paramname"><em>analyzerBuilder_</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">StorageClientInterface *&#160;</td>
-          <td class="paramname"><em>storageClient_</em>&#160;</td>
+          <td class="paramtype">ErrorBufferInterface *&#160;</td>
+          <td class="paramname"><em>errorhnd</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -168,12 +108,46 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Creates an RPC request handler object to be used by a server implementation. </p>
+<p>Creates an RPC Client connection to the server. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">storageBuilder_</td><td>storage builder (singleton, ownership hold by caller) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">analyzerBuilder_</td><td>analyzer builder reference (singleton, ownership hold by caller) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">storageClient_</td><td>storage client reference for the storage instance hosted by the server (singleton, ownership hold by caller) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">connector</td><td>interface (passed with ownership) to use for sending and receiving messages to and from the server </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">errorhnd</td><td>buffer for reporting errors </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a257c874970f680e5fb7593dfc45772ae"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classstrus_1_1RpcClientMessagingInterface.html">RpcClientMessagingInterface</a>* strus::createRpcClientMessaging </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>config</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ErrorBufferInterface *&#160;</td>
+          <td class="paramname"><em>errorhnd</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a messaging interface for the strus RPC Client based on sockets. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">config</td><td>configuration string for connecting to the server </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">errorhnd</td><td>buffer for reporting errors </td></tr>
   </table>
   </dd>
 </dl>
@@ -184,7 +158,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.6-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 16 2015 21:14:57 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Oct 10 2015 19:49:53 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

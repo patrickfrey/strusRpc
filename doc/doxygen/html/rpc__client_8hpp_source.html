@@ -95,22 +95,24 @@
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">class </span><a class="code" href="classstrus_1_1RpcClientInterface.html">RpcClientInterface</a>;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">class </span><a class="code" href="classstrus_1_1RpcClientMessagingInterface.html">RpcClientMessagingInterface</a>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<a class="code" href="classstrus_1_1RpcClientInterface.html">RpcClientInterface</a>*</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="namespacestrus.html#afc0d24db5e4934276e762f6ac3a34787">createRpcClient</a>(</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                <a class="code" href="classstrus_1_1RpcClientMessagingInterface.html">RpcClientMessagingInterface</a>* connector);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}<span class="comment">//namespace</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">class </span>ErrorBufferInterface;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="classstrus_1_1RpcClientInterface.html">RpcClientInterface</a>*</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="namespacestrus.html#add6d83fccff903e4287f8fcb390bb76a">createRpcClient</a>(</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                <a class="code" href="classstrus_1_1RpcClientMessagingInterface.html">RpcClientMessagingInterface</a>* connector,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                ErrorBufferInterface* errorhnd);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}<span class="comment">//namespace</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor"></span></div>
 <div class="ttc" id="classstrus_1_1RpcClientInterface_html"><div class="ttname"><a href="classstrus_1_1RpcClientInterface.html">strus::RpcClientInterface</a></div><div class="ttdoc">Interface providing a mechanism to create and address objects residing on server side. </div><div class="ttdef"><b>Definition:</b> rpcClientInterface.hpp:45</div></div>
 <div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html">strus::RpcClientMessagingInterface</a></div><div class="ttdoc">Interface providing a mechanism for the client to send and receive messages. </div><div class="ttdef"><b>Definition:</b> rpcClientMessagingInterface.hpp:40</div></div>
-<div class="ttc" id="namespacestrus_html_afc0d24db5e4934276e762f6ac3a34787"><div class="ttname"><a href="namespacestrus.html#afc0d24db5e4934276e762f6ac3a34787">strus::createRpcClient</a></div><div class="ttdeci">RpcClientInterface * createRpcClient(RpcClientMessagingInterface *connector)</div><div class="ttdoc">Creates an RPC Client connection to the server. </div></div>
+<div class="ttc" id="namespacestrus_html_add6d83fccff903e4287f8fcb390bb76a"><div class="ttname"><a href="namespacestrus.html#add6d83fccff903e4287f8fcb390bb76a">strus::createRpcClient</a></div><div class="ttdeci">RpcClientInterface * createRpcClient(RpcClientMessagingInterface *connector, ErrorBufferInterface *errorhnd)</div><div class="ttdoc">Creates an RPC Client connection to the server. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.6-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 16 2015 21:14:57 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Oct 10 2015 19:49:53 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

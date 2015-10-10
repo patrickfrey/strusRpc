@@ -52,14 +52,14 @@
 <div class="contents">
 <div class="textblock"><p>The project strusRpc provides a proxy interface to StorageObjectBuilderInterface and AnalyzerObjectBuilderInterface and all the objects created from these interfaces. The calls to these interfaces are forwarded via a proprietary RPC protocol to an rpcServer process. With RPC you can use strus in the context of a webserver, where objects should not persist beyond a single connection. It also allow to obey the rules of a webserver, that may not allow the loading of modules not declared in the webserver configuration.</p>
 <h2>How to use RPC in a client </h2>
-<p>The strus <a class="el" href="classstrus_1_1RpcClientInterface.html">RPC client interface</a> is constructed by calling the function <a class="el" href="namespacestrus.html#afc0d24db5e4934276e762f6ac3a34787">createRpcClient</a> (<a class="el" href="rpc__client_8hpp.html" title="Exported functions of the strus rpc client library. ">rpc_client.hpp</a>) with a message handler object <a class="el" href="classstrus_1_1RpcClientMessagingInterface.html">RpcClientMessagingInterface</a> as parameter. The message handler based on sockets can be created by calling the function <a class="el" href="namespacestrus.html#a422a9a164d7975c77d8752266160775c">createRpcClientMessaging</a> (<a class="el" href="rpc__client__socket_8hpp.html" title="Exported functions of the strus rpc messaging library based on sockets. ">rpc_client_socket.hpp</a>).</p>
+<p>The strus <a class="el" href="classstrus_1_1RpcClientInterface.html">RPC client interface</a> is constructed by calling the function <a class="el" href="namespacestrus.html#add6d83fccff903e4287f8fcb390bb76a">createRpcClient</a> (<a class="el" href="rpc__client_8hpp.html" title="Exported functions of the strus rpc client library. ">rpc_client.hpp</a>) with a message handler object <a class="el" href="classstrus_1_1RpcClientMessagingInterface.html">RpcClientMessagingInterface</a> as parameter. The message handler based on sockets can be created by calling the function <a class="el" href="namespacestrus.html#a257c874970f680e5fb7593dfc45772ae">createRpcClientMessaging</a> (<a class="el" href="rpc__client__socket_8hpp.html" title="Exported functions of the strus rpc messaging library based on sockets. ">rpc_client_socket.hpp</a>).</p>
 <h2>How to start the rpc server </h2>
 <p>The program strusRpcServer implements the rpc server. See the man pages or use the option -h to get the possible options of the program. </p>
 </div></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.6-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 16 2015 21:14:57 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Oct 10 2015 19:49:53 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -37,11 +37,6 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="sendRequest"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html#a88fc838bd8e95d131a687f2b1c262aaa"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="synchronize"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html#a8ccf9bd5574d33584ea8687098d69149"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
-      <LI><OBJECT type="text/sitemap"><param name="Name" value="RpcRequestHandlerInterface"><param name="ImageNumber" value="1"></OBJECT>
-        <UL>
-        <LI><OBJECT type="text/sitemap"><param name="Name" value="~RpcRequestHandlerInterface"><param name="Local" value="classstrus_1_1RpcRequestHandlerInterface.html#a05c4d49424dcdc0b15bc374d7889a090"><param name="ImageNumber" value="11"></OBJECT>
-        <LI><OBJECT type="text/sitemap"><param name="Name" value="handleRequest"><param name="Local" value="classstrus_1_1RpcRequestHandlerInterface.html#afddebbc0153c5000b225e99d7bb3786d"><param name="ImageNumber" value="11"></OBJECT>
-        </UL>
       </UL>
     </UL>
   <LI><OBJECT type="text/sitemap"><param name="Name" value="Class Index"><param name="Local" value="classes.html"><param name="ImageNumber" value="11"></OBJECT>
@@ -63,15 +58,11 @@
           <UL>
           <LI><OBJECT type="text/sitemap"><param name="Name" value="rpc_client.hpp"><param name="ImageNumber" value="1"></OBJECT>
             <UL>
-            <LI><OBJECT type="text/sitemap"><param name="Name" value="createRpcClient"><param name="Local" value="rpc__client_8hpp.html#afc0d24db5e4934276e762f6ac3a34787"><param name="ImageNumber" value="11"></OBJECT>
+            <LI><OBJECT type="text/sitemap"><param name="Name" value="createRpcClient"><param name="Local" value="rpc__client_8hpp.html#add6d83fccff903e4287f8fcb390bb76a"><param name="ImageNumber" value="11"></OBJECT>
             </UL>
           <LI><OBJECT type="text/sitemap"><param name="Name" value="rpc_client_socket.hpp"><param name="ImageNumber" value="1"></OBJECT>
             <UL>
-            <LI><OBJECT type="text/sitemap"><param name="Name" value="createRpcClientMessaging"><param name="Local" value="rpc__client__socket_8hpp.html#a422a9a164d7975c77d8752266160775c"><param name="ImageNumber" value="11"></OBJECT>
-            </UL>
-          <LI><OBJECT type="text/sitemap"><param name="Name" value="rpc_server.hpp"><param name="ImageNumber" value="1"></OBJECT>
-            <UL>
-            <LI><OBJECT type="text/sitemap"><param name="Name" value="createRpcRequestHandler"><param name="Local" value="rpc__server_8hpp.html#a1501236a5e734025cf9dffad4de94f64"><param name="ImageNumber" value="11"></OBJECT>
+            <LI><OBJECT type="text/sitemap"><param name="Name" value="createRpcClientMessaging"><param name="Local" value="rpc__client__socket_8hpp.html#a257c874970f680e5fb7593dfc45772ae"><param name="ImageNumber" value="11"></OBJECT>
             </UL>
           </UL>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="rpcClientInterface.hpp"><param name="Local" value="rpcClientInterface_8hpp.html"><param name="ImageNumber" value="11"></OBJECT>
@@ -93,14 +84,6 @@
             <LI><OBJECT type="text/sitemap"><param name="Name" value="sendMessage"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html#a9835a577160450af6140a3a6210dfe5e"><param name="ImageNumber" value="11"></OBJECT>
             <LI><OBJECT type="text/sitemap"><param name="Name" value="sendRequest"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html#a88fc838bd8e95d131a687f2b1c262aaa"><param name="ImageNumber" value="11"></OBJECT>
             <LI><OBJECT type="text/sitemap"><param name="Name" value="synchronize"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html#a8ccf9bd5574d33584ea8687098d69149"><param name="ImageNumber" value="11"></OBJECT>
-            </UL>
-          </UL>
-        <LI><OBJECT type="text/sitemap"><param name="Name" value="rpcRequestHandlerInterface.hpp"><param name="Local" value="rpcRequestHandlerInterface_8hpp.html"><param name="ImageNumber" value="11"></OBJECT>
-          <UL>
-          <LI><OBJECT type="text/sitemap"><param name="Name" value="RpcRequestHandlerInterface"><param name="ImageNumber" value="1"></OBJECT>
-            <UL>
-            <LI><OBJECT type="text/sitemap"><param name="Name" value="~RpcRequestHandlerInterface"><param name="Local" value="classstrus_1_1RpcRequestHandlerInterface.html#a05c4d49424dcdc0b15bc374d7889a090"><param name="ImageNumber" value="11"></OBJECT>
-            <LI><OBJECT type="text/sitemap"><param name="Name" value="handleRequest"><param name="Local" value="classstrus_1_1RpcRequestHandlerInterface.html#afddebbc0153c5000b225e99d7bb3786d"><param name="ImageNumber" value="11"></OBJECT>
             </UL>
           </UL>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="versionRpc.hpp"><param name="ImageNumber" value="1"></OBJECT>
