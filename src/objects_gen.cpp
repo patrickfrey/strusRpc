@@ -2288,7 +2288,7 @@ PostingJoinOperatorImpl::~PostingJoinOperatorImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2) const
+PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2, unsigned int p3) const
 {
 	errorhnd()->report(_TXT("the method '%s' is not implemented for RPC"),"createResultIterator");
 	return 0;
