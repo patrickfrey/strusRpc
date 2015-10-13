@@ -2619,7 +2619,7 @@ try
 }
 }
 
-void QueryImpl::pushExpression( const PostingJoinOperatorInterface* p1, std::size_t p2, int p3)
+void QueryImpl::pushExpression( const PostingJoinOperatorInterface* p1, std::size_t p2, int p3, unsigned int p4)
 {
 try
 {
@@ -2632,6 +2632,7 @@ try
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	msg.packSize( p2);
 	msg.packInt( p3);
+	msg.packUint( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {

@@ -2416,13 +2416,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const PostingJoinOperatorInterface* p1;
 			std::size_t p2;
 			int p3;
+			unsigned int p4;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_PostingJoinOperator) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getConstObject<PostingJoinOperatorInterface>( classId_1, objId_1);
 			p2 = serializedMsg.unpackSize();
 			p3 = serializedMsg.unpackInt();
-			obj->pushExpression(p1,p2,p3);
+			p4 = serializedMsg.unpackUint();
+			obj->pushExpression(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
