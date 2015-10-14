@@ -193,7 +193,7 @@ my %alternativeClientImpl = ();
 $alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx(), false, errorhnd());\n";
 
 # Set debug code generation ON/OFF:
-my $doGenerateDebugCode = 1;
+my $doGenerateDebugCode = 0;
 
 sub parseType
 {

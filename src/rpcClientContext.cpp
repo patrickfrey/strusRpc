@@ -59,8 +59,8 @@ void RpcClientContext::handleError( const std::string& msgstr) const
 	{
 		case MsgTypeError:
 		{
-			std::string errorstr( msg.unpackString());
-			throw strus::runtime_error( _TXT("method call failed: %s"), errorstr.c_str());
+			const char* errorstr = msg.unpackConstCharp();
+			throw strus::runtime_error( _TXT("method call failed: %s"), errorstr);
 		}
 		case MsgTypeSynchronize:
 			break;
