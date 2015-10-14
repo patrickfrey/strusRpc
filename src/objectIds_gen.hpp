@@ -100,7 +100,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createInstance
+		Method_createInstance,
+		Method_getDescription
 	};
 };
 
@@ -316,7 +317,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createInstance
+		Method_createInstance,
+		Method_getDescription
 	};
 };
 
@@ -379,7 +381,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createResultIterator
+		Method_createResultIterator,
+		Method_getDescription
 	};
 };
 
@@ -442,7 +445,9 @@ public:
 		Method_defineWeightingFunction,
 		Method_getWeightingFunction,
 		Method_defineSummarizerFunction,
-		Method_getSummarizerFunction
+		Method_getSummarizerFunction,
+		Method_getDescription,
+		Method_getFunctionList
 	};
 };
 
@@ -644,7 +649,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createInstance
+		Method_createInstance,
+		Method_getDescription
 	};
 };
 
@@ -663,7 +669,9 @@ public:
 		Method_defineDocumentClassDetector,
 		Method_defineTokenizer,
 		Method_defineNormalizer,
-		Method_defineAggregator
+		Method_defineAggregator,
+		Method_getDescription,
+		Method_getFunctionList
 	};
 };
 
@@ -694,7 +702,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createInstance
+		Method_createInstance,
+		Method_getDescription
 	};
 };
 
@@ -728,7 +737,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createInstance
+		Method_createInstance,
+		Method_getDescription
 	};
 };
 } //namespace

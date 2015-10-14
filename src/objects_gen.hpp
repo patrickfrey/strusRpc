@@ -110,6 +110,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual AggregatorFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1) const;
+	virtual const char* getDescription( ) const;
 };
 
 class AnalyzerObjectBuilderImpl
@@ -394,6 +395,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual NormalizerFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
+	virtual const char* getDescription( ) const;
 };
 
 class PeerMessageBuilderImpl
@@ -477,6 +479,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_PostingJoinOperator, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual PostingIteratorInterface* createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2, unsigned int p3) const;
+	virtual const char* getDescription( ) const;
 };
 
 class QueryAnalyzerImpl
@@ -556,6 +559,8 @@ public:
 	virtual const WeightingFunctionInterface* getWeightingFunction( const std::string& p1) const;
 	virtual void defineSummarizerFunction( const std::string& p1, SummarizerFunctionInterface* p2);
 	virtual const SummarizerFunctionInterface* getSummarizerFunction( const std::string& p1) const;
+	virtual const char* getDescription( QueryProcessorInterface::FunctionType p1, const std::string& p2) const;
+	virtual std::vector<std::string> getFunctionList( QueryProcessorInterface::FunctionType p1) const;
 };
 
 class SegmenterContextImpl
@@ -814,6 +819,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual SummarizerFunctionInstanceInterface* createInstance( const QueryProcessorInterface* p1) const;
+	virtual const char* getDescription( ) const;
 };
 
 class TextProcessorImpl
@@ -837,6 +843,8 @@ public:
 	virtual void defineTokenizer( const std::string& p1, TokenizerFunctionInterface* p2);
 	virtual void defineNormalizer( const std::string& p1, NormalizerFunctionInterface* p2);
 	virtual void defineAggregator( const std::string& p1, AggregatorFunctionInterface* p2);
+	virtual const char* getDescription( TextProcessorInterface::FunctionType p1, const std::string& p2) const;
+	virtual std::vector<std::string> getFunctionList( TextProcessorInterface::FunctionType p1) const;
 };
 
 class TokenizerFunctionContextImpl
@@ -880,6 +888,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual TokenizerFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
+	virtual const char* getDescription( ) const;
 };
 
 class WeightingFunctionContextImpl
@@ -926,6 +935,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual WeightingFunctionInstanceInterface* createInstance( ) const;
+	virtual const char* getDescription( ) const;
 };
 } //namespace
 #endif

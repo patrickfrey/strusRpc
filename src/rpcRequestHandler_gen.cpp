@@ -110,6 +110,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case AggregatorFunctionConst::Method_getDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->getDescription();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -1620,6 +1637,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case NormalizerFunctionConst::Method_getDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->getDescription();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -1987,6 +2021,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			(void)(obj);
 			msg.packByte( MsgTypeError);
 			msg.packString( "the method 'createResultIterator' is not implemented for RPC");
+			return msg.content();
+		}
+		case PostingJoinOperatorConst::Method_getDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->getDescription();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
 			return msg.content();
 		}
 	}
@@ -2618,6 +2669,49 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case QueryProcessorConst::Method_getDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			QueryProcessorInterface::FunctionType p1;
+			std::string p2;
+			p1 = serializedMsg.unpackQueryProcessorFunctionType();
+			p2 = serializedMsg.unpackString();
+			p0 = obj->getDescription(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case QueryProcessorConst::Method_getFunctionList:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			QueryProcessorInterface::FunctionType p1;
+			p1 = serializedMsg.unpackQueryProcessorFunctionType();
+			p0 = obj->getFunctionList(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -4242,6 +4336,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case SummarizerFunctionConst::Method_getDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->getDescription();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -4469,6 +4580,49 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case TextProcessorConst::Method_getDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			TextProcessorInterface::FunctionType p1;
+			std::string p2;
+			p1 = serializedMsg.unpackTextProcessorFunctionType();
+			p2 = serializedMsg.unpackString();
+			p0 = obj->getDescription(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case TextProcessorConst::Method_getFunctionList:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			TextProcessorInterface::FunctionType p1;
+			p1 = serializedMsg.unpackTextProcessorFunctionType();
+			p0 = obj->getFunctionList(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -4596,6 +4750,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case TokenizerFunctionConst::Method_getDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->getDescription();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -4778,6 +4949,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case WeightingFunctionConst::Method_getDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->getDescription();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;

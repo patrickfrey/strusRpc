@@ -165,24 +165,24 @@ void RpcSerializer::packCharp( const char* buf)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packCharp ('" << buf << "')" << std::endl;
 #endif
-	m_content.append( buf);
+	if (buf) m_content.append( buf);
 	m_content.push_back( '\0');
 }
 
 void RpcSerializer::packCharpp( const char** buf)
 {
-#ifdef STRUS_LOWLEVEL_DEBUG
-	char const** gi = buf;
-	std::cerr << "packCharpp (";
-	for (int gidx=0; *gi; ++gi,++gidx)
-	{
-		if (gidx) std::cerr << ", ";
-		std::cerr << "'" << *gi << "'";
-	}
-	std::cerr << ")" << std::endl;
-#endif
 	if (buf)
 	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		char const** gi = buf;
+		std::cerr << "packCharpp (";
+		for (int gidx=0; *gi; ++gi,++gidx)
+		{
+			if (gidx) std::cerr << ", ";
+			std::cerr << "'" << *gi << "'";
+		}
+		std::cerr << ")" << std::endl;
+#endif
 		char const** bi = buf;
 		for (; *bi; ++bi){}
 		packSize( bi - buf);
@@ -194,6 +194,9 @@ void RpcSerializer::packCharpp( const char** buf)
 	}
 	else
 	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		std::cerr << "packCharpp (NULL)" << std::endl;
+#endif
 		packSize( 0);
 	}
 }
@@ -463,6 +466,16 @@ void RpcSerializer::packPeerMessageViewerDocumentFrequencyChange( const PeerMess
 	packBool( val.isnew);
 }
 
+
+void RpcSerializer::packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val)
+{
+	packByte((unsigned char)val);
+}
+
+void RpcSerializer::packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val)
+{
+	packByte((unsigned char)val);
+}
 
 void RpcSerializer::packCrc32()
 {
@@ -850,4 +863,15 @@ PeerMessageViewerInterface::DocumentFrequencyChange RpcDeserializer::unpackPeerM
 	rt.isnew = unpackBool();
 	return rt;
 }
+
+QueryProcessorInterface::FunctionType RpcDeserializer::unpackQueryProcessorFunctionType()
+{
+	return (QueryProcessorInterface::FunctionType)unpackByte();
+}
+
+TextProcessorInterface::FunctionType RpcDeserializer::unpackTextProcessorFunctionType()
+{
+	return (TextProcessorInterface::FunctionType)unpackByte();
+}
+
 

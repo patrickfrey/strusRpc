@@ -822,6 +822,14 @@ sub packParameter
 	{
 		$rt .= "msg.packPeerMessageViewerDocumentFrequencyChange( " . $id . ");";
 	}
+	elsif ($type eq "QueryProcessorInterface::FunctionType")
+	{
+		$rt .= "msg.packQueryProcessorFunctionType( " . $id . ");";
+	}
+	elsif ($type eq "TextProcessorInterface::FunctionType")
+	{
+		$rt .= "msg.packTextProcessorFunctionType( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -1060,6 +1068,14 @@ sub unpackParameter
 	elsif ($type eq "PeerMessageViewerInterface::DocumentFrequencyChange")
 	{
 		$rt .= "$id = serializedMsg.unpackPeerMessageViewerDocumentFrequencyChange();";
+	}
+	elsif ($type eq "QueryProcessorInterface::FunctionType")
+	{
+		$rt .= "$id = serializedMsg.unpackQueryProcessorFunctionType();";
+	}
+	elsif ($type eq "TextProcessorInterface::FunctionType")
+	{
+		$rt .= "$id = serializedMsg.unpackTextProcessorFunctionType();";
 	}
 	else
 	{
