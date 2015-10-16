@@ -4156,6 +4156,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			PostingIteratorInterface* p2;
 			std::vector<SummarizationVariable> p3;
+			float p4;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
@@ -4171,7 +4172,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				
 				p3.push_back( ee);
 			}
-			obj->addSummarizationFeature(p1,p2,p3);
+			p4 = serializedMsg.unpackFloat();
+			obj->addSummarizationFeature(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

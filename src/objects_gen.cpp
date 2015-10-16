@@ -4599,7 +4599,7 @@ SummarizerFunctionContextImpl::~SummarizerFunctionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3)
+void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, float p4)
 {
 try
 {
@@ -4614,6 +4614,7 @@ try
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
 		msg.packSummarizationVariable( p3[ii]);
 	}
+	msg.packFloat( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
