@@ -60,6 +60,15 @@ target_link_libraries( strus_rpc_client_socket strus_private_utils dl uv )
 add_library( strus_rpc_client SHARED ${client_source_files} libstrus_rpc_client.cpp )
 target_link_libraries( strus_rpc_client strus_private_utils dl )
 
+# some old platforms still have real-time functions (clock_getres, clock_gettime) in librt.so
+# and not in the C library
+find_library( LIBRT_LIBRARIES rt )
+if(NOT LIBRT_LIBRARIES_NOT_FOUND)
+    target_link_libraries( strus_rpc_client_socket ${LIBRT_LIBRARIES} )
+    target_link_libraries( strus_rpc_client ${LIBRT_LIBRARIES} )
+endif()
+target_link_libraries( strus_rpc_client_socket ${CMAKE_THREAD_LIBS_INIT} )
+
 set_target_properties(
     strus_rpc_client_socket
     PROPERTIES
@@ -80,7 +89,10 @@ set_target_properties(
 # PROGRAMS
 # ------------------------------
 add_executable( strusRpcServer strusRpcServer.cpp utils.cpp ${server_source_files} )
-target_link_libraries( strusRpcServer  "${Boost_LIBRARIES}" strus_private_utils strus_error strus_utils strus_module uv dl )
+target_link_libraries( strusRpcServer  "${Boost_LIBRARIES}" strus_private_utils strus_error strus_utils strus_module uv dl ${CMAKE_THREAD_LIBS_INIT} )
+if(NOT LIBRT_LIBRARIES_NOT_FOUND)
+    target_link_libraries( strusRpcServer ${LIBRT_LIBRARIES} )
+endif()
 
 # ------------------------------
 # INSTALLATION
