@@ -1,14 +1,20 @@
-Source: strusmodule
+Source: strusrpc
 Section: libs
 Priority: optional
 Maintainer: Patrick Frey <patrickpfrey@yahoo.com>
 Build-Depends: debhelper (>= 4.1.16), cmake,
  libboost-dev, libboost-thread-dev, libboost-system-dev,
- libboost-date-time-dev
+ libboost-date-time-dev, strus-dev, strusanalyzer-dev, strusmodule-dev
 Standards-Version: 3.8.3
 Homepage: http://project-strus.net
 
-Package: strusmodule
-Architecture: all
+Package: strusrpc
+Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Library for calling strus via RPC for trusted clients (insecure)
+
+Package: strusrpc-dev
+Architecture: any
+Depends: strusrpc, ${shlibs:Depends}, ${misc:Depends}
+Description: strusrpc development files
+ Strus RPC development files.
