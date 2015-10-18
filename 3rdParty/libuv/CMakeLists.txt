@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.6)
 
 # Patch for libuv to compile (not C99 because of non POSIX extensions and no-strict-aliasing)
 set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -fPIC -fno-strict-aliasing -O${STRUS_OPTIMIZATION_LEVEL}" )
