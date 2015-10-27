@@ -43,6 +43,72 @@ using namespace strus;
 
 namespace {
 
+#define STRUS_ALTERNATIVE_CHECK_SUM
+#ifdef STRUS_ALTERNATIVE_CHECK_SUM
+
+enum AlternativeCheckProperties
+{
+	NofNonAscii,
+	NofSpaces,
+	NofAscii,
+	NofNull
+};
+
+uint32_t calcAlternativeCheckSum( const char* ptr, std::size_t ptrsize)
+{
+	unsigned char xx[4] = {0,0,0,0};
+	char const* si = ptr;
+	char const* se = ptr + ptrsize;
+
+	for (si=ptr; si != se; ++si)
+	{
+		if ((unsigned char)*si > 127) xx[ NofNonAscii] += 1;
+		if ((unsigned char)*si <= 32 && (unsigned char)*si > 0) xx[ NofSpaces] += 1;
+		if ((unsigned char)*si > 32 && (unsigned char)*si <= 127) xx[ NofAscii] += 1;
+		if ((unsigned char)*si == 0) xx[ NofNull] += 1;
+	}
+	return ((unsigned int)xx[3] << 24) + ((unsigned int)xx[2] << 16) + ((unsigned int)xx[1] << 8) + xx[0];
+}
+
+bool checkAlternativeCheckSum( uint32_t aa, uint32_t bb)
+{
+	bool rt = true;
+	unsigned char aaval[4];
+	unsigned char bbval[4];
+	aaval[3] = (aa >> 24) & 0xff;
+	aaval[2] = (aa >> 16) & 0xff;
+	aaval[1] = (aa >>  8) & 0xff;
+	aaval[0] = (aa >>  0) & 0xff;
+
+	bbval[3] = (bb >> 24) & 0xff;
+	bbval[2] = (bb >> 16) & 0xff;
+	bbval[1] = (bb >>  8) & 0xff;
+	bbval[0] = (bb >>  0) & 0xff;
+
+	if (aaval[NofNonAscii] != bbval[NofNonAscii])
+	{
+		std::cerr << "Checksums differ in number of non ascii characters" << (unsigned int)aaval[NofNonAscii] << " != " << (unsigned int)bbval[NofNonAscii] << std::endl;
+		rt = false;
+	}
+	if (aaval[NofSpaces] != bbval[NofSpaces])
+	{
+		std::cerr << "Checksums differ in number of spaces" << (unsigned int)aaval[NofSpaces] << " != " << (unsigned int)bbval[NofSpaces] << std::endl;
+		rt = false;
+	}
+	if (aaval[NofAscii] != bbval[NofAscii])
+	{
+		std::cerr << "Checksums differ in number of ascii characters" << (unsigned int)aaval[NofAscii] << " != " << (unsigned int)bbval[NofAscii] << std::endl;
+		rt = false;
+	}
+	if (aaval[NofNull] != bbval[NofNull])
+	{
+		std::cerr << "Checksums differ in number of non ascii characters " << (unsigned int)aaval[NofNull] << " != " << (unsigned int)bbval[NofNull] << std::endl;
+		rt = false;
+	}
+	return rt;
+}
+#endif
+
 template <int>
 static void pack( std::string& buf, const void* ptr);
 template <int>
@@ -480,7 +546,11 @@ void RpcSerializer::packTextProcessorFunctionType( const TextProcessorInterface:
 void RpcSerializer::packCrc32()
 {
 #if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM
+#ifdef STRUS_ALTERNATIVE_CHECK_SUM
+	uint32_t crc = calcAlternativeCheckSum( m_content.c_str(), m_content.size());
+#else
 	uint32_t crc = utils::Crc32::calc( m_content.c_str(), m_content.size());
+#endif
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packCrc32(" << crc << ") size=" << m_content.size() << std::endl;
 #endif
@@ -678,12 +748,20 @@ bool RpcDeserializer::unpackCrc32()
 {
 #if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM	
 	uint32_t size = (m_end - m_start) - 4;
+#ifdef STRUS_ALTERNATIVE_CHECK_SUM
+	uint32_t crc = calcAlternativeCheckSum( m_start, size);
+#else
 	uint32_t crc = utils::Crc32::calc( m_start, size);
+#endif
 	char const* ee = m_end-4;
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackCrc32(" << crc << ") size=" << size << std::endl;
 #endif
+#ifdef STRUS_ALTERNATIVE_CHECK_SUM
+	return checkAlternativeCheckSum( crc, unpackScalar<uint32_t>( ee, m_end));
+#else
 	return crc == unpackScalar<uint32_t>( ee, m_end);
+#endif
 #else
 	return true;
 #endif
