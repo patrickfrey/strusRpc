@@ -2367,7 +2367,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryConst::Method_pushDuplicate:
 		{
 			RpcSerializer msg;
-			obj->pushDuplicate();
+			std::size_t p1;
+			p1 = serializedMsg.unpackSize();
+			obj->pushDuplicate(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

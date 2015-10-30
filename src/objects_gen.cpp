@@ -2590,13 +2590,14 @@ try
 }
 }
 
-void QueryImpl::pushDuplicate( )
+void QueryImpl::pushDuplicate( std::size_t p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushDuplicate);
+	msg.packSize( p1);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
