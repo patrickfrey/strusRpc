@@ -423,6 +423,7 @@ public:
 		Method_pushTerm,
 		Method_pushExpression,
 		Method_pushDuplicate,
+		Method_swapElements,
 		Method_attachVariable,
 		Method_defineFeature,
 		Method_defineMetaDataRestriction,
