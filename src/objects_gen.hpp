@@ -533,6 +533,7 @@ public:
 	virtual void pushExpression( const PostingJoinOperatorInterface* p1, std::size_t p2, int p3, unsigned int p4);
 	virtual void pushDuplicate( std::size_t p1);
 	virtual void swapElements( std::size_t p1);
+	virtual void moveElement( std::size_t p1);
 	virtual void attachVariable( const std::string& p1);
 	virtual void defineFeature( const std::string& p1, float p2);
 	virtual void defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);

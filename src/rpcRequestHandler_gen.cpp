@@ -2396,6 +2396,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case QueryConst::Method_moveElement:
+		{
+			RpcSerializer msg;
+			std::size_t p1;
+			p1 = serializedMsg.unpackSize();
+			obj->moveElement(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case QueryConst::Method_attachVariable:
 		{
 			RpcSerializer msg;

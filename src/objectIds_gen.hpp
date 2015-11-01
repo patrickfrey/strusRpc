@@ -424,6 +424,7 @@ public:
 		Method_pushExpression,
 		Method_pushDuplicate,
 		Method_swapElements,
+		Method_moveElement,
 		Method_attachVariable,
 		Method_defineFeature,
 		Method_defineMetaDataRestriction,
