@@ -88,17 +88,17 @@ bool checkAlternativeCheckSum( uint32_t aa, uint32_t bb)
 
 	if (aaval[NofNonAscii] != bbval[NofNonAscii])
 	{
-		std::cerr << "Checksums differ in number of non ascii characters" << (unsigned int)aaval[NofNonAscii] << " != " << (unsigned int)bbval[NofNonAscii] << std::endl;
+		std::cerr << "Checksums differ in number of non ascii characters " << (unsigned int)aaval[NofNonAscii] << " != " << (unsigned int)bbval[NofNonAscii] << std::endl;
 		rt = false;
 	}
 	if (aaval[NofSpaces] != bbval[NofSpaces])
 	{
-		std::cerr << "Checksums differ in number of spaces" << (unsigned int)aaval[NofSpaces] << " != " << (unsigned int)bbval[NofSpaces] << std::endl;
+		std::cerr << "Checksums differ in number of spaces " << (unsigned int)aaval[NofSpaces] << " != " << (unsigned int)bbval[NofSpaces] << std::endl;
 		rt = false;
 	}
 	if (aaval[NofAscii] != bbval[NofAscii])
 	{
-		std::cerr << "Checksums differ in number of ascii characters" << (unsigned int)aaval[NofAscii] << " != " << (unsigned int)bbval[NofAscii] << std::endl;
+		std::cerr << "Checksums differ in number of ascii characters " << (unsigned int)aaval[NofAscii] << " != " << (unsigned int)bbval[NofAscii] << std::endl;
 		rt = false;
 	}
 	if (aaval[NofNull] != bbval[NofNull])
