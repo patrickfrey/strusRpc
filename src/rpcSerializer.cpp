@@ -27,6 +27,7 @@
 --------------------------------------------------------------------
 */
 #include "rpcSerializer.hpp"
+#include "hexdump.h"
 #include "private/utils.hpp"
 #include "private/internationalization.hpp"
 #include "rpcProtocolDefines.hpp"
@@ -758,7 +759,17 @@ bool RpcDeserializer::unpackCrc32()
 	std::cerr << "unpackCrc32(" << crc << ") size=" << size << std::endl;
 #endif
 #ifdef STRUS_ALTERNATIVE_CHECK_SUM
-	return checkAlternativeCheckSum( crc, unpackScalar<uint32_t>( ee, m_end));
+	if (checkAlternativeCheckSum( crc, unpackScalar<uint32_t>( ee, m_end)))
+	{
+		return true;
+	}
+	else
+	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		strus_hexdump( stderr, "CRC32 checksum failed", m_start, size);
+#endif
+		return false;
+	}
 #else
 	return crc == unpackScalar<uint32_t>( ee, m_end);
 #endif
