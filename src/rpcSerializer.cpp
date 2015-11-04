@@ -103,7 +103,7 @@ bool checkAlternativeCheckSum( uint32_t aa, uint32_t bb)
 	}
 	if (aaval[NofNull] != bbval[NofNull])
 	{
-		std::cerr << "Checksums differ in number of non ascii characters " << (unsigned int)aaval[NofNull] << " != " << (unsigned int)bbval[NofNull] << std::endl;
+		std::cerr << "Checksums differ in number of null characters " << (unsigned int)aaval[NofNull] << " != " << (unsigned int)bbval[NofNull] << std::endl;
 		rt = false;
 	}
 	return rt;
