@@ -2590,63 +2590,6 @@ try
 }
 }
 
-void QueryImpl::pushDuplicate( std::size_t p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_pushDuplicate);
-	msg.packSize( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::pushDuplicate");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::pushDuplicate", err.what());
-	return void();
-}
-}
-
-void QueryImpl::swapElements( std::size_t p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_swapElements);
-	msg.packSize( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::swapElements");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::swapElements", err.what());
-	return void();
-}
-}
-
-void QueryImpl::moveElement( std::size_t p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_moveElement);
-	msg.packSize( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::moveElement");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::moveElement", err.what());
-	return void();
-}
-}
-
 void QueryImpl::attachVariable( const std::string& p1)
 {
 try
