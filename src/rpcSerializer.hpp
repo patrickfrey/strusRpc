@@ -31,6 +31,7 @@
 #include <string>
 #include "rpcInterfaceStub.hpp"
 #include "strus/index.hpp"
+#include "strus/textProcessorInterface.hpp"
 #include "strus/documentClass.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/queryAnalyzerInterface.hpp"
@@ -45,6 +46,7 @@
 #include "strus/summarizerFunctionContextInterface.hpp"
 #include "strus/queryInterface.hpp"
 #include "strus/queryEvalInterface.hpp"
+#include "strus/queryProcessorInterface.hpp"
 #include "strus/weightedDocument.hpp"
 #include "strus/resultDocument.hpp"
 #include "strus/peerMessageProcessorInterface.hpp"
@@ -104,6 +106,8 @@ public:
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
 	void packPeerMessageProcessorBuilderOptions( const PeerMessageProcessorInterface::BuilderOptions& val);
 	void packPeerMessageViewerDocumentFrequencyChange( const PeerMessageViewerInterface::DocumentFrequencyChange& val);
+	void packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val);
+	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
 	void packCrc32();
 	const std::string& content() const
 	{
@@ -166,6 +170,8 @@ public:
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();
 	PeerMessageProcessorInterface::BuilderOptions unpackPeerMessageProcessorBuilderOptions();
 	PeerMessageViewerInterface::DocumentFrequencyChange unpackPeerMessageViewerDocumentFrequencyChange();
+	QueryProcessorInterface::FunctionType unpackQueryProcessorFunctionType();
+	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();
 	bool unpackCrc32();
 
 	std::size_t position() const

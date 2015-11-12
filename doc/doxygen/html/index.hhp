@@ -17,13 +17,11 @@ rpc__client_8hpp_source.html
 rpc__client__socket_8hpp_source.html
 rpcClientInterface_8hpp_source.html
 rpcClientMessagingInterface_8hpp_source.html
-versionRpc_8hpp_source.html
 strus_8md.html
 rpc__client_8hpp.html
 rpc__client__socket_8hpp.html
 rpcClientInterface_8hpp.html
 rpcClientMessagingInterface_8hpp.html
-versionRpc_8hpp.html
 namespacestrus.html
 classstrus_1_1RpcClientInterface.html
 classstrus_1_1RpcClientInterface-members.html
@@ -41,8 +39,6 @@ classes.html
 functions.html
 functions_func.html
 files.html
-globals.html
-globals_defs.html
 tab_a.png
 tab_b.png
 tab_h.png

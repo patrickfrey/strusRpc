@@ -41,6 +41,9 @@ Testing/
 CPackConfig.cmake
 CPackSourceConfig.cmake
 src/cmake_install.cmake.user
+include/strus/versionRpc.hpp
+src/internationalization.cpp
+src/rpcProtocolDefines.hpp
 
 # Compiled Programs
 src/strusRpcServer
