@@ -458,7 +458,10 @@ int main( int argc, const char* argv[])
 		{
 			g_moduleLoader->addResourcePath( *pi);
 		}
-
+		if (g_errorBuffer->hasError())
+		{
+			throw strus::runtime_error(_TXT("error in initialization: %s"), g_errorBuffer->fetchError());
+		}
 		std::auto_ptr<strus::StorageObjectBuilderInterface>
 			storageBuilder( g_moduleLoader->createStorageObjectBuilder());
 		if (!storageBuilder.get())
