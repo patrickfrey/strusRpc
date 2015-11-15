@@ -766,7 +766,7 @@ bool RpcDeserializer::unpackCrc32()
 	else
 	{
 #ifdef STRUS_LOWLEVEL_DEBUG
-		strus_hexdump( stderr, "CRC32 checksum failed", m_start, size);
+		strus_hexdump( stderr, "CRC32 checksum failed", (const unsigned char*)m_start, (size_t)size);
 #endif
 		return false;
 	}

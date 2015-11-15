@@ -21,6 +21,7 @@ set( server_source_files
 
 set( client_source_files
 	rpcSerializer.cpp
+	hexdump.c
 	objects_gen.cpp
 	rpcInterfaceStub.cpp
 	rpcClientContext.cpp

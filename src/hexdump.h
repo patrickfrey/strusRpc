@@ -31,7 +31,14 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void strus_hexdump( FILE* output, const char* title, const unsigned char* data, size_t datasize);
 
+#ifdef __cplusplus
+}
+#endif
 #endif
 
