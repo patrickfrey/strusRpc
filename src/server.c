@@ -10,7 +10,7 @@
 #include <inttypes.h>
 
 #define UV_VERSION_NUM (UV_VERSION_MAJOR*100 + UV_VERSION_MINOR)
-#define STRUS_LOWLEVEL_DEBUG
+#undef STRUS_LOWLEVEL_DEBUG
 #undef STRUS_LOG_REQUEST_TIME
 
 /* Shared global data */
