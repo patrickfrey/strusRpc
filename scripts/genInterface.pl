@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use 5.014;
+use 5.010;
 
 my $num_args = $#ARGV + 1;
 if ($num_args == 0)
