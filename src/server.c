@@ -10,7 +10,7 @@
 #include <inttypes.h>
 
 #define UV_VERSION_NUM (UV_VERSION_MAJOR*100 + UV_VERSION_MINOR)
-#undef STRUS_LOWLEVEL_DEBUG
+#define STRUS_LOWLEVEL_DEBUG
 #undef STRUS_LOG_REQUEST_TIME
 
 /* Shared global data */
@@ -226,13 +226,13 @@ static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 	if (nread == 0)
 	{
 #ifdef STRUS_LOWLEVEL_DEBUG
-		if (conn->logf) fprintf( conn->logf, "read callback called (EAGAIN)\n");
+		if (g_glbctx->logf) log_message_conn( conn, "read callback called (EAGAIN)\n");
 #endif
 	}
 	else if (nread > 0)
 	{
 #ifdef STRUS_LOWLEVEL_DEBUG
-		if (g_glbctx->logf) log_message_conn( conn, "read callback called (nred %d)", nread);
+		if (g_glbctx->logf) fprintf( g_glbctx->logf, "read callback called (nread %d)", (int)nread);
 #endif
 		switch (conn->state)
 		{
