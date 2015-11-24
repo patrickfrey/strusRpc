@@ -114,7 +114,7 @@
 
 Summary: This Project implements proxy classes for the strus storage and analyzer interfaces that forward all calls to strus to an RPC server (strusRpcServer).
 Name: strusrpc
-%define main_version 0.1.9
+%define main_version @STRUS_VERSION@
 Version: %{main_version}
 Release: 0.1
 License: GPLv3
@@ -268,10 +268,10 @@ make test
 %files
 %defattr( -, root, root )
 %dir %{_libdir}/strus
-%{_libdir}/strus/libstrus_rpc_client.so.0.1
-%{_libdir}/strus/libstrus_rpc_client.so.0.1.9
-%{_libdir}/strus/libstrus_rpc_client_socket.so.0.1
-%{_libdir}/strus/libstrus_rpc_client_socket.so.0.1.9
+%{_libdir}/strus/libstrus_rpc_client.so.@STRUS_MAJOR_VERSION@.@STRUS_MINOR_VERSION@
+%{_libdir}/strus/libstrus_rpc_client.so.@STRUS_MAJOR_VERSION@.@STRUS_MINOR_VERSION@.@STRUS_PATCH_VERSION@
+%{_libdir}/strus/libstrus_rpc_client_socket.so.@STRUS_MAJOR_VERSION@.@STRUS_MINOR_VERSION@
+%{_libdir}/strus/libstrus_rpc_client_socket.so.@STRUS_MAJOR_VERSION@.@STRUS_MINOR_VERSION@.@STRUS_PATCH_VERSION@
 %{_bindir}/strusRpcServer
 
 %files devel

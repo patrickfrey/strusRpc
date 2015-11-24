@@ -2,14 +2,14 @@
 # Maintainer: Patrick Frey <patrickpfrey@yahoo.com> 
 
 pkgname=strusrpc
-_mainpkgver=0.1.9
+_mainpkgver=@STRUS_VERSION@
 pkgver=${_mainpkgver}
 pkgrel=1
 pkgdesc='This Project implements proxy classes for the strus storage and analyzer interfaces that forward all calls to strus to an RPC server (strusRpcServer).'
 license=('GPL3')
 arch=('i686' 'x86_64')
 url="http://project-strus.net"
-depends=('boost>=1.53' 'boost-libs>=1.53' "strus>=0.1.6" "strusanalyzer>=0.1.6" "strusmodule>=0.1.5")
+depends=('boost>=1.53' 'boost-libs>=1.53' "strus>=${_mainpkgver}" "strusanalyzer>=${_mainpkgver}" "strusmodule>=${_mainpkgver}")
 makedepends=('cmake')
 source=("${pkgname}-${_mainpkgver}.tar.gz")
 

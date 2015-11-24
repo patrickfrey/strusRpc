@@ -1,6 +1,6 @@
 Format: 3.0 (quilt)
 Source: strusrpc
-Version: 0.1.9-Debian7.0
+Version: @STRUS_VERSION@-Debian7.0
 Binary: strus
 Maintainer: Patrick Frey <patrickpfrey@yahoo.com>
 Architecture: any

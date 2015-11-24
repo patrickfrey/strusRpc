@@ -1,6 +1,6 @@
 Format: 3.0 (quilt)
 Source: strusrpc
-Version: 0.1.9
+Version: @STRUS_VERSION@
 Binary: strusrpc
 Maintainer: Patrick Frey <patrickpfrey@yahoo.com>
 Architecture: any
