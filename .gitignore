@@ -44,6 +44,12 @@ src/cmake_install.cmake.user
 include/strus/versionRpc.hpp
 src/internationalization.cpp
 src/rpcProtocolDefines.hpp
+dist/archlinux/PKGBUILD
+dist/obs/deploy_to_obs.sh
+dist/obs/strusrpc-Debian_7.0.dsc
+dist/obs/strusrpc-xUbuntu_12.04.dsc
+dist/obs/strusrpc.dsc
+dist/redhat/strusrpc.spec
 
 # Compiled Programs
 src/strusRpcServer
