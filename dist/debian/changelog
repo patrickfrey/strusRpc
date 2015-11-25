@@ -1,5 +1,101 @@
-strusrpc (0.1.9-1) unstable; urgency=low
+strusRpc (0.2.3-1)
+  * synchronized version with strus core: increment version to 0.2.3
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Tue, 24 Nov 2015 19:49:41 +0100
 
-  * Initial Release.
+strusRpc (0.2.2-1)
+  * propagate version from CMakeLists.txt into packages
+  * use lower perl version in generate interface scripts
+  * fixed bug in client/server: Wrong handling of EAGAIN/EWOULDBLOCK
+  * fixed compile error when LOWLEVEL debug is enabled
+  * improved error message, if a module could not be loaded
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Tue, 24 Nov 2015 14:35:24 +0100
 
- -- Patrick Frey <patrickpfrey@yahoo.com>  Thu, 19 Feb 2015 09:48:41 +0100
+strusRpc (0.2.0-1)
+  * adapted strus core interface changes: removed some superfluos methods in query
+  * fixed wrong CRC32 error message
+  * fix error message
+  * more output for failing CRC32 chechsum
+  * adapted interface changes from core: new query methods
+  * adapted changes in core: Added query stack operation to swap elements on the stack
+  * adapted interface changes of strus core (pushDuplicate)
+  * added alternative checksum calculation in place of CRC32 that suits better for finding bugs if enabled
+  * Merge branch 'master' into obs
+  * fixed pthread and -lrt libraries for libuv
+  * fixed a minimal required cmake version from 2.8 to 2.6
+  * updated OBS package build support
+  * adapted interface changes
+  * adapted interface change in analyzer text processor and storage query processor
+  * fixed bug in error handling of client: error message not decoded correctly (appeared with exception free interfaces)
+  * adapted interface changes (new expression parameter cardinality)
+  * adapted iterator join operator interface changes in 'strus'
+  * do not checkin cmake generated files
+  * fixed bug that came in with latest changes: segfault on termination (cleanup)
+  * (origin/errorhnd, errorhnd) some comments in interface generation script
+  * adapted interface changes in strus utility library
+  * incremented number of threads
+  * make instarfaces exception safe -- work in progress
+  * (origin/interface_exceptions, interface_exceptions) added method Query::addDocumentEvaluationSet in strus
+  * remove some dangerous copy constructors
+  * make visibility default (all visible) for temporarily enable exceptions
+  * fixed another SEGFAULT when closing connection before destroying it
+  * fixed: invalid call of close connection of libuv of already closed connetion
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Wed, 11 Nov 2015 02:50:04 +0100
+
+strusRpc (0.1.9-1)
+  * adapted peer message handling redesign from strus core
+  * put common CMAKE stuff of all strus relaed projects into includes
+  * include libuv sources instead of the github project as submodule
+  * fixed inconsistency with strus peer interfaces. Take out peer interfaces from RPC
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Wed, 12 Aug 2015 23:51:58 +0200
+
+strusRpc (0.1.8-1)
+  * removed debug code
+  * fixed memory leaks in client
+  * fixed bug in getaddrinfo/connect strategy
+  * fix wrong errno error message in server
+  * set error code of first error occurred in request
+  * added description for updating libuv submodule
+  * disable logging of request time in client
+  * rewrote client based on libuv as the server and fix some bad behaviour of the server (response time, leaks)
+  * added module for implementing also client base on libuv
+  * make CRC32 calculation switch on/off. add timers that can be enabled or disabled
+  * added functions to measure time
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Mon, 3 Aug 2015 15:18:43 +0200
+
+strusRpc (0.1.7-1)
+  * fixed bug in logfile support (last checkin)
+  * removed remaining traces of libevent, replaced boost CRC32 by own implementation of the standard 1 byte method. Added synchronize answer message (fix protocol error)
+  * fixed bug: returning empty answer in synchronize methond instead of empty string
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Sun, 26 Jul 2015 13:15:26 +0200
+
+strusRpc (0.1.6-1)
+  * added possibility to define configuration from file instead as configuration string
+  * compile flag -fno-strict-aliasing for libuv
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Fri, 24 Jul 2015 18:28:16 +0200
+
+strusRpc (0.1.5-1)
+  * switch to official version of libuv as subproject
+  * added submodule libuv
+  * reverted some server.c stuff (last checkin)
+  * try to get working with official libuv-dev from Ubuntu. Gave up: Moved edited CMake files to .Attic
+  * changed server from libevent to libuv
+  * first version of strusRpcServer based on libuv instead of libevent
+  * temporary checkin
+  * fixed: shutdown of server when to many connections arrive
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Wed, 22 Jul 2015 12:13:56 +0200
+
+strusRpc (0.1.4-1)
+  * adapted analyzer interface changes
+  * adapted changes in analyzer interface
+  * replaced content description interface by a structure
+  * adapted analyzer interface changes: content description interface added
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Tue, 14 Jul 2015 11:22:22 +0200
+
+strusRpc (0.1.3-1)
+  * added option -s to server for implicit creation of storage if it does not exist yet
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Fri, 10 Jul 2015 13:52:30 +0200
+
+strusRpc (0.1.2-1)
+  * Initial revision
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Thu, 9 Jul 2015 15:34:15 +0200
+
