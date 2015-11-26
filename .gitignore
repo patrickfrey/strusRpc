@@ -41,6 +41,7 @@ Testing/
 CPackConfig.cmake
 CPackSourceConfig.cmake
 src/cmake_install.cmake.user
+cmake/build_rules.cmake.user
 include/strus/versionRpc.hpp
 src/internationalization.cpp
 src/rpcProtocolDefines.hpp
