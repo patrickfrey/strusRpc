@@ -1990,6 +1990,66 @@ try
 }
 }
 
+PeerMessageQueueImpl::~PeerMessageQueueImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void PeerMessageQueueImpl::push( const char* p1, std::size_t p2, const char*& p3, std::size_t& p4)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_push);
+	msg.packBuffer( p1, p2);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	const char* bp3;
+	serializedMsg.unpackBuffer( bp3, p4);
+	p3 = (const char*) ctx()->constConstructor()->get( bp3, p4);
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PeerMessageQueueImpl::push");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PeerMessageQueueImpl::push", err.what());
+	return void();
+}
+}
+
+bool PeerMessageQueueImpl::fetch( const char*& p1, std::size_t& p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_fetch);
+	msg.packCrc32();
+	ctx()->constConstructor()->reset();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	const char* bp1;
+	serializedMsg.unpackBuffer( bp1, p2);
+	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PeerMessageQueueImpl::fetch");
+	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PeerMessageQueueImpl::fetch", err.what());
+	return false;
+}
+}
+
 PeerMessageViewerImpl::~PeerMessageViewerImpl()
 {
 	if (isConst()) return;
@@ -3660,96 +3720,26 @@ try
 }
 }
 
-void StorageClientImpl::definePeerMessageProcessor( const PeerMessageProcessorInterface* p1)
-{
-	errorhnd()->report(_TXT("the method '%s' is not implemented for RPC"),"definePeerMessageProcessor");
-	return void();
-}
-
-void StorageClientImpl::startPeerInit( )
+PeerMessageQueueInterface* StorageClientImpl::createPeerMessageQueue( )
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_startPeerInit);
+	msg.packByte( Method_createPeerMessageQueue);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_PeerMessageQueue;
+	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::startPeerInit");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::startPeerInit", err.what());
-	return void();
-}
-}
-
-void StorageClientImpl::pushPeerMessage( const char* p1, std::size_t p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_pushPeerMessage);
-	msg.packBuffer( p1, p2);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::pushPeerMessage");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::pushPeerMessage", err.what());
-	return void();
-}
-}
-
-bool StorageClientImpl::fetchPeerReply( const char*& p1, std::size_t& p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_fetchPeerReply);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	const char* bp1;
-	serializedMsg.unpackBuffer( bp1, p2);
-	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
+	PeerMessageQueueInterface* p0 = new PeerMessageQueueImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::fetchPeerReply");
-	return false;
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createPeerMessageQueue");
+	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::fetchPeerReply", err.what());
-	return false;
-}
-}
-
-bool StorageClientImpl::fetchPeerMessage( const char*& p1, std::size_t& p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_fetchPeerMessage);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	const char* bp1;
-	serializedMsg.unpackBuffer( bp1, p2);
-	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::fetchPeerMessage");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::fetchPeerMessage", err.what());
-	return false;
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createPeerMessageQueue", err.what());
+	return 0;
 }
 }
 
@@ -4127,7 +4117,7 @@ StorageImpl::~StorageImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-StorageClientInterface* StorageImpl::createClient( const std::string& p1, DatabaseClientInterface* p2) const
+StorageClientInterface* StorageImpl::createClient( const std::string& p1, DatabaseClientInterface* p2, const PeerMessageProcessorInterface* p3) const
 {
 try
 {
@@ -4138,6 +4128,9 @@ try
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "DatabaseClient");
 	msg.packObject( impl_2->classId(), impl_2->objId());
+	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
+	if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PeerMessageProcessor");
+	msg.packObject( impl_3->classId(), impl_3->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StorageClient;
 	msg.packObject( classId_0, objId_0);

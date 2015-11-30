@@ -34,6 +34,7 @@
 #include "strus/moduleLoaderInterface.hpp"
 #include "strus/errorBufferInterface.hpp"
 #include "strus/versionRpc.hpp"
+#include "strus/peerMessageQueueInterface.hpp"
 #include "strus/private/configParser.hpp"
 #include "strus/private/fileio.hpp"
 #include "private/errorUtils.hpp"
@@ -508,7 +509,10 @@ int main( int argc, const char* argv[])
 				msg << ec;
 				throw strus::runtime_error( _TXT( "error reading global statistics file '%s' (system error code %u)"), gi->c_str(), ec);
 			}
-			storageClient->pushPeerMessage( content.c_str(), content.size());
+			const char* outmsg;
+			std::size_t outmsgsize;
+			std::auto_ptr<strus::PeerMessageQueueInterface> peermsgqueue;
+			peermsgqueue->push( content.c_str(), content.size(), outmsg, outmsgsize);
 		}
 
 		// Start server:

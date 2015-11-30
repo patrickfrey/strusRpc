@@ -61,6 +61,7 @@
 #include "strus/metaDataReaderInterface.hpp"
 #include "strus/peerMessageBuilderInterface.hpp"
 #include "strus/peerMessageProcessorInterface.hpp"
+#include "strus/peerMessageQueueInterface.hpp"
 #include "strus/peerMessageViewerInterface.hpp"
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/postingJoinOperatorInterface.hpp"
@@ -431,6 +432,21 @@ public:
 	virtual PeerMessageBuilderInterface* createBuilder( const PeerMessageProcessorInterface::BuilderOptions& p1) const;
 };
 
+class PeerMessageQueueImpl
+		:public RpcInterfaceStub
+		,public strus::PeerMessageQueueInterface
+		,public strus::PeerMessageQueueConst
+{
+public:
+	virtual ~PeerMessageQueueImpl();
+
+	PeerMessageQueueImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PeerMessageQueue, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void push( const char* p1, std::size_t p2, const char*& p3, std::size_t& p4);
+	virtual bool fetch( const char*& p1, std::size_t& p2);
+};
+
 class PeerMessageViewerImpl
 		:public RpcInterfaceStub
 		,public strus::PeerMessageViewerInterface
@@ -654,11 +670,7 @@ public:
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual DocnoRangeAllocatorInterface* createDocnoRangeAllocator( );
 	virtual StorageTransactionInterface* createTransaction( );
-	virtual void definePeerMessageProcessor( const PeerMessageProcessorInterface* p1);
-	virtual void startPeerInit( );
-	virtual void pushPeerMessage( const char* p1, std::size_t p2);
-	virtual bool fetchPeerReply( const char*& p1, std::size_t& p2);
-	virtual bool fetchPeerMessage( const char*& p1, std::size_t& p2);
+	virtual PeerMessageQueueInterface* createPeerMessageQueue( );
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
 	virtual bool checkStorage( std::ostream& p1) const;
 	virtual StorageDumpInterface* createDump( ) const;
@@ -728,7 +740,7 @@ public:
 	StorageImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Storage, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual StorageClientInterface* createClient( const std::string& p1, DatabaseClientInterface* p2) const;
+	virtual StorageClientInterface* createClient( const std::string& p1, DatabaseClientInterface* p2, const PeerMessageProcessorInterface* p3) const;
 	virtual bool createStorage( const std::string& p1, DatabaseClientInterface* p2) const;
 	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( DatabaseClientInterface* p1) const;
 	virtual const char* getConfigDescription( StorageInterface::ConfigType p1) const;

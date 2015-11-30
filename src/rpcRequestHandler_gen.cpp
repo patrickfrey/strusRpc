@@ -1812,6 +1812,60 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_PeerMessageQueue:
+	{
+	PeerMessageQueueInterface* obj = getObject<PeerMessageQueueInterface>( classId, objId);
+	switch( (PeerMessageQueueConst::MethodId)methodId)
+	{
+		case PeerMessageQueueConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PeerMessageQueueConst::Method_push:
+		{
+			RpcSerializer msg;
+			const char* p1;
+			std::size_t p2;
+			const char* p3;
+			std::size_t p4;
+			serializedMsg.unpackBuffer( p1, p2);
+			obj->push(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBuffer( p3, p4);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PeerMessageQueueConst::Method_fetch:
+		{
+			RpcSerializer msg;
+			bool p0;
+			const char* p1;
+			std::size_t p2;
+			p0 = obj->fetch(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packBuffer( p1, p2);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_PeerMessageViewer:
 	{
 	PeerMessageViewerInterface* obj = getObject<PeerMessageViewerInterface>( classId, objId);
@@ -3311,18 +3365,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case StorageClientConst::Method_definePeerMessageProcessor:
+		case StorageClientConst::Method_createPeerMessageQueue:
 		{
 			RpcSerializer msg;
-			(void)(obj);
-			msg.packByte( MsgTypeError);
-			msg.packString( "the method 'definePeerMessageProcessor' is not implemented for RPC");
-			return msg.content();
-		}
-		case StorageClientConst::Method_startPeerInit:
-		{
-			RpcSerializer msg;
-			obj->startPeerInit();
+			PeerMessageQueueInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createPeerMessageQueue();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3331,64 +3380,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
 			return std::string();
-		}
-		case StorageClientConst::Method_pushPeerMessage:
-		{
-			RpcSerializer msg;
-			const char* p1;
-			std::size_t p2;
-			serializedMsg.unpackBuffer( p1, p2);
-			obj->pushPeerMessage(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case StorageClientConst::Method_fetchPeerReply:
-		{
-			RpcSerializer msg;
-			bool p0;
-			const char* p1;
-			std::size_t p2;
-			p0 = obj->fetchPeerReply(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packBuffer( p1, p2);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case StorageClientConst::Method_fetchPeerMessage:
-		{
-			RpcSerializer msg;
-			bool p0;
-			const char* p1;
-			std::size_t p2;
-			p0 = obj->fetchPeerMessage(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packBuffer( p1, p2);
-			msg.packCrc32();
-			return msg.content();
 		}
 		case StorageClientConst::Method_createDocumentChecker:
 		{
@@ -3736,15 +3730,21 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			StorageClientInterface* p0;
 			std::string p1;
 			DatabaseClientInterface* p2;
+			const PeerMessageProcessorInterface* p3;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_DatabaseClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<DatabaseClientInterface>( classId_2, objId_2);
 			markObjectToRelease( classId_2, objId_2);
+			unsigned char classId_3; unsigned int objId_3;
+			serializedMsg.unpackObject( classId_3, objId_3);
+			if (classId_3 != ClassId_PeerMessageProcessor) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p3 = getConstObject<PeerMessageProcessorInterface>( classId_3, objId_3);
+			markObjectToRelease( classId_3, objId_3);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createClient(p1,p2);
+			p0 = obj->createClient(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

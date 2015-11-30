@@ -54,6 +54,7 @@ enum ClassId
 	ClassId_NormalizerFunction,
 	ClassId_PeerMessageBuilder,
 	ClassId_PeerMessageProcessor,
+	ClassId_PeerMessageQueue,
 	ClassId_PeerMessageViewer,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
@@ -347,6 +348,17 @@ public:
 	};
 };
 
+class PeerMessageQueueConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_push,
+		Method_fetch
+	};
+};
+
 class PeerMessageViewerConst
 {
 public:
@@ -521,11 +533,7 @@ public:
 		Method_createAttributeReader,
 		Method_createDocnoRangeAllocator,
 		Method_createTransaction,
-		Method_definePeerMessageProcessor,
-		Method_startPeerInit,
-		Method_pushPeerMessage,
-		Method_fetchPeerReply,
-		Method_fetchPeerMessage,
+		Method_createPeerMessageQueue,
 		Method_createDocumentChecker,
 		Method_checkStorage,
 		Method_createDump
