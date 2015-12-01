@@ -1,3 +1,7 @@
+strusrpc (0.2.6)
+  * adapted interface changes in core: added interfaces for introspection (user names, docids, term types, term values)
+ -- patrickfrey <patrickpfrey@yahoo.com>  Tue, 1 Dec 2015 20:54:00 +0100
+
 strusrpc (0.2.5)
   * adapt core interface change: define method PeerMessageQueue start for register/deregister of peers
   * adapt changes from core: change peer message processing interface

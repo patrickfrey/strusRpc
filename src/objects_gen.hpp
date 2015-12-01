@@ -79,6 +79,7 @@
 #include "strus/summarizerFunctionContextInterface.hpp"
 #include "strus/summarizerFunctionInstanceInterface.hpp"
 #include "strus/summarizerFunctionInterface.hpp"
+#include "strus/valueIteratorInterface.hpp"
 #include "strus/weightingFunctionContextInterface.hpp"
 #include "strus/weightingFunctionInstanceInterface.hpp"
 #include "strus/weightingFunctionInterface.hpp"
@@ -446,6 +447,7 @@ public:
 	virtual void start( bool p1);
 	virtual void push( const char* p1, std::size_t p2, const char*& p3, std::size_t& p4);
 	virtual bool fetch( const char*& p1, std::size_t& p2);
+	virtual const PeerMessageProcessorInterface* getMessageProcessor( ) const;
 };
 
 class PeerMessageViewerImpl
@@ -666,6 +668,10 @@ public:
 	virtual Index localDocumentFrequency( const std::string& p1, const std::string& p2) const;
 	virtual Index maxDocumentNumber( ) const;
 	virtual Index documentNumber( const std::string& p1) const;
+	virtual ValueIteratorInterface* createTermTypeIterator( ) const;
+	virtual ValueIteratorInterface* createTermValueIterator( ) const;
+	virtual ValueIteratorInterface* createDocIdIterator( ) const;
+	virtual ValueIteratorInterface* createUserNameIterator( ) const;
 	virtual Index documentStatistics( const Index& p1, const StorageClientInterface::DocumentStatisticsType& p2, const std::string& p3) const;
 	virtual MetaDataReaderInterface* createMetaDataReader( ) const;
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
@@ -901,6 +907,21 @@ public:
 
 	virtual TokenizerFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
 	virtual const char* getDescription( ) const;
+};
+
+class ValueIteratorImpl
+		:public RpcInterfaceStub
+		,public strus::ValueIteratorInterface
+		,public strus::ValueIteratorConst
+{
+public:
+	virtual ~ValueIteratorImpl();
+
+	ValueIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_ValueIterator, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void skip( const char* p1, std::size_t p2);
+	virtual std::vector<std::string> fetchValues( std::size_t p1);
 };
 
 class WeightingFunctionContextImpl

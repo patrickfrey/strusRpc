@@ -80,6 +80,7 @@ enum ClassId
 	ClassId_TokenizerFunctionContext,
 	ClassId_TokenizerFunctionInstance,
 	ClassId_TokenizerFunction,
+	ClassId_ValueIterator,
 	ClassId_WeightingFunctionContext,
 	ClassId_WeightingFunctionInstance,
 	ClassId_WeightingFunction
@@ -356,7 +357,8 @@ public:
 		Method_Destructor,
 		Method_start,
 		Method_push,
-		Method_fetch
+		Method_fetch,
+		Method_getMessageProcessor
 	};
 };
 
@@ -529,6 +531,10 @@ public:
 		Method_localDocumentFrequency,
 		Method_maxDocumentNumber,
 		Method_documentNumber,
+		Method_createTermTypeIterator,
+		Method_createTermValueIterator,
+		Method_createDocIdIterator,
+		Method_createUserNameIterator,
 		Method_documentStatistics,
 		Method_createMetaDataReader,
 		Method_createAttributeReader,
@@ -712,6 +718,17 @@ public:
 		Method_Destructor,
 		Method_createInstance,
 		Method_getDescription
+	};
+};
+
+class ValueIteratorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_skip,
+		Method_fetchValues
 	};
 };
 

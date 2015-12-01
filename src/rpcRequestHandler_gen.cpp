@@ -1879,6 +1879,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case PeerMessageQueueConst::Method_getMessageProcessor:
+		{
+			RpcSerializer msg;
+			const PeerMessageProcessorInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->getMessageProcessor();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 	}
 	break;
 	}
@@ -3281,6 +3300,82 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
+		}
+		case StorageClientConst::Method_createTermTypeIterator:
+		{
+			RpcSerializer msg;
+			ValueIteratorInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createTermTypeIterator();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StorageClientConst::Method_createTermValueIterator:
+		{
+			RpcSerializer msg;
+			ValueIteratorInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createTermValueIterator();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StorageClientConst::Method_createDocIdIterator:
+		{
+			RpcSerializer msg;
+			ValueIteratorInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createDocIdIterator();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StorageClientConst::Method_createUserNameIterator:
+		{
+			RpcSerializer msg;
+			ValueIteratorInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createUserNameIterator();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
 		}
 		case StorageClientConst::Method_documentStatistics:
 		{
@@ -4769,6 +4864,58 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_ValueIterator:
+	{
+	ValueIteratorInterface* obj = getObject<ValueIteratorInterface>( classId, objId);
+	switch( (ValueIteratorConst::MethodId)methodId)
+	{
+		case ValueIteratorConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ValueIteratorConst::Method_skip:
+		{
+			RpcSerializer msg;
+			const char* p1;
+			std::size_t p2;
+			serializedMsg.unpackBuffer( p1, p2);
+			obj->skip(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case ValueIteratorConst::Method_fetchValues:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			std::size_t p1;
+			p1 = serializedMsg.unpackSize();
+			p0 = obj->fetchValues(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
 			msg.packCrc32();
 			return msg.content();
 		}

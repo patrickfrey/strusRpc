@@ -285,6 +285,9 @@ make test
 %{_includedir}/strus/lib/*.hpp
 
 %changelog
+* Tue Dec 1 2015 Patrick Frey <patrickpfrey@yahoo.com> 0.2.6-0.1
+- adapted interface changes in core: added interfaces for introspection (user names, docids, term types, term values)
+
 * Tue Dec 1 2015 Patrick Frey <patrickpfrey@yahoo.com> 0.2.5-0.1
 - adapt core interface change: define method PeerMessageQueue start for register/deregister of peers
 - adapt changes from core: change peer message processing interface
