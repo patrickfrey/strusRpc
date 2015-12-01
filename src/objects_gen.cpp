@@ -2000,6 +2000,25 @@ PeerMessageQueueImpl::~PeerMessageQueueImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+void PeerMessageQueueImpl::start( bool p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_start);
+	msg.packBool( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PeerMessageQueueImpl::start");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PeerMessageQueueImpl::start", err.what());
+	return void();
+}
+}
+
 void PeerMessageQueueImpl::push( const char* p1, std::size_t p2, const char*& p3, std::size_t& p4)
 {
 try

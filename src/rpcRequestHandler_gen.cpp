@@ -1822,6 +1822,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case PeerMessageQueueConst::Method_start:
+		{
+			RpcSerializer msg;
+			bool p1;
+			p1 = serializedMsg.unpackBool();
+			obj->start(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case PeerMessageQueueConst::Method_push:
 		{
 			RpcSerializer msg;

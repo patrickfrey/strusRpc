@@ -443,6 +443,7 @@ public:
 	PeerMessageQueueImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PeerMessageQueue, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual void start( bool p1);
 	virtual void push( const char* p1, std::size_t p2, const char*& p3, std::size_t& p4);
 	virtual bool fetch( const char*& p1, std::size_t& p2);
 };

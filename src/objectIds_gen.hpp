@@ -354,6 +354,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_start,
 		Method_push,
 		Method_fetch
 	};
