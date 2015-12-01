@@ -285,6 +285,10 @@ make test
 %{_includedir}/strus/lib/*.hpp
 
 %changelog
+* Tue Dec 1 2015 Patrick Frey <patrickpfrey@yahoo.com> 0.2.5-0.1
+- adapt core interface change: define method PeerMessageQueue start for register/deregister of peers
+- adapt changes from core: change peer message processing interface
+
 * Thu Nov 26 2015 Patrick Frey <patrickpfrey@yahoo.com> 0.2.4-0.1
 - incremented version to 0.2.4 to resolve OBS trouble with dependencies
 

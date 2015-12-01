@@ -1,3 +1,8 @@
+strusrpc (0.2.5-1) unstable; urgency=low
+  * adapt core interface change: define method PeerMessageQueue start for register/deregister of peers
+  * adapt changes from core: change peer message processing interface
+ -- patrickfrey <patrickpfrey@yahoo.com>  Tue, 1 Dec 2015 13:23:22 +0100
+
 strusrpc (0.2.4-1) unstable; urgency=low
   * incremented version to 0.2.4 to resolve OBS trouble with dependencies
  -- patrickfrey <patrickpfrey@yahoo.com>  Thu, 26 Nov 2015 09:09:00 +0100
