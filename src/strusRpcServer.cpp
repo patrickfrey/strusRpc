@@ -34,7 +34,7 @@
 #include "strus/moduleLoaderInterface.hpp"
 #include "strus/errorBufferInterface.hpp"
 #include "strus/versionRpc.hpp"
-#include "strus/peerMessageQueueInterface.hpp"
+#include "strus/peerStorageTransactionInterface.hpp"
 #include "strus/private/configParser.hpp"
 #include "strus/private/fileio.hpp"
 #include "private/errorUtils.hpp"
@@ -526,8 +526,12 @@ int main( int argc, const char* argv[])
 			}
 			const char* outmsg;
 			std::size_t outmsgsize;
-			std::auto_ptr<strus::PeerMessageQueueInterface> peermsgqueue;
-			peermsgqueue->push( content.c_str(), content.size(), outmsg, outmsgsize);
+			std::auto_ptr<strus::PeerStorageTransactionInterface> transaction;
+			transaction->push( content.c_str(), content.size());
+			if (!transaction->commit( outmsg, outmsgsize))
+			{
+				throw strus::runtime_error( _TXT( "error loading global statistics"));
+			}
 		}
 
 		// Start server:

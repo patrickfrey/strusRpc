@@ -53,9 +53,10 @@ enum ClassId
 	ClassId_NormalizerFunctionInstance,
 	ClassId_NormalizerFunction,
 	ClassId_PeerMessageBuilder,
+	ClassId_PeerMessageIterator,
 	ClassId_PeerMessageProcessor,
-	ClassId_PeerMessageQueue,
 	ClassId_PeerMessageViewer,
+	ClassId_PeerStorageTransaction,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
 	ClassId_QueryAnalyzer,
@@ -338,6 +339,16 @@ public:
 	};
 };
 
+class PeerMessageIteratorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getNext
+	};
+};
+
 class PeerMessageProcessorConst
 {
 public:
@@ -349,19 +360,6 @@ public:
 	};
 };
 
-class PeerMessageQueueConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_start,
-		Method_push,
-		Method_fetch,
-		Method_getMessageProcessor
-	};
-};
-
 class PeerMessageViewerConst
 {
 public:
@@ -370,6 +368,18 @@ public:
 		Method_Destructor,
 		Method_nofDocumentsInsertedChange,
 		Method_nextDfChange
+	};
+};
+
+class PeerStorageTransactionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_push,
+		Method_commit,
+		Method_rollback
 	};
 };
 
@@ -540,7 +550,10 @@ public:
 		Method_createAttributeReader,
 		Method_createDocnoRangeAllocator,
 		Method_createTransaction,
-		Method_createPeerMessageQueue,
+		Method_createInitPeerMessageIterator,
+		Method_createUpdatePeerMessageIterator,
+		Method_createPeerStorageTransaction,
+		Method_getPeerMessageProcessor,
 		Method_createDocumentChecker,
 		Method_checkStorage,
 		Method_createDump
