@@ -473,7 +473,7 @@ public:
 	PeerStorageTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PeerStorageTransaction, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void push( const char* p1, std::size_t p2);
+	virtual void push( const char* p1, std::size_t p2, bool p3);
 	virtual bool commit( const char*& p1, std::size_t& p2);
 	virtual void rollback( );
 };
@@ -691,7 +691,7 @@ public:
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual DocnoRangeAllocatorInterface* createDocnoRangeAllocator( );
 	virtual StorageTransactionInterface* createTransaction( );
-	virtual PeerMessageIteratorInterface* createInitPeerMessageIterator( bool p1);
+	virtual PeerMessageIteratorInterface* createInitPeerMessageIterator( );
 	virtual PeerMessageIteratorInterface* createUpdatePeerMessageIterator( );
 	virtual PeerStorageTransactionInterface* createPeerStorageTransaction( );
 	virtual const PeerMessageProcessorInterface* getPeerMessageProcessor( ) const;

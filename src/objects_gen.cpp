@@ -2072,7 +2072,7 @@ PeerStorageTransactionImpl::~PeerStorageTransactionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void PeerStorageTransactionImpl::push( const char* p1, std::size_t p2)
+void PeerStorageTransactionImpl::push( const char* p1, std::size_t p2, bool p3)
 {
 try
 {
@@ -2080,6 +2080,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_push);
 	msg.packBuffer( p1, p2);
+	msg.packBool( p3);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -3863,14 +3864,13 @@ try
 }
 }
 
-PeerMessageIteratorInterface* StorageClientImpl::createInitPeerMessageIterator( bool p1)
+PeerMessageIteratorInterface* StorageClientImpl::createInitPeerMessageIterator( )
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInitPeerMessageIterator);
-	msg.packBool( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_PeerMessageIterator;
 	msg.packObject( classId_0, objId_0);

@@ -1895,8 +1895,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			const char* p1;
 			std::size_t p2;
+			bool p3;
 			serializedMsg.unpackBuffer( p1, p2);
-			obj->push(p1,p2);
+			p3 = serializedMsg.unpackBool();
+			obj->push(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3496,11 +3498,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			PeerMessageIteratorInterface* p0;
-			bool p1;
-			p1 = serializedMsg.unpackBool();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createInitPeerMessageIterator(p1);
+			p0 = obj->createInitPeerMessageIterator();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
