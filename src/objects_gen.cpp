@@ -382,24 +382,6 @@ DatabaseClientImpl::~DatabaseClientImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void DatabaseClientImpl::close( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_close);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseClientImpl::close");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseClientImpl::close", err.what());
-	return void();
-}
-}
-
 DatabaseTransactionInterface* DatabaseClientImpl::createTransaction( )
 {
 try
@@ -2736,6 +2718,46 @@ try
 }
 }
 
+void QueryImpl::defineTermStatistics( const std::string& p1, const std::string& p2, const TermStatistics& p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineTermStatistics);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packTermStatistics( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::defineTermStatistics");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::defineTermStatistics", err.what());
+	return void();
+}
+}
+
+void QueryImpl::defineGlobalStatistics( const GlobalStatistics& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineGlobalStatistics);
+	msg.packGlobalStatistics( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::defineGlobalStatistics");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::defineGlobalStatistics", err.what());
+	return void();
+}
+}
+
 void QueryImpl::defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
 {
 try
@@ -3420,24 +3442,6 @@ StorageClientImpl::~StorageClientImpl()
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-}
-
-void StorageClientImpl::close( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_close);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::close");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::close", err.what());
-	return void();
-}
 }
 
 PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const std::string& p1, const std::string& p2) const
@@ -4784,7 +4788,7 @@ SummarizerFunctionContextImpl::~SummarizerFunctionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, float p4)
+void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, float p4, const TermStatistics& p5)
 {
 try
 {
@@ -4800,6 +4804,7 @@ try
 		msg.packSummarizationVariable( p3[ii]);
 	}
 	msg.packFloat( p4);
+	msg.packTermStatistics( p5);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -4889,7 +4894,7 @@ try
 }
 }
 
-SummarizerFunctionContextInterface* SummarizerFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2) const
+SummarizerFunctionContextInterface* SummarizerFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const
 {
 try
 {
@@ -4902,6 +4907,7 @@ try
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "MetaDataReader");
 	msg.packObject( impl_2->classId(), impl_2->objId());
+	msg.packGlobalStatistics( p3);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_SummarizerFunctionContext;
 	msg.packObject( classId_0, objId_0);
@@ -5522,7 +5528,7 @@ WeightingFunctionContextImpl::~WeightingFunctionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void WeightingFunctionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3)
+void WeightingFunctionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3, const TermStatistics& p4)
 {
 try
 {
@@ -5534,6 +5540,7 @@ try
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PostingIterator");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packFloat( p3);
+	msg.packTermStatistics( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -5618,7 +5625,7 @@ try
 }
 }
 
-WeightingFunctionContextInterface* WeightingFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2) const
+WeightingFunctionContextInterface* WeightingFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const
 {
 try
 {
@@ -5631,6 +5638,7 @@ try
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "MetaDataReader");
 	msg.packObject( impl_2->classId(), impl_2->objId());
+	msg.packGlobalStatistics( p3);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_WeightingFunctionContext;
 	msg.packObject( classId_0, objId_0);

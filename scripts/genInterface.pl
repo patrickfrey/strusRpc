@@ -679,6 +679,14 @@ sub packParameter
 	{
 		$rt .= "msg.packDocumentClass( " . $id . ");";
 	}
+	elsif ($type eq "TermStatistics")
+	{
+		$rt .= "msg.packTermStatistics( " . $id . ");";
+	}
+	elsif ($type eq "GlobalStatistics")
+	{
+		$rt .= "msg.packGlobalStatistics( " . $id . ");";
+	}
 	elsif ($type eq "Index")
 	{
 		$rt .= "msg.packIndex( " . $id . ");";
@@ -885,6 +893,14 @@ sub unpackParameter
 	elsif ($type eq "DocumentClass")
 	{
 		$rt .= "$id = serializedMsg.unpackDocumentClass();";
+	}
+	elsif ($type eq "TermStatistics")
+	{
+		$rt .= "$id = serializedMsg.unpackTermStatistics();";
+	}
+	elsif ($type eq "GlobalStatistics")
+	{
+		$rt .= "$id = serializedMsg.unpackGlobalStatistics();";
 	}
 	elsif ($type eq "Index")
 	{

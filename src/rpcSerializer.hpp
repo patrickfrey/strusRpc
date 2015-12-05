@@ -37,6 +37,8 @@
 #include "strus/queryAnalyzerInterface.hpp"
 #include "strus/arithmeticVariant.hpp"
 #include "strus/postingIteratorInterface.hpp"
+#include "strus/termStatistics.hpp"
+#include "strus/globalStatistics.hpp"
 #include "strus/databaseOptions.hpp"
 #include "strus/databaseInterface.hpp"
 #include "strus/databaseCursorInterface.hpp"
@@ -84,6 +86,8 @@ public:
 	void packSize( std::size_t size);
 	void packArithmeticVariant( const ArithmeticVariant& val);
 	void packDocumentClass( const DocumentClass& prop);
+	void packTermStatistics( const TermStatistics& stats);
+	void packGlobalStatistics( const GlobalStatistics& stats);
 
 	void packDatabaseOptions( const DatabaseOptions& val);
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
@@ -149,6 +153,8 @@ public:
 	std::size_t unpackSize();
 	ArithmeticVariant unpackArithmeticVariant();
 	DocumentClass unpackDocumentClass();
+	TermStatistics unpackTermStatistics();
+	GlobalStatistics unpackGlobalStatistics();
 
 	DatabaseOptions unpackDatabaseOptions();
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();

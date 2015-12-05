@@ -150,7 +150,6 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_close,
 		Method_createTransaction,
 		Method_createCursor,
 		Method_createBackupCursor,
@@ -449,6 +448,8 @@ public:
 		Method_pushExpression,
 		Method_attachVariable,
 		Method_defineFeature,
+		Method_defineTermStatistics,
+		Method_defineGlobalStatistics,
 		Method_defineMetaDataRestriction,
 		Method_addDocumentEvaluationSet,
 		Method_setMaxNofRanks,
@@ -531,7 +532,6 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_close,
 		Method_createTermPostingIterator,
 		Method_createForwardIterator,
 		Method_createInvAclIterator,

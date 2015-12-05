@@ -356,20 +356,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case DatabaseClientConst::Method_close:
-		{
-			RpcSerializer msg;
-			obj->close();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
 		case DatabaseClientConst::Method_createTransaction:
 		{
 			RpcSerializer msg;
@@ -2495,6 +2481,42 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case QueryConst::Method_defineTermStatistics:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			TermStatistics p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackTermStatistics();
+			obj->defineTermStatistics(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case QueryConst::Method_defineGlobalStatistics:
+		{
+			RpcSerializer msg;
+			GlobalStatistics p1;
+			p1 = serializedMsg.unpackGlobalStatistics();
+			obj->defineGlobalStatistics(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case QueryConst::Method_defineMetaDataRestriction:
 		{
 			RpcSerializer msg;
@@ -3116,20 +3138,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case StorageClientConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
-			return std::string();
-		}
-		case StorageClientConst::Method_close:
-		{
-			RpcSerializer msg;
-			obj->close();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case StorageClientConst::Method_createTermPostingIterator:
@@ -4321,6 +4329,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			PostingIteratorInterface* p2;
 			std::vector<SummarizationVariable> p3;
 			float p4;
+			TermStatistics p5;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
@@ -4337,7 +4346,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p3.push_back( ee);
 			}
 			p4 = serializedMsg.unpackFloat();
-			obj->addSummarizationFeature(p1,p2,p3,p4);
+			p5 = serializedMsg.unpackTermStatistics();
+			obj->addSummarizationFeature(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -4425,6 +4435,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			SummarizerFunctionContextInterface* p0;
 			const StorageClientInterface* p1;
 			MetaDataReaderInterface* p2;
+			GlobalStatistics p3;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_StorageClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
@@ -4433,9 +4444,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_MetaDataReader) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<MetaDataReaderInterface>( classId_2, objId_2);
+			p3 = serializedMsg.unpackGlobalStatistics();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createFunctionContext(p1,p2);
+			p0 = obj->createFunctionContext(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5005,13 +5017,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			PostingIteratorInterface* p2;
 			float p3;
+			TermStatistics p4;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PostingIterator) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PostingIteratorInterface>( classId_2, objId_2);
 			p3 = serializedMsg.unpackFloat();
-			obj->addWeightingFeature(p1,p2,p3);
+			p4 = serializedMsg.unpackTermStatistics();
+			obj->addWeightingFeature(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5096,6 +5110,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			WeightingFunctionContextInterface* p0;
 			const StorageClientInterface* p1;
 			MetaDataReaderInterface* p2;
+			GlobalStatistics p3;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_StorageClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
@@ -5104,9 +5119,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_MetaDataReader) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<MetaDataReaderInterface>( classId_2, objId_2);
+			p3 = serializedMsg.unpackGlobalStatistics();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createFunctionContext(p1,p2);
+			p0 = obj->createFunctionContext(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

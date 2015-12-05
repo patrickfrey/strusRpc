@@ -373,6 +373,16 @@ void RpcSerializer::packDocumentClass( const DocumentClass& dclass)
 	packString( dclass.encoding());
 }
 
+void RpcSerializer::packTermStatistics( const TermStatistics& stats)
+{
+	packGlobalCounter( stats.documentFrequency());
+}
+
+void RpcSerializer::packGlobalStatistics( const GlobalStatistics& stats)
+{
+	packGlobalCounter( stats.nofDocumentsInserted());
+}
+
 void RpcSerializer::packDatabaseOptions( const DatabaseOptions& val)
 {
 	packUint( val.opt());
@@ -742,6 +752,20 @@ DocumentClass RpcDeserializer::unpackDocumentClass()
 	DocumentClass rt( unpackString());
 	rt.setScheme( unpackString());
 	rt.setEncoding( unpackString());
+	return rt;
+}
+
+TermStatistics RpcDeserializer::unpackTermStatistics()
+{
+	TermStatistics rt;
+	rt.setDocumentFrequency( unpackGlobalCounter());
+	return rt;
+}
+
+GlobalStatistics RpcDeserializer::unpackGlobalStatistics()
+{
+	GlobalStatistics rt;
+	rt.setNofDocumentsInserted( unpackGlobalCounter());
 	return rt;
 }
 
