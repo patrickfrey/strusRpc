@@ -624,6 +624,7 @@ public:
 		Method_getStorage,
 		Method_getDatabase,
 		Method_getQueryProcessor,
+		Method_getPeerMessageProcessor,
 		Method_createStorageClient,
 		Method_createAlterMetaDataTable,
 		Method_createQueryEval

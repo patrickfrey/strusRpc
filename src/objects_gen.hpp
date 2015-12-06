@@ -785,6 +785,7 @@ public:
 	virtual const StorageInterface* getStorage( ) const;
 	virtual const DatabaseInterface* getDatabase( const std::string& p1) const;
 	virtual const QueryProcessorInterface* getQueryProcessor( ) const;
+	virtual const PeerMessageProcessorInterface* getPeerMessageProcessor( ) const;
 	virtual StorageClientInterface* createStorageClient( const std::string& p1) const;
 	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( const std::string& p1) const;
 	virtual QueryEvalInterface* createQueryEval( ) const;

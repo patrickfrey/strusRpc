@@ -4548,6 +4548,30 @@ try
 }
 }
 
+const PeerMessageProcessorInterface* StorageObjectBuilderImpl::getPeerMessageProcessor( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getPeerMessageProcessor);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_PeerMessageProcessor;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	PeerMessageProcessorImpl const_0( objId_0, ctx(), true, errorhnd());
+	const PeerMessageProcessorInterface* p0 = (const PeerMessageProcessorImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getPeerMessageProcessor");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getPeerMessageProcessor", err.what());
+	return 0;
+}
+}
+
 StorageClientInterface* StorageObjectBuilderImpl::createStorageClient( const std::string& p1) const
 {
 try
