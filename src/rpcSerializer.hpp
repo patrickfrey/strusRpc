@@ -51,8 +51,8 @@
 #include "strus/queryProcessorInterface.hpp"
 #include "strus/weightedDocument.hpp"
 #include "strus/resultDocument.hpp"
-#include "strus/peerMessageProcessorInterface.hpp"
-#include "strus/peerMessageViewerInterface.hpp"
+#include "strus/statisticsProcessorInterface.hpp"
+#include "strus/statisticsViewerInterface.hpp"
 #include "strus/analyzer/token.hpp"
 #include "strus/analyzer/term.hpp"
 #include "strus/analyzer/metaData.hpp"
@@ -108,8 +108,8 @@ public:
 	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
 	void packPhrase( const QueryAnalyzerInterface::Phrase& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
-	void packPeerMessageProcessorBuilderOptions( const PeerMessageProcessorInterface::BuilderOptions& val);
-	void packPeerMessageViewerDocumentFrequencyChange( const PeerMessageViewerInterface::DocumentFrequencyChange& val);
+	void packStatisticsProcessorBuilderOptions( const StatisticsProcessorInterface::BuilderOptions& val);
+	void packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val);
 	void packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val);
 	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
 	void packCrc32();
@@ -174,8 +174,8 @@ public:
 	QueryEvalInterface::FeatureParameter unpackFeatureParameter();
 	QueryAnalyzerInterface::Phrase unpackPhrase();
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();
-	PeerMessageProcessorInterface::BuilderOptions unpackPeerMessageProcessorBuilderOptions();
-	PeerMessageViewerInterface::DocumentFrequencyChange unpackPeerMessageViewerDocumentFrequencyChange();
+	StatisticsProcessorInterface::BuilderOptions unpackStatisticsProcessorBuilderOptions();
+	StatisticsViewerInterface::DocumentFrequencyChange unpackStatisticsViewerDocumentFrequencyChange();
 	QueryProcessorInterface::FunctionType unpackQueryProcessorFunctionType();
 	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();
 	bool unpackCrc32();

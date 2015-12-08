@@ -145,7 +145,7 @@ my %notImplMethods = ();
 $notImplMethods{"checkStorage"} = 1;				# ...ostream reference input cannot be handled
 $notImplMethods{"subExpressions"} = 1;				# ...vector of const object return can not be handled
 $notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
-$notImplMethods{"definePeerMessageProcessor"} = 1;		# ...peer message processor is internal
+$notImplMethods{"defineStatisticsProcessor"} = 1;		# ...peer message processor is internal
 
 # List of interfaces that are not implemented for RPC:
 my %notImplInterfaces = ();
@@ -822,13 +822,13 @@ sub packParameter
 	{
 		$rt .= "msg.packDocumentStatisticsType( " . $id . ");";
 	}
-	elsif ($type eq "PeerMessageProcessorInterface::BuilderOptions")
+	elsif ($type eq "StatisticsProcessorInterface::BuilderOptions")
 	{
-		$rt .= "msg.packPeerMessageProcessorBuilderOptions( " . $id . ");";
+		$rt .= "msg.packStatisticsProcessorBuilderOptions( " . $id . ");";
 	}
-	elsif ($type eq "PeerMessageViewerInterface::DocumentFrequencyChange")
+	elsif ($type eq "StatisticsViewerInterface::DocumentFrequencyChange")
 	{
-		$rt .= "msg.packPeerMessageViewerDocumentFrequencyChange( " . $id . ");";
+		$rt .= "msg.packStatisticsViewerDocumentFrequencyChange( " . $id . ");";
 	}
 	elsif ($type eq "QueryProcessorInterface::FunctionType")
 	{
@@ -1077,13 +1077,13 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackDocumentStatisticsType();";
 	}
-	elsif ($type eq "PeerMessageProcessorInterface::BuilderOptions")
+	elsif ($type eq "StatisticsProcessorInterface::BuilderOptions")
 	{
-		$rt .= "$id = serializedMsg.unpackPeerMessageProcessorBuilderOptions();";
+		$rt .= "$id = serializedMsg.unpackStatisticsProcessorBuilderOptions();";
 	}
-	elsif ($type eq "PeerMessageViewerInterface::DocumentFrequencyChange")
+	elsif ($type eq "StatisticsViewerInterface::DocumentFrequencyChange")
 	{
-		$rt .= "$id = serializedMsg.unpackPeerMessageViewerDocumentFrequencyChange();";
+		$rt .= "$id = serializedMsg.unpackStatisticsViewerDocumentFrequencyChange();";
 	}
 	elsif ($type eq "QueryProcessorInterface::FunctionType")
 	{

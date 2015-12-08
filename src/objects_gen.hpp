@@ -59,16 +59,15 @@
 #include "strus/forwardIteratorInterface.hpp"
 #include "strus/invAclIteratorInterface.hpp"
 #include "strus/metaDataReaderInterface.hpp"
-#include "strus/peerMessageBuilderInterface.hpp"
-#include "strus/peerMessageIteratorInterface.hpp"
-#include "strus/peerMessageProcessorInterface.hpp"
-#include "strus/peerMessageViewerInterface.hpp"
-#include "strus/peerStorageTransactionInterface.hpp"
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/postingJoinOperatorInterface.hpp"
 #include "strus/queryEvalInterface.hpp"
 #include "strus/queryInterface.hpp"
 #include "strus/queryProcessorInterface.hpp"
+#include "strus/statisticsBuilderInterface.hpp"
+#include "strus/statisticsIteratorInterface.hpp"
+#include "strus/statisticsProcessorInterface.hpp"
+#include "strus/statisticsViewerInterface.hpp"
 #include "strus/storageAlterMetaDataTableInterface.hpp"
 #include "strus/storageClientInterface.hpp"
 #include "strus/storageDocumentInterface.hpp"
@@ -400,84 +399,6 @@ public:
 	virtual const char* getDescription( ) const;
 };
 
-class PeerMessageBuilderImpl
-		:public RpcInterfaceStub
-		,public strus::PeerMessageBuilderInterface
-		,public strus::PeerMessageBuilderConst
-{
-public:
-	virtual ~PeerMessageBuilderImpl();
-
-	PeerMessageBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_PeerMessageBuilder, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual void setNofDocumentsInsertedChange( int p1);
-	virtual void addDfChange( const char* p1, const char* p2, int p3, bool p4);
-	virtual void start( );
-	virtual void rollback( );
-	virtual bool fetchMessage( const char*& p1, std::size_t& p2);
-};
-
-class PeerMessageIteratorImpl
-		:public RpcInterfaceStub
-		,public strus::PeerMessageIteratorInterface
-		,public strus::PeerMessageIteratorConst
-{
-public:
-	virtual ~PeerMessageIteratorImpl();
-
-	PeerMessageIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_PeerMessageIterator, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual bool getNext( const char*& p1, std::size_t& p2);
-};
-
-class PeerMessageProcessorImpl
-		:public RpcInterfaceStub
-		,public strus::PeerMessageProcessorInterface
-		,public strus::PeerMessageProcessorConst
-{
-public:
-	virtual ~PeerMessageProcessorImpl();
-
-	PeerMessageProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_PeerMessageProcessor, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual PeerMessageViewerInterface* createViewer( const char* p1, std::size_t p2) const;
-	virtual PeerMessageBuilderInterface* createBuilder( const PeerMessageProcessorInterface::BuilderOptions& p1) const;
-};
-
-class PeerMessageViewerImpl
-		:public RpcInterfaceStub
-		,public strus::PeerMessageViewerInterface
-		,public strus::PeerMessageViewerConst
-{
-public:
-	virtual ~PeerMessageViewerImpl();
-
-	PeerMessageViewerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_PeerMessageViewer, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual int nofDocumentsInsertedChange( );
-	virtual bool nextDfChange( PeerMessageViewerInterface::DocumentFrequencyChange& p1);
-};
-
-class PeerStorageTransactionImpl
-		:public RpcInterfaceStub
-		,public strus::PeerStorageTransactionInterface
-		,public strus::PeerStorageTransactionConst
-{
-public:
-	virtual ~PeerStorageTransactionImpl();
-
-	PeerStorageTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_PeerStorageTransaction, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual void push( const char* p1, std::size_t p2);
-	virtual bool commit( const char*& p1, std::size_t& p2);
-	virtual void rollback( );
-};
-
 class PostingIteratorImpl
 		:public RpcInterfaceStub
 		,public strus::PostingIteratorInterface
@@ -642,6 +563,68 @@ public:
 	virtual SegmenterInstanceInterface* createInstance( ) const;
 };
 
+class StatisticsBuilderImpl
+		:public RpcInterfaceStub
+		,public strus::StatisticsBuilderInterface
+		,public strus::StatisticsBuilderConst
+{
+public:
+	virtual ~StatisticsBuilderImpl();
+
+	StatisticsBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsBuilder, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void setNofDocumentsInsertedChange( int p1);
+	virtual void addDfChange( const char* p1, const char* p2, int p3, bool p4);
+	virtual void start( );
+	virtual void rollback( );
+	virtual bool fetchMessage( const char*& p1, std::size_t& p2);
+};
+
+class StatisticsIteratorImpl
+		:public RpcInterfaceStub
+		,public strus::StatisticsIteratorInterface
+		,public strus::StatisticsIteratorConst
+{
+public:
+	virtual ~StatisticsIteratorImpl();
+
+	StatisticsIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsIterator, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual bool getNext( const char*& p1, std::size_t& p2);
+};
+
+class StatisticsProcessorImpl
+		:public RpcInterfaceStub
+		,public strus::StatisticsProcessorInterface
+		,public strus::StatisticsProcessorConst
+{
+public:
+	virtual ~StatisticsProcessorImpl();
+
+	StatisticsProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsProcessor, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual StatisticsViewerInterface* createViewer( const char* p1, std::size_t p2) const;
+	virtual StatisticsBuilderInterface* createBuilder( const StatisticsProcessorInterface::BuilderOptions& p1) const;
+};
+
+class StatisticsViewerImpl
+		:public RpcInterfaceStub
+		,public strus::StatisticsViewerInterface
+		,public strus::StatisticsViewerConst
+{
+public:
+	virtual ~StatisticsViewerImpl();
+
+	StatisticsViewerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsViewer, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual int nofDocumentsInsertedChange( );
+	virtual bool nextDfChange( StatisticsViewerInterface::DocumentFrequencyChange& p1);
+};
+
 class StorageAlterMetaDataTableImpl
 		:public RpcInterfaceStub
 		,public strus::StorageAlterMetaDataTableInterface
@@ -676,10 +659,8 @@ public:
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;
 	virtual InvAclIteratorInterface* createInvAclIterator( const std::string& p1) const;
-	virtual GlobalCounter globalNofDocumentsInserted( ) const;
-	virtual Index localNofDocumentsInserted( ) const;
-	virtual GlobalCounter globalDocumentFrequency( const std::string& p1, const std::string& p2) const;
-	virtual Index localDocumentFrequency( const std::string& p1, const std::string& p2) const;
+	virtual Index nofDocumentsInserted( ) const;
+	virtual Index documentFrequency( const std::string& p1, const std::string& p2) const;
 	virtual Index maxDocumentNumber( ) const;
 	virtual Index documentNumber( const std::string& p1) const;
 	virtual ValueIteratorInterface* createTermTypeIterator( ) const;
@@ -691,10 +672,9 @@ public:
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual DocnoRangeAllocatorInterface* createDocnoRangeAllocator( );
 	virtual StorageTransactionInterface* createTransaction( );
-	virtual PeerMessageIteratorInterface* createInitPeerMessageIterator( bool p1);
-	virtual PeerMessageIteratorInterface* createUpdatePeerMessageIterator( );
-	virtual PeerStorageTransactionInterface* createPeerStorageTransaction( );
-	virtual const PeerMessageProcessorInterface* getPeerMessageProcessor( ) const;
+	virtual StatisticsIteratorInterface* createInitStatisticsIterator( bool p1);
+	virtual StatisticsIteratorInterface* createUpdateStatisticsIterator( );
+	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
 	virtual bool checkStorage( std::ostream& p1) const;
 	virtual StorageDumpInterface* createDump( ) const;
@@ -764,7 +744,7 @@ public:
 	StorageImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Storage, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual StorageClientInterface* createClient( const std::string& p1, DatabaseClientInterface* p2, const PeerMessageProcessorInterface* p3) const;
+	virtual StorageClientInterface* createClient( const std::string& p1, DatabaseClientInterface* p2, const StatisticsProcessorInterface* p3) const;
 	virtual bool createStorage( const std::string& p1, DatabaseClientInterface* p2) const;
 	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( DatabaseClientInterface* p1) const;
 	virtual const char* getConfigDescription( StorageInterface::ConfigType p1) const;
@@ -785,7 +765,7 @@ public:
 	virtual const StorageInterface* getStorage( ) const;
 	virtual const DatabaseInterface* getDatabase( const std::string& p1) const;
 	virtual const QueryProcessorInterface* getQueryProcessor( ) const;
-	virtual const PeerMessageProcessorInterface* getPeerMessageProcessor( ) const;
+	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
 	virtual StorageClientInterface* createStorageClient( const std::string& p1) const;
 	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( const std::string& p1) const;
 	virtual QueryEvalInterface* createQueryEval( ) const;

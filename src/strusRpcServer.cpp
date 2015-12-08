@@ -34,7 +34,6 @@
 #include "strus/moduleLoaderInterface.hpp"
 #include "strus/errorBufferInterface.hpp"
 #include "strus/versionRpc.hpp"
-#include "strus/peerStorageTransactionInterface.hpp"
 #include "strus/private/configParser.hpp"
 #include "strus/private/fileio.hpp"
 #include "private/errorUtils.hpp"
@@ -311,7 +310,6 @@ int main( int argc, const char* argv[])
 	std::vector<std::string> moduledirs;
 	std::vector<std::string> modules;
 	std::vector<std::string> resourcedirs;
-	std::vector<std::string> globalstatfiles;
 	std::string peermsgproc;
 	bool has_peermsgproc = false;
 	std::string storageconfig;
@@ -404,12 +402,6 @@ int main( int argc, const char* argv[])
 			{
 				doCreateIfNotExist = true;
 			}
-			else if (0==std::strcmp( argv[argi], "-g") || 0==std::strcmp( argv[argi], "--globalstats"))
-			{
-				++argi;
-				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--storage");
-				globalstatfiles.push_back( argv[argi]);
-			}
 			else if (0==std::strcmp( argv[argi], "-t") || 0==std::strcmp( argv[argi], "--threads"))
 			{
 				++argi;
@@ -460,7 +452,7 @@ int main( int argc, const char* argv[])
 		moduleLoader->addSystemModulePath();
 		if (has_peermsgproc)
 		{
-			moduleLoader->definePeerMessageProcessor( peermsgproc);
+			moduleLoader->defineStatisticsProcessor( peermsgproc);
 		}
 		std::vector<std::string>::const_iterator
 			mi = modules.begin(), me = modules.end();
@@ -508,30 +500,6 @@ int main( int argc, const char* argv[])
 			}
 			std::cerr << _TXT("strus RPC server is hosting storage ") << "'" << storageconfig << "'" << std::endl;
 			g_storageClient = storageClient.get();
-		}
-
-		// Load global statistics from file if defined:
-		std::vector<std::string>::const_iterator
-			gi = globalstatfiles.begin(), ge = globalstatfiles.end();
-		for (; gi != ge; ++gi)
-		{
-			std::cerr << _TXT("strus RPC server loading global statistics from file: ") << *gi << std::endl;
-			std::string content;
-			unsigned int ec = strus::readFile( *gi, content);
-			if (ec)
-			{
-				std::ostringstream msg;
-				msg << ec;
-				throw strus::runtime_error( _TXT( "error reading global statistics file '%s' (system error code %u)"), gi->c_str(), ec);
-			}
-			const char* outmsg;
-			std::size_t outmsgsize;
-			std::auto_ptr<strus::PeerStorageTransactionInterface> transaction;
-			transaction->push( content.c_str(), content.size());
-			if (!transaction->commit( outmsg, outmsgsize))
-			{
-				throw strus::runtime_error( _TXT( "error loading global statistics"));
-			}
 		}
 
 		// Start server:

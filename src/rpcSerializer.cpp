@@ -529,13 +529,13 @@ void RpcSerializer::packDocumentStatisticsType( const StorageClientInterface::Do
 	packByte( val);
 }
 
-void RpcSerializer::packPeerMessageProcessorBuilderOptions( const PeerMessageProcessorInterface::BuilderOptions& val)
+void RpcSerializer::packStatisticsProcessorBuilderOptions( const StatisticsProcessorInterface::BuilderOptions& val)
 {
 	packUint( val.maxBlockSize);
 	packByte( val.set);
 }
 
-void RpcSerializer::packPeerMessageViewerDocumentFrequencyChange( const PeerMessageViewerInterface::DocumentFrequencyChange& val)
+void RpcSerializer::packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val)
 {
 	packCharp( val.type);
 	packCharp( val.value);
@@ -958,17 +958,17 @@ StorageClientInterface::DocumentStatisticsType RpcDeserializer::unpackDocumentSt
 	return (StorageClientInterface::DocumentStatisticsType)unpackByte();
 }
 
-PeerMessageProcessorInterface::BuilderOptions RpcDeserializer::unpackPeerMessageProcessorBuilderOptions()
+StatisticsProcessorInterface::BuilderOptions RpcDeserializer::unpackStatisticsProcessorBuilderOptions()
 {
 	unsigned int maxBlockSize = unpackUint();
-	typedef PeerMessageProcessorInterface::BuilderOptions::Set Set;
+	typedef StatisticsProcessorInterface::BuilderOptions::Set Set;
 	Set set = (Set)unpackByte();
-	return PeerMessageProcessorInterface::BuilderOptions( set, maxBlockSize);
+	return StatisticsProcessorInterface::BuilderOptions( set, maxBlockSize);
 }
 
-PeerMessageViewerInterface::DocumentFrequencyChange RpcDeserializer::unpackPeerMessageViewerDocumentFrequencyChange()
+StatisticsViewerInterface::DocumentFrequencyChange RpcDeserializer::unpackStatisticsViewerDocumentFrequencyChange()
 {
-	typedef PeerMessageViewerInterface::DocumentFrequencyChange DocumentFrequencyChange;
+	typedef StatisticsViewerInterface::DocumentFrequencyChange DocumentFrequencyChange;
 	DocumentFrequencyChange rt;
 	rt.type = unpackConstCharp();
 	rt.value = unpackConstCharp();
