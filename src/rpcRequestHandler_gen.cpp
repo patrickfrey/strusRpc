@@ -2729,12 +2729,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p1;
 			const char* p2;
 			int p3;
-			bool p4;
 			p1 = serializedMsg.unpackConstCharp();
 			p2 = serializedMsg.unpackConstCharp();
 			p3 = serializedMsg.unpackInt();
-			p4 = serializedMsg.unpackBool();
-			obj->addDfChange(p1,p2,p3,p4);
+			obj->addDfChange(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

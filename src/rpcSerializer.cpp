@@ -540,7 +540,6 @@ void RpcSerializer::packStatisticsViewerDocumentFrequencyChange( const Statistic
 	packCharp( val.type);
 	packCharp( val.value);
 	packInt( val.increment);
-	packBool( val.isnew);
 }
 
 
@@ -973,7 +972,6 @@ StatisticsViewerInterface::DocumentFrequencyChange RpcDeserializer::unpackStatis
 	rt.type = unpackConstCharp();
 	rt.value = unpackConstCharp();
 	rt.increment = unpackInt();
-	rt.isnew = unpackBool();
 	return rt;
 }
 

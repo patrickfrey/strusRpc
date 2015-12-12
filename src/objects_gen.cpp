@@ -2982,7 +2982,7 @@ try
 }
 }
 
-void StatisticsBuilderImpl::addDfChange( const char* p1, const char* p2, int p3, bool p4)
+void StatisticsBuilderImpl::addDfChange( const char* p1, const char* p2, int p3)
 {
 try
 {
@@ -2992,7 +2992,6 @@ try
 	msg.packCharp( p1);
 	msg.packCharp( p2);
 	msg.packInt( p3);
-	msg.packBool( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
