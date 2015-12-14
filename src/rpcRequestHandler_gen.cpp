@@ -896,59 +896,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_DocnoRangeAllocator:
-	{
-	DocnoRangeAllocatorInterface* obj = getObject<DocnoRangeAllocatorInterface>( classId, objId);
-	switch( (DocnoRangeAllocatorConst::MethodId)methodId)
-	{
-		case DocnoRangeAllocatorConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case DocnoRangeAllocatorConst::Method_allocDocnoRange:
-		{
-			RpcSerializer msg;
-			Index p0;
-			Index p1;
-			p1 = serializedMsg.unpackIndex();
-			p0 = obj->allocDocnoRange(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packIndex( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case DocnoRangeAllocatorConst::Method_deallocDocnoRange:
-		{
-			RpcSerializer msg;
-			bool p0;
-			Index p1;
-			Index p2;
-			p1 = serializedMsg.unpackIndex();
-			p2 = serializedMsg.unpackIndex();
-			p0 = obj->deallocDocnoRange(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-	}
-	break;
-	}
 	case ClassId_DocumentAnalyzerContext:
 	{
 	DocumentAnalyzerContextInterface* obj = getObject<DocumentAnalyzerContextInterface>( classId, objId);
@@ -3350,25 +3297,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case StorageClientConst::Method_createDocnoRangeAllocator:
-		{
-			RpcSerializer msg;
-			DocnoRangeAllocatorInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createDocnoRangeAllocator();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
 		case StorageClientConst::Method_createTransaction:
 		{
 			RpcSerializer msg;
@@ -4083,12 +4011,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			StorageDocumentInterface* p0;
 			std::string p1;
-			Index p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackIndex();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createDocument(p1,p2);
+			p0 = obj->createDocument(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

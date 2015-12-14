@@ -54,7 +54,6 @@
 #include "strus/databaseCursorInterface.hpp"
 #include "strus/databaseInterface.hpp"
 #include "strus/databaseTransactionInterface.hpp"
-#include "strus/docnoRangeAllocatorInterface.hpp"
 #include "strus/errorBufferInterface.hpp"
 #include "strus/forwardIteratorInterface.hpp"
 #include "strus/invAclIteratorInterface.hpp"
@@ -239,21 +238,6 @@ public:
 	virtual void removeSubTree( const char* p1, std::size_t p2);
 	virtual bool commit( );
 	virtual void rollback( );
-};
-
-class DocnoRangeAllocatorImpl
-		:public RpcInterfaceStub
-		,public strus::DocnoRangeAllocatorInterface
-		,public strus::DocnoRangeAllocatorConst
-{
-public:
-	virtual ~DocnoRangeAllocatorImpl();
-
-	DocnoRangeAllocatorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_DocnoRangeAllocator, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual Index allocDocnoRange( const Index& p1);
-	virtual bool deallocDocnoRange( const Index& p1, const Index& p2);
 };
 
 class DocumentAnalyzerContextImpl
@@ -670,7 +654,6 @@ public:
 	virtual Index documentStatistics( const Index& p1, const StorageClientInterface::DocumentStatisticsType& p2, const std::string& p3) const;
 	virtual MetaDataReaderInterface* createMetaDataReader( ) const;
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
-	virtual DocnoRangeAllocatorInterface* createDocnoRangeAllocator( );
 	virtual StorageTransactionInterface* createTransaction( );
 	virtual StatisticsIteratorInterface* createInitStatisticsIterator( bool p1);
 	virtual StatisticsIteratorInterface* createUpdateStatisticsIterator( );
@@ -782,7 +765,7 @@ public:
 	StorageTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageTransaction, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual StorageDocumentInterface* createDocument( const std::string& p1, const Index& p2);
+	virtual StorageDocumentInterface* createDocument( const std::string& p1);
 	virtual StorageDocumentUpdateInterface* createDocumentUpdate( const Index& p1);
 	virtual void deleteDocument( const std::string& p1);
 	virtual void deleteUserAccessRights( const std::string& p1);

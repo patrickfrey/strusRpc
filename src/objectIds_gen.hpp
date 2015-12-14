@@ -42,7 +42,6 @@ enum ClassId
 	ClassId_DatabaseCursor,
 	ClassId_Database,
 	ClassId_DatabaseTransaction,
-	ClassId_DocnoRangeAllocator,
 	ClassId_DocumentAnalyzerContext,
 	ClassId_DocumentAnalyzer,
 	ClassId_DocumentClassDetector,
@@ -202,17 +201,6 @@ public:
 		Method_removeSubTree,
 		Method_commit,
 		Method_rollback
-	};
-};
-
-class DocnoRangeAllocatorConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_allocDocnoRange,
-		Method_deallocDocnoRange
 	};
 };
 
@@ -533,7 +521,6 @@ public:
 		Method_documentStatistics,
 		Method_createMetaDataReader,
 		Method_createAttributeReader,
-		Method_createDocnoRangeAllocator,
 		Method_createTransaction,
 		Method_createInitStatisticsIterator,
 		Method_createUpdateStatisticsIterator,

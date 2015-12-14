@@ -1003,63 +1003,6 @@ try
 }
 }
 
-DocnoRangeAllocatorImpl::~DocnoRangeAllocatorImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-Index DocnoRangeAllocatorImpl::allocDocnoRange( const Index& p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_allocDocnoRange);
-	msg.packIndex( p1);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	Index p0 = serializedMsg.unpackIndex();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocnoRangeAllocatorImpl::allocDocnoRange");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocnoRangeAllocatorImpl::allocDocnoRange", err.what());
-	return 0;
-}
-}
-
-bool DocnoRangeAllocatorImpl::deallocDocnoRange( const Index& p1, const Index& p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_deallocDocnoRange);
-	msg.packIndex( p1);
-	msg.packIndex( p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocnoRangeAllocatorImpl::deallocDocnoRange");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocnoRangeAllocatorImpl::deallocDocnoRange", err.what());
-	return false;
-}
-}
-
 DocumentAnalyzerContextImpl::~DocumentAnalyzerContextImpl()
 {
 	if (isConst()) return;
@@ -3698,29 +3641,6 @@ try
 }
 }
 
-DocnoRangeAllocatorInterface* StorageClientImpl::createDocnoRangeAllocator( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createDocnoRangeAllocator);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_DocnoRangeAllocator;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	DocnoRangeAllocatorInterface* p0 = new DocnoRangeAllocatorImpl( objId_0, ctx(), false, errorhnd());
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createDocnoRangeAllocator");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createDocnoRangeAllocator", err.what());
-	return 0;
-}
-}
-
 StorageTransactionInterface* StorageClientImpl::createTransaction( )
 {
 try
@@ -4512,7 +4432,7 @@ StorageTransactionImpl::~StorageTransactionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-StorageDocumentInterface* StorageTransactionImpl::createDocument( const std::string& p1, const Index& p2)
+StorageDocumentInterface* StorageTransactionImpl::createDocument( const std::string& p1)
 {
 try
 {
@@ -4520,7 +4440,6 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDocument);
 	msg.packString( p1);
-	msg.packIndex( p2);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StorageDocument;
 	msg.packObject( classId_0, objId_0);
