@@ -112,6 +112,9 @@ public:
 	void packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val);
 	void packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val);
 	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
+	void packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val);
+	void packWeightingFunctionDescription( const WeightingFunctionInterface::Description& val);
+	void packSummarizerFunctionDescription( const SummarizerFunctionInterface::Description& val);
 	void packCrc32();
 	const std::string& content() const
 	{
@@ -178,6 +181,9 @@ public:
 	StatisticsViewerInterface::DocumentFrequencyChange unpackStatisticsViewerDocumentFrequencyChange();
 	QueryProcessorInterface::FunctionType unpackQueryProcessorFunctionType();
 	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();
+	PostingJoinOperatorInterface::Description unpackPostingJoinOperatorDescription();
+	WeightingFunctionInterface::Description unpackWeightingFunctionDescription();
+	SummarizerFunctionInterface::Description unpackSummarizerFunctionDescription();
 	bool unpackCrc32();
 
 	std::size_t position() const

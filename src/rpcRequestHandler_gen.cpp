@@ -1755,7 +1755,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case PostingJoinOperatorConst::Method_getDescription:
 		{
 			RpcSerializer msg;
-			const char* p0;
+			PostingJoinOperatorInterface::Description p0;
 			p0 = obj->getDescription();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -1765,7 +1765,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packCharp( p0);
+			msg.packPostingJoinOperatorDescription( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -2420,27 +2420,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
-		}
-		case QueryProcessorConst::Method_getDescription:
-		{
-			RpcSerializer msg;
-			const char* p0;
-			QueryProcessorInterface::FunctionType p1;
-			std::string p2;
-			p1 = serializedMsg.unpackQueryProcessorFunctionType();
-			p2 = serializedMsg.unpackString();
-			p0 = obj->getDescription(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packCharp( p0);
-			msg.packCrc32();
-			return msg.content();
 		}
 		case QueryProcessorConst::Method_getFunctionList:
 		{
@@ -4339,7 +4318,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case SummarizerFunctionConst::Method_getDescription:
 		{
 			RpcSerializer msg;
-			const char* p0;
+			SummarizerFunctionInterface::Description p0;
 			p0 = obj->getDescription();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4349,7 +4328,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packCharp( p0);
+			msg.packSummarizerFunctionDescription( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -4579,27 +4558,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
-		}
-		case TextProcessorConst::Method_getDescription:
-		{
-			RpcSerializer msg;
-			const char* p0;
-			TextProcessorInterface::FunctionType p1;
-			std::string p2;
-			p1 = serializedMsg.unpackTextProcessorFunctionType();
-			p2 = serializedMsg.unpackString();
-			p0 = obj->getDescription(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packCharp( p0);
-			msg.packCrc32();
-			return msg.content();
 		}
 		case TextProcessorConst::Method_getFunctionList:
 		{
@@ -5009,7 +4967,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case WeightingFunctionConst::Method_getDescription:
 		{
 			RpcSerializer msg;
-			const char* p0;
+			WeightingFunctionInterface::Description p0;
 			p0 = obj->getDescription();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -5019,7 +4977,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packCharp( p0);
+			msg.packWeightingFunctionDescription( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

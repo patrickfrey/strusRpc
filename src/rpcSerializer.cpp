@@ -553,6 +553,37 @@ void RpcSerializer::packTextProcessorFunctionType( const TextProcessorInterface:
 	packByte((unsigned char)val);
 }
 
+void RpcSerializer::packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val)
+{
+	packString( val.text());
+}
+
+void RpcSerializer::packWeightingFunctionDescription( const WeightingFunctionInterface::Description& val)
+{
+	packString( val.text());
+	packSize( val.param().size());
+	std::vector<WeightingFunctionInterface::Description::Param>::const_iterator vi = val.param().begin(), ve = val.param().end();
+	for (; vi != ve; ++vi)
+	{
+		packByte( (unsigned char)vi->type());
+		packString( vi->name());
+		packString( vi->text());
+	}
+}
+
+void RpcSerializer::packSummarizerFunctionDescription( const SummarizerFunctionInterface::Description& val)
+{
+	packString( val.text());
+	packSize( val.param().size());
+	std::vector<SummarizerFunctionInterface::Description::Param>::const_iterator vi = val.param().begin(), ve = val.param().end();
+	for (; vi != ve; ++vi)
+	{
+		packByte( (unsigned char)vi->type());
+		packString( vi->name());
+		packString( vi->text());
+	}
+}
+
 void RpcSerializer::packCrc32()
 {
 #if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM
@@ -983,6 +1014,39 @@ QueryProcessorInterface::FunctionType RpcDeserializer::unpackQueryProcessorFunct
 TextProcessorInterface::FunctionType RpcDeserializer::unpackTextProcessorFunctionType()
 {
 	return (TextProcessorInterface::FunctionType)unpackByte();
+}
+
+PostingJoinOperatorInterface::Description RpcDeserializer::unpackPostingJoinOperatorDescription()
+{
+	return PostingJoinOperatorInterface::Description( unpackString());
+}
+
+WeightingFunctionInterface::Description RpcDeserializer::unpackWeightingFunctionDescription()
+{
+	WeightingFunctionInterface::Description rt( unpackString());
+	unsigned int ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		WeightingFunctionInterface::Description::Param::Type type = (WeightingFunctionInterface::Description::Param::Type)unpackByte();
+		std::string name( unpackString());
+		std::string text( unpackString());
+		rt( type, name, text);
+	}
+	return rt;
+}
+
+SummarizerFunctionInterface::Description RpcDeserializer::unpackSummarizerFunctionDescription()
+{
+	SummarizerFunctionInterface::Description rt( unpackString());
+	unsigned int ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		SummarizerFunctionInterface::Description::Param::Type type = (SummarizerFunctionInterface::Description::Param::Type)unpackByte();
+		std::string name( unpackString());
+		std::string text( unpackString());
+		rt( type, name, text);
+	}
+	return rt;
 }
 
 

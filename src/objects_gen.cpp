@@ -1933,7 +1933,7 @@ PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const s
 	return 0;
 }
 
-const char* PostingJoinOperatorImpl::getDescription( ) const
+PostingJoinOperatorInterface::Description PostingJoinOperatorImpl::getDescription( ) const
 {
 try
 {
@@ -1944,14 +1944,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	PostingJoinOperatorInterface::Description p0 = serializedMsg.unpackPostingJoinOperatorDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingJoinOperatorImpl::getDescription");
-	return 0;
+	return PostingJoinOperatorInterface::Description();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingJoinOperatorImpl::getDescription", err.what());
-	return 0;
+	return PostingJoinOperatorInterface::Description();
 }
 }
 
@@ -2653,30 +2653,6 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::getSummarizerFunction", err.what());
-	return 0;
-}
-}
-
-const char* QueryProcessorImpl::getDescription( QueryProcessorInterface::FunctionType p1, const std::string& p2) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_getDescription);
-	msg.packQueryProcessorFunctionType( p1);
-	msg.packString( p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getDescription");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::getDescription", err.what());
 	return 0;
 }
 }
@@ -4783,7 +4759,7 @@ try
 }
 }
 
-const char* SummarizerFunctionImpl::getDescription( ) const
+SummarizerFunctionInterface::Description SummarizerFunctionImpl::getDescription( ) const
 {
 try
 {
@@ -4794,14 +4770,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	SummarizerFunctionInterface::Description p0 = serializedMsg.unpackSummarizerFunctionDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionImpl::getDescription");
-	return 0;
+	return SummarizerFunctionInterface::Description();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionImpl::getDescription", err.what());
-	return 0;
+	return SummarizerFunctionInterface::Description();
 }
 }
 
@@ -5052,30 +5028,6 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::defineAggregator", err.what());
 	return void();
-}
-}
-
-const char* TextProcessorImpl::getDescription( TextProcessorInterface::FunctionType p1, const std::string& p2) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_getDescription);
-	msg.packTextProcessorFunctionType( p1);
-	msg.packString( p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getDescription");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getDescription", err.what());
-	return 0;
 }
 }
 
@@ -5511,7 +5463,7 @@ try
 }
 }
 
-const char* WeightingFunctionImpl::getDescription( ) const
+WeightingFunctionInterface::Description WeightingFunctionImpl::getDescription( ) const
 {
 try
 {
@@ -5522,14 +5474,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	WeightingFunctionInterface::Description p0 = serializedMsg.unpackWeightingFunctionDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionImpl::getDescription");
-	return 0;
+	return WeightingFunctionInterface::Description();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionImpl::getDescription", err.what());
-	return 0;
+	return WeightingFunctionInterface::Description();
 }
 }
 

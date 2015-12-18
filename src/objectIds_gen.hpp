@@ -400,7 +400,6 @@ public:
 		Method_getWeightingFunction,
 		Method_defineSummarizerFunction,
 		Method_getSummarizerFunction,
-		Method_getDescription,
 		Method_getFunctionList
 	};
 };
@@ -669,7 +668,6 @@ public:
 		Method_defineTokenizer,
 		Method_defineNormalizer,
 		Method_defineAggregator,
-		Method_getDescription,
 		Method_getFunctionList
 	};
 };
