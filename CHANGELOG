@@ -1,25 +1,29 @@
-strusrpc (0.3.0)
+strusRpc (0.3.1)
+  * fixing versioning problems on the Open Suse build cluster
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Fri, 21 Dec 2015 09:38:00 +0100
+
+strusRpc (0.3.0)
   * adapted core interface changes: better introspection for functions
   * adapted core interface changes: removed docno allocator interface and fdatasync on every new document insert when not using the docno allocator
- -- patrickfrey <patrickpfrey@yahoo.com>  Fri, 18 Dec 2015 15:00:00 +0100
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Fri, 18 Dec 2015 15:00:00 +0100
 
-strusrpc (0.2.6)
+strusRpc (0.2.6)
   * adapted interface changes in core: added interfaces for introspection (user names, docids, term types, term values)
- -- patrickfrey <patrickpfrey@yahoo.com>  Tue, 1 Dec 2015 20:54:00 +0100
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Tue, 1 Dec 2015 20:54:00 +0100
 
-strusrpc (0.2.5)
+strusRpc (0.2.5)
   * adapt core interface change: define method PeerMessageQueue start for register/deregister of peers
   * adapt changes from core: change peer message processing interface
- -- patrickfrey <patrickpfrey@yahoo.com>  Tue, 1 Dec 2015 13:23:22 +0100
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Tue, 1 Dec 2015 13:23:22 +0100
 
-strusrpc (0.2.4)
+strusRpc (0.2.4)
   * incremented version to 0.2.4 to resolve OBS trouble with dependencies
   * define dependency from other strus packages by minor version instead of patch version
- -- patrickfrey <patrickpfrey@yahoo.com>  Thu, 26 Nov 2015 09:09:00 +0100
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Thu, 26 Nov 2015 09:09:00 +0100
 
 strusRpc (0.2.3)
   * synchronized version with strus core: increment version to 0.2.3
- -- patrickfrey <patrickpfrey@yahoo.com>  Tue, 24 Nov 2015 19:49:41 +0100
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Tue, 24 Nov 2015 19:49:41 +0100
 
 strusRpc (0.2.2)
   * propagate version from CMakeLists.txt into packages
@@ -27,7 +31,7 @@ strusRpc (0.2.2)
   * fixed bug in client/server: Wrong handling of EAGAIN/EWOULDBLOCK
   * fixed compile error when LOWLEVEL debug is enabled
   * improved error message, if a module could not be loaded
- -- patrickfrey <patrickpfrey@yahoo.com>  Tue, 24 Nov 2015 14:35:24 +0100
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Tue, 24 Nov 2015 14:35:24 +0100
 
 strusRpc (0.2.0)
   * adapted strus core interface changes: removed some superfluos methods in query
@@ -58,14 +62,14 @@ strusRpc (0.2.0)
   * make visibility default (all visible) for temporarily enable exceptions
   * fixed another SEGFAULT when closing connection before destroying it
   * fixed: invalid call of close connection of libuv of already closed connetion
- -- patrickfrey <patrickpfrey@yahoo.com>  Wed, 11 Nov 2015 02:50:04 +0100
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Wed, 11 Nov 2015 02:50:04 +0100
 
 strusRpc (v0.1.9)
   * adapted peer message handling redesign from strus core
   * put common CMAKE stuff of all strus relaed projects into includes
   * include libuv sources instead of the github project as submodule
   * fixed inconsistency with strus peer interfaces. Take out peer interfaces from RPC
- -- patrickfrey <patrickpfrey@yahoo.com>  Wed, 12 Aug 2015 23:51:58 +0200
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Wed, 12 Aug 2015 23:51:58 +0200
 
 strusRpc (v0.1.8)
   * removed debug code
@@ -79,18 +83,18 @@ strusRpc (v0.1.8)
   * added module for implementing also client base on libuv
   * make CRC32 calculation switch on/off. add timers that can be enabled or disabled
   * added functions to measure time
- -- patrickfrey <patrickpfrey@yahoo.com>  Mon, 3 Aug 2015 15:18:43 +0200
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Mon, 3 Aug 2015 15:18:43 +0200
 
 strusRpc (v0.1.7)
   * fixed bug in logfile support (last checkin)
   * removed remaining traces of libevent, replaced boost CRC32 by own implementation of the standard 1 byte method. Added synchronize answer message (fix protocol error)
   * fixed bug: returning empty answer in synchronize methond instead of empty string
- -- patrickfrey <patrickpfrey@yahoo.com>  Sun, 26 Jul 2015 13:15:26 +0200
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Sun, 26 Jul 2015 13:15:26 +0200
 
 strusRpc (v0.1.6)
   * added possibility to define configuration from file instead as configuration string
   * compile flag -fno-strict-aliasing for libuv
- -- patrickfrey <patrickpfrey@yahoo.com>  Fri, 24 Jul 2015 18:28:16 +0200
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Fri, 24 Jul 2015 18:28:16 +0200
 
 strusRpc (v0.1.5)
   * switch to official version of libuv as subproject
@@ -101,20 +105,20 @@ strusRpc (v0.1.5)
   * first version of strusRpcServer based on libuv instead of libevent
   * temporary checkin
   * fixed: shutdown of server when to many connections arrive
- -- patrickfrey <patrickpfrey@yahoo.com>  Wed, 22 Jul 2015 12:13:56 +0200
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Wed, 22 Jul 2015 12:13:56 +0200
 
 strusRpc (v0.1.4)
   * adapted analyzer interface changes
   * adapted changes in analyzer interface
   * replaced content description interface by a structure
   * adapted analyzer interface changes: content description interface added
- -- patrickfrey <patrickpfrey@yahoo.com>  Tue, 14 Jul 2015 11:22:22 +0200
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Tue, 14 Jul 2015 11:22:22 +0200
 
 strusRpc (v0.1.3)
   * added option -s to server for implicit creation of storage if it does not exist yet
- -- patrickfrey <patrickpfrey@yahoo.com>  Fri, 10 Jul 2015 13:52:30 +0200
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Fri, 10 Jul 2015 13:52:30 +0200
 
 strusRpc (v0.1.2)
   * Initial revision
- -- patrickfrey <patrickpfrey@yahoo.com>  Thu, 9 Jul 2015 15:34:15 +0200
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Thu, 9 Jul 2015 15:34:15 +0200
 
