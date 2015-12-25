@@ -382,24 +382,6 @@ DatabaseClientImpl::~DatabaseClientImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void DatabaseClientImpl::close( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_close);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseClientImpl::close");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseClientImpl::close", err.what());
-	return void();
-}
-}
-
 DatabaseTransactionInterface* DatabaseClientImpl::createTransaction( )
 {
 try
@@ -1018,63 +1000,6 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::rollback", err.what());
 	return void();
-}
-}
-
-DocnoRangeAllocatorImpl::~DocnoRangeAllocatorImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-Index DocnoRangeAllocatorImpl::allocDocnoRange( const Index& p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_allocDocnoRange);
-	msg.packIndex( p1);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	Index p0 = serializedMsg.unpackIndex();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocnoRangeAllocatorImpl::allocDocnoRange");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocnoRangeAllocatorImpl::allocDocnoRange", err.what());
-	return 0;
-}
-}
-
-bool DocnoRangeAllocatorImpl::deallocDocnoRange( const Index& p1, const Index& p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_deallocDocnoRange);
-	msg.packIndex( p1);
-	msg.packIndex( p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocnoRangeAllocatorImpl::deallocDocnoRange");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocnoRangeAllocatorImpl::deallocDocnoRange", err.what());
-	return false;
 }
 }
 
@@ -1820,231 +1745,6 @@ try
 }
 }
 
-PeerMessageBuilderImpl::~PeerMessageBuilderImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-void PeerMessageBuilderImpl::setNofDocumentsInsertedChange( int p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_setNofDocumentsInsertedChange);
-	msg.packInt( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PeerMessageBuilderImpl::setNofDocumentsInsertedChange");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PeerMessageBuilderImpl::setNofDocumentsInsertedChange", err.what());
-	return void();
-}
-}
-
-void PeerMessageBuilderImpl::addDfChange( const char* p1, const char* p2, int p3, bool p4)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_addDfChange);
-	msg.packCharp( p1);
-	msg.packCharp( p2);
-	msg.packInt( p3);
-	msg.packBool( p4);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PeerMessageBuilderImpl::addDfChange");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PeerMessageBuilderImpl::addDfChange", err.what());
-	return void();
-}
-}
-
-void PeerMessageBuilderImpl::start( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_start);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PeerMessageBuilderImpl::start");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PeerMessageBuilderImpl::start", err.what());
-	return void();
-}
-}
-
-void PeerMessageBuilderImpl::rollback( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_rollback);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PeerMessageBuilderImpl::rollback");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PeerMessageBuilderImpl::rollback", err.what());
-	return void();
-}
-}
-
-bool PeerMessageBuilderImpl::fetchMessage( const char*& p1, std::size_t& p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_fetchMessage);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	const char* bp1;
-	serializedMsg.unpackBuffer( bp1, p2);
-	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PeerMessageBuilderImpl::fetchMessage");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PeerMessageBuilderImpl::fetchMessage", err.what());
-	return false;
-}
-}
-
-PeerMessageProcessorImpl::~PeerMessageProcessorImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-PeerMessageViewerInterface* PeerMessageProcessorImpl::createViewer( const char* p1, std::size_t p2) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createViewer);
-	msg.packBuffer( p1, p2);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_PeerMessageViewer;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	PeerMessageViewerInterface* p0 = new PeerMessageViewerImpl( objId_0, ctx(), false, errorhnd());
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PeerMessageProcessorImpl::createViewer");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PeerMessageProcessorImpl::createViewer", err.what());
-	return 0;
-}
-}
-
-PeerMessageBuilderInterface* PeerMessageProcessorImpl::createBuilder( const PeerMessageProcessorInterface::BuilderOptions& p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createBuilder);
-	msg.packPeerMessageProcessorBuilderOptions( p1);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_PeerMessageBuilder;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	PeerMessageBuilderInterface* p0 = new PeerMessageBuilderImpl( objId_0, ctx(), false, errorhnd());
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PeerMessageProcessorImpl::createBuilder");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PeerMessageProcessorImpl::createBuilder", err.what());
-	return 0;
-}
-}
-
-PeerMessageViewerImpl::~PeerMessageViewerImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-int PeerMessageViewerImpl::nofDocumentsInsertedChange( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_nofDocumentsInsertedChange);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	int p0 = serializedMsg.unpackInt();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PeerMessageViewerImpl::nofDocumentsInsertedChange");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PeerMessageViewerImpl::nofDocumentsInsertedChange", err.what());
-	return 0;
-}
-}
-
-bool PeerMessageViewerImpl::nextDfChange( PeerMessageViewerInterface::DocumentFrequencyChange& p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_nextDfChange);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	p1 = serializedMsg.unpackPeerMessageViewerDocumentFrequencyChange();
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PeerMessageViewerImpl::nextDfChange");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PeerMessageViewerImpl::nextDfChange", err.what());
-	return false;
-}
-}
-
 PostingIteratorImpl::~PostingIteratorImpl()
 {
 	if (isConst()) return;
@@ -2233,7 +1933,7 @@ PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const s
 	return 0;
 }
 
-const char* PostingJoinOperatorImpl::getDescription( ) const
+PostingJoinOperatorInterface::Description PostingJoinOperatorImpl::getDescription( ) const
 {
 try
 {
@@ -2244,14 +1944,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	PostingJoinOperatorInterface::Description p0 = serializedMsg.unpackPostingJoinOperatorDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingJoinOperatorImpl::getDescription");
-	return 0;
+	return PostingJoinOperatorInterface::Description();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingJoinOperatorImpl::getDescription", err.what());
-	return 0;
+	return PostingJoinOperatorInterface::Description();
 }
 }
 
@@ -2629,6 +2329,46 @@ try
 }
 }
 
+void QueryImpl::defineTermStatistics( const std::string& p1, const std::string& p2, const TermStatistics& p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineTermStatistics);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packTermStatistics( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::defineTermStatistics");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::defineTermStatistics", err.what());
+	return void();
+}
+}
+
+void QueryImpl::defineGlobalStatistics( const GlobalStatistics& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineGlobalStatistics);
+	msg.packGlobalStatistics( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::defineGlobalStatistics");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::defineGlobalStatistics", err.what());
+	return void();
+}
+}
+
 void QueryImpl::defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
 {
 try
@@ -2917,30 +2657,6 @@ try
 }
 }
 
-const char* QueryProcessorImpl::getDescription( QueryProcessorInterface::FunctionType p1, const std::string& p2) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_getDescription);
-	msg.packQueryProcessorFunctionType( p1);
-	msg.packString( p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getDescription");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::getDescription", err.what());
-	return 0;
-}
-}
-
 std::vector<std::string> QueryProcessorImpl::getFunctionList( QueryProcessorInterface::FunctionType p1) const
 {
 try
@@ -3156,6 +2872,265 @@ try
 }
 }
 
+StatisticsBuilderImpl::~StatisticsBuilderImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void StatisticsBuilderImpl::setNofDocumentsInsertedChange( int p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_setNofDocumentsInsertedChange);
+	msg.packInt( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::setNofDocumentsInsertedChange");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::setNofDocumentsInsertedChange", err.what());
+	return void();
+}
+}
+
+void StatisticsBuilderImpl::addDfChange( const char* p1, const char* p2, int p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addDfChange);
+	msg.packCharp( p1);
+	msg.packCharp( p2);
+	msg.packInt( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::addDfChange");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::addDfChange", err.what());
+	return void();
+}
+}
+
+void StatisticsBuilderImpl::start( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_start);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::start");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::start", err.what());
+	return void();
+}
+}
+
+void StatisticsBuilderImpl::rollback( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_rollback);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::rollback");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::rollback", err.what());
+	return void();
+}
+}
+
+bool StatisticsBuilderImpl::fetchMessage( const char*& p1, std::size_t& p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_fetchMessage);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	const char* bp1;
+	serializedMsg.unpackBuffer( bp1, p2);
+	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::fetchMessage");
+	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::fetchMessage", err.what());
+	return false;
+}
+}
+
+StatisticsIteratorImpl::~StatisticsIteratorImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+bool StatisticsIteratorImpl::getNext( const char*& p1, std::size_t& p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getNext);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	const char* bp1;
+	serializedMsg.unpackBuffer( bp1, p2);
+	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsIteratorImpl::getNext");
+	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsIteratorImpl::getNext", err.what());
+	return false;
+}
+}
+
+StatisticsProcessorImpl::~StatisticsProcessorImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+StatisticsViewerInterface* StatisticsProcessorImpl::createViewer( const char* p1, std::size_t p2) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createViewer);
+	msg.packBuffer( p1, p2);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StatisticsViewer;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	StatisticsViewerInterface* p0 = new StatisticsViewerImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsProcessorImpl::createViewer");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsProcessorImpl::createViewer", err.what());
+	return 0;
+}
+}
+
+StatisticsBuilderInterface* StatisticsProcessorImpl::createBuilder( const StatisticsProcessorInterface::BuilderOptions& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createBuilder);
+	msg.packStatisticsProcessorBuilderOptions( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StatisticsBuilder;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	StatisticsBuilderInterface* p0 = new StatisticsBuilderImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsProcessorImpl::createBuilder");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsProcessorImpl::createBuilder", err.what());
+	return 0;
+}
+}
+
+StatisticsViewerImpl::~StatisticsViewerImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+int StatisticsViewerImpl::nofDocumentsInsertedChange( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_nofDocumentsInsertedChange);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	int p0 = serializedMsg.unpackInt();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsViewerImpl::nofDocumentsInsertedChange");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsViewerImpl::nofDocumentsInsertedChange", err.what());
+	return 0;
+}
+}
+
+bool StatisticsViewerImpl::nextDfChange( StatisticsViewerInterface::DocumentFrequencyChange& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_nextDfChange);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	p1 = serializedMsg.unpackStatisticsViewerDocumentFrequencyChange();
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsViewerImpl::nextDfChange");
+	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsViewerImpl::nextDfChange", err.what());
+	return false;
+}
+}
+
 StorageAlterMetaDataTableImpl::~StorageAlterMetaDataTableImpl()
 {
 	if (isConst()) return;
@@ -3315,24 +3290,6 @@ StorageClientImpl::~StorageClientImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void StorageClientImpl::close( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_close);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::close");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::close", err.what());
-	return void();
-}
-}
-
 PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const std::string& p1, const std::string& p2) const
 {
 try
@@ -3406,35 +3363,13 @@ try
 }
 }
 
-GlobalCounter StorageClientImpl::globalNofDocumentsInserted( ) const
+Index StorageClientImpl::nofDocumentsInserted( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_globalNofDocumentsInserted);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	GlobalCounter p0 = serializedMsg.unpackGlobalCounter();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::globalNofDocumentsInserted");
-	return GlobalCounter();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::globalNofDocumentsInserted", err.what());
-	return GlobalCounter();
-}
-}
-
-Index StorageClientImpl::localNofDocumentsInserted( ) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_localNofDocumentsInserted);
+	msg.packByte( Method_nofDocumentsInserted);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -3442,45 +3377,21 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::localNofDocumentsInserted");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::nofDocumentsInserted");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::localNofDocumentsInserted", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::nofDocumentsInserted", err.what());
 	return 0;
 }
 }
 
-GlobalCounter StorageClientImpl::globalDocumentFrequency( const std::string& p1, const std::string& p2) const
+Index StorageClientImpl::documentFrequency( const std::string& p1, const std::string& p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_globalDocumentFrequency);
-	msg.packString( p1);
-	msg.packString( p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	GlobalCounter p0 = serializedMsg.unpackGlobalCounter();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::globalDocumentFrequency");
-	return GlobalCounter();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::globalDocumentFrequency", err.what());
-	return GlobalCounter();
-}
-}
-
-Index StorageClientImpl::localDocumentFrequency( const std::string& p1, const std::string& p2) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_localDocumentFrequency);
+	msg.packByte( Method_documentFrequency);
 	msg.packString( p1);
 	msg.packString( p2);
 	msg.packCrc32();
@@ -3490,10 +3401,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::localDocumentFrequency");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::documentFrequency");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::localDocumentFrequency", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::documentFrequency", err.what());
 	return 0;
 }
 }
@@ -3539,6 +3450,98 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::documentNumber", err.what());
+	return 0;
+}
+}
+
+ValueIteratorInterface* StorageClientImpl::createTermTypeIterator( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createTermTypeIterator);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ValueIterator;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ValueIteratorInterface* p0 = new ValueIteratorImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createTermTypeIterator");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createTermTypeIterator", err.what());
+	return 0;
+}
+}
+
+ValueIteratorInterface* StorageClientImpl::createTermValueIterator( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createTermValueIterator);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ValueIterator;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ValueIteratorInterface* p0 = new ValueIteratorImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createTermValueIterator");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createTermValueIterator", err.what());
+	return 0;
+}
+}
+
+ValueIteratorInterface* StorageClientImpl::createDocIdIterator( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createDocIdIterator);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ValueIterator;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ValueIteratorInterface* p0 = new ValueIteratorImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createDocIdIterator");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createDocIdIterator", err.what());
+	return 0;
+}
+}
+
+ValueIteratorInterface* StorageClientImpl::createUserNameIterator( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createUserNameIterator);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ValueIterator;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ValueIteratorInterface* p0 = new ValueIteratorImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createUserNameIterator");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createUserNameIterator", err.what());
 	return 0;
 }
 }
@@ -3614,29 +3617,6 @@ try
 }
 }
 
-DocnoRangeAllocatorInterface* StorageClientImpl::createDocnoRangeAllocator( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createDocnoRangeAllocator);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_DocnoRangeAllocator;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	DocnoRangeAllocatorInterface* p0 = new DocnoRangeAllocatorImpl( objId_0, ctx(), false, errorhnd());
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createDocnoRangeAllocator");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createDocnoRangeAllocator", err.what());
-	return 0;
-}
-}
-
 StorageTransactionInterface* StorageClientImpl::createTransaction( )
 {
 try
@@ -3660,96 +3640,74 @@ try
 }
 }
 
-void StorageClientImpl::definePeerMessageProcessor( const PeerMessageProcessorInterface* p1)
-{
-	errorhnd()->report(_TXT("the method '%s' is not implemented for RPC"),"definePeerMessageProcessor");
-	return void();
-}
-
-void StorageClientImpl::startPeerInit( )
+StatisticsIteratorInterface* StorageClientImpl::createInitStatisticsIterator( bool p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_startPeerInit);
+	msg.packByte( Method_createInitStatisticsIterator);
+	msg.packBool( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StatisticsIterator;
+	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	StatisticsIteratorInterface* p0 = new StatisticsIteratorImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::startPeerInit");
-	return void();
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createInitStatisticsIterator");
+	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::startPeerInit", err.what());
-	return void();
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createInitStatisticsIterator", err.what());
+	return 0;
 }
 }
 
-void StorageClientImpl::pushPeerMessage( const char* p1, std::size_t p2)
+StatisticsIteratorInterface* StorageClientImpl::createUpdateStatisticsIterator( )
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_pushPeerMessage);
-	msg.packBuffer( p1, p2);
+	msg.packByte( Method_createUpdateStatisticsIterator);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StatisticsIterator;
+	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	StatisticsIteratorInterface* p0 = new StatisticsIteratorImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::pushPeerMessage");
-	return void();
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createUpdateStatisticsIterator");
+	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::pushPeerMessage", err.what());
-	return void();
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createUpdateStatisticsIterator", err.what());
+	return 0;
 }
 }
 
-bool StorageClientImpl::fetchPeerReply( const char*& p1, std::size_t& p2)
+const StatisticsProcessorInterface* StorageClientImpl::getStatisticsProcessor( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_fetchPeerReply);
+	msg.packByte( Method_getStatisticsProcessor);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StatisticsProcessor;
+	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	const char* bp1;
-	serializedMsg.unpackBuffer( bp1, p2);
-	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
+	ctx()->rpc_sendMessage( msg.content());
+	StatisticsProcessorImpl const_0( objId_0, ctx(), true, errorhnd());
+	const StatisticsProcessorInterface* p0 = (const StatisticsProcessorImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::fetchPeerReply");
-	return false;
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::getStatisticsProcessor");
+	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::fetchPeerReply", err.what());
-	return false;
-}
-}
-
-bool StorageClientImpl::fetchPeerMessage( const char*& p1, std::size_t& p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_fetchPeerMessage);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	const char* bp1;
-	serializedMsg.unpackBuffer( bp1, p2);
-	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::fetchPeerMessage");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::fetchPeerMessage", err.what());
-	return false;
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::getStatisticsProcessor", err.what());
+	return 0;
 }
 }
 
@@ -4127,7 +4085,7 @@ StorageImpl::~StorageImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-StorageClientInterface* StorageImpl::createClient( const std::string& p1, DatabaseClientInterface* p2) const
+StorageClientInterface* StorageImpl::createClient( const std::string& p1, DatabaseClientInterface* p2, const StatisticsProcessorInterface* p3) const
 {
 try
 {
@@ -4138,6 +4096,9 @@ try
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "DatabaseClient");
 	msg.packObject( impl_2->classId(), impl_2->objId());
+	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
+	if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "StatisticsProcessor");
+	msg.packObject( impl_3->classId(), impl_3->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StorageClient;
 	msg.packObject( classId_0, objId_0);
@@ -4341,6 +4302,30 @@ try
 }
 }
 
+const StatisticsProcessorInterface* StorageObjectBuilderImpl::getStatisticsProcessor( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getStatisticsProcessor);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StatisticsProcessor;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	StatisticsProcessorImpl const_0( objId_0, ctx(), true, errorhnd());
+	const StatisticsProcessorInterface* p0 = (const StatisticsProcessorImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getStatisticsProcessor");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getStatisticsProcessor", err.what());
+	return 0;
+}
+}
+
 StorageClientInterface* StorageObjectBuilderImpl::createStorageClient( const std::string& p1) const
 {
 try
@@ -4423,7 +4408,7 @@ StorageTransactionImpl::~StorageTransactionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-StorageDocumentInterface* StorageTransactionImpl::createDocument( const std::string& p1, const Index& p2)
+StorageDocumentInterface* StorageTransactionImpl::createDocument( const std::string& p1)
 {
 try
 {
@@ -4431,7 +4416,6 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDocument);
 	msg.packString( p1);
-	msg.packIndex( p2);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StorageDocument;
 	msg.packObject( classId_0, objId_0);
@@ -4581,7 +4565,7 @@ SummarizerFunctionContextImpl::~SummarizerFunctionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, float p4)
+void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, float p4, const TermStatistics& p5)
 {
 try
 {
@@ -4597,6 +4581,7 @@ try
 		msg.packSummarizationVariable( p3[ii]);
 	}
 	msg.packFloat( p4);
+	msg.packTermStatistics( p5);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -4686,7 +4671,7 @@ try
 }
 }
 
-SummarizerFunctionContextInterface* SummarizerFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2) const
+SummarizerFunctionContextInterface* SummarizerFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const
 {
 try
 {
@@ -4699,6 +4684,7 @@ try
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "MetaDataReader");
 	msg.packObject( impl_2->classId(), impl_2->objId());
+	msg.packGlobalStatistics( p3);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_SummarizerFunctionContext;
 	msg.packObject( classId_0, objId_0);
@@ -4773,7 +4759,7 @@ try
 }
 }
 
-const char* SummarizerFunctionImpl::getDescription( ) const
+SummarizerFunctionInterface::Description SummarizerFunctionImpl::getDescription( ) const
 {
 try
 {
@@ -4784,14 +4770,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	SummarizerFunctionInterface::Description p0 = serializedMsg.unpackSummarizerFunctionDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionImpl::getDescription");
-	return 0;
+	return SummarizerFunctionInterface::Description();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionImpl::getDescription", err.what());
-	return 0;
+	return SummarizerFunctionInterface::Description();
 }
 }
 
@@ -5045,30 +5031,6 @@ try
 }
 }
 
-const char* TextProcessorImpl::getDescription( TextProcessorInterface::FunctionType p1, const std::string& p2) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_getDescription);
-	msg.packTextProcessorFunctionType( p1);
-	msg.packString( p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getDescription");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getDescription", err.what());
-	return 0;
-}
-}
-
 std::vector<std::string> TextProcessorImpl::getFunctionList( TextProcessorInterface::FunctionType p1) const
 {
 try
@@ -5252,6 +5214,63 @@ try
 }
 }
 
+ValueIteratorImpl::~ValueIteratorImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void ValueIteratorImpl::skip( const char* p1, std::size_t p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_skip);
+	msg.packBuffer( p1, p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ValueIteratorImpl::skip");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ValueIteratorImpl::skip", err.what());
+	return void();
+}
+}
+
+std::vector<std::string> ValueIteratorImpl::fetchValues( std::size_t p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_fetchValues);
+	msg.packSize( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ValueIteratorImpl::fetchValues");
+	return std::vector<std::string>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ValueIteratorImpl::fetchValues", err.what());
+	return std::vector<std::string>();
+}
+}
+
 WeightingFunctionContextImpl::~WeightingFunctionContextImpl()
 {
 	if (isConst()) return;
@@ -5262,7 +5281,7 @@ WeightingFunctionContextImpl::~WeightingFunctionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void WeightingFunctionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3)
+void WeightingFunctionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3, const TermStatistics& p4)
 {
 try
 {
@@ -5274,6 +5293,7 @@ try
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PostingIterator");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packFloat( p3);
+	msg.packTermStatistics( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -5358,7 +5378,7 @@ try
 }
 }
 
-WeightingFunctionContextInterface* WeightingFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2) const
+WeightingFunctionContextInterface* WeightingFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const
 {
 try
 {
@@ -5371,6 +5391,7 @@ try
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "MetaDataReader");
 	msg.packObject( impl_2->classId(), impl_2->objId());
+	msg.packGlobalStatistics( p3);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_WeightingFunctionContext;
 	msg.packObject( classId_0, objId_0);
@@ -5442,7 +5463,7 @@ try
 }
 }
 
-const char* WeightingFunctionImpl::getDescription( ) const
+WeightingFunctionInterface::Description WeightingFunctionImpl::getDescription( ) const
 {
 try
 {
@@ -5453,14 +5474,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	WeightingFunctionInterface::Description p0 = serializedMsg.unpackWeightingFunctionDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionImpl::getDescription");
-	return 0;
+	return WeightingFunctionInterface::Description();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionImpl::getDescription", err.what());
-	return 0;
+	return WeightingFunctionInterface::Description();
 }
 }
 

@@ -474,11 +474,17 @@ static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 	unsigned int nn;
 	unsigned int bufidx = 0;
 
-#ifdef STRUS_LOWLEVEL_DEBUG
-	if (conn->logf) fprintf( conn->logf, "read callback called (nread %d)\n", (int)nread);
-#endif
-	if (nread > 0)
+	if (nread == 0)
 	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		if (conn->logf) fprintf( conn->logf, "read callback called (EAGAIN)\n");
+#endif
+	}
+	else if (nread > 0)
+	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		if (conn->logf) fprintf( conn->logf, "read callback called (nread %d)\n", (int)nread);
+#endif
 		if (conn->outputstate < sizeof(conn->outputsize))
 		{
 			dp = (unsigned char*)&conn->outputsize + conn->outputstate;
@@ -556,8 +562,23 @@ static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 #endif
 		}
 	}
+	else if (nread == UV_EOF)
+	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		if (conn->logf) fprintf( conn->logf, "read callback called (EOF)\n");
+#endif
+		if (conn->logf) fprintf( conn->logf, "disconnected (%s)\n", "got eof");
+		if (!uv_is_closing((uv_handle_t*)handle))
+		{
+			uv_close( (uv_handle_t*)handle, on_close);
+		}
+		uv_stop( &conn->loop);
+	}
 	else
 	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		if (conn->logf) fprintf( conn->logf, "read callback called (system error %u)\n", -(int)nread);
+#endif
 		if (conn->syserrno == 0)
 		{
 			conn->syserrno = nread;

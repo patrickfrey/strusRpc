@@ -72,6 +72,8 @@ static void printUsage()
 	std::cout << "    " << _TXT("Search modules to load first in <DIR>") << std::endl;
 	std::cout << "-R|--resourcedir <DIR>" << std::endl;
 	std::cout << "    " << _TXT("Define a resource path <DIR> for the analyzer") << std::endl;
+	std::cout << "-P|--peermsgproc <NAME>" << std::endl;
+	std::cout << "    " << _TXT("Define the peer message processor <NAME>") << std::endl;
 	std::cout << "-p|--port <PORT>" << std::endl;
 	std::cout << "    " << _TXT("Define the port to listen for requests as <PORT> (default 7181)") << std::endl;
 	std::cout << "-s|--storage <CONFIG>" << std::endl;
@@ -308,7 +310,8 @@ int main( int argc, const char* argv[])
 	std::vector<std::string> moduledirs;
 	std::vector<std::string> modules;
 	std::vector<std::string> resourcedirs;
-	std::vector<std::string> globalstatfiles;
+	std::string peermsgproc;
+	bool has_peermsgproc = false;
 	std::string storageconfig;
 	bool doCreateIfNotExist = false;
 	unsigned int nofThreads = 0;
@@ -345,6 +348,13 @@ int main( int argc, const char* argv[])
 				++argi;
 				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--resourcedir");
 				resourcedirs.push_back( argv[argi]);
+			}
+			else if (0==std::strcmp( argv[argi], "-P") || 0==std::strcmp( argv[argi], "--peermsgproc"))
+			{
+				++argi;
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--peermsgproc");
+				peermsgproc = argv[argi];
+				has_peermsgproc = true;
 			}
 			else if (0==std::strcmp( argv[argi], "-p") || 0==std::strcmp( argv[argi], "--port"))
 			{
@@ -391,12 +401,6 @@ int main( int argc, const char* argv[])
 			else if (0==std::strcmp( argv[argi], "-c") || 0==std::strcmp( argv[argi], "--create"))
 			{
 				doCreateIfNotExist = true;
-			}
-			else if (0==std::strcmp( argv[argi], "-g") || 0==std::strcmp( argv[argi], "--globalstats"))
-			{
-				++argi;
-				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--storage");
-				globalstatfiles.push_back( argv[argi]);
 			}
 			else if (0==std::strcmp( argv[argi], "-t") || 0==std::strcmp( argv[argi], "--threads"))
 			{
@@ -446,6 +450,10 @@ int main( int argc, const char* argv[])
 			g_moduleLoader->addModulePath( *di);
 		}
 		moduleLoader->addSystemModulePath();
+		if (has_peermsgproc)
+		{
+			moduleLoader->defineStatisticsProcessor( peermsgproc);
+		}
 		std::vector<std::string>::const_iterator
 			mi = modules.begin(), me = modules.end();
 		for (; mi != me; ++mi)
@@ -458,7 +466,10 @@ int main( int argc, const char* argv[])
 		{
 			g_moduleLoader->addResourcePath( *pi);
 		}
-
+		if (g_errorBuffer->hasError())
+		{
+			throw strus::runtime_error(_TXT("error in initialization: %s"), g_errorBuffer->fetchError());
+		}
 		std::auto_ptr<strus::StorageObjectBuilderInterface>
 			storageBuilder( g_moduleLoader->createStorageObjectBuilder());
 		if (!storageBuilder.get())
@@ -489,23 +500,6 @@ int main( int argc, const char* argv[])
 			}
 			std::cerr << _TXT("strus RPC server is hosting storage ") << "'" << storageconfig << "'" << std::endl;
 			g_storageClient = storageClient.get();
-		}
-
-		// Load global statistics from file if defined:
-		std::vector<std::string>::const_iterator
-			gi = globalstatfiles.begin(), ge = globalstatfiles.end();
-		for (; gi != ge; ++gi)
-		{
-			std::cerr << _TXT("strus RPC server loading global statistics from file: ") << *gi << std::endl;
-			std::string content;
-			unsigned int ec = strus::readFile( *gi, content);
-			if (ec)
-			{
-				std::ostringstream msg;
-				msg << ec;
-				throw strus::runtime_error( _TXT( "error reading global statistics file '%s' (system error code %u)"), gi->c_str(), ec);
-			}
-			storageClient->pushPeerMessage( content.c_str(), content.size());
 		}
 
 		// Start server:

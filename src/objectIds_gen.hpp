@@ -42,7 +42,6 @@ enum ClassId
 	ClassId_DatabaseCursor,
 	ClassId_Database,
 	ClassId_DatabaseTransaction,
-	ClassId_DocnoRangeAllocator,
 	ClassId_DocumentAnalyzerContext,
 	ClassId_DocumentAnalyzer,
 	ClassId_DocumentClassDetector,
@@ -52,9 +51,6 @@ enum ClassId
 	ClassId_NormalizerFunctionContext,
 	ClassId_NormalizerFunctionInstance,
 	ClassId_NormalizerFunction,
-	ClassId_PeerMessageBuilder,
-	ClassId_PeerMessageProcessor,
-	ClassId_PeerMessageViewer,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
 	ClassId_QueryAnalyzer,
@@ -64,6 +60,10 @@ enum ClassId
 	ClassId_SegmenterContext,
 	ClassId_SegmenterInstance,
 	ClassId_Segmenter,
+	ClassId_StatisticsBuilder,
+	ClassId_StatisticsIterator,
+	ClassId_StatisticsProcessor,
+	ClassId_StatisticsViewer,
 	ClassId_StorageAlterMetaDataTable,
 	ClassId_StorageClient,
 	ClassId_StorageDocument,
@@ -79,6 +79,7 @@ enum ClassId
 	ClassId_TokenizerFunctionContext,
 	ClassId_TokenizerFunctionInstance,
 	ClassId_TokenizerFunction,
+	ClassId_ValueIterator,
 	ClassId_WeightingFunctionContext,
 	ClassId_WeightingFunctionInstance,
 	ClassId_WeightingFunction
@@ -147,7 +148,6 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_close,
 		Method_createTransaction,
 		Method_createCursor,
 		Method_createBackupCursor,
@@ -201,17 +201,6 @@ public:
 		Method_removeSubTree,
 		Method_commit,
 		Method_rollback
-	};
-};
-
-class DocnoRangeAllocatorConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_allocDocnoRange,
-		Method_deallocDocnoRange
 	};
 };
 
@@ -322,42 +311,6 @@ public:
 	};
 };
 
-class PeerMessageBuilderConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_setNofDocumentsInsertedChange,
-		Method_addDfChange,
-		Method_start,
-		Method_rollback,
-		Method_fetchMessage
-	};
-};
-
-class PeerMessageProcessorConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_createViewer,
-		Method_createBuilder
-	};
-};
-
-class PeerMessageViewerConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_nofDocumentsInsertedChange,
-		Method_nextDfChange
-	};
-};
-
 class PostingIteratorConst
 {
 public:
@@ -424,6 +377,8 @@ public:
 		Method_pushExpression,
 		Method_attachVariable,
 		Method_defineFeature,
+		Method_defineTermStatistics,
+		Method_defineGlobalStatistics,
 		Method_defineMetaDataRestriction,
 		Method_addDocumentEvaluationSet,
 		Method_setMaxNofRanks,
@@ -445,7 +400,6 @@ public:
 		Method_getWeightingFunction,
 		Method_defineSummarizerFunction,
 		Method_getSummarizerFunction,
-		Method_getDescription,
 		Method_getFunctionList
 	};
 };
@@ -484,6 +438,52 @@ public:
 	};
 };
 
+class StatisticsBuilderConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_setNofDocumentsInsertedChange,
+		Method_addDfChange,
+		Method_start,
+		Method_rollback,
+		Method_fetchMessage
+	};
+};
+
+class StatisticsIteratorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getNext
+	};
+};
+
+class StatisticsProcessorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createViewer,
+		Method_createBuilder
+	};
+};
+
+class StatisticsViewerConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_nofDocumentsInsertedChange,
+		Method_nextDfChange
+	};
+};
+
 class StorageAlterMetaDataTableConst
 {
 public:
@@ -506,26 +506,24 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_close,
 		Method_createTermPostingIterator,
 		Method_createForwardIterator,
 		Method_createInvAclIterator,
-		Method_globalNofDocumentsInserted,
-		Method_localNofDocumentsInserted,
-		Method_globalDocumentFrequency,
-		Method_localDocumentFrequency,
+		Method_nofDocumentsInserted,
+		Method_documentFrequency,
 		Method_maxDocumentNumber,
 		Method_documentNumber,
+		Method_createTermTypeIterator,
+		Method_createTermValueIterator,
+		Method_createDocIdIterator,
+		Method_createUserNameIterator,
 		Method_documentStatistics,
 		Method_createMetaDataReader,
 		Method_createAttributeReader,
-		Method_createDocnoRangeAllocator,
 		Method_createTransaction,
-		Method_definePeerMessageProcessor,
-		Method_startPeerInit,
-		Method_pushPeerMessage,
-		Method_fetchPeerReply,
-		Method_fetchPeerMessage,
+		Method_createInitStatisticsIterator,
+		Method_createUpdateStatisticsIterator,
+		Method_getStatisticsProcessor,
 		Method_createDocumentChecker,
 		Method_checkStorage,
 		Method_createDump
@@ -596,6 +594,7 @@ public:
 		Method_getStorage,
 		Method_getDatabase,
 		Method_getQueryProcessor,
+		Method_getStatisticsProcessor,
 		Method_createStorageClient,
 		Method_createAlterMetaDataTable,
 		Method_createQueryEval
@@ -669,7 +668,6 @@ public:
 		Method_defineTokenizer,
 		Method_defineNormalizer,
 		Method_defineAggregator,
-		Method_getDescription,
 		Method_getFunctionList
 	};
 };
@@ -703,6 +701,17 @@ public:
 		Method_Destructor,
 		Method_createInstance,
 		Method_getDescription
+	};
+};
+
+class ValueIteratorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_skip,
+		Method_fetchValues
 	};
 };
 

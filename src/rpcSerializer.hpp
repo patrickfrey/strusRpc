@@ -37,6 +37,8 @@
 #include "strus/queryAnalyzerInterface.hpp"
 #include "strus/arithmeticVariant.hpp"
 #include "strus/postingIteratorInterface.hpp"
+#include "strus/termStatistics.hpp"
+#include "strus/globalStatistics.hpp"
 #include "strus/databaseOptions.hpp"
 #include "strus/databaseInterface.hpp"
 #include "strus/databaseCursorInterface.hpp"
@@ -49,8 +51,8 @@
 #include "strus/queryProcessorInterface.hpp"
 #include "strus/weightedDocument.hpp"
 #include "strus/resultDocument.hpp"
-#include "strus/peerMessageProcessorInterface.hpp"
-#include "strus/peerMessageViewerInterface.hpp"
+#include "strus/statisticsProcessorInterface.hpp"
+#include "strus/statisticsViewerInterface.hpp"
 #include "strus/analyzer/token.hpp"
 #include "strus/analyzer/term.hpp"
 #include "strus/analyzer/metaData.hpp"
@@ -84,6 +86,8 @@ public:
 	void packSize( std::size_t size);
 	void packArithmeticVariant( const ArithmeticVariant& val);
 	void packDocumentClass( const DocumentClass& prop);
+	void packTermStatistics( const TermStatistics& stats);
+	void packGlobalStatistics( const GlobalStatistics& stats);
 
 	void packDatabaseOptions( const DatabaseOptions& val);
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
@@ -104,10 +108,13 @@ public:
 	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
 	void packPhrase( const QueryAnalyzerInterface::Phrase& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
-	void packPeerMessageProcessorBuilderOptions( const PeerMessageProcessorInterface::BuilderOptions& val);
-	void packPeerMessageViewerDocumentFrequencyChange( const PeerMessageViewerInterface::DocumentFrequencyChange& val);
+	void packStatisticsProcessorBuilderOptions( const StatisticsProcessorInterface::BuilderOptions& val);
+	void packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val);
 	void packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val);
 	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
+	void packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val);
+	void packWeightingFunctionDescription( const WeightingFunctionInterface::Description& val);
+	void packSummarizerFunctionDescription( const SummarizerFunctionInterface::Description& val);
 	void packCrc32();
 	const std::string& content() const
 	{
@@ -149,6 +156,8 @@ public:
 	std::size_t unpackSize();
 	ArithmeticVariant unpackArithmeticVariant();
 	DocumentClass unpackDocumentClass();
+	TermStatistics unpackTermStatistics();
+	GlobalStatistics unpackGlobalStatistics();
 
 	DatabaseOptions unpackDatabaseOptions();
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();
@@ -168,10 +177,13 @@ public:
 	QueryEvalInterface::FeatureParameter unpackFeatureParameter();
 	QueryAnalyzerInterface::Phrase unpackPhrase();
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();
-	PeerMessageProcessorInterface::BuilderOptions unpackPeerMessageProcessorBuilderOptions();
-	PeerMessageViewerInterface::DocumentFrequencyChange unpackPeerMessageViewerDocumentFrequencyChange();
+	StatisticsProcessorInterface::BuilderOptions unpackStatisticsProcessorBuilderOptions();
+	StatisticsViewerInterface::DocumentFrequencyChange unpackStatisticsViewerDocumentFrequencyChange();
 	QueryProcessorInterface::FunctionType unpackQueryProcessorFunctionType();
 	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();
+	PostingJoinOperatorInterface::Description unpackPostingJoinOperatorDescription();
+	WeightingFunctionInterface::Description unpackWeightingFunctionDescription();
+	SummarizerFunctionInterface::Description unpackSummarizerFunctionDescription();
 	bool unpackCrc32();
 
 	std::size_t position() const

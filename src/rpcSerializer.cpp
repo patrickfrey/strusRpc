@@ -373,6 +373,16 @@ void RpcSerializer::packDocumentClass( const DocumentClass& dclass)
 	packString( dclass.encoding());
 }
 
+void RpcSerializer::packTermStatistics( const TermStatistics& stats)
+{
+	packGlobalCounter( stats.documentFrequency());
+}
+
+void RpcSerializer::packGlobalStatistics( const GlobalStatistics& stats)
+{
+	packGlobalCounter( stats.nofDocumentsInserted());
+}
+
 void RpcSerializer::packDatabaseOptions( const DatabaseOptions& val)
 {
 	packUint( val.opt());
@@ -519,18 +529,17 @@ void RpcSerializer::packDocumentStatisticsType( const StorageClientInterface::Do
 	packByte( val);
 }
 
-void RpcSerializer::packPeerMessageProcessorBuilderOptions( const PeerMessageProcessorInterface::BuilderOptions& val)
+void RpcSerializer::packStatisticsProcessorBuilderOptions( const StatisticsProcessorInterface::BuilderOptions& val)
 {
 	packUint( val.maxBlockSize);
 	packByte( val.set);
 }
 
-void RpcSerializer::packPeerMessageViewerDocumentFrequencyChange( const PeerMessageViewerInterface::DocumentFrequencyChange& val)
+void RpcSerializer::packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val)
 {
 	packCharp( val.type);
 	packCharp( val.value);
 	packInt( val.increment);
-	packBool( val.isnew);
 }
 
 
@@ -542,6 +551,37 @@ void RpcSerializer::packQueryProcessorFunctionType( const QueryProcessorInterfac
 void RpcSerializer::packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val)
 {
 	packByte((unsigned char)val);
+}
+
+void RpcSerializer::packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val)
+{
+	packString( val.text());
+}
+
+void RpcSerializer::packWeightingFunctionDescription( const WeightingFunctionInterface::Description& val)
+{
+	packString( val.text());
+	packSize( val.param().size());
+	std::vector<WeightingFunctionInterface::Description::Param>::const_iterator vi = val.param().begin(), ve = val.param().end();
+	for (; vi != ve; ++vi)
+	{
+		packByte( (unsigned char)vi->type());
+		packString( vi->name());
+		packString( vi->text());
+	}
+}
+
+void RpcSerializer::packSummarizerFunctionDescription( const SummarizerFunctionInterface::Description& val)
+{
+	packString( val.text());
+	packSize( val.param().size());
+	std::vector<SummarizerFunctionInterface::Description::Param>::const_iterator vi = val.param().begin(), ve = val.param().end();
+	for (; vi != ve; ++vi)
+	{
+		packByte( (unsigned char)vi->type());
+		packString( vi->name());
+		packString( vi->text());
+	}
 }
 
 void RpcSerializer::packCrc32()
@@ -745,6 +785,20 @@ DocumentClass RpcDeserializer::unpackDocumentClass()
 	return rt;
 }
 
+TermStatistics RpcDeserializer::unpackTermStatistics()
+{
+	TermStatistics rt;
+	rt.setDocumentFrequency( unpackGlobalCounter());
+	return rt;
+}
+
+GlobalStatistics RpcDeserializer::unpackGlobalStatistics()
+{
+	GlobalStatistics rt;
+	rt.setNofDocumentsInserted( unpackGlobalCounter());
+	return rt;
+}
+
 bool RpcDeserializer::unpackCrc32()
 {
 #if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM	
@@ -766,7 +820,7 @@ bool RpcDeserializer::unpackCrc32()
 	else
 	{
 #ifdef STRUS_LOWLEVEL_DEBUG
-		strus_hexdump( stderr, "CRC32 checksum failed", m_start, size);
+		strus_hexdump( stderr, "CRC32 checksum failed", (const unsigned char*)m_start, (size_t)size);
 #endif
 		return false;
 	}
@@ -934,22 +988,21 @@ StorageClientInterface::DocumentStatisticsType RpcDeserializer::unpackDocumentSt
 	return (StorageClientInterface::DocumentStatisticsType)unpackByte();
 }
 
-PeerMessageProcessorInterface::BuilderOptions RpcDeserializer::unpackPeerMessageProcessorBuilderOptions()
+StatisticsProcessorInterface::BuilderOptions RpcDeserializer::unpackStatisticsProcessorBuilderOptions()
 {
 	unsigned int maxBlockSize = unpackUint();
-	typedef PeerMessageProcessorInterface::BuilderOptions::Set Set;
+	typedef StatisticsProcessorInterface::BuilderOptions::Set Set;
 	Set set = (Set)unpackByte();
-	return PeerMessageProcessorInterface::BuilderOptions( set, maxBlockSize);
+	return StatisticsProcessorInterface::BuilderOptions( set, maxBlockSize);
 }
 
-PeerMessageViewerInterface::DocumentFrequencyChange RpcDeserializer::unpackPeerMessageViewerDocumentFrequencyChange()
+StatisticsViewerInterface::DocumentFrequencyChange RpcDeserializer::unpackStatisticsViewerDocumentFrequencyChange()
 {
-	typedef PeerMessageViewerInterface::DocumentFrequencyChange DocumentFrequencyChange;
+	typedef StatisticsViewerInterface::DocumentFrequencyChange DocumentFrequencyChange;
 	DocumentFrequencyChange rt;
 	rt.type = unpackConstCharp();
 	rt.value = unpackConstCharp();
 	rt.increment = unpackInt();
-	rt.isnew = unpackBool();
 	return rt;
 }
 
@@ -961,6 +1014,39 @@ QueryProcessorInterface::FunctionType RpcDeserializer::unpackQueryProcessorFunct
 TextProcessorInterface::FunctionType RpcDeserializer::unpackTextProcessorFunctionType()
 {
 	return (TextProcessorInterface::FunctionType)unpackByte();
+}
+
+PostingJoinOperatorInterface::Description RpcDeserializer::unpackPostingJoinOperatorDescription()
+{
+	return PostingJoinOperatorInterface::Description( unpackString());
+}
+
+WeightingFunctionInterface::Description RpcDeserializer::unpackWeightingFunctionDescription()
+{
+	WeightingFunctionInterface::Description rt( unpackString());
+	unsigned int ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		WeightingFunctionInterface::Description::Param::Type type = (WeightingFunctionInterface::Description::Param::Type)unpackByte();
+		std::string name( unpackString());
+		std::string text( unpackString());
+		rt( type, name, text);
+	}
+	return rt;
+}
+
+SummarizerFunctionInterface::Description RpcDeserializer::unpackSummarizerFunctionDescription()
+{
+	SummarizerFunctionInterface::Description rt( unpackString());
+	unsigned int ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		SummarizerFunctionInterface::Description::Param::Type type = (SummarizerFunctionInterface::Description::Param::Type)unpackByte();
+		std::string name( unpackString());
+		std::string text( unpackString());
+		rt( type, name, text);
+	}
+	return rt;
 }
 
 

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use 5.014;
+use 5.010;
 
 my $num_args = $#ARGV + 1;
 if ($num_args == 0)
@@ -145,7 +145,7 @@ my %notImplMethods = ();
 $notImplMethods{"checkStorage"} = 1;				# ...ostream reference input cannot be handled
 $notImplMethods{"subExpressions"} = 1;				# ...vector of const object return can not be handled
 $notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
-$notImplMethods{"definePeerMessageProcessor"} = 1;		# ...peer message processor is internal
+$notImplMethods{"defineStatisticsProcessor"} = 1;		# ...peer message processor is internal
 
 # List of interfaces that are not implemented for RPC:
 my %notImplInterfaces = ();
@@ -679,6 +679,14 @@ sub packParameter
 	{
 		$rt .= "msg.packDocumentClass( " . $id . ");";
 	}
+	elsif ($type eq "TermStatistics")
+	{
+		$rt .= "msg.packTermStatistics( " . $id . ");";
+	}
+	elsif ($type eq "GlobalStatistics")
+	{
+		$rt .= "msg.packGlobalStatistics( " . $id . ");";
+	}
 	elsif ($type eq "Index")
 	{
 		$rt .= "msg.packIndex( " . $id . ");";
@@ -814,13 +822,13 @@ sub packParameter
 	{
 		$rt .= "msg.packDocumentStatisticsType( " . $id . ");";
 	}
-	elsif ($type eq "PeerMessageProcessorInterface::BuilderOptions")
+	elsif ($type eq "StatisticsProcessorInterface::BuilderOptions")
 	{
-		$rt .= "msg.packPeerMessageProcessorBuilderOptions( " . $id . ");";
+		$rt .= "msg.packStatisticsProcessorBuilderOptions( " . $id . ");";
 	}
-	elsif ($type eq "PeerMessageViewerInterface::DocumentFrequencyChange")
+	elsif ($type eq "StatisticsViewerInterface::DocumentFrequencyChange")
 	{
-		$rt .= "msg.packPeerMessageViewerDocumentFrequencyChange( " . $id . ");";
+		$rt .= "msg.packStatisticsViewerDocumentFrequencyChange( " . $id . ");";
 	}
 	elsif ($type eq "QueryProcessorInterface::FunctionType")
 	{
@@ -829,6 +837,18 @@ sub packParameter
 	elsif ($type eq "TextProcessorInterface::FunctionType")
 	{
 		$rt .= "msg.packTextProcessorFunctionType( " . $id . ");";
+	}
+	elsif ($type eq "PostingJoinOperatorInterface::Description")
+	{
+		$rt .= "msg.packPostingJoinOperatorDescription( " . $id . ");";
+	}
+	elsif ($type eq "WeightingFunctionInterface::Description")
+	{
+		$rt .= "msg.packWeightingFunctionDescription( " . $id . ");";
+	}
+	elsif ($type eq "SummarizerFunctionInterface::Description")
+	{
+		$rt .= "msg.packSummarizerFunctionDescription( " . $id . ");";
 	}
 	else
 	{
@@ -885,6 +905,14 @@ sub unpackParameter
 	elsif ($type eq "DocumentClass")
 	{
 		$rt .= "$id = serializedMsg.unpackDocumentClass();";
+	}
+	elsif ($type eq "TermStatistics")
+	{
+		$rt .= "$id = serializedMsg.unpackTermStatistics();";
+	}
+	elsif ($type eq "GlobalStatistics")
+	{
+		$rt .= "$id = serializedMsg.unpackGlobalStatistics();";
 	}
 	elsif ($type eq "Index")
 	{
@@ -1061,13 +1089,13 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackDocumentStatisticsType();";
 	}
-	elsif ($type eq "PeerMessageProcessorInterface::BuilderOptions")
+	elsif ($type eq "StatisticsProcessorInterface::BuilderOptions")
 	{
-		$rt .= "$id = serializedMsg.unpackPeerMessageProcessorBuilderOptions();";
+		$rt .= "$id = serializedMsg.unpackStatisticsProcessorBuilderOptions();";
 	}
-	elsif ($type eq "PeerMessageViewerInterface::DocumentFrequencyChange")
+	elsif ($type eq "StatisticsViewerInterface::DocumentFrequencyChange")
 	{
-		$rt .= "$id = serializedMsg.unpackPeerMessageViewerDocumentFrequencyChange();";
+		$rt .= "$id = serializedMsg.unpackStatisticsViewerDocumentFrequencyChange();";
 	}
 	elsif ($type eq "QueryProcessorInterface::FunctionType")
 	{
@@ -1076,6 +1104,18 @@ sub unpackParameter
 	elsif ($type eq "TextProcessorInterface::FunctionType")
 	{
 		$rt .= "$id = serializedMsg.unpackTextProcessorFunctionType();";
+	}
+	elsif ($type eq "PostingJoinOperatorInterface::Description")
+	{
+		$rt .= "$id = serializedMsg.unpackPostingJoinOperatorDescription();";
+	}
+	elsif ($type eq "WeightingFunctionInterface::Description")
+	{
+		$rt .= "$id = serializedMsg.unpackWeightingFunctionDescription();";
+	}
+	elsif ($type eq "SummarizerFunctionInterface::Description")
+	{
+		$rt .= "$id = serializedMsg.unpackSummarizerFunctionDescription();";
 	}
 	else
 	{

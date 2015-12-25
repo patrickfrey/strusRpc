@@ -223,11 +223,17 @@ static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 	unsigned int nn;
 	unsigned int bufidx = 0;
 
-#ifdef STRUS_LOWLEVEL_DEBUG
-	if (g_glbctx->logf) log_message_conn( conn, "read callback called");
-#endif
-	if (nread > 0)
+	if (nread == 0)
 	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		if (g_glbctx->logf) log_message_conn( conn, "read callback called (EAGAIN)\n");
+#endif
+	}
+	else if (nread > 0)
+	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		if (g_glbctx->logf) fprintf( g_glbctx->logf, "read callback called (nread %d)", (int)nread);
+#endif
 		switch (conn->state)
 		{
 			case CTX_READDATASIZE:
@@ -300,24 +306,21 @@ static void on_read( uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 				break;
 		}
 	}
+	else if (nread == UV_EOF)
+	{
+#ifdef STRUS_LOWLEVEL_DEBUG
+		log_message_conn( conn, "got eof");
+#endif
+		conn->state = CTX_TERMINATED;
+		conn->shutdown_req.data = conn;
+		uv_shutdown( &conn->shutdown_req, handle, on_shutdown);
+	}
 	else
 	{
-		if (nread == UV_EOF)
+		log_error_conn_sys( conn, "disconnected", nread);
+		if (!uv_is_closing((uv_handle_t*)handle))
 		{
-#ifdef STRUS_LOWLEVEL_DEBUG
-			log_message_conn( conn, "got eof");
-#endif
-			conn->state = CTX_TERMINATED;
-			conn->shutdown_req.data = conn;
-			uv_shutdown( &conn->shutdown_req, handle, on_shutdown);
-		}
-		else
-		{
-			log_error_conn_sys( conn, "disconnected", nread);
-			if (!uv_is_closing((uv_handle_t*)handle))
-			{
-				uv_close( (uv_handle_t*)handle, on_close);
-			}
+			uv_close( (uv_handle_t*)handle, on_close);
 		}
 	}
 }
