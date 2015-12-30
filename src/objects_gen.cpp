@@ -1829,7 +1829,7 @@ std::vector<const PostingIteratorInterface*> PostingIteratorImpl::subExpressions
 	return std::vector<const PostingIteratorInterface*>();
 }
 
-GlobalCounter PostingIteratorImpl::documentFrequency( ) const
+Index PostingIteratorImpl::documentFrequency( ) const
 {
 try
 {
@@ -1840,14 +1840,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	GlobalCounter p0 = serializedMsg.unpackGlobalCounter();;
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingIteratorImpl::documentFrequency");
-	return GlobalCounter();
+	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::documentFrequency", err.what());
-	return GlobalCounter();
+	return 0;
 }
 }
 

@@ -398,7 +398,7 @@ public:
 	virtual Index skipPos( const Index& p1);
 	virtual const char* featureid( ) const;
 	virtual std::vector<const PostingIteratorInterface*> subExpressions( bool p1) const;
-	virtual GlobalCounter documentFrequency( ) const;
+	virtual Index documentFrequency( ) const;
 	virtual unsigned int frequency( );
 	virtual Index docno( ) const;
 	virtual Index posno( ) const;

@@ -1666,7 +1666,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case PostingIteratorConst::Method_documentFrequency:
 		{
 			RpcSerializer msg;
-			GlobalCounter p0;
+			Index p0;
 			p0 = obj->documentFrequency();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -1676,7 +1676,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packGlobalCounter( p0);
+			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
