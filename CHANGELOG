@@ -1,3 +1,7 @@
+strusRpc (0.3.2)
+  * adapted core interface change: changed type of document frequency from GlobalCounter to Index
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Fri, 1 Jan 2016 15:00:00 +0100
+
 strusRpc (0.3.1)
   * fixing versioning problems on the Open Suse build cluster
  -- Patrick Frey <patrickpfrey@yahoo.com>  Fri, 21 Dec 2015 09:38:00 +0100
