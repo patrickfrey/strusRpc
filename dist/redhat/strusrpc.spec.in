@@ -285,6 +285,9 @@ make test
 %{_includedir}/strus/lib/*.hpp
 
 %changelog
+* Sat Jan 2 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.4.0-0.1
+- adapted core interface change: changed interface of posting iterator (new method skipDocCandidate and removed obsolete method subExpressions)
+
 * Fri Jan 1 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.3.2-0.1
 - adapted core interface change: changed type of document frequency from GlobalCounter to Index
 

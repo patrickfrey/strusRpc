@@ -395,9 +395,9 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_PostingIterator, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual Index skipDoc( const Index& p1);
+	virtual Index skipDocCandidate( const Index& p1);
 	virtual Index skipPos( const Index& p1);
 	virtual const char* featureid( ) const;
-	virtual std::vector<const PostingIteratorInterface*> subExpressions( bool p1) const;
 	virtual Index documentFrequency( ) const;
 	virtual unsigned int frequency( );
 	virtual Index docno( ) const;

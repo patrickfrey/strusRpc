@@ -318,9 +318,9 @@ public:
 	{
 		Method_Destructor,
 		Method_skipDoc,
+		Method_skipDocCandidate,
 		Method_skipPos,
 		Method_featureid,
-		Method_subExpressions,
 		Method_documentFrequency,
 		Method_frequency,
 		Method_docno,

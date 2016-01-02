@@ -1778,6 +1778,29 @@ try
 }
 }
 
+Index PostingIteratorImpl::skipDocCandidate( const Index& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_skipDocCandidate);
+	msg.packIndex( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingIteratorImpl::skipDocCandidate");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::skipDocCandidate", err.what());
+	return 0;
+}
+}
+
 Index PostingIteratorImpl::skipPos( const Index& p1)
 {
 try
@@ -1821,12 +1844,6 @@ try
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::featureid", err.what());
 	return 0;
 }
-}
-
-std::vector<const PostingIteratorInterface*> PostingIteratorImpl::subExpressions( bool p1) const
-{
-	errorhnd()->report(_TXT("the method '%s' is not implemented for RPC"),"subExpressions");
-	return std::vector<const PostingIteratorInterface*>();
 }
 
 Index PostingIteratorImpl::documentFrequency( ) const

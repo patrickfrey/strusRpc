@@ -1619,6 +1619,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case PostingIteratorConst::Method_skipDocCandidate:
+		{
+			RpcSerializer msg;
+			Index p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->skipDocCandidate(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndex( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case PostingIteratorConst::Method_skipPos:
 		{
 			RpcSerializer msg;
@@ -1653,14 +1672,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
 			msg.packCrc32();
-			return msg.content();
-		}
-		case PostingIteratorConst::Method_subExpressions:
-		{
-			RpcSerializer msg;
-			(void)(obj);
-			msg.packByte( MsgTypeError);
-			msg.packString( "the method 'subExpressions' is not implemented for RPC");
 			return msg.content();
 		}
 		case PostingIteratorConst::Method_documentFrequency:

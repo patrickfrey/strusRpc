@@ -143,7 +143,6 @@ $syncMethods{"done"} = 1;
 # List of methods that are not implemented for RPC:
 my %notImplMethods = ();
 $notImplMethods{"checkStorage"} = 1;				# ...ostream reference input cannot be handled
-$notImplMethods{"subExpressions"} = 1;				# ...vector of const object return can not be handled
 $notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
 $notImplMethods{"defineStatisticsProcessor"} = 1;		# ...peer message processor is internal
 
