@@ -44,7 +44,6 @@ extern "C" {
 #include "server.h"
 #include "hexdump.h"
 }
-#include <cstring>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -436,7 +435,7 @@ int main( int argc, const char* argv[])
 		init_global_context( logfile.empty()?0:logfile.c_str());
 		g_errorBuffer->setLogFile( g_glbctx.logf);
 		g_errorBuffer->setMaxNofThreads( strus_threadpool_size()+2);
-		
+
 		// Create the global context:
 		std::auto_ptr<strus::ModuleLoaderInterface>
 			moduleLoader( strus::createModuleLoader( g_errorBuffer));
