@@ -915,7 +915,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3, const TermStatistics& p4);
-	virtual float call( const Index& p1);
+	virtual double call( const Index& p1);
 };
 
 class WeightingFunctionInstanceImpl

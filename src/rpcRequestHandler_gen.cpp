@@ -4830,7 +4830,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case WeightingFunctionContextConst::Method_call:
 		{
 			RpcSerializer msg;
-			float p0;
+			double p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
 			p0 = obj->call(p1);
@@ -4842,7 +4842,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packFloat( p0);
+			msg.packDouble( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
