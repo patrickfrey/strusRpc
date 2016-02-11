@@ -568,6 +568,7 @@ void RpcSerializer::packWeightingFunctionDescription( const WeightingFunctionInt
 		packByte( (unsigned char)vi->type());
 		packString( vi->name());
 		packString( vi->text());
+		packString( vi->domain());
 	}
 }
 
@@ -581,6 +582,7 @@ void RpcSerializer::packSummarizerFunctionDescription( const SummarizerFunctionI
 		packByte( (unsigned char)vi->type());
 		packString( vi->name());
 		packString( vi->text());
+		packString( vi->domain());
 	}
 }
 
@@ -1030,7 +1032,8 @@ WeightingFunctionInterface::Description RpcDeserializer::unpackWeightingFunction
 		WeightingFunctionInterface::Description::Param::Type type = (WeightingFunctionInterface::Description::Param::Type)unpackByte();
 		std::string name( unpackString());
 		std::string text( unpackString());
-		rt( type, name, text);
+		std::string domain( unpackString());
+		rt( type, name, text, domain);
 	}
 	return rt;
 }
@@ -1044,7 +1047,8 @@ SummarizerFunctionInterface::Description RpcDeserializer::unpackSummarizerFuncti
 		SummarizerFunctionInterface::Description::Param::Type type = (SummarizerFunctionInterface::Description::Param::Type)unpackByte();
 		std::string name( unpackString());
 		std::string text( unpackString());
-		rt( type, name, text);
+		std::string domain( unpackString());
+		rt( type, name, text, domain);
 	}
 	return rt;
 }
