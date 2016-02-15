@@ -81,8 +81,6 @@ static void printUsage()
 	std::cout << "    " << _TXT("Define storage configuration as content of file <CFGFILE>") << std::endl;
 	std::cout << "-c|--create <CONFIG>" << std::endl;
 	std::cout << "    " << _TXT("Implicitely create storage with <CONFIG> if it does not exist yet") << std::endl;
-	std::cout << "-g|--globalstats <FILE>" << std::endl;
-	std::cout << "    " << _TXT("Load global statistics of peers from file <FILE>") << std::endl;
 	std::cout << "-l|--logfile <FILE>" << std::endl;
 	std::cout << "    " << _TXT("Write logs to file <FILE>") << std::endl;
 }
