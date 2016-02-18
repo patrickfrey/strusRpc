@@ -42,12 +42,6 @@
 namespace strus {
 namespace utils {
 
-class Crc32
-{
-public:
-	static uint32_t calc( const char* blk, std::size_t blksize);
-};
-
 std::string tostring( int val);
 unsigned int touint( const std::string& val);
 
