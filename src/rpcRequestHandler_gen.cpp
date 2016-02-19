@@ -2267,7 +2267,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryConst::Method_evaluate:
 		{
 			RpcSerializer msg;
-			std::vector<ResultDocument> p0;
+			QueryResult p0;
 			p0 = obj->evaluate();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -2277,10 +2277,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packResultDocument( p0[ii]);
-			}
+			msg.packQueryResult( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

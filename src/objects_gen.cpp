@@ -2487,7 +2487,7 @@ try
 }
 }
 
-std::vector<ResultDocument> QueryImpl::evaluate( )
+QueryResult QueryImpl::evaluate( )
 {
 try
 {
@@ -2498,19 +2498,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::vector<ResultDocument> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		ResultDocument elem_p0 = serializedMsg.unpackResultDocument();
-		p0.push_back( elem_p0);
-	}
+	QueryResult p0 = serializedMsg.unpackQueryResult();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::evaluate");
-	return std::vector<ResultDocument>();
+	return QueryResult();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::evaluate", err.what());
-	return std::vector<ResultDocument>();
+	return QueryResult();
 }
 }
 

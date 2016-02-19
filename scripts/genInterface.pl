@@ -809,6 +809,10 @@ sub packParameter
 	{
 		$rt .= "msg.packResultDocument( " . $id . ");";
 	}
+	elsif ($type eq "QueryResult")
+	{
+		$rt .= "msg.packQueryResult( " . $id . ");";
+	}
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
 		$rt .= "msg.packFeatureParameter( " . $id . ");";
@@ -1075,6 +1079,10 @@ sub unpackParameter
 	elsif ($type eq "ResultDocument")
 	{
 		$rt .= "$id = serializedMsg.unpackResultDocument();";
+	}
+	elsif ($type eq "QueryResult")
+	{
+		$rt .= "$id = serializedMsg.unpackQueryResult();";
 	}
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{

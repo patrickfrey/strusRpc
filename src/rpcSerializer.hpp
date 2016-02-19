@@ -105,6 +105,7 @@ public:
 	void packAnalyzerToken( const analyzer::Token& val);
 	void packWeightedDocument( const WeightedDocument& val);
 	void packResultDocument( const ResultDocument& val);
+	void packQueryResult( const QueryResult& val);
 	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
 	void packPhrase( const QueryAnalyzerInterface::Phrase& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
@@ -174,6 +175,7 @@ public:
 	analyzer::Token unpackAnalyzerToken();
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();
+	QueryResult unpackQueryResult();
 	QueryEvalInterface::FeatureParameter unpackFeatureParameter();
 	QueryAnalyzerInterface::Phrase unpackPhrase();
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();

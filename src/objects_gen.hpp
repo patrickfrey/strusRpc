@@ -477,7 +477,7 @@ public:
 	virtual void setMaxNofRanks( std::size_t p1);
 	virtual void setMinRank( std::size_t p1);
 	virtual void addUserName( const std::string& p1);
-	virtual std::vector<ResultDocument> evaluate( );
+	virtual QueryResult evaluate( );
 };
 
 class QueryProcessorImpl

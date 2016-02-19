@@ -513,6 +513,21 @@ void RpcSerializer::packResultDocument( const ResultDocument& val)
 	}
 }
 
+void RpcSerializer::packQueryResult( const QueryResult& val)
+{
+	packByte( val.evaluationPass());
+	packIndex( val.nofDocumentsRanked());
+	packIndex( val.nofDocumentsVisited());
+
+	std::vector<ResultDocument>::const_iterator
+		ri = val.ranks().begin(), re = val.ranks().end();
+	packSize( re-ri);
+	for (; ri != re; ++ri)
+	{
+		packResultDocument( *ri);
+	}
+}
+
 void RpcSerializer::packFeatureParameter( const QueryEvalInterface::FeatureParameter& val)
 {
 	packString( val.parameterName());
@@ -970,6 +985,20 @@ ResultDocument RpcDeserializer::unpackResultDocument()
 		rt.addAttribute( name, value, weight);
 	}
 	return rt;
+}
+
+QueryResult RpcDeserializer::unpackQueryResult()
+{
+	unsigned int pass = unpackByte();
+	unsigned int nofDocumentsRanked = unpackIndex();
+	unsigned int nofDocumentsVisited = unpackIndex();
+	std::size_t ii=0,size=unpackSize();
+	std::vector<ResultDocument> ranks;
+	for (; ii<size; ++ii)
+	{
+		ranks.push_back( unpackResultDocument());
+	}
+	return QueryResult( pass, nofDocumentsRanked, nofDocumentsVisited, ranks);
 }
 
 QueryAnalyzerInterface::Phrase RpcDeserializer::unpackPhrase()
