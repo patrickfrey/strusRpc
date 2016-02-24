@@ -769,7 +769,7 @@ sub packParameter
 	{
 		$rt .= "msg.packSummarizationVariable( " . $id . ");";
 	}
-	elsif ($type eq "SummarizerFunctionContextInterface::SummaryElement")
+	elsif ($type eq "SummaryElement")
 	{
 		$rt .= "msg.packSummaryElement( " . $id . ");";
 	}
@@ -1032,7 +1032,7 @@ sub unpackParameter
 			die "no deserialization defined for type \"$type\"";
 		}
 	}
-	elsif ($type eq "SummarizerFunctionContextInterface::SummaryElement")
+	elsif ($type eq "SummaryElement")
 	{
 		$rt .= "$id = serializedMsg.unpackSummaryElement();";
 	}

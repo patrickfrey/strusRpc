@@ -2167,7 +2167,7 @@ try
 }
 }
 
-void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4)
+void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3)
 {
 try
 {
@@ -2182,7 +2182,6 @@ try
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
 		msg.packFeatureParameter( p3[ii]);
 	}
-	msg.packString( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
@@ -4605,7 +4604,7 @@ try
 }
 }
 
-std::vector<SummarizerFunctionContextInterface::SummaryElement> SummarizerFunctionContextImpl::getSummary( const Index& p1)
+std::vector<SummaryElement> SummarizerFunctionContextImpl::getSummary( const Index& p1)
 {
 try
 {
@@ -4617,19 +4616,19 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::vector<SummarizerFunctionContextInterface::SummaryElement> p0;
+	std::vector<SummaryElement> p0;
 	std::size_t n0 = serializedMsg.unpackSize();
 	for (std::size_t ii=0; ii < n0; ++ii) {
-		SummarizerFunctionContextInterface::SummaryElement elem_p0 = serializedMsg.unpackSummaryElement();
+		SummaryElement elem_p0 = serializedMsg.unpackSummaryElement();
 		p0.push_back( elem_p0);
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::getSummary");
-	return std::vector<SummarizerFunctionContextInterface::SummaryElement>();
+	return std::vector<SummaryElement>();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::getSummary", err.what());
-	return std::vector<SummarizerFunctionContextInterface::SummaryElement>();
+	return std::vector<SummaryElement>();
 }
 }
 

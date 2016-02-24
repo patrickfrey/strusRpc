@@ -93,7 +93,7 @@ public:
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
 	void packStorageConfigType( const StorageInterface::ConfigType& val);
 	void packFeatureOptions( const DocumentAnalyzerInterface::FeatureOptions& val);
-	void packSummaryElement( const SummarizerFunctionContextInterface::SummaryElement& val);
+	void packSummaryElement( const SummaryElement& val);
 	void packCompareOperator( const QueryInterface::CompareOperator& val);
 	void packSummarizationVariable( const SummarizationVariable& val);
 	void packSlice( DatabaseCursorInterface::Slice& val);
@@ -164,7 +164,7 @@ public:
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();
 	StorageInterface::ConfigType unpackStorageConfigType();
 	DocumentAnalyzerInterface::FeatureOptions unpackFeatureOptions();
-	SummarizerFunctionContextInterface::SummaryElement unpackSummaryElement();
+	SummaryElement unpackSummaryElement();
 	QueryInterface::CompareOperator unpackCompareOperator();
 	DatabaseCursorInterface::Slice unpackSlice();
 	analyzer::Document unpackAnalyzerDocument();

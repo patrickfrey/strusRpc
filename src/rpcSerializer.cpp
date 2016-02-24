@@ -363,7 +363,7 @@ void RpcSerializer::packArithmeticVariant( const ArithmeticVariant& val)
 		case ArithmeticVariant::Null: break;
 		case ArithmeticVariant::Int: packInt( val.variant.Int); break;
 		case ArithmeticVariant::UInt: packUint( val.variant.UInt); break;
-		case ArithmeticVariant::Float: packFloat( val.variant.Float); break;
+		case ArithmeticVariant::Float: packDouble( val.variant.Float); break;
 	}
 }
 
@@ -404,10 +404,12 @@ void RpcSerializer::packFeatureOptions( const DocumentAnalyzerInterface::Feature
 	packUint( val.opt());
 }
 
-void RpcSerializer::packSummaryElement( const SummarizerFunctionContextInterface::SummaryElement& val)
+void RpcSerializer::packSummaryElement( const SummaryElement& val)
 {
-	packString( val.text());
-	packFloat( val.weight());
+	packString( val.name());
+	packString( val.value());
+	packDouble( val.weight());
+	packInt( val.index());
 }
 
 void RpcSerializer::packCompareOperator( const QueryInterface::CompareOperator& val)
@@ -496,20 +498,18 @@ void RpcSerializer::packAnalyzerToken( const analyzer::Token& val)
 void RpcSerializer::packWeightedDocument( const WeightedDocument& val)
 {
 	packIndex( val.docno());
-	packFloat( val.weight());
+	packDouble( val.weight());
 }
 
 void RpcSerializer::packResultDocument( const ResultDocument& val)
 {
 	packWeightedDocument( val);
-	std::vector<ResultDocument::Attribute>::const_iterator
-		ai = val.attributes().begin(), ae = val.attributes().end();
+	std::vector<SummaryElement>::const_iterator
+		ai = val.summaryElements().begin(), ae = val.summaryElements().end();
 	packSize( ae-ai);
 	for (; ai != ae; ++ai)
 	{
-		packString( ai->name());
-		packString( ai->value());
-		packFloat( ai->weight());
+		packSummaryElement( *ai);
 	}
 }
 
@@ -790,7 +790,7 @@ ArithmeticVariant RpcDeserializer::unpackArithmeticVariant()
 		case ArithmeticVariant::Null: return ArithmeticVariant();
 		case ArithmeticVariant::Int: return ArithmeticVariant( unpackInt());
 		case ArithmeticVariant::UInt: return ArithmeticVariant( unpackUint());
-		case ArithmeticVariant::Float: return ArithmeticVariant( unpackFloat());
+		case ArithmeticVariant::Float: return ArithmeticVariant( unpackDouble());
 	}
 	throw strus::runtime_error( _TXT("unknown type of arithmetic variant"));
 }
@@ -870,11 +870,13 @@ DocumentAnalyzerInterface::FeatureOptions RpcDeserializer::unpackFeatureOptions(
 	return DocumentAnalyzerInterface::FeatureOptions( unpackUint());
 }
 
-SummarizerFunctionContextInterface::SummaryElement RpcDeserializer::unpackSummaryElement()
+SummaryElement RpcDeserializer::unpackSummaryElement()
 {
-	std::string pname = unpackString();
-	float pvalue = unpackFloat();
-	return SummarizerFunctionContextInterface::SummaryElement( pname, pvalue);
+	std::string name = unpackString();
+	std::string value = unpackString();
+	float weight = unpackDouble();
+	float index = unpackInt();
+	return SummaryElement( name, value, weight, index);
 }
 
 QueryInterface::CompareOperator RpcDeserializer::unpackCompareOperator()
@@ -969,22 +971,20 @@ analyzer::Token RpcDeserializer::unpackAnalyzerToken()
 WeightedDocument RpcDeserializer::unpackWeightedDocument()
 {
 	Index docno = unpackIndex();
-	float weight = unpackFloat();
+	float weight = unpackDouble();
 	return WeightedDocument( docno, weight);
 }
 
 ResultDocument RpcDeserializer::unpackResultDocument()
 {
-	ResultDocument rt( unpackWeightedDocument());
+	WeightedDocument weightedDocument( unpackWeightedDocument());
+	std::vector<SummaryElement> summaryElements;
 	std::size_t ii=0,size=unpackSize();
 	for (; ii<size; ++ii)
 	{
-		std::string name = unpackString();
-		std::string value = unpackString();
-		float weight = unpackFloat();
-		rt.addAttribute( name, value, weight);
+		summaryElements.push_back( unpackSummaryElement());
 	}
-	return rt;
+	return ResultDocument( weightedDocument, summaryElements);
 }
 
 QueryResult RpcDeserializer::unpackQueryResult()
