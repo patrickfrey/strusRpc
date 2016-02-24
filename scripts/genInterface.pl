@@ -773,6 +773,10 @@ sub packParameter
 	{
 		$rt .= "msg.packSummaryElement( " . $id . ");";
 	}
+	elsif ($type eq "DocumentTermIteratorInterface::Term")
+	{
+		$rt .= "msg.packDocumentTermIteratorTerm( " . $id . ");";
+	}
 	elsif ($type eq "DatabaseCursorInterface::Slice")
 	{
 		$rt .= "msg.packSlice( " . $id . ");";
@@ -1035,6 +1039,10 @@ sub unpackParameter
 	elsif ($type eq "SummaryElement")
 	{
 		$rt .= "$id = serializedMsg.unpackSummaryElement();";
+	}
+	elsif ($type eq "DocumentTermIteratorInterface::Term")
+	{
+		$rt .= "$id = serializedMsg.unpackDocumentTermIteratorTerm();";
 	}
 	elsif ($type eq "DatabaseCursorInterface::Slice")
 	{

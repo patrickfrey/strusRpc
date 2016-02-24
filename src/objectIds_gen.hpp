@@ -45,6 +45,7 @@ enum ClassId
 	ClassId_DocumentAnalyzerContext,
 	ClassId_DocumentAnalyzer,
 	ClassId_DocumentClassDetector,
+	ClassId_DocumentTermIterator,
 	ClassId_ForwardIterator,
 	ClassId_InvAclIterator,
 	ClassId_MetaDataReader,
@@ -239,6 +240,19 @@ public:
 	{
 		Method_Destructor,
 		Method_detect
+	};
+};
+
+class DocumentTermIteratorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_skipDoc,
+		Method_nextTerm,
+		Method_termDocumentFrequency,
+		Method_termValue
 	};
 };
 
@@ -508,6 +522,7 @@ public:
 		Method_Destructor,
 		Method_createTermPostingIterator,
 		Method_createForwardIterator,
+		Method_createDocumentTermIterator,
 		Method_createInvAclIterator,
 		Method_nofDocumentsInserted,
 		Method_documentFrequency,
@@ -624,7 +639,8 @@ public:
 	{
 		Method_Destructor,
 		Method_addSummarizationFeature,
-		Method_getSummary
+		Method_getSummary,
+		Method_getOverallSummary
 	};
 };
 

@@ -49,6 +49,7 @@
 #include "strus/queryInterface.hpp"
 #include "strus/queryEvalInterface.hpp"
 #include "strus/queryProcessorInterface.hpp"
+#include "strus/documentTermIteratorInterface.hpp"
 #include "strus/weightedDocument.hpp"
 #include "strus/resultDocument.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
@@ -96,6 +97,7 @@ public:
 	void packSummaryElement( const SummaryElement& val);
 	void packCompareOperator( const QueryInterface::CompareOperator& val);
 	void packSummarizationVariable( const SummarizationVariable& val);
+	void packDocumentTermIteratorTerm( const DocumentTermIteratorInterface::Term& term);
 	void packSlice( DatabaseCursorInterface::Slice& val);
 	void packAnalyzerDocument( const analyzer::Document& val);
 	void packAnalyzerAttribute( const analyzer::Attribute& val);
@@ -166,6 +168,7 @@ public:
 	DocumentAnalyzerInterface::FeatureOptions unpackFeatureOptions();
 	SummaryElement unpackSummaryElement();
 	QueryInterface::CompareOperator unpackCompareOperator();
+	DocumentTermIteratorInterface::Term unpackDocumentTermIteratorTerm();
 	DatabaseCursorInterface::Slice unpackSlice();
 	analyzer::Document unpackAnalyzerDocument();
 	analyzer::Attribute unpackAnalyzerAttribute();

@@ -425,6 +425,13 @@ void RpcSerializer::packSummarizationVariable( const SummarizationVariable& val)
 	packObject( so->classId(), so->objId());
 }
 
+void RpcSerializer::packDocumentTermIteratorTerm( const DocumentTermIteratorInterface::Term& val)
+{
+	packIndex( (Index)val.tf);
+	packIndex( (Index)val.firstpos);
+	packIndex( val.termno);
+}
+
 void RpcSerializer::packSlice( DatabaseCursorInterface::Slice& val)
 {
 	packBuffer( val.ptr(), val.size());
@@ -525,6 +532,13 @@ void RpcSerializer::packQueryResult( const QueryResult& val)
 	for (; ri != re; ++ri)
 	{
 		packResultDocument( *ri);
+	}
+	std::vector<SummaryElement>::const_iterator
+		ai = val.summaryElements().begin(), ae = val.summaryElements().end();
+	packSize( ae-ai);
+	for (; ai != ae; ++ai)
+	{
+		packSummaryElement( *ai);
 	}
 }
 
@@ -884,6 +898,14 @@ QueryInterface::CompareOperator RpcDeserializer::unpackCompareOperator()
 	return QueryInterface::CompareOperator( unpackByte());
 }
 
+DocumentTermIteratorInterface::Term RpcDeserializer::unpackDocumentTermIteratorTerm()
+{
+	Index tf = unpackIndex();
+	Index firstpos = unpackIndex();
+	Index termno = unpackIndex();
+	return DocumentTermIteratorInterface::Term( tf, firstpos, termno);
+}
+
 DatabaseCursorInterface::Slice RpcDeserializer::unpackSlice()
 {
 	const char* buf;
@@ -998,7 +1020,13 @@ QueryResult RpcDeserializer::unpackQueryResult()
 	{
 		ranks.push_back( unpackResultDocument());
 	}
-	return QueryResult( pass, nofDocumentsRanked, nofDocumentsVisited, ranks);
+	std::vector<SummaryElement> summaryElements;
+	ii=0,size=unpackSize();
+	for (; ii<size; ++ii)
+	{
+		summaryElements.push_back( unpackSummaryElement());
+	}
+	return QueryResult( pass, nofDocumentsRanked, nofDocumentsVisited, ranks, summaryElements);
 }
 
 QueryAnalyzerInterface::Phrase RpcDeserializer::unpackPhrase()

@@ -1227,6 +1227,92 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_DocumentTermIterator:
+	{
+	DocumentTermIteratorInterface* obj = getObject<DocumentTermIteratorInterface>( classId, objId);
+	switch( (DocumentTermIteratorConst::MethodId)methodId)
+	{
+		case DocumentTermIteratorConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case DocumentTermIteratorConst::Method_skipDoc:
+		{
+			RpcSerializer msg;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			obj->skipDoc(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case DocumentTermIteratorConst::Method_nextTerm:
+		{
+			RpcSerializer msg;
+			bool p0;
+			DocumentTermIteratorInterface::Term p1;
+			p0 = obj->nextTerm(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packDocumentTermIteratorTerm( p1);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case DocumentTermIteratorConst::Method_termDocumentFrequency:
+		{
+			RpcSerializer msg;
+			unsigned int p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->termDocumentFrequency(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packUint( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case DocumentTermIteratorConst::Method_termValue:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->termValue(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_ForwardIterator:
 	{
 	ForwardIteratorInterface* obj = getObject<ForwardIteratorInterface>( classId, objId);
@@ -3050,6 +3136,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case StorageClientConst::Method_createDocumentTermIterator:
+		{
+			RpcSerializer msg;
+			DocumentTermIteratorInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createDocumentTermIterator(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case StorageClientConst::Method_createInvAclIterator:
 		{
 			RpcSerializer msg;
@@ -4172,6 +4279,26 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
 			p0 = obj->getSummary(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packSummaryElement( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SummarizerFunctionContextConst::Method_getOverallSummary:
+		{
+			RpcSerializer msg;
+			std::vector<SummaryElement> p0;
+			p0 = obj->getOverallSummary();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

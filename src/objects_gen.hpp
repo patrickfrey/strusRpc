@@ -54,6 +54,7 @@
 #include "strus/databaseCursorInterface.hpp"
 #include "strus/databaseInterface.hpp"
 #include "strus/databaseTransactionInterface.hpp"
+#include "strus/documentTermIteratorInterface.hpp"
 #include "strus/errorBufferInterface.hpp"
 #include "strus/forwardIteratorInterface.hpp"
 #include "strus/invAclIteratorInterface.hpp"
@@ -288,6 +289,23 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentClassDetector, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual bool detect( DocumentClass& p1, const char* p2, std::size_t p3) const;
+};
+
+class DocumentTermIteratorImpl
+		:public RpcInterfaceStub
+		,public strus::DocumentTermIteratorInterface
+		,public strus::DocumentTermIteratorConst
+{
+public:
+	virtual ~DocumentTermIteratorImpl();
+
+	DocumentTermIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocumentTermIterator, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void skipDoc( const Index& p1);
+	virtual bool nextTerm( DocumentTermIteratorInterface::Term& p1);
+	virtual unsigned int termDocumentFrequency( const Index& p1) const;
+	virtual std::string termValue( const Index& p1) const;
 };
 
 class ForwardIteratorImpl
@@ -641,6 +659,7 @@ public:
 
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;
+	virtual DocumentTermIteratorInterface* createDocumentTermIterator( const std::string& p1) const;
 	virtual InvAclIteratorInterface* createInvAclIterator( const std::string& p1) const;
 	virtual Index nofDocumentsInserted( ) const;
 	virtual Index documentFrequency( const std::string& p1, const std::string& p2) const;
@@ -786,6 +805,7 @@ public:
 
 	virtual void addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, float p4, const TermStatistics& p5);
 	virtual std::vector<SummaryElement> getSummary( const Index& p1);
+	virtual std::vector<SummaryElement> getOverallSummary( );
 };
 
 class SummarizerFunctionInstanceImpl
