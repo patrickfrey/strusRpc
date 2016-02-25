@@ -805,7 +805,6 @@ public:
 
 	virtual void addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, float p4, const TermStatistics& p5);
 	virtual std::vector<SummaryElement> getSummary( const Index& p1);
-	virtual std::vector<SummaryElement> getOverallSummary( );
 };
 
 class SummarizerFunctionInstanceImpl

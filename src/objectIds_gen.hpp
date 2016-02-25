@@ -639,8 +639,7 @@ public:
 	{
 		Method_Destructor,
 		Method_addSummarizationFeature,
-		Method_getSummary,
-		Method_getOverallSummary
+		Method_getSummary
 	};
 };
 

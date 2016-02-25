@@ -533,13 +533,6 @@ void RpcSerializer::packQueryResult( const QueryResult& val)
 	{
 		packResultDocument( *ri);
 	}
-	std::vector<SummaryElement>::const_iterator
-		ai = val.summaryElements().begin(), ae = val.summaryElements().end();
-	packSize( ae-ai);
-	for (; ai != ae; ++ai)
-	{
-		packSummaryElement( *ai);
-	}
 }
 
 void RpcSerializer::packFeatureParameter( const QueryEvalInterface::FeatureParameter& val)
@@ -1020,13 +1013,7 @@ QueryResult RpcDeserializer::unpackQueryResult()
 	{
 		ranks.push_back( unpackResultDocument());
 	}
-	std::vector<SummaryElement> summaryElements;
-	ii=0,size=unpackSize();
-	for (; ii<size; ++ii)
-	{
-		summaryElements.push_back( unpackSummaryElement());
-	}
-	return QueryResult( pass, nofDocumentsRanked, nofDocumentsVisited, ranks, summaryElements);
+	return QueryResult( pass, nofDocumentsRanked, nofDocumentsVisited, ranks);
 }
 
 QueryAnalyzerInterface::Phrase RpcDeserializer::unpackPhrase()

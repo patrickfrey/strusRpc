@@ -4754,33 +4754,6 @@ try
 }
 }
 
-std::vector<SummaryElement> SummarizerFunctionContextImpl::getOverallSummary( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_getOverallSummary);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<SummaryElement> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		SummaryElement elem_p0 = serializedMsg.unpackSummaryElement();
-		p0.push_back( elem_p0);
-	}
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::getOverallSummary");
-	return std::vector<SummaryElement>();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::getOverallSummary", err.what());
-	return std::vector<SummaryElement>();
-}
-}
-
 SummarizerFunctionInstanceImpl::~SummarizerFunctionInstanceImpl()
 {
 	if (isConst()) return;
