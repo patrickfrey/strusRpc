@@ -675,6 +675,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageClient, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2) const;
+	virtual PostingIteratorInterface* createBrowsePostingIterator( MetaDataRestrictionInterface* p1, const Index& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;
 	virtual DocumentTermIteratorInterface* createDocumentTermIterator( const std::string& p1) const;
 	virtual InvAclIteratorInterface* createInvAclIterator( const std::string& p1) const;

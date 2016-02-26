@@ -144,7 +144,7 @@ $syncMethods{"done"} = 1;
 my %notImplMethods = ();
 $notImplMethods{"checkStorage"} = 1;				# ...ostream reference input cannot be handled
 $notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
-$notImplMethods{"defineStatisticsProcessor"} = 1;		# ...peer message processor is internal
+$notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
 
 # List of interfaces that are not implemented for RPC:
 my %notImplInterfaces = ();
@@ -164,6 +164,7 @@ $passOwnershipParams{"defineAggregator"} = 1;			# TextProcessor
 
 $passOwnershipParams{"createClient"} = 1;			# Storage
 $passOwnershipParams{"createAlterMetaDataTable"} = 1;		# Storage
+$passOwnershipParams{"createBrowsePostingIterator"} = 1;	# Storage
 
 $passOwnershipParams{"definePhraseType"} = 1;			# QueryAnalyzer
 
@@ -185,7 +186,6 @@ $constResetMethodMap{"seekLast"} = 1;
 $constResetMethodMap{"seekNext"} = 1;
 $constResetMethodMap{"seekPrev"} = 1;
 $constResetMethodMap{"nextChunk"} = 1;
-
 
 # List of hacks (client code inserted at the beginning of a method call):
 my %alternativeClientImpl = ();

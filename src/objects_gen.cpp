@@ -3501,6 +3501,36 @@ try
 }
 }
 
+PostingIteratorInterface* StorageClientImpl::createBrowsePostingIterator( MetaDataRestrictionInterface* p1, const Index& p2) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createBrowsePostingIterator);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "MetaDataRestriction");
+	msg.packObject( impl_1->classId(), impl_1->objId());
+	msg.packIndex( p2);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_PostingIterator;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, ctx(), false, errorhnd());
+	RpcInterfaceStub* done_1 = dynamic_cast<RpcInterfaceStub*>(p1);
+	done_1->release();
+	delete p1;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createBrowsePostingIterator");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createBrowsePostingIterator", err.what());
+	return 0;
+}
+}
+
 ForwardIteratorInterface* StorageClientImpl::createForwardIterator( const std::string& p1) const
 {
 try

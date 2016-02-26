@@ -534,6 +534,7 @@ public:
 	{
 		Method_Destructor,
 		Method_createTermPostingIterator,
+		Method_createBrowsePostingIterator,
 		Method_createForwardIterator,
 		Method_createDocumentTermIterator,
 		Method_createInvAclIterator,

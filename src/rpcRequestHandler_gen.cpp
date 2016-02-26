@@ -3186,6 +3186,35 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case StorageClientConst::Method_createBrowsePostingIterator:
+		{
+			RpcSerializer msg;
+			PostingIteratorInterface* p0;
+			MetaDataRestrictionInterface* p1;
+			Index p2;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_MetaDataRestriction) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getObject<MetaDataRestrictionInterface>( classId_1, objId_1);
+			markObjectToRelease( classId_1, objId_1);
+			p2 = serializedMsg.unpackIndex();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createBrowsePostingIterator(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				unmarkObjectsToRelease();
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case StorageClientConst::Method_createForwardIterator:
 		{
 			RpcSerializer msg;
