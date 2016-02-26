@@ -737,6 +737,10 @@ sub packParameter
 			die "no serialization defined for type \"$type\"";
 		}
 	}
+	elsif ($type eq "MetaDataRestrictionInterface::CompareOperator")
+	{
+		$rt .= "msg.packMetaDataRestrictionCompareOperator( " . $id . ");";
+	}
 	elsif ($type eq "std::string")
 	{
 		$rt .= "msg.packString( " . $id . ");";
@@ -760,10 +764,6 @@ sub packParameter
 	elsif ($type eq "DocumentAnalyzerInterface::FeatureOptions")
 	{
 		$rt .= "msg.packFeatureOptions( " . $id . ");";
-	}
-	elsif ($type eq "QueryInterface::CompareOperator")
-	{
-		$rt .= "msg.packCompareOperator( " . $id . ");";
 	}
 	elsif ($type eq "SummarizationVariable")
 	{
@@ -993,6 +993,10 @@ sub unpackParameter
 			die "no deserialization defined for type \"$type\"";
 		}
 	}
+	elsif ($type eq "MetaDataRestrictionInterface::CompareOperator")
+	{
+		$rt .= "$id = serializedMsg.unpackMetaDataRestrictionCompareOperator();";
+	}	
 	elsif ($type eq "std::string")
 	{
 		$rt .= "$id = serializedMsg.unpackString();";
@@ -1016,10 +1020,6 @@ sub unpackParameter
 	elsif ($type eq "DocumentAnalyzerInterface::FeatureOptions")
 	{
 		$rt .= "$id = serializedMsg.unpackFeatureOptions();";
-	}
-	elsif ($type eq "QueryInterface::CompareOperator")
-	{
-		$rt .= "$id = serializedMsg.unpackCompareOperator();";
 	}
 	elsif ($type eq "SummarizationVariable")
 	{

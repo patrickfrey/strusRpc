@@ -71,8 +71,8 @@ static void printUsage()
 	std::cout << "    " << _TXT("Search modules to load first in <DIR>") << std::endl;
 	std::cout << "-R|--resourcedir <DIR>" << std::endl;
 	std::cout << "    " << _TXT("Define a resource path <DIR> for the analyzer") << std::endl;
-	std::cout << "-P|--peermsgproc <NAME>" << std::endl;
-	std::cout << "    " << _TXT("Define the peer message processor <NAME>") << std::endl;
+	std::cout << "-T|--statmsgproc <NAME>" << std::endl;
+	std::cout << "    " << _TXT("Define the message processor for statistics as <NAME>") << std::endl;
 	std::cout << "-p|--port <PORT>" << std::endl;
 	std::cout << "    " << _TXT("Define the port to listen for requests as <PORT> (default 7181)") << std::endl;
 	std::cout << "-s|--storage <CONFIG>" << std::endl;
@@ -307,8 +307,8 @@ int main( int argc, const char* argv[])
 	std::vector<std::string> moduledirs;
 	std::vector<std::string> modules;
 	std::vector<std::string> resourcedirs;
-	std::string peermsgproc;
-	bool has_peermsgproc = false;
+	std::string statmsgproc;
+	bool has_statmsgproc = false;
 	std::string storageconfig;
 	bool doCreateIfNotExist = false;
 	unsigned int nofThreads = 0;
@@ -346,12 +346,12 @@ int main( int argc, const char* argv[])
 				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--resourcedir");
 				resourcedirs.push_back( argv[argi]);
 			}
-			else if (0==std::strcmp( argv[argi], "-P") || 0==std::strcmp( argv[argi], "--peermsgproc"))
+			else if (0==std::strcmp( argv[argi], "-T") || 0==std::strcmp( argv[argi], "--statmsgproc"))
 			{
 				++argi;
-				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--peermsgproc");
-				peermsgproc = argv[argi];
-				has_peermsgproc = true;
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--statmsgproc");
+				statmsgproc = argv[argi];
+				has_statmsgproc = true;
 			}
 			else if (0==std::strcmp( argv[argi], "-p") || 0==std::strcmp( argv[argi], "--port"))
 			{
@@ -447,9 +447,9 @@ int main( int argc, const char* argv[])
 			g_moduleLoader->addModulePath( *di);
 		}
 		moduleLoader->addSystemModulePath();
-		if (has_peermsgproc)
+		if (has_statmsgproc)
 		{
-			moduleLoader->defineStatisticsProcessor( peermsgproc);
+			moduleLoader->defineStatisticsProcessor( statmsgproc);
 		}
 		std::vector<std::string>::const_iterator
 			mi = modules.begin(), me = modules.end();

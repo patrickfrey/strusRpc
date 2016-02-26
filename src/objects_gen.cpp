@@ -1715,6 +1715,83 @@ try
 }
 }
 
+MetaDataRestrictionImpl::~MetaDataRestrictionImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void MetaDataRestrictionImpl::addCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addCondition);
+	msg.packMetaDataRestrictionCompareOperator( p1);
+	msg.packString( p2);
+	msg.packArithmeticVariant( p3);
+	msg.packBool( p4);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataRestrictionImpl::addCondition");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataRestrictionImpl::addCondition", err.what());
+	return void();
+}
+}
+
+bool MetaDataRestrictionImpl::match( const Index& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_match);
+	msg.packIndex( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataRestrictionImpl::match");
+	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataRestrictionImpl::match", err.what());
+	return false;
+}
+}
+
+std::string MetaDataRestrictionImpl::tostring( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_tostring);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataRestrictionImpl::tostring");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataRestrictionImpl::tostring", err.what());
+	return std::string();
+}
+}
+
 NormalizerFunctionContextImpl::~NormalizerFunctionContextImpl()
 {
 	if (isConst()) return;
@@ -2483,14 +2560,14 @@ try
 }
 }
 
-void QueryImpl::defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
+void QueryImpl::defineMetaDataRestriction( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineMetaDataRestriction);
-	msg.packCompareOperator( p1);
+	msg.packMetaDataRestrictionCompareOperator( p1);
 	msg.packString( p2);
 	msg.packArithmeticVariant( p3);
 	msg.packBool( p4);
@@ -3723,6 +3800,29 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createMetaDataReader", err.what());
+	return 0;
+}
+}
+
+MetaDataRestrictionInterface* StorageClientImpl::createMetaDataRestriction( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createMetaDataRestriction);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_MetaDataRestriction;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	MetaDataRestrictionInterface* p0 = new MetaDataRestrictionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createMetaDataRestriction");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createMetaDataRestriction", err.what());
 	return 0;
 }
 }

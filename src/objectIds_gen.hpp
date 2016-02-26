@@ -49,6 +49,7 @@ enum ClassId
 	ClassId_ForwardIterator,
 	ClassId_InvAclIterator,
 	ClassId_MetaDataReader,
+	ClassId_MetaDataRestriction,
 	ClassId_NormalizerFunctionContext,
 	ClassId_NormalizerFunctionInstance,
 	ClassId_NormalizerFunction,
@@ -294,6 +295,18 @@ public:
 	};
 };
 
+class MetaDataRestrictionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addCondition,
+		Method_match,
+		Method_tostring
+	};
+};
+
 class NormalizerFunctionContextConst
 {
 public:
@@ -534,6 +547,7 @@ public:
 		Method_createUserNameIterator,
 		Method_documentStatistics,
 		Method_createMetaDataReader,
+		Method_createMetaDataRestriction,
 		Method_createAttributeReader,
 		Method_createTransaction,
 		Method_createInitStatisticsIterator,

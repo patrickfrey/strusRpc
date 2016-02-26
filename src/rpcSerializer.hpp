@@ -52,6 +52,7 @@
 #include "strus/documentTermIteratorInterface.hpp"
 #include "strus/weightedDocument.hpp"
 #include "strus/resultDocument.hpp"
+#include "strus/metaDataRestrictionInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
 #include "strus/statisticsViewerInterface.hpp"
 #include "strus/analyzer/token.hpp"
@@ -89,13 +90,13 @@ public:
 	void packDocumentClass( const DocumentClass& prop);
 	void packTermStatistics( const TermStatistics& stats);
 	void packGlobalStatistics( const GlobalStatistics& stats);
+	void packMetaDataRestrictionCompareOperator( MetaDataRestrictionInterface::CompareOperator val);
 
 	void packDatabaseOptions( const DatabaseOptions& val);
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
 	void packStorageConfigType( const StorageInterface::ConfigType& val);
 	void packFeatureOptions( const DocumentAnalyzerInterface::FeatureOptions& val);
 	void packSummaryElement( const SummaryElement& val);
-	void packCompareOperator( const QueryInterface::CompareOperator& val);
 	void packSummarizationVariable( const SummarizationVariable& val);
 	void packDocumentTermIteratorTerm( const DocumentTermIteratorInterface::Term& term);
 	void packSlice( DatabaseCursorInterface::Slice& val);
@@ -161,13 +162,13 @@ public:
 	DocumentClass unpackDocumentClass();
 	TermStatistics unpackTermStatistics();
 	GlobalStatistics unpackGlobalStatistics();
+	MetaDataRestrictionInterface::CompareOperator unpackMetaDataRestrictionCompareOperator();
 
 	DatabaseOptions unpackDatabaseOptions();
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();
 	StorageInterface::ConfigType unpackStorageConfigType();
 	DocumentAnalyzerInterface::FeatureOptions unpackFeatureOptions();
 	SummaryElement unpackSummaryElement();
-	QueryInterface::CompareOperator unpackCompareOperator();
 	DocumentTermIteratorInterface::Term unpackDocumentTermIteratorTerm();
 	DatabaseCursorInterface::Slice unpackSlice();
 	analyzer::Document unpackAnalyzerDocument();

@@ -59,6 +59,7 @@
 #include "strus/forwardIteratorInterface.hpp"
 #include "strus/invAclIteratorInterface.hpp"
 #include "strus/metaDataReaderInterface.hpp"
+#include "strus/metaDataRestrictionInterface.hpp"
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/postingJoinOperatorInterface.hpp"
 #include "strus/queryEvalInterface.hpp"
@@ -358,6 +359,22 @@ public:
 	virtual const char* getName( const Index& p1) const;
 };
 
+class MetaDataRestrictionImpl
+		:public RpcInterfaceStub
+		,public strus::MetaDataRestrictionInterface
+		,public strus::MetaDataRestrictionConst
+{
+public:
+	virtual ~MetaDataRestrictionImpl();
+
+	MetaDataRestrictionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataRestriction, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void addCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
+	virtual bool match( const Index& p1) const;
+	virtual std::string tostring( ) const;
+};
+
 class NormalizerFunctionContextImpl
 		:public RpcInterfaceStub
 		,public strus::NormalizerFunctionContextInterface
@@ -490,7 +507,7 @@ public:
 	virtual void defineFeature( const std::string& p1, float p2);
 	virtual void defineTermStatistics( const std::string& p1, const std::string& p2, const TermStatistics& p3);
 	virtual void defineGlobalStatistics( const GlobalStatistics& p1);
-	virtual void defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
+	virtual void defineMetaDataRestriction( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
 	virtual void addDocumentEvaluationSet( const std::vector<Index>& p1);
 	virtual void setMaxNofRanks( std::size_t p1);
 	virtual void setMinRank( std::size_t p1);
@@ -671,6 +688,7 @@ public:
 	virtual ValueIteratorInterface* createUserNameIterator( ) const;
 	virtual Index documentStatistics( const Index& p1, const StorageClientInterface::DocumentStatisticsType& p2, const std::string& p3) const;
 	virtual MetaDataReaderInterface* createMetaDataReader( ) const;
+	virtual MetaDataRestrictionInterface* createMetaDataRestriction( ) const;
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual StorageTransactionInterface* createTransaction( );
 	virtual StatisticsIteratorInterface* createInitStatisticsIterator( bool p1);

@@ -1551,6 +1551,77 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_MetaDataRestriction:
+	{
+	MetaDataRestrictionInterface* obj = getObject<MetaDataRestrictionInterface>( classId, objId);
+	switch( (MetaDataRestrictionConst::MethodId)methodId)
+	{
+		case MetaDataRestrictionConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case MetaDataRestrictionConst::Method_addCondition:
+		{
+			RpcSerializer msg;
+			MetaDataRestrictionInterface::CompareOperator p1;
+			std::string p2;
+			ArithmeticVariant p3;
+			bool p4;
+			p1 = serializedMsg.unpackMetaDataRestrictionCompareOperator();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackArithmeticVariant();
+			p4 = serializedMsg.unpackBool();
+			obj->addCondition(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case MetaDataRestrictionConst::Method_match:
+		{
+			RpcSerializer msg;
+			bool p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->match(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case MetaDataRestrictionConst::Method_tostring:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			p0 = obj->tostring();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_NormalizerFunctionContext:
 	{
 	NormalizerFunctionContextInterface* obj = getObject<NormalizerFunctionContextInterface>( classId, objId);
@@ -2261,11 +2332,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryConst::Method_defineMetaDataRestriction:
 		{
 			RpcSerializer msg;
-			QueryInterface::CompareOperator p1;
+			MetaDataRestrictionInterface::CompareOperator p1;
 			std::string p2;
 			ArithmeticVariant p3;
 			bool p4;
-			p1 = serializedMsg.unpackCompareOperator();
+			p1 = serializedMsg.unpackMetaDataRestrictionCompareOperator();
 			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackArithmeticVariant();
 			p4 = serializedMsg.unpackBool();
@@ -3358,6 +3429,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createMetaDataReader();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StorageClientConst::Method_createMetaDataRestriction:
+		{
+			RpcSerializer msg;
+			MetaDataRestrictionInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createMetaDataRestriction();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

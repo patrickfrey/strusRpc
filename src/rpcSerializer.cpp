@@ -384,6 +384,11 @@ void RpcSerializer::packGlobalStatistics( const GlobalStatistics& stats)
 	packGlobalCounter( stats.nofDocumentsInserted());
 }
 
+void RpcSerializer::packMetaDataRestrictionCompareOperator( MetaDataRestrictionInterface::CompareOperator val)
+{
+	packByte( (unsigned char)val);
+}
+
 void RpcSerializer::packDatabaseOptions( const DatabaseOptions& val)
 {
 	packUint( val.opt());
@@ -410,11 +415,6 @@ void RpcSerializer::packSummaryElement( const SummaryElement& val)
 	packString( val.value());
 	packDouble( val.weight());
 	packInt( val.index());
-}
-
-void RpcSerializer::packCompareOperator( const QueryInterface::CompareOperator& val)
-{
-	packByte( (unsigned char)val);
 }
 
 void RpcSerializer::packSummarizationVariable( const SummarizationVariable& val)
@@ -824,6 +824,11 @@ GlobalStatistics RpcDeserializer::unpackGlobalStatistics()
 	return rt;
 }
 
+MetaDataRestrictionInterface::CompareOperator RpcDeserializer::unpackMetaDataRestrictionCompareOperator()
+{
+	return (MetaDataRestrictionInterface::CompareOperator)unpackByte();
+}
+
 bool RpcDeserializer::unpackCrc32()
 {
 #if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM	
@@ -884,11 +889,6 @@ SummaryElement RpcDeserializer::unpackSummaryElement()
 	float weight = unpackDouble();
 	float index = unpackInt();
 	return SummaryElement( name, value, weight, index);
-}
-
-QueryInterface::CompareOperator RpcDeserializer::unpackCompareOperator()
-{
-	return QueryInterface::CompareOperator( unpackByte());
 }
 
 DocumentTermIteratorInterface::Term RpcDeserializer::unpackDocumentTermIteratorTerm()
