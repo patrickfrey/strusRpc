@@ -2560,13 +2560,13 @@ try
 }
 }
 
-void QueryImpl::defineMetaDataRestriction( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
+void QueryImpl::addMetaDataRestrictionCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineMetaDataRestriction);
+	msg.packByte( Method_addMetaDataRestrictionCondition);
 	msg.packMetaDataRestrictionCompareOperator( p1);
 	msg.packString( p2);
 	msg.packArithmeticVariant( p3);
@@ -2574,10 +2574,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::defineMetaDataRestriction");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::addMetaDataRestrictionCondition");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::defineMetaDataRestriction", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::addMetaDataRestrictionCondition", err.what());
 	return void();
 }
 }

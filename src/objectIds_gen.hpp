@@ -406,7 +406,7 @@ public:
 		Method_defineFeature,
 		Method_defineTermStatistics,
 		Method_defineGlobalStatistics,
-		Method_defineMetaDataRestriction,
+		Method_addMetaDataRestrictionCondition,
 		Method_addDocumentEvaluationSet,
 		Method_setMaxNofRanks,
 		Method_setMinRank,

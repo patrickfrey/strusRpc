@@ -2329,7 +2329,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryConst::Method_defineMetaDataRestriction:
+		case QueryConst::Method_addMetaDataRestrictionCondition:
 		{
 			RpcSerializer msg;
 			MetaDataRestrictionInterface::CompareOperator p1;
@@ -2340,7 +2340,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackArithmeticVariant();
 			p4 = serializedMsg.unpackBool();
-			obj->defineMetaDataRestriction(p1,p2,p3,p4);
+			obj->addMetaDataRestrictionCondition(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
