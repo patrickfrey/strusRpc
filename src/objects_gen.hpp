@@ -59,6 +59,7 @@
 #include "strus/forwardIteratorInterface.hpp"
 #include "strus/invAclIteratorInterface.hpp"
 #include "strus/metaDataReaderInterface.hpp"
+#include "strus/metaDataRestrictionInstanceInterface.hpp"
 #include "strus/metaDataRestrictionInterface.hpp"
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/postingJoinOperatorInterface.hpp"
@@ -359,6 +360,20 @@ public:
 	virtual const char* getName( const Index& p1) const;
 };
 
+class MetaDataRestrictionInstanceImpl
+		:public RpcInterfaceStub
+		,public strus::MetaDataRestrictionInstanceInterface
+		,public strus::MetaDataRestrictionInstanceConst
+{
+public:
+	virtual ~MetaDataRestrictionInstanceImpl();
+
+	MetaDataRestrictionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataRestrictionInstance, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual bool match( const Index& p1) const;
+};
+
 class MetaDataRestrictionImpl
 		:public RpcInterfaceStub
 		,public strus::MetaDataRestrictionInterface
@@ -371,7 +386,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataRestriction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
-	virtual bool match( const Index& p1) const;
+	virtual MetaDataRestrictionInstanceInterface* createInstance( ) const;
 	virtual std::string tostring( ) const;
 };
 
@@ -675,7 +690,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageClient, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2) const;
-	virtual PostingIteratorInterface* createBrowsePostingIterator( MetaDataRestrictionInterface* p1, const Index& p2) const;
+	virtual PostingIteratorInterface* createBrowsePostingIterator( const MetaDataRestrictionInterface* p1, const Index& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;
 	virtual DocumentTermIteratorInterface* createDocumentTermIterator( const std::string& p1) const;
 	virtual InvAclIteratorInterface* createInvAclIterator( const std::string& p1) const;

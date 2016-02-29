@@ -49,6 +49,7 @@ enum ClassId
 	ClassId_ForwardIterator,
 	ClassId_InvAclIterator,
 	ClassId_MetaDataReader,
+	ClassId_MetaDataRestrictionInstance,
 	ClassId_MetaDataRestriction,
 	ClassId_NormalizerFunctionContext,
 	ClassId_NormalizerFunctionInstance,
@@ -295,6 +296,16 @@ public:
 	};
 };
 
+class MetaDataRestrictionInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_match
+	};
+};
+
 class MetaDataRestrictionConst
 {
 public:
@@ -302,7 +313,7 @@ public:
 	{
 		Method_Destructor,
 		Method_addCondition,
-		Method_match,
+		Method_createInstance,
 		Method_tostring
 	};
 };

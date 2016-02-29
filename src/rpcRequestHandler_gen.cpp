@@ -1551,6 +1551,38 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_MetaDataRestrictionInstance:
+	{
+	MetaDataRestrictionInstanceInterface* obj = getObject<MetaDataRestrictionInstanceInterface>( classId, objId);
+	switch( (MetaDataRestrictionInstanceConst::MethodId)methodId)
+	{
+		case MetaDataRestrictionInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case MetaDataRestrictionInstanceConst::Method_match:
+		{
+			RpcSerializer msg;
+			bool p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->match(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_MetaDataRestriction:
 	{
 	MetaDataRestrictionInterface* obj = getObject<MetaDataRestrictionInterface>( classId, objId);
@@ -1583,13 +1615,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case MetaDataRestrictionConst::Method_match:
+		case MetaDataRestrictionConst::Method_createInstance:
 		{
 			RpcSerializer msg;
-			bool p0;
-			Index p1;
-			p1 = serializedMsg.unpackIndex();
-			p0 = obj->match(p1);
+			MetaDataRestrictionInstanceInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createInstance();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1598,9 +1630,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packCrc32();
-			return msg.content();
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
 		}
 		case MetaDataRestrictionConst::Method_tostring:
 		{
@@ -3190,12 +3222,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			PostingIteratorInterface* p0;
-			MetaDataRestrictionInterface* p1;
+			const MetaDataRestrictionInterface* p1;
 			Index p2;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_MetaDataRestriction) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p1 = getObject<MetaDataRestrictionInterface>( classId_1, objId_1);
+			p1 = getConstObject<MetaDataRestrictionInterface>( classId_1, objId_1);
 			markObjectToRelease( classId_1, objId_1);
 			p2 = serializedMsg.unpackIndex();
 			unsigned char classId_0; unsigned int objId_0;

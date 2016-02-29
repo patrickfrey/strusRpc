@@ -1715,6 +1715,39 @@ try
 }
 }
 
+MetaDataRestrictionInstanceImpl::~MetaDataRestrictionInstanceImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+bool MetaDataRestrictionInstanceImpl::match( const Index& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_match);
+	msg.packIndex( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataRestrictionInstanceImpl::match");
+	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataRestrictionInstanceImpl::match", err.what());
+	return false;
+}
+}
+
 MetaDataRestrictionImpl::~MetaDataRestrictionImpl()
 {
 	if (isConst()) return;
@@ -1747,26 +1780,26 @@ try
 }
 }
 
-bool MetaDataRestrictionImpl::match( const Index& p1) const
+MetaDataRestrictionInstanceInterface* MetaDataRestrictionImpl::createInstance( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_match);
-	msg.packIndex( p1);
+	msg.packByte( Method_createInstance);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_MetaDataRestrictionInstance;
+	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
+	ctx()->rpc_sendMessage( msg.content());
+	MetaDataRestrictionInstanceInterface* p0 = new MetaDataRestrictionInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataRestrictionImpl::match");
-	return false;
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataRestrictionImpl::createInstance");
+	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataRestrictionImpl::match", err.what());
-	return false;
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataRestrictionImpl::createInstance", err.what());
+	return 0;
 }
 }
 
@@ -3501,7 +3534,7 @@ try
 }
 }
 
-PostingIteratorInterface* StorageClientImpl::createBrowsePostingIterator( MetaDataRestrictionInterface* p1, const Index& p2) const
+PostingIteratorInterface* StorageClientImpl::createBrowsePostingIterator( const MetaDataRestrictionInterface* p1, const Index& p2) const
 {
 try
 {
@@ -3518,9 +3551,6 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, ctx(), false, errorhnd());
-	RpcInterfaceStub* done_1 = dynamic_cast<RpcInterfaceStub*>(p1);
-	done_1->release();
-	delete p1;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createBrowsePostingIterator");
