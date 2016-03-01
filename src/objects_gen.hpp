@@ -304,7 +304,7 @@ public:
 	DocumentTermIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentTermIterator, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void skipDoc( const Index& p1);
+	virtual bool skipDoc( const Index& p1);
 	virtual bool nextTerm( DocumentTermIteratorInterface::Term& p1);
 	virtual unsigned int termDocumentFrequency( const Index& p1) const;
 	virtual std::string termValue( const Index& p1) const;

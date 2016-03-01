@@ -1353,7 +1353,7 @@ DocumentTermIteratorImpl::~DocumentTermIteratorImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void DocumentTermIteratorImpl::skipDoc( const Index& p1)
+bool DocumentTermIteratorImpl::skipDoc( const Index& p1)
 {
 try
 {
@@ -1362,13 +1362,17 @@ try
 	msg.packByte( Method_skipDoc);
 	msg.packIndex( p1);
 	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentTermIteratorImpl::skipDoc");
-	return void();
+	return false;
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentTermIteratorImpl::skipDoc", err.what());
-	return void();
+	return false;
 }
 }
 

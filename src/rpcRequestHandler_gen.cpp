@@ -1240,9 +1240,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case DocumentTermIteratorConst::Method_skipDoc:
 		{
 			RpcSerializer msg;
+			bool p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
-			obj->skipDoc(p1);
+			p0 = obj->skipDoc(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1251,7 +1252,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			return std::string();
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 		case DocumentTermIteratorConst::Method_nextTerm:
 		{
