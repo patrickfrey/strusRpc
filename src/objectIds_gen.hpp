@@ -167,6 +167,7 @@ public:
 	{
 		Method_Destructor,
 		Method_seekUpperBound,
+		Method_seekUpperBoundRestricted,
 		Method_seekFirst,
 		Method_seekLast,
 		Method_seekNext,

@@ -552,6 +552,31 @@ try
 }
 }
 
+DatabaseCursorInterface::Slice DatabaseCursorImpl::seekUpperBoundRestricted( const char* p1, std::size_t p2, const char* p3, std::size_t p4)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_seekUpperBoundRestricted);
+	msg.packBuffer( p1, p2);
+	msg.packBuffer( p3, p4);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	DatabaseCursorInterface::Slice slice0 = serializedMsg.unpackSlice();
+	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekUpperBoundRestricted");
+	return DatabaseCursorInterface::Slice();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekUpperBoundRestricted", err.what());
+	return DatabaseCursorInterface::Slice();
+}
+}
+
 DatabaseCursorInterface::Slice DatabaseCursorImpl::seekFirst( const char* p1, std::size_t p2)
 {
 try
@@ -1353,7 +1378,7 @@ DocumentTermIteratorImpl::~DocumentTermIteratorImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-bool DocumentTermIteratorImpl::skipDoc( const Index& p1)
+Index DocumentTermIteratorImpl::skipDoc( const Index& p1)
 {
 try
 {
@@ -1365,14 +1390,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
+	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentTermIteratorImpl::skipDoc");
-	return false;
+	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentTermIteratorImpl::skipDoc", err.what());
-	return false;
+	return 0;
 }
 }
 

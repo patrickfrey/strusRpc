@@ -511,6 +511,29 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case DatabaseCursorConst::Method_seekUpperBoundRestricted:
+		{
+			RpcSerializer msg;
+			DatabaseCursorInterface::Slice p0;
+			const char* p1;
+			std::size_t p2;
+			const char* p3;
+			std::size_t p4;
+			serializedMsg.unpackBuffer( p1, p2);
+			serializedMsg.unpackBuffer( p3, p4);
+			p0 = obj->seekUpperBoundRestricted(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSlice( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case DatabaseCursorConst::Method_seekFirst:
 		{
 			RpcSerializer msg;
@@ -1240,7 +1263,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case DocumentTermIteratorConst::Method_skipDoc:
 		{
 			RpcSerializer msg;
-			bool p0;
+			Index p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
 			p0 = obj->skipDoc(p1);
@@ -1252,7 +1275,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
+			msg.packIndex( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

@@ -196,6 +196,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseCursor, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual DatabaseCursorInterface::Slice seekUpperBound( const char* p1, std::size_t p2, std::size_t p3);
+	virtual DatabaseCursorInterface::Slice seekUpperBoundRestricted( const char* p1, std::size_t p2, const char* p3, std::size_t p4);
 	virtual DatabaseCursorInterface::Slice seekFirst( const char* p1, std::size_t p2);
 	virtual DatabaseCursorInterface::Slice seekLast( const char* p1, std::size_t p2);
 	virtual DatabaseCursorInterface::Slice seekNext( );
@@ -304,7 +305,7 @@ public:
 	DocumentTermIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentTermIterator, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual bool skipDoc( const Index& p1);
+	virtual Index skipDoc( const Index& p1);
 	virtual bool nextTerm( DocumentTermIteratorInterface::Term& p1);
 	virtual unsigned int termDocumentFrequency( const Index& p1) const;
 	virtual std::string termValue( const Index& p1) const;
