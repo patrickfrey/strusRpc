@@ -1,3 +1,7 @@
+strusRpc (0.5.0)
+  * adapted core interface changes
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Sun, 6 Mar 2016 15:00:00 +0100
+
 strusRpc (0.4.2)
   * adapted core interface change: weighting function return type
  -- Patrick Frey <patrickpfrey@yahoo.com>  Tue, 9 Feb 2016 11:00:00 +0100

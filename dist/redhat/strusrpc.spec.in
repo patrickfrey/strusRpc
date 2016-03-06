@@ -285,6 +285,9 @@ make test
 %{_includedir}/strus/lib/*.hpp
 
 %changelog
+* Sun Mar 6 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.5.0-0.1
+- adapted core interface changes
+
 * Tue Feb 9 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.4.2-0.1
 - adapted core interface change: weighting function return type
 
