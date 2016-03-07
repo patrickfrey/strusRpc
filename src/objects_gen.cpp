@@ -4064,13 +4064,14 @@ bool StorageClientImpl::checkStorage( std::ostream& p1) const
 	return false;
 }
 
-StorageDumpInterface* StorageClientImpl::createDump( ) const
+StorageDumpInterface* StorageClientImpl::createDump( const std::string& p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createDump);
+	msg.packString( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StorageDump;
 	msg.packObject( classId_0, objId_0);

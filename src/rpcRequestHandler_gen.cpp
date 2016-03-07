@@ -3679,9 +3679,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			StorageDumpInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createDump();
+			p0 = obj->createDump(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

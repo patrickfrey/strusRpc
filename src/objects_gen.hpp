@@ -713,7 +713,7 @@ public:
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
 	virtual bool checkStorage( std::ostream& p1) const;
-	virtual StorageDumpInterface* createDump( ) const;
+	virtual StorageDumpInterface* createDump( const std::string& p1) const;
 };
 
 class StorageDocumentImpl
