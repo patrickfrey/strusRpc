@@ -3,19 +3,19 @@
     The C++ library strus implements basic operations to build
     a search engine for structured search on unstructured data.
 
-    Copyright (C) 2013,2014 Patrick Frey
+    Copyright (C) 2015 Patrick Frey
 
     This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
+    modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+    version 3 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+    General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
+    You should have received a copy of the GNU General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
@@ -45,9 +45,12 @@ enum ClassId
 	ClassId_DocumentAnalyzerContext,
 	ClassId_DocumentAnalyzer,
 	ClassId_DocumentClassDetector,
+	ClassId_DocumentTermIterator,
 	ClassId_ForwardIterator,
 	ClassId_InvAclIterator,
 	ClassId_MetaDataReader,
+	ClassId_MetaDataRestrictionInstance,
+	ClassId_MetaDataRestriction,
 	ClassId_NormalizerFunctionContext,
 	ClassId_NormalizerFunctionInstance,
 	ClassId_NormalizerFunction,
@@ -164,6 +167,7 @@ public:
 	{
 		Method_Destructor,
 		Method_seekUpperBound,
+		Method_seekUpperBoundRestricted,
 		Method_seekFirst,
 		Method_seekLast,
 		Method_seekNext,
@@ -242,6 +246,19 @@ public:
 	};
 };
 
+class DocumentTermIteratorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_skipDoc,
+		Method_nextTerm,
+		Method_termDocumentFrequency,
+		Method_termValue
+	};
+};
+
 class ForwardIteratorConst
 {
 public:
@@ -277,6 +294,28 @@ public:
 		Method_getValue,
 		Method_getType,
 		Method_getName
+	};
+};
+
+class MetaDataRestrictionInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_match
+	};
+};
+
+class MetaDataRestrictionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addCondition,
+		Method_createInstance,
+		Method_tostring
 	};
 };
 
@@ -318,9 +357,9 @@ public:
 	{
 		Method_Destructor,
 		Method_skipDoc,
+		Method_skipDocCandidate,
 		Method_skipPos,
 		Method_featureid,
-		Method_subExpressions,
 		Method_documentFrequency,
 		Method_frequency,
 		Method_docno,
@@ -379,7 +418,7 @@ public:
 		Method_defineFeature,
 		Method_defineTermStatistics,
 		Method_defineGlobalStatistics,
-		Method_defineMetaDataRestriction,
+		Method_addMetaDataRestrictionCondition,
 		Method_addDocumentEvaluationSet,
 		Method_setMaxNofRanks,
 		Method_setMinRank,
@@ -507,7 +546,9 @@ public:
 	{
 		Method_Destructor,
 		Method_createTermPostingIterator,
+		Method_createBrowsePostingIterator,
 		Method_createForwardIterator,
+		Method_createDocumentTermIterator,
 		Method_createInvAclIterator,
 		Method_nofDocumentsInserted,
 		Method_documentFrequency,
@@ -519,6 +560,7 @@ public:
 		Method_createUserNameIterator,
 		Method_documentStatistics,
 		Method_createMetaDataReader,
+		Method_createMetaDataRestriction,
 		Method_createAttributeReader,
 		Method_createTransaction,
 		Method_createInitStatisticsIterator,

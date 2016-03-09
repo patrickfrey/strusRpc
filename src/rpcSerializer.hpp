@@ -3,19 +3,19 @@
     The C++ library strus implements basic operations to build
     a search engine for structured search on unstructured data.
 
-    Copyright (C) 2013,2014 Patrick Frey
+    Copyright (C) 2015 Patrick Frey
 
     This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
+    modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+    version 3 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+    General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
+    You should have received a copy of the GNU General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
@@ -49,8 +49,10 @@
 #include "strus/queryInterface.hpp"
 #include "strus/queryEvalInterface.hpp"
 #include "strus/queryProcessorInterface.hpp"
+#include "strus/documentTermIteratorInterface.hpp"
 #include "strus/weightedDocument.hpp"
 #include "strus/resultDocument.hpp"
+#include "strus/metaDataRestrictionInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
 #include "strus/statisticsViewerInterface.hpp"
 #include "strus/analyzer/token.hpp"
@@ -88,14 +90,15 @@ public:
 	void packDocumentClass( const DocumentClass& prop);
 	void packTermStatistics( const TermStatistics& stats);
 	void packGlobalStatistics( const GlobalStatistics& stats);
+	void packMetaDataRestrictionCompareOperator( MetaDataRestrictionInterface::CompareOperator val);
 
 	void packDatabaseOptions( const DatabaseOptions& val);
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
 	void packStorageConfigType( const StorageInterface::ConfigType& val);
 	void packFeatureOptions( const DocumentAnalyzerInterface::FeatureOptions& val);
-	void packSummaryElement( const SummarizerFunctionContextInterface::SummaryElement& val);
-	void packCompareOperator( const QueryInterface::CompareOperator& val);
+	void packSummaryElement( const SummaryElement& val);
 	void packSummarizationVariable( const SummarizationVariable& val);
+	void packDocumentTermIteratorTerm( const DocumentTermIteratorInterface::Term& term);
 	void packSlice( DatabaseCursorInterface::Slice& val);
 	void packAnalyzerDocument( const analyzer::Document& val);
 	void packAnalyzerAttribute( const analyzer::Attribute& val);
@@ -105,6 +108,7 @@ public:
 	void packAnalyzerToken( const analyzer::Token& val);
 	void packWeightedDocument( const WeightedDocument& val);
 	void packResultDocument( const ResultDocument& val);
+	void packQueryResult( const QueryResult& val);
 	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
 	void packPhrase( const QueryAnalyzerInterface::Phrase& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
@@ -158,13 +162,14 @@ public:
 	DocumentClass unpackDocumentClass();
 	TermStatistics unpackTermStatistics();
 	GlobalStatistics unpackGlobalStatistics();
+	MetaDataRestrictionInterface::CompareOperator unpackMetaDataRestrictionCompareOperator();
 
 	DatabaseOptions unpackDatabaseOptions();
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();
 	StorageInterface::ConfigType unpackStorageConfigType();
 	DocumentAnalyzerInterface::FeatureOptions unpackFeatureOptions();
-	SummarizerFunctionContextInterface::SummaryElement unpackSummaryElement();
-	QueryInterface::CompareOperator unpackCompareOperator();
+	SummaryElement unpackSummaryElement();
+	DocumentTermIteratorInterface::Term unpackDocumentTermIteratorTerm();
 	DatabaseCursorInterface::Slice unpackSlice();
 	analyzer::Document unpackAnalyzerDocument();
 	analyzer::Attribute unpackAnalyzerAttribute();
@@ -174,6 +179,7 @@ public:
 	analyzer::Token unpackAnalyzerToken();
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();
+	QueryResult unpackQueryResult();
 	QueryEvalInterface::FeatureParameter unpackFeatureParameter();
 	QueryAnalyzerInterface::Phrase unpackPhrase();
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();

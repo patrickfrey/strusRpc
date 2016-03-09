@@ -3,19 +3,19 @@
     The C++ library strus implements basic operations to build
     a search engine for structured search on unstructured data.
 
-    Copyright (C) 2013,2014 Patrick Frey
+    Copyright (C) 2015 Patrick Frey
 
     This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
+    modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+    version 3 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+    General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
+    You should have received a copy of the GNU General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
@@ -30,6 +30,7 @@
 #include "hexdump.h"
 #include "private/utils.hpp"
 #include "private/internationalization.hpp"
+#include "strus/private/crc32.hpp"
 #include "rpcProtocolDefines.hpp"
 #include <stdexcept>
 #include <cstring>
@@ -362,7 +363,7 @@ void RpcSerializer::packArithmeticVariant( const ArithmeticVariant& val)
 		case ArithmeticVariant::Null: break;
 		case ArithmeticVariant::Int: packInt( val.variant.Int); break;
 		case ArithmeticVariant::UInt: packUint( val.variant.UInt); break;
-		case ArithmeticVariant::Float: packFloat( val.variant.Float); break;
+		case ArithmeticVariant::Float: packDouble( val.variant.Float); break;
 	}
 }
 
@@ -381,6 +382,11 @@ void RpcSerializer::packTermStatistics( const TermStatistics& stats)
 void RpcSerializer::packGlobalStatistics( const GlobalStatistics& stats)
 {
 	packGlobalCounter( stats.nofDocumentsInserted());
+}
+
+void RpcSerializer::packMetaDataRestrictionCompareOperator( MetaDataRestrictionInterface::CompareOperator val)
+{
+	packByte( (unsigned char)val);
 }
 
 void RpcSerializer::packDatabaseOptions( const DatabaseOptions& val)
@@ -403,15 +409,12 @@ void RpcSerializer::packFeatureOptions( const DocumentAnalyzerInterface::Feature
 	packUint( val.opt());
 }
 
-void RpcSerializer::packSummaryElement( const SummarizerFunctionContextInterface::SummaryElement& val)
+void RpcSerializer::packSummaryElement( const SummaryElement& val)
 {
-	packString( val.text());
-	packFloat( val.weight());
-}
-
-void RpcSerializer::packCompareOperator( const QueryInterface::CompareOperator& val)
-{
-	packByte( (unsigned char)val);
+	packString( val.name());
+	packString( val.value());
+	packDouble( val.weight());
+	packInt( val.index());
 }
 
 void RpcSerializer::packSummarizationVariable( const SummarizationVariable& val)
@@ -420,6 +423,13 @@ void RpcSerializer::packSummarizationVariable( const SummarizationVariable& val)
 	const RpcInterfaceStub* so = dynamic_cast<const RpcInterfaceStub*>( val.itr());
 	if (!so) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (summarization variable)"));
 	packObject( so->classId(), so->objId());
+}
+
+void RpcSerializer::packDocumentTermIteratorTerm( const DocumentTermIteratorInterface::Term& val)
+{
+	packIndex( (Index)val.tf);
+	packIndex( (Index)val.firstpos);
+	packIndex( val.termno);
 }
 
 void RpcSerializer::packSlice( DatabaseCursorInterface::Slice& val)
@@ -495,20 +505,33 @@ void RpcSerializer::packAnalyzerToken( const analyzer::Token& val)
 void RpcSerializer::packWeightedDocument( const WeightedDocument& val)
 {
 	packIndex( val.docno());
-	packFloat( val.weight());
+	packDouble( val.weight());
 }
 
 void RpcSerializer::packResultDocument( const ResultDocument& val)
 {
 	packWeightedDocument( val);
-	std::vector<ResultDocument::Attribute>::const_iterator
-		ai = val.attributes().begin(), ae = val.attributes().end();
+	std::vector<SummaryElement>::const_iterator
+		ai = val.summaryElements().begin(), ae = val.summaryElements().end();
 	packSize( ae-ai);
 	for (; ai != ae; ++ai)
 	{
-		packString( ai->name());
-		packString( ai->value());
-		packFloat( ai->weight());
+		packSummaryElement( *ai);
+	}
+}
+
+void RpcSerializer::packQueryResult( const QueryResult& val)
+{
+	packByte( val.evaluationPass());
+	packIndex( val.nofDocumentsRanked());
+	packIndex( val.nofDocumentsVisited());
+
+	std::vector<ResultDocument>::const_iterator
+		ri = val.ranks().begin(), re = val.ranks().end();
+	packSize( re-ri);
+	for (; ri != re; ++ri)
+	{
+		packResultDocument( *ri);
 	}
 }
 
@@ -568,6 +591,7 @@ void RpcSerializer::packWeightingFunctionDescription( const WeightingFunctionInt
 		packByte( (unsigned char)vi->type());
 		packString( vi->name());
 		packString( vi->text());
+		packString( vi->domain());
 	}
 }
 
@@ -581,6 +605,7 @@ void RpcSerializer::packSummarizerFunctionDescription( const SummarizerFunctionI
 		packByte( (unsigned char)vi->type());
 		packString( vi->name());
 		packString( vi->text());
+		packString( vi->domain());
 	}
 }
 
@@ -772,7 +797,7 @@ ArithmeticVariant RpcDeserializer::unpackArithmeticVariant()
 		case ArithmeticVariant::Null: return ArithmeticVariant();
 		case ArithmeticVariant::Int: return ArithmeticVariant( unpackInt());
 		case ArithmeticVariant::UInt: return ArithmeticVariant( unpackUint());
-		case ArithmeticVariant::Float: return ArithmeticVariant( unpackFloat());
+		case ArithmeticVariant::Float: return ArithmeticVariant( unpackDouble());
 	}
 	throw strus::runtime_error( _TXT("unknown type of arithmetic variant"));
 }
@@ -797,6 +822,11 @@ GlobalStatistics RpcDeserializer::unpackGlobalStatistics()
 	GlobalStatistics rt;
 	rt.setNofDocumentsInserted( unpackGlobalCounter());
 	return rt;
+}
+
+MetaDataRestrictionInterface::CompareOperator RpcDeserializer::unpackMetaDataRestrictionCompareOperator()
+{
+	return (MetaDataRestrictionInterface::CompareOperator)unpackByte();
 }
 
 bool RpcDeserializer::unpackCrc32()
@@ -852,16 +882,21 @@ DocumentAnalyzerInterface::FeatureOptions RpcDeserializer::unpackFeatureOptions(
 	return DocumentAnalyzerInterface::FeatureOptions( unpackUint());
 }
 
-SummarizerFunctionContextInterface::SummaryElement RpcDeserializer::unpackSummaryElement()
+SummaryElement RpcDeserializer::unpackSummaryElement()
 {
-	std::string pname = unpackString();
-	float pvalue = unpackFloat();
-	return SummarizerFunctionContextInterface::SummaryElement( pname, pvalue);
+	std::string name = unpackString();
+	std::string value = unpackString();
+	float weight = unpackDouble();
+	float index = unpackInt();
+	return SummaryElement( name, value, weight, index);
 }
 
-QueryInterface::CompareOperator RpcDeserializer::unpackCompareOperator()
+DocumentTermIteratorInterface::Term RpcDeserializer::unpackDocumentTermIteratorTerm()
 {
-	return QueryInterface::CompareOperator( unpackByte());
+	Index tf = unpackIndex();
+	Index firstpos = unpackIndex();
+	Index termno = unpackIndex();
+	return DocumentTermIteratorInterface::Term( tf, firstpos, termno);
 }
 
 DatabaseCursorInterface::Slice RpcDeserializer::unpackSlice()
@@ -951,22 +986,34 @@ analyzer::Token RpcDeserializer::unpackAnalyzerToken()
 WeightedDocument RpcDeserializer::unpackWeightedDocument()
 {
 	Index docno = unpackIndex();
-	float weight = unpackFloat();
+	float weight = unpackDouble();
 	return WeightedDocument( docno, weight);
 }
 
 ResultDocument RpcDeserializer::unpackResultDocument()
 {
-	ResultDocument rt( unpackWeightedDocument());
+	WeightedDocument weightedDocument( unpackWeightedDocument());
+	std::vector<SummaryElement> summaryElements;
 	std::size_t ii=0,size=unpackSize();
 	for (; ii<size; ++ii)
 	{
-		std::string name = unpackString();
-		std::string value = unpackString();
-		float weight = unpackFloat();
-		rt.addAttribute( name, value, weight);
+		summaryElements.push_back( unpackSummaryElement());
 	}
-	return rt;
+	return ResultDocument( weightedDocument, summaryElements);
+}
+
+QueryResult RpcDeserializer::unpackQueryResult()
+{
+	unsigned int pass = unpackByte();
+	unsigned int nofDocumentsRanked = unpackIndex();
+	unsigned int nofDocumentsVisited = unpackIndex();
+	std::size_t ii=0,size=unpackSize();
+	std::vector<ResultDocument> ranks;
+	for (; ii<size; ++ii)
+	{
+		ranks.push_back( unpackResultDocument());
+	}
+	return QueryResult( pass, nofDocumentsRanked, nofDocumentsVisited, ranks);
 }
 
 QueryAnalyzerInterface::Phrase RpcDeserializer::unpackPhrase()
@@ -1030,7 +1077,8 @@ WeightingFunctionInterface::Description RpcDeserializer::unpackWeightingFunction
 		WeightingFunctionInterface::Description::Param::Type type = (WeightingFunctionInterface::Description::Param::Type)unpackByte();
 		std::string name( unpackString());
 		std::string text( unpackString());
-		rt( type, name, text);
+		std::string domain( unpackString());
+		rt( type, name, text, domain);
 	}
 	return rt;
 }
@@ -1044,7 +1092,8 @@ SummarizerFunctionInterface::Description RpcDeserializer::unpackSummarizerFuncti
 		SummarizerFunctionInterface::Description::Param::Type type = (SummarizerFunctionInterface::Description::Param::Type)unpackByte();
 		std::string name( unpackString());
 		std::string text( unpackString());
-		rt( type, name, text);
+		std::string domain( unpackString());
+		rt( type, name, text, domain);
 	}
 	return rt;
 }

@@ -1,3 +1,23 @@
+strusRpc (0.5.0)
+  * adapted core interface changes
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Sun, 6 Mar 2016 15:00:00 +0100
+
+strusRpc (0.4.2)
+  * adapted core interface change: weighting function return type
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Tue, 9 Feb 2016 11:00:00 +0100
+
+strusRpc (0.4.1)
+  * fix typos in src license reference
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Sun, 17 Jan 2016 12:00:00 +0100
+
+strusRpc (0.4.0)
+  * adapted core interface change: changed interface of posting iterator (new method skipDocCandidate and removed obsolete method subExpressions)
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Sat, 2 Jan 2016 17:00:00 +0100
+
+strusRpc (0.3.2)
+  * adapted core interface change: changed type of document frequency from GlobalCounter to Index
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Fri, 1 Jan 2016 15:00:00 +0100
+
 strusRpc (0.3.1)
   * fixing versioning problems on the Open Suse build cluster
  -- Patrick Frey <patrickpfrey@yahoo.com>  Fri, 21 Dec 2015 09:38:00 +0100

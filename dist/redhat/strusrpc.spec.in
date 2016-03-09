@@ -285,6 +285,21 @@ make test
 %{_includedir}/strus/lib/*.hpp
 
 %changelog
+* Sun Mar 6 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.5.0-0.1
+- adapted core interface changes
+
+* Tue Feb 9 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.4.2-0.1
+- adapted core interface change: weighting function return type
+
+* Sun Jan 17 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.4.1-0.1
+- fix typos in src license reference
+
+* Sat Jan 2 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.4.0-0.1
+- adapted core interface change: changed interface of posting iterator (new method skipDocCandidate and removed obsolete method subExpressions)
+
+* Fri Jan 1 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.3.2-0.1
+- adapted core interface change: changed type of document frequency from GlobalCounter to Index
+
 * Mon Dec 21 2015 Patrick Frey <patrickpfrey@yahoo.com> 0.3.1-0.1
 - fixing versioning problems of the Open Suse build cluster 
 

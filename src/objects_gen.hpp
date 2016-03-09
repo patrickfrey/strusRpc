@@ -3,19 +3,19 @@
     The C++ library strus implements basic operations to build
     a search engine for structured search on unstructured data.
 
-    Copyright (C) 2013,2014 Patrick Frey
+    Copyright (C) 2015 Patrick Frey
 
     This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
+    modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+    version 3 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+    General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
+    You should have received a copy of the GNU General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
@@ -54,10 +54,13 @@
 #include "strus/databaseCursorInterface.hpp"
 #include "strus/databaseInterface.hpp"
 #include "strus/databaseTransactionInterface.hpp"
+#include "strus/documentTermIteratorInterface.hpp"
 #include "strus/errorBufferInterface.hpp"
 #include "strus/forwardIteratorInterface.hpp"
 #include "strus/invAclIteratorInterface.hpp"
 #include "strus/metaDataReaderInterface.hpp"
+#include "strus/metaDataRestrictionInstanceInterface.hpp"
+#include "strus/metaDataRestrictionInterface.hpp"
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/postingJoinOperatorInterface.hpp"
 #include "strus/queryEvalInterface.hpp"
@@ -193,6 +196,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_DatabaseCursor, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual DatabaseCursorInterface::Slice seekUpperBound( const char* p1, std::size_t p2, std::size_t p3);
+	virtual DatabaseCursorInterface::Slice seekUpperBoundRestricted( const char* p1, std::size_t p2, const char* p3, std::size_t p4);
 	virtual DatabaseCursorInterface::Slice seekFirst( const char* p1, std::size_t p2);
 	virtual DatabaseCursorInterface::Slice seekLast( const char* p1, std::size_t p2);
 	virtual DatabaseCursorInterface::Slice seekNext( );
@@ -290,6 +294,23 @@ public:
 	virtual bool detect( DocumentClass& p1, const char* p2, std::size_t p3) const;
 };
 
+class DocumentTermIteratorImpl
+		:public RpcInterfaceStub
+		,public strus::DocumentTermIteratorInterface
+		,public strus::DocumentTermIteratorConst
+{
+public:
+	virtual ~DocumentTermIteratorImpl();
+
+	DocumentTermIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocumentTermIterator, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual Index skipDoc( const Index& p1);
+	virtual bool nextTerm( DocumentTermIteratorInterface::Term& p1);
+	virtual unsigned int termDocumentFrequency( const Index& p1) const;
+	virtual std::string termValue( const Index& p1) const;
+};
+
 class ForwardIteratorImpl
 		:public RpcInterfaceStub
 		,public strus::ForwardIteratorInterface
@@ -338,6 +359,36 @@ public:
 	virtual ArithmeticVariant getValue( const Index& p1) const;
 	virtual const char* getType( const Index& p1) const;
 	virtual const char* getName( const Index& p1) const;
+};
+
+class MetaDataRestrictionInstanceImpl
+		:public RpcInterfaceStub
+		,public strus::MetaDataRestrictionInstanceInterface
+		,public strus::MetaDataRestrictionInstanceConst
+{
+public:
+	virtual ~MetaDataRestrictionInstanceImpl();
+
+	MetaDataRestrictionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataRestrictionInstance, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual bool match( const Index& p1) const;
+};
+
+class MetaDataRestrictionImpl
+		:public RpcInterfaceStub
+		,public strus::MetaDataRestrictionInterface
+		,public strus::MetaDataRestrictionConst
+{
+public:
+	virtual ~MetaDataRestrictionImpl();
+
+	MetaDataRestrictionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataRestriction, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void addCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
+	virtual MetaDataRestrictionInstanceInterface* createInstance( ) const;
+	virtual std::string tostring( ) const;
 };
 
 class NormalizerFunctionContextImpl
@@ -395,10 +446,10 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_PostingIterator, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual Index skipDoc( const Index& p1);
+	virtual Index skipDocCandidate( const Index& p1);
 	virtual Index skipPos( const Index& p1);
 	virtual const char* featureid( ) const;
-	virtual std::vector<const PostingIteratorInterface*> subExpressions( bool p1) const;
-	virtual GlobalCounter documentFrequency( ) const;
+	virtual Index documentFrequency( ) const;
 	virtual unsigned int frequency( );
 	virtual Index docno( ) const;
 	virtual Index posno( ) const;
@@ -450,7 +501,7 @@ public:
 	virtual void addSelectionFeature( const std::string& p1);
 	virtual void addRestrictionFeature( const std::string& p1);
 	virtual void addExclusionFeature( const std::string& p1);
-	virtual void addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4);
+	virtual void addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3);
 	virtual void addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, float p4);
 	virtual QueryInterface* createQuery( const StorageClientInterface* p1) const;
 };
@@ -472,12 +523,12 @@ public:
 	virtual void defineFeature( const std::string& p1, float p2);
 	virtual void defineTermStatistics( const std::string& p1, const std::string& p2, const TermStatistics& p3);
 	virtual void defineGlobalStatistics( const GlobalStatistics& p1);
-	virtual void defineMetaDataRestriction( QueryInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
+	virtual void addMetaDataRestrictionCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
 	virtual void addDocumentEvaluationSet( const std::vector<Index>& p1);
 	virtual void setMaxNofRanks( std::size_t p1);
 	virtual void setMinRank( std::size_t p1);
 	virtual void addUserName( const std::string& p1);
-	virtual std::vector<ResultDocument> evaluate( );
+	virtual QueryResult evaluate( );
 };
 
 class QueryProcessorImpl
@@ -640,7 +691,9 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageClient, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2) const;
+	virtual PostingIteratorInterface* createBrowsePostingIterator( const MetaDataRestrictionInterface* p1, const Index& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;
+	virtual DocumentTermIteratorInterface* createDocumentTermIterator( const std::string& p1) const;
 	virtual InvAclIteratorInterface* createInvAclIterator( const std::string& p1) const;
 	virtual Index nofDocumentsInserted( ) const;
 	virtual Index documentFrequency( const std::string& p1, const std::string& p2) const;
@@ -652,6 +705,7 @@ public:
 	virtual ValueIteratorInterface* createUserNameIterator( ) const;
 	virtual Index documentStatistics( const Index& p1, const StorageClientInterface::DocumentStatisticsType& p2, const std::string& p3) const;
 	virtual MetaDataReaderInterface* createMetaDataReader( ) const;
+	virtual MetaDataRestrictionInterface* createMetaDataRestriction( ) const;
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual StorageTransactionInterface* createTransaction( );
 	virtual StatisticsIteratorInterface* createInitStatisticsIterator( bool p1);
@@ -659,7 +713,7 @@ public:
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
 	virtual bool checkStorage( std::ostream& p1) const;
-	virtual StorageDumpInterface* createDump( ) const;
+	virtual StorageDumpInterface* createDump( const std::string& p1) const;
 };
 
 class StorageDocumentImpl
@@ -785,7 +839,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, float p4, const TermStatistics& p5);
-	virtual std::vector<SummarizerFunctionContextInterface::SummaryElement> getSummary( const Index& p1);
+	virtual std::vector<SummaryElement> getSummary( const Index& p1);
 };
 
 class SummarizerFunctionInstanceImpl
@@ -915,7 +969,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3, const TermStatistics& p4);
-	virtual float call( const Index& p1);
+	virtual double call( const Index& p1);
 };
 
 class WeightingFunctionInstanceImpl

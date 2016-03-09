@@ -3,19 +3,19 @@
     The C++ library strus implements basic operations to build
     a search engine for structured search on unstructured data.
 
-    Copyright (C) 2013,2014 Patrick Frey
+    Copyright (C) 2015 Patrick Frey
 
     This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
+    modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+    version 3 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+    General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
+    You should have received a copy of the GNU General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
@@ -44,7 +44,6 @@ extern "C" {
 #include "server.h"
 #include "hexdump.h"
 }
-#include <cstring>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -72,8 +71,8 @@ static void printUsage()
 	std::cout << "    " << _TXT("Search modules to load first in <DIR>") << std::endl;
 	std::cout << "-R|--resourcedir <DIR>" << std::endl;
 	std::cout << "    " << _TXT("Define a resource path <DIR> for the analyzer") << std::endl;
-	std::cout << "-P|--peermsgproc <NAME>" << std::endl;
-	std::cout << "    " << _TXT("Define the peer message processor <NAME>") << std::endl;
+	std::cout << "-T|--statmsgproc <NAME>" << std::endl;
+	std::cout << "    " << _TXT("Define the message processor for statistics as <NAME>") << std::endl;
 	std::cout << "-p|--port <PORT>" << std::endl;
 	std::cout << "    " << _TXT("Define the port to listen for requests as <PORT> (default 7181)") << std::endl;
 	std::cout << "-s|--storage <CONFIG>" << std::endl;
@@ -82,8 +81,6 @@ static void printUsage()
 	std::cout << "    " << _TXT("Define storage configuration as content of file <CFGFILE>") << std::endl;
 	std::cout << "-c|--create <CONFIG>" << std::endl;
 	std::cout << "    " << _TXT("Implicitely create storage with <CONFIG> if it does not exist yet") << std::endl;
-	std::cout << "-g|--globalstats <FILE>" << std::endl;
-	std::cout << "    " << _TXT("Load global statistics of peers from file <FILE>") << std::endl;
 	std::cout << "-l|--logfile <FILE>" << std::endl;
 	std::cout << "    " << _TXT("Write logs to file <FILE>") << std::endl;
 }
@@ -310,8 +307,8 @@ int main( int argc, const char* argv[])
 	std::vector<std::string> moduledirs;
 	std::vector<std::string> modules;
 	std::vector<std::string> resourcedirs;
-	std::string peermsgproc;
-	bool has_peermsgproc = false;
+	std::string statmsgproc;
+	bool has_statmsgproc = false;
 	std::string storageconfig;
 	bool doCreateIfNotExist = false;
 	unsigned int nofThreads = 0;
@@ -349,12 +346,12 @@ int main( int argc, const char* argv[])
 				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--resourcedir");
 				resourcedirs.push_back( argv[argi]);
 			}
-			else if (0==std::strcmp( argv[argi], "-P") || 0==std::strcmp( argv[argi], "--peermsgproc"))
+			else if (0==std::strcmp( argv[argi], "-T") || 0==std::strcmp( argv[argi], "--statmsgproc"))
 			{
 				++argi;
-				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--peermsgproc");
-				peermsgproc = argv[argi];
-				has_peermsgproc = true;
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--statmsgproc");
+				statmsgproc = argv[argi];
+				has_statmsgproc = true;
 			}
 			else if (0==std::strcmp( argv[argi], "-p") || 0==std::strcmp( argv[argi], "--port"))
 			{
@@ -436,7 +433,7 @@ int main( int argc, const char* argv[])
 		init_global_context( logfile.empty()?0:logfile.c_str());
 		g_errorBuffer->setLogFile( g_glbctx.logf);
 		g_errorBuffer->setMaxNofThreads( strus_threadpool_size()+2);
-		
+
 		// Create the global context:
 		std::auto_ptr<strus::ModuleLoaderInterface>
 			moduleLoader( strus::createModuleLoader( g_errorBuffer));
@@ -450,9 +447,9 @@ int main( int argc, const char* argv[])
 			g_moduleLoader->addModulePath( *di);
 		}
 		moduleLoader->addSystemModulePath();
-		if (has_peermsgproc)
+		if (has_statmsgproc)
 		{
-			moduleLoader->defineStatisticsProcessor( peermsgproc);
+			moduleLoader->defineStatisticsProcessor( statmsgproc);
 		}
 		std::vector<std::string>::const_iterator
 			mi = modules.begin(), me = modules.end();

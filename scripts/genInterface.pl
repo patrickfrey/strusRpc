@@ -143,9 +143,8 @@ $syncMethods{"done"} = 1;
 # List of methods that are not implemented for RPC:
 my %notImplMethods = ();
 $notImplMethods{"checkStorage"} = 1;				# ...ostream reference input cannot be handled
-$notImplMethods{"subExpressions"} = 1;				# ...vector of const object return can not be handled
 $notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
-$notImplMethods{"defineStatisticsProcessor"} = 1;		# ...peer message processor is internal
+$notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
 
 # List of interfaces that are not implemented for RPC:
 my %notImplInterfaces = ();
@@ -165,6 +164,7 @@ $passOwnershipParams{"defineAggregator"} = 1;			# TextProcessor
 
 $passOwnershipParams{"createClient"} = 1;			# Storage
 $passOwnershipParams{"createAlterMetaDataTable"} = 1;		# Storage
+$passOwnershipParams{"createBrowsePostingIterator"} = 1;	# Storage
 
 $passOwnershipParams{"definePhraseType"} = 1;			# QueryAnalyzer
 
@@ -186,7 +186,6 @@ $constResetMethodMap{"seekLast"} = 1;
 $constResetMethodMap{"seekNext"} = 1;
 $constResetMethodMap{"seekPrev"} = 1;
 $constResetMethodMap{"nextChunk"} = 1;
-
 
 # List of hacks (client code inserted at the beginning of a method call):
 my %alternativeClientImpl = ();
@@ -738,6 +737,10 @@ sub packParameter
 			die "no serialization defined for type \"$type\"";
 		}
 	}
+	elsif ($type eq "MetaDataRestrictionInterface::CompareOperator")
+	{
+		$rt .= "msg.packMetaDataRestrictionCompareOperator( " . $id . ");";
+	}
 	elsif ($type eq "std::string")
 	{
 		$rt .= "msg.packString( " . $id . ");";
@@ -762,17 +765,17 @@ sub packParameter
 	{
 		$rt .= "msg.packFeatureOptions( " . $id . ");";
 	}
-	elsif ($type eq "QueryInterface::CompareOperator")
-	{
-		$rt .= "msg.packCompareOperator( " . $id . ");";
-	}
 	elsif ($type eq "SummarizationVariable")
 	{
 		$rt .= "msg.packSummarizationVariable( " . $id . ");";
 	}
-	elsif ($type eq "SummarizerFunctionContextInterface::SummaryElement")
+	elsif ($type eq "SummaryElement")
 	{
 		$rt .= "msg.packSummaryElement( " . $id . ");";
+	}
+	elsif ($type eq "DocumentTermIteratorInterface::Term")
+	{
+		$rt .= "msg.packDocumentTermIteratorTerm( " . $id . ");";
 	}
 	elsif ($type eq "DatabaseCursorInterface::Slice")
 	{
@@ -809,6 +812,10 @@ sub packParameter
 	elsif ($type eq "ResultDocument")
 	{
 		$rt .= "msg.packResultDocument( " . $id . ");";
+	}
+	elsif ($type eq "QueryResult")
+	{
+		$rt .= "msg.packQueryResult( " . $id . ");";
 	}
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
@@ -986,6 +993,10 @@ sub unpackParameter
 			die "no deserialization defined for type \"$type\"";
 		}
 	}
+	elsif ($type eq "MetaDataRestrictionInterface::CompareOperator")
+	{
+		$rt .= "$id = serializedMsg.unpackMetaDataRestrictionCompareOperator();";
+	}	
 	elsif ($type eq "std::string")
 	{
 		$rt .= "$id = serializedMsg.unpackString();";
@@ -1010,10 +1021,6 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackFeatureOptions();";
 	}
-	elsif ($type eq "QueryInterface::CompareOperator")
-	{
-		$rt .= "$id = serializedMsg.unpackCompareOperator();";
-	}
 	elsif ($type eq "SummarizationVariable")
 	{
 		if ($serverSide)
@@ -1029,9 +1036,13 @@ sub unpackParameter
 			die "no deserialization defined for type \"$type\"";
 		}
 	}
-	elsif ($type eq "SummarizerFunctionContextInterface::SummaryElement")
+	elsif ($type eq "SummaryElement")
 	{
 		$rt .= "$id = serializedMsg.unpackSummaryElement();";
+	}
+	elsif ($type eq "DocumentTermIteratorInterface::Term")
+	{
+		$rt .= "$id = serializedMsg.unpackDocumentTermIteratorTerm();";
 	}
 	elsif ($type eq "DatabaseCursorInterface::Slice")
 	{
@@ -1076,6 +1087,10 @@ sub unpackParameter
 	elsif ($type eq "ResultDocument")
 	{
 		$rt .= "$id = serializedMsg.unpackResultDocument();";
+	}
+	elsif ($type eq "QueryResult")
+	{
+		$rt .= "$id = serializedMsg.unpackQueryResult();";
 	}
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
@@ -1694,19 +1709,19 @@ print HDRFILE <<EOF;
     The C++ library strus implements basic operations to build
     a search engine for structured search on unstructured data.
 
-    Copyright (C) 2013,2014 Patrick Frey
+    Copyright (C) 2015 Patrick Frey
 
     This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
+    modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+    version 3 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+    General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
+    You should have received a copy of the GNU General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
@@ -1744,19 +1759,19 @@ print HDRFILE <<EOF;
     The C++ library strus implements basic operations to build
     a search engine for structured search on unstructured data.
 
-    Copyright (C) 2013,2014 Patrick Frey
+    Copyright (C) 2015 Patrick Frey
 
     This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
+    modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+    version 3 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+    General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
+    You should have received a copy of the GNU General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
@@ -1804,19 +1819,19 @@ print SRCFILE <<EOF;
     The C++ library strus implements basic operations to build
     a search engine for structured search on unstructured data.
 
-    Copyright (C) 2013,2014 Patrick Frey
+    Copyright (C) 2015 Patrick Frey
 
     This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
+    modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+    version 3 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+    General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
+    You should have received a copy of the GNU General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
@@ -1854,19 +1869,19 @@ print SRCFILE <<EOF;
     The C++ library strus implements basic operations to build
     a search engine for structured search on unstructured data.
 
-    Copyright (C) 2013,2014 Patrick Frey
+    Copyright (C) 2015 Patrick Frey
 
     This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
+    modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+    version 3 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+    General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
+    You should have received a copy of the GNU General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
