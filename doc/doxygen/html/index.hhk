@@ -46,7 +46,18 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="namespacestrus.html#add6d83fccff903e4287f8fcb390bb76a"><param name="Name" value="createRpcClient"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="namespacestrus.html#a257c874970f680e5fb7593dfc45772ae"><param name="Name" value="createRpcClientMessaging"></OBJECT>
   </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="versionRpc_8hpp.html#a5e1f20b8cce6dfc5920ff47b07191ff0"><param name="Name" value="STRUS_RPC_VERSION"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="versionRpc_8hpp.html#a1375ede2becc14ab69f5660fb0d95749"><param name="Name" value="STRUS_RPC_VERSION_MAJOR"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="versionRpc_8hpp.html#a5475104469140dc84aba4129742e214c"><param name="Name" value="STRUS_RPC_VERSION_MINOR"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="versionRpc_8hpp.html#ac14d55bd3fa3cb62e8f8fa9f3f03946f"><param name="Name" value="STRUS_RPC_VERSION_STRING"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html#a8ccf9bd5574d33584ea8687098d69149"><param name="Name" value="synchronize"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="versionRpc_8hpp.html"><param name="Name" value="versionRpc.hpp"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="versionRpc_8hpp.html#a5e1f20b8cce6dfc5920ff47b07191ff0"><param name="Name" value="STRUS_RPC_VERSION"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="versionRpc_8hpp.html#a1375ede2becc14ab69f5660fb0d95749"><param name="Name" value="STRUS_RPC_VERSION_MAJOR"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="versionRpc_8hpp.html#a5475104469140dc84aba4129742e214c"><param name="Name" value="STRUS_RPC_VERSION_MINOR"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="versionRpc_8hpp.html#ac14d55bd3fa3cb62e8f8fa9f3f03946f"><param name="Name" value="STRUS_RPC_VERSION_STRING"></OBJECT>
+  </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientInterface.html#ad00c39ec9e19bd3c25abf5b47f655899"><param name="Name" value="~RpcClientInterface"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classstrus_1_1RpcClientMessagingInterface.html#a46a656d724221babafd7784ccbd17890"><param name="Name" value="~RpcClientMessagingInterface"></OBJECT>
 </UL>
