@@ -1,4 +1,4 @@
-This Project implements RPC proxy classes for the Strus <a href="https://github.com/patrickfrey/strus">storage</a> and <a href="https://github.com/patrickfrey/strusAnalyzer">analyzer</a> interfaces.
+This Project implements RPC proxy classes for the Strus storage and analyzer interfaces.
 
 Licenced as MPLv2 (Mozilla Public License, Version 2 - https://www.mozilla.org/en-US/MPL/2.0)
 
