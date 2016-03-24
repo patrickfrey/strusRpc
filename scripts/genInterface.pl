@@ -670,9 +670,9 @@ sub packParameter
 			$rt .= "msg.packObject( impl_" . $idx . "->classId(), impl_" . $idx . "->objId());";
 		}
 	}
-	elsif ($type eq "ArithmeticVariant")
+	elsif ($type eq "NumericVariant")
 	{
-		$rt .= "msg.packArithmeticVariant( " . $id . ");";
+		$rt .= "msg.packNumericVariant( " . $id . ");";
 	}
 	elsif ($type eq "DocumentClass")
 	{
@@ -905,9 +905,9 @@ sub unpackParameter
 			}
 		}
 	}
-	elsif ($type eq "ArithmeticVariant")
+	elsif ($type eq "NumericVariant")
 	{
-		$rt .= "$id = serializedMsg.unpackArithmeticVariant();";
+		$rt .= "$id = serializedMsg.unpackNumericVariant();";
 	}
 	elsif ($type eq "DocumentClass")
 	{

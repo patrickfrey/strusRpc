@@ -334,15 +334,15 @@ void RpcSerializer::packSize( std::size_t size)
 	packScalar( m_content, (uint32_t)size);
 }
 
-void RpcSerializer::packArithmeticVariant( const ArithmeticVariant& val)
+void RpcSerializer::packNumericVariant( const NumericVariant& val)
 {
 	packByte( (unsigned char)val.type);
 	switch (val.type)
 	{
-		case ArithmeticVariant::Null: break;
-		case ArithmeticVariant::Int: packInt( val.variant.Int); break;
-		case ArithmeticVariant::UInt: packUint( val.variant.UInt); break;
-		case ArithmeticVariant::Float: packDouble( val.variant.Float); break;
+		case NumericVariant::Null: break;
+		case NumericVariant::Int: packInt( val.variant.Int); break;
+		case NumericVariant::UInt: packUint( val.variant.UInt); break;
+		case NumericVariant::Float: packDouble( val.variant.Float); break;
 	}
 }
 
@@ -768,17 +768,17 @@ std::size_t RpcDeserializer::unpackSize()
 	return rt;
 }
 
-ArithmeticVariant RpcDeserializer::unpackArithmeticVariant()
+NumericVariant RpcDeserializer::unpackNumericVariant()
 {
-	ArithmeticVariant::Type type = (ArithmeticVariant::Type)unpackByte();
+	NumericVariant::Type type = (NumericVariant::Type)unpackByte();
 	switch (type)
 	{
-		case ArithmeticVariant::Null: return ArithmeticVariant();
-		case ArithmeticVariant::Int: return ArithmeticVariant( unpackInt());
-		case ArithmeticVariant::UInt: return ArithmeticVariant( unpackUint());
-		case ArithmeticVariant::Float: return ArithmeticVariant( unpackDouble());
+		case NumericVariant::Null: return NumericVariant();
+		case NumericVariant::Int: return NumericVariant( unpackInt());
+		case NumericVariant::UInt: return NumericVariant( unpackUint());
+		case NumericVariant::Float: return NumericVariant( unpackDouble());
 	}
-	throw strus::runtime_error( _TXT("unknown type of arithmetic variant"));
+	throw strus::runtime_error( _TXT("unknown type of numeric variant"));
 }
 
 DocumentClass RpcDeserializer::unpackDocumentClass()

@@ -335,7 +335,7 @@ public:
 	virtual Index elementHandle( const std::string& p1) const;
 	virtual Index nofElements( ) const;
 	virtual void skipDoc( const Index& p1);
-	virtual ArithmeticVariant getValue( const Index& p1) const;
+	virtual NumericVariant getValue( const Index& p1) const;
 	virtual const char* getType( const Index& p1) const;
 	virtual const char* getName( const Index& p1) const;
 };
@@ -365,7 +365,7 @@ public:
 	MetaDataRestrictionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataRestriction, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
+	virtual void addCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const NumericVariant& p3, bool p4);
 	virtual MetaDataRestrictionInstanceInterface* createInstance( ) const;
 	virtual std::string tostring( ) const;
 };
@@ -502,7 +502,7 @@ public:
 	virtual void defineFeature( const std::string& p1, float p2);
 	virtual void defineTermStatistics( const std::string& p1, const std::string& p2, const TermStatistics& p3);
 	virtual void defineGlobalStatistics( const GlobalStatistics& p1);
-	virtual void addMetaDataRestrictionCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4);
+	virtual void addMetaDataRestrictionCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const NumericVariant& p3, bool p4);
 	virtual void addDocumentEvaluationSet( const std::vector<Index>& p1);
 	virtual void setMaxNofRanks( std::size_t p1);
 	virtual void setMinRank( std::size_t p1);
@@ -708,7 +708,7 @@ public:
 
 	virtual void addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
 	virtual void addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
-	virtual void setMetaData( const std::string& p1, const ArithmeticVariant& p2);
+	virtual void setMetaData( const std::string& p1, const NumericVariant& p2);
 	virtual void setAttribute( const std::string& p1, const std::string& p2);
 	virtual void setUserAccessRight( const std::string& p1);
 	virtual void done( );
@@ -725,7 +725,7 @@ public:
 	StorageDocumentUpdateImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocumentUpdate, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void setMetaData( const std::string& p1, const ArithmeticVariant& p2);
+	virtual void setMetaData( const std::string& p1, const NumericVariant& p2);
 	virtual void setAttribute( const std::string& p1, const std::string& p2);
 	virtual void clearAttribute( const std::string& p1);
 	virtual void setUserAccessRight( const std::string& p1);
@@ -801,7 +801,7 @@ public:
 	virtual StorageDocumentUpdateInterface* createDocumentUpdate( const Index& p1);
 	virtual void deleteDocument( const std::string& p1);
 	virtual void deleteUserAccessRights( const std::string& p1);
-	virtual void updateMetaData( const Index& p1, const std::string& p2, const ArithmeticVariant& p3);
+	virtual void updateMetaData( const Index& p1, const std::string& p2, const NumericVariant& p3);
 	virtual bool commit( );
 	virtual void rollback( );
 };
@@ -833,7 +833,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addStringParameter( const std::string& p1, const std::string& p2);
-	virtual void addNumericParameter( const std::string& p1, const ArithmeticVariant& p2);
+	virtual void addNumericParameter( const std::string& p1, const NumericVariant& p2);
 	virtual SummarizerFunctionContextInterface* createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const;
 	virtual std::string tostring( ) const;
 };
@@ -963,7 +963,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addStringParameter( const std::string& p1, const std::string& p2);
-	virtual void addNumericParameter( const std::string& p1, const ArithmeticVariant& p2);
+	virtual void addNumericParameter( const std::string& p1, const NumericVariant& p2);
 	virtual WeightingFunctionContextInterface* createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const;
 	virtual std::string tostring( ) const;
 };

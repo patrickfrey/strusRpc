@@ -1654,7 +1654,7 @@ try
 }
 }
 
-ArithmeticVariant MetaDataReaderImpl::getValue( const Index& p1) const
+NumericVariant MetaDataReaderImpl::getValue( const Index& p1) const
 {
 try
 {
@@ -1666,14 +1666,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	ArithmeticVariant p0 = serializedMsg.unpackArithmeticVariant();;
+	NumericVariant p0 = serializedMsg.unpackNumericVariant();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::getValue");
-	return ArithmeticVariant();
+	return NumericVariant();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataReaderImpl::getValue", err.what());
-	return ArithmeticVariant();
+	return NumericVariant();
 }
 }
 
@@ -1766,7 +1766,7 @@ MetaDataRestrictionImpl::~MetaDataRestrictionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void MetaDataRestrictionImpl::addCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
+void MetaDataRestrictionImpl::addCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const NumericVariant& p3, bool p4)
 {
 try
 {
@@ -1775,7 +1775,7 @@ try
 	msg.packByte( Method_addCondition);
 	msg.packMetaDataRestrictionCompareOperator( p1);
 	msg.packString( p2);
-	msg.packArithmeticVariant( p3);
+	msg.packNumericVariant( p3);
 	msg.packBool( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -2601,7 +2601,7 @@ try
 }
 }
 
-void QueryImpl::addMetaDataRestrictionCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
+void QueryImpl::addMetaDataRestrictionCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const NumericVariant& p3, bool p4)
 {
 try
 {
@@ -2610,7 +2610,7 @@ try
 	msg.packByte( Method_addMetaDataRestrictionCondition);
 	msg.packMetaDataRestrictionCompareOperator( p1);
 	msg.packString( p2);
-	msg.packArithmeticVariant( p3);
+	msg.packNumericVariant( p3);
 	msg.packBool( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -4119,7 +4119,7 @@ try
 }
 }
 
-void StorageDocumentImpl::setMetaData( const std::string& p1, const ArithmeticVariant& p2)
+void StorageDocumentImpl::setMetaData( const std::string& p1, const NumericVariant& p2)
 {
 try
 {
@@ -4127,7 +4127,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMetaData);
 	msg.packString( p1);
-	msg.packArithmeticVariant( p2);
+	msg.packNumericVariant( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -4207,7 +4207,7 @@ StorageDocumentUpdateImpl::~StorageDocumentUpdateImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void StorageDocumentUpdateImpl::setMetaData( const std::string& p1, const ArithmeticVariant& p2)
+void StorageDocumentUpdateImpl::setMetaData( const std::string& p1, const NumericVariant& p2)
 {
 try
 {
@@ -4215,7 +4215,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMetaData);
 	msg.packString( p1);
-	msg.packArithmeticVariant( p2);
+	msg.packNumericVariant( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -4796,7 +4796,7 @@ try
 }
 }
 
-void StorageTransactionImpl::updateMetaData( const Index& p1, const std::string& p2, const ArithmeticVariant& p3)
+void StorageTransactionImpl::updateMetaData( const Index& p1, const std::string& p2, const NumericVariant& p3)
 {
 try
 {
@@ -4805,7 +4805,7 @@ try
 	msg.packByte( Method_updateMetaData);
 	msg.packIndex( p1);
 	msg.packString( p2);
-	msg.packArithmeticVariant( p3);
+	msg.packNumericVariant( p3);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -4953,7 +4953,7 @@ try
 }
 }
 
-void SummarizerFunctionInstanceImpl::addNumericParameter( const std::string& p1, const ArithmeticVariant& p2)
+void SummarizerFunctionInstanceImpl::addNumericParameter( const std::string& p1, const NumericVariant& p2)
 {
 try
 {
@@ -4961,7 +4961,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addNumericParameter);
 	msg.packString( p1);
-	msg.packArithmeticVariant( p2);
+	msg.packNumericVariant( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -5660,7 +5660,7 @@ try
 }
 }
 
-void WeightingFunctionInstanceImpl::addNumericParameter( const std::string& p1, const ArithmeticVariant& p2)
+void WeightingFunctionInstanceImpl::addNumericParameter( const std::string& p1, const NumericVariant& p2)
 {
 try
 {
@@ -5668,7 +5668,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addNumericParameter);
 	msg.packString( p1);
-	msg.packArithmeticVariant( p2);
+	msg.packNumericVariant( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {

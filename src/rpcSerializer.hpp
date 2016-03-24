@@ -14,7 +14,7 @@
 #include "strus/documentClass.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/queryAnalyzerInterface.hpp"
-#include "strus/arithmeticVariant.hpp"
+#include "strus/numericVariant.hpp"
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/termStatistics.hpp"
 #include "strus/globalStatistics.hpp"
@@ -65,7 +65,7 @@ public:
 	void packFloat( float val);
 	void packDouble( double val);
 	void packSize( std::size_t size);
-	void packArithmeticVariant( const ArithmeticVariant& val);
+	void packNumericVariant( const NumericVariant& val);
 	void packDocumentClass( const DocumentClass& prop);
 	void packTermStatistics( const TermStatistics& stats);
 	void packGlobalStatistics( const GlobalStatistics& stats);
@@ -137,7 +137,7 @@ public:
 	float unpackFloat();
 	double unpackDouble();
 	std::size_t unpackSize();
-	ArithmeticVariant unpackArithmeticVariant();
+	NumericVariant unpackNumericVariant();
 	DocumentClass unpackDocumentClass();
 	TermStatistics unpackTermStatistics();
 	GlobalStatistics unpackGlobalStatistics();

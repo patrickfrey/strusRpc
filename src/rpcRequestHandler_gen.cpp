@@ -1499,7 +1499,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case MetaDataReaderConst::Method_getValue:
 		{
 			RpcSerializer msg;
-			ArithmeticVariant p0;
+			NumericVariant p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
 			p0 = obj->getValue(p1);
@@ -1511,7 +1511,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packArithmeticVariant( p0);
+			msg.packNumericVariant( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -1603,11 +1603,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			MetaDataRestrictionInterface::CompareOperator p1;
 			std::string p2;
-			ArithmeticVariant p3;
+			NumericVariant p3;
 			bool p4;
 			p1 = serializedMsg.unpackMetaDataRestrictionCompareOperator();
 			p2 = serializedMsg.unpackString();
-			p3 = serializedMsg.unpackArithmeticVariant();
+			p3 = serializedMsg.unpackNumericVariant();
 			p4 = serializedMsg.unpackBool();
 			obj->addCondition(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
@@ -2371,11 +2371,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			MetaDataRestrictionInterface::CompareOperator p1;
 			std::string p2;
-			ArithmeticVariant p3;
+			NumericVariant p3;
 			bool p4;
 			p1 = serializedMsg.unpackMetaDataRestrictionCompareOperator();
 			p2 = serializedMsg.unpackString();
-			p3 = serializedMsg.unpackArithmeticVariant();
+			p3 = serializedMsg.unpackNumericVariant();
 			p4 = serializedMsg.unpackBool();
 			obj->addMetaDataRestrictionCondition(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
@@ -3732,9 +3732,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			ArithmeticVariant p2;
+			NumericVariant p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackArithmeticVariant();
+			p2 = serializedMsg.unpackNumericVariant();
 			obj->setMetaData(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -3811,9 +3811,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			ArithmeticVariant p2;
+			NumericVariant p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackArithmeticVariant();
+			p2 = serializedMsg.unpackNumericVariant();
 			obj->setMetaData(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4335,10 +4335,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			Index p1;
 			std::string p2;
-			ArithmeticVariant p3;
+			NumericVariant p3;
 			p1 = serializedMsg.unpackIndex();
 			p2 = serializedMsg.unpackString();
-			p3 = serializedMsg.unpackArithmeticVariant();
+			p3 = serializedMsg.unpackNumericVariant();
 			obj->updateMetaData(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4487,9 +4487,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			ArithmeticVariant p2;
+			NumericVariant p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackArithmeticVariant();
+			p2 = serializedMsg.unpackNumericVariant();
 			obj->addNumericParameter(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -5141,9 +5141,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			ArithmeticVariant p2;
+			NumericVariant p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackArithmeticVariant();
+			p2 = serializedMsg.unpackNumericVariant();
 			obj->addNumericParameter(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
