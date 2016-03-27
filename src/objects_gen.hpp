@@ -45,6 +45,9 @@
 #include "strus/queryEvalInterface.hpp"
 #include "strus/queryInterface.hpp"
 #include "strus/queryProcessorInterface.hpp"
+#include "strus/scalarFunctionInstanceInterface.hpp"
+#include "strus/scalarFunctionInterface.hpp"
+#include "strus/scalarFunctionParserInterface.hpp"
 #include "strus/statisticsBuilderInterface.hpp"
 #include "strus/statisticsIteratorInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
@@ -528,6 +531,56 @@ public:
 	virtual void defineSummarizerFunction( const std::string& p1, SummarizerFunctionInterface* p2);
 	virtual const SummarizerFunctionInterface* getSummarizerFunction( const std::string& p1) const;
 	virtual std::vector<std::string> getFunctionList( QueryProcessorInterface::FunctionType p1) const;
+};
+
+class ScalarFunctionInstanceImpl
+		:public RpcInterfaceStub
+		,public strus::ScalarFunctionInstanceInterface
+		,public strus::ScalarFunctionInstanceConst
+{
+public:
+	virtual ~ScalarFunctionInstanceImpl();
+
+	ScalarFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_ScalarFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual std::vector<std::string> getVariables( ) const;
+	virtual std::size_t getNofArguments( ) const;
+	virtual void setVariableValue( const std::string& p1, double p2);
+	virtual double call( const double* p1, std::size_t p2) const;
+	virtual std::string tostring( ) const;
+};
+
+class ScalarFunctionImpl
+		:public RpcInterfaceStub
+		,public strus::ScalarFunctionInterface
+		,public strus::ScalarFunctionConst
+{
+public:
+	virtual ~ScalarFunctionImpl();
+
+	ScalarFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_ScalarFunction, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual ScalarFunctionInstanceInterface* createInstance( ) const;
+	virtual std::string tostring( ) const;
+};
+
+class ScalarFunctionParserImpl
+		:public RpcInterfaceStub
+		,public strus::ScalarFunctionParserInterface
+		,public strus::ScalarFunctionParserConst
+{
+public:
+	virtual ~ScalarFunctionParserImpl();
+
+	ScalarFunctionParserImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_ScalarFunctionParser, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void defineBinaryFunction( const std::string& p1, BinaryFunction p2);
+	virtual void defineUnaryFunction( const std::string& p1, UnaryFunction p2);
+	virtual void defineNaryFunction( const std::string& p1, NaryFunction p2, std::size_t p3, std::size_t p4);
+	virtual ScalarFunctionInterface* createFunction( const std::string& p1) const;
 };
 
 class SegmenterContextImpl

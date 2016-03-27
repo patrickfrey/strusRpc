@@ -258,6 +258,20 @@ void RpcSerializer::packBuffer( const char* buf, std::size_t size)
 	m_content.append( buf, size);
 }
 
+void RpcSerializer::packBufferFloat( const double* buf, std::size_t size)
+{
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packBuffer('" << std::string(buf,size) << "')" << std::endl;
+#endif
+	if (size > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( _TXT("buffer size out of range"));
+	packScalar( m_content, (uint32_t)size);
+	std::size_t ii=0;
+	for (ii=0; ii<size; ++ii)
+	{
+		packDouble( buf[ii]);
+	}
+}
+
 void RpcSerializer::packBool( bool val)
 {
 #ifdef STRUS_LOWLEVEL_DEBUG
@@ -684,6 +698,27 @@ void RpcDeserializer::unpackBuffer( const char*& buf, std::size_t& size)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackBuffer('" << std::string(buf,size) << "')" << std::endl;
 #endif
+}
+
+std::vector<double> RpcDeserializer::unpackBufferFloat()
+{
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::ostringstream msg;
+#endif
+	std::vector<double> rt;
+	std::size_t ii=0, size = unpackScalar<uint32_t>( m_itr, m_end);
+	for (ii=0; ii<size; ++ii)
+	{
+		rt.push_back( unpackDouble());
+#ifdef STRUS_LOWLEVEL_DEBUG
+		if (ii) msg << ", ";
+		msg << rt.back();
+#endif
+	}
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackBufferFloat('" << msg.str() << "')" << std::endl;
+#endif
+	return rt;
 }
 
 bool RpcDeserializer::unpackBool()

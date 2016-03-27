@@ -2912,6 +2912,237 @@ try
 }
 }
 
+ScalarFunctionInstanceImpl::~ScalarFunctionInstanceImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+std::vector<std::string> ScalarFunctionInstanceImpl::getVariables( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getVariables);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::getVariables");
+	return std::vector<std::string>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::getVariables", err.what());
+	return std::vector<std::string>();
+}
+}
+
+std::size_t ScalarFunctionInstanceImpl::getNofArguments( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getNofArguments);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::size_t p0 = serializedMsg.unpackSize();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::getNofArguments");
+	return std::size_t();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::getNofArguments", err.what());
+	return std::size_t();
+}
+}
+
+void ScalarFunctionInstanceImpl::setVariableValue( const std::string& p1, double p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_setVariableValue);
+	msg.packString( p1);
+	msg.packDouble( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::setVariableValue");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::setVariableValue", err.what());
+	return void();
+}
+}
+
+double ScalarFunctionInstanceImpl::call( const double* p1, std::size_t p2) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_call);
+	msg.packBufferFloat( p1, p2);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	double p0 = serializedMsg.unpackDouble();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::call");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::call", err.what());
+	return 0;
+}
+}
+
+std::string ScalarFunctionInstanceImpl::tostring( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_tostring);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::tostring");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::tostring", err.what());
+	return std::string();
+}
+}
+
+ScalarFunctionImpl::~ScalarFunctionImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+ScalarFunctionInstanceInterface* ScalarFunctionImpl::createInstance( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createInstance);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ScalarFunctionInstance;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ScalarFunctionInstanceInterface* p0 = new ScalarFunctionInstanceImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::createInstance");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::createInstance", err.what());
+	return 0;
+}
+}
+
+std::string ScalarFunctionImpl::tostring( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_tostring);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::tostring");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::tostring", err.what());
+	return std::string();
+}
+}
+
+ScalarFunctionParserImpl::~ScalarFunctionParserImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void ScalarFunctionParserImpl::defineBinaryFunction( const std::string& p1, BinaryFunction p2)
+{
+	errorhnd()->report(_TXT("the method '%s' is not implemented for RPC"),"defineBinaryFunction");
+	return void();
+}
+
+void ScalarFunctionParserImpl::defineUnaryFunction( const std::string& p1, UnaryFunction p2)
+{
+	errorhnd()->report(_TXT("the method '%s' is not implemented for RPC"),"defineUnaryFunction");
+	return void();
+}
+
+void ScalarFunctionParserImpl::defineNaryFunction( const std::string& p1, NaryFunction p2, std::size_t p3, std::size_t p4)
+{
+	errorhnd()->report(_TXT("the method '%s' is not implemented for RPC"),"defineNaryFunction");
+	return void();
+}
+
+ScalarFunctionInterface* ScalarFunctionParserImpl::createFunction( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createFunction);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ScalarFunction;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ScalarFunctionInterface* p0 = new ScalarFunctionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionParserImpl::createFunction");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionParserImpl::createFunction", err.what());
+	return 0;
+}
+}
+
 SegmenterContextImpl::~SegmenterContextImpl()
 {
 	if (isConst()) return;

@@ -2646,6 +2646,220 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_ScalarFunctionInstance:
+	{
+	ScalarFunctionInstanceInterface* obj = getObject<ScalarFunctionInstanceInterface>( classId, objId);
+	switch( (ScalarFunctionInstanceConst::MethodId)methodId)
+	{
+		case ScalarFunctionInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ScalarFunctionInstanceConst::Method_getVariables:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getVariables();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case ScalarFunctionInstanceConst::Method_getNofArguments:
+		{
+			RpcSerializer msg;
+			std::size_t p0;
+			p0 = obj->getNofArguments();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case ScalarFunctionInstanceConst::Method_setVariableValue:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			double p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDouble();
+			obj->setVariableValue(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case ScalarFunctionInstanceConst::Method_call:
+		{
+			RpcSerializer msg;
+			double p0;
+			const double* p1;
+			std::size_t p2;
+			std::vector<double> buf_1 = serializedMsg.unpackBufferFloat();
+			p1 = buf_1.data();
+			p2 = buf_1.size();
+			p0 = obj->call(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packDouble( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case ScalarFunctionInstanceConst::Method_tostring:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			p0 = obj->tostring();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_ScalarFunction:
+	{
+	ScalarFunctionInterface* obj = getObject<ScalarFunctionInterface>( classId, objId);
+	switch( (ScalarFunctionConst::MethodId)methodId)
+	{
+		case ScalarFunctionConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ScalarFunctionConst::Method_createInstance:
+		{
+			RpcSerializer msg;
+			ScalarFunctionInstanceInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createInstance();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case ScalarFunctionConst::Method_tostring:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			p0 = obj->tostring();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_ScalarFunctionParser:
+	{
+	ScalarFunctionParserInterface* obj = getObject<ScalarFunctionParserInterface>( classId, objId);
+	switch( (ScalarFunctionParserConst::MethodId)methodId)
+	{
+		case ScalarFunctionParserConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ScalarFunctionParserConst::Method_defineBinaryFunction:
+		{
+			RpcSerializer msg;
+			(void)(obj);
+			msg.packByte( MsgTypeError);
+			msg.packString( "the method 'defineBinaryFunction' is not implemented for RPC");
+			return msg.content();
+		}
+		case ScalarFunctionParserConst::Method_defineUnaryFunction:
+		{
+			RpcSerializer msg;
+			(void)(obj);
+			msg.packByte( MsgTypeError);
+			msg.packString( "the method 'defineUnaryFunction' is not implemented for RPC");
+			return msg.content();
+		}
+		case ScalarFunctionParserConst::Method_defineNaryFunction:
+		{
+			RpcSerializer msg;
+			(void)(obj);
+			msg.packByte( MsgTypeError);
+			msg.packString( "the method 'defineNaryFunction' is not implemented for RPC");
+			return msg.content();
+		}
+		case ScalarFunctionParserConst::Method_createFunction:
+		{
+			RpcSerializer msg;
+			ScalarFunctionInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createFunction(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+	}
+	break;
+	}
 	case ClassId_SegmenterContext:
 	{
 	SegmenterContextInterface* obj = getObject<SegmenterContextInterface>( classId, objId);

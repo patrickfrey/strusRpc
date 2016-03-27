@@ -145,6 +145,9 @@ my %notImplMethods = ();
 $notImplMethods{"checkStorage"} = 1;				# ...ostream reference input cannot be handled
 $notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
 $notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
+$notImplMethods{"defineUnaryFunction"} = 1;			# ...function pointers cannot be defined remotely 
+$notImplMethods{"defineBinaryFunction"} = 1;			# ...function pointers cannot be defined remotely 
+$notImplMethods{"defineNaryFunction"} = 1;			# ...function pointers cannot be defined remotely 
 
 # List of interfaces that are not implemented for RPC:
 my %notImplInterfaces = ();
@@ -1359,9 +1362,18 @@ sub getMethodDeclarationSource
 		{
 			if ($pi+1 <= $#param && $param[$pi] eq "const^ char" && $param[$pi+1] eq "std::size_t")
 			{
-				# ... exception for buffer( size, len):
+				# ... exception for buffer( ptr, len):
 				$sender_code .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				$receiver_code .= "\tserializedMsg.unpackBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				++$pi;
+			}
+			elsif ($pi+1 <= $#param && $param[$pi] eq "const^ double" && $param[$pi+1] eq "std::size_t")
+			{
+				# ... exception for double buffer( ptr, len):
+				$sender_code .= "\tmsg.packBufferFloat( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				$receiver_code .= "\tstd::vector<double> buf_" . ($pi+1) . " = serializedMsg.unpackBufferFloat();\n";
+				$receiver_code .= "\tp" . ($pi+1) . " = buf_" . ($pi+1) . ".data();\n";
+				$receiver_code .= "\tp" . ($pi+2) . " = buf_" . ($pi+1) . ".size();\n";
 				++$pi;
 			}
 			else
@@ -1474,6 +1486,20 @@ sub getMethodDeclarationSource
 				$sender_output .= "\tp" . ($pi+1) . " = (const char*) ctx()->constConstructor()->get( $bpvar, p" . ($pi+2) .");\n";
 
 				$receiver_output .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				++$pi;
+			}
+			elsif ($pi+1 <= $#param && $param[$pi] eq "const^& double" && $param[$pi+1] eq "& std::size_t")
+			{
+				# ... exception for buffer( size, len):
+				my $bpvar = "bp" . ($pi+1);
+				$sender_output .= "\tstd::vector<double> buf_$bpvar;\n";
+				$sender_output .= "\tconst double* $bpvar;\n";
+				
+				$sender_output .= "\tbuf_$bpvar = serializedMsg.unpackBufferFloat();\n";
+				$sender_output .= "\t$bpvar = buf_$bpvar.data();\n";
+				$sender_output .= "\tp" . ($pi+2) . "= buf_$bpvar.size();\n";
+
+				$receiver_output .= "\tmsg.packBufferFloat( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				++$pi;
 			}
 			else

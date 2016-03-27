@@ -39,6 +39,9 @@ enum ClassId
 	ClassId_QueryEval,
 	ClassId_Query,
 	ClassId_QueryProcessor,
+	ClassId_ScalarFunctionInstance,
+	ClassId_ScalarFunction,
+	ClassId_ScalarFunctionParser,
 	ClassId_SegmenterContext,
 	ClassId_SegmenterInstance,
 	ClassId_Segmenter,
@@ -419,6 +422,44 @@ public:
 		Method_defineSummarizerFunction,
 		Method_getSummarizerFunction,
 		Method_getFunctionList
+	};
+};
+
+class ScalarFunctionInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getVariables,
+		Method_getNofArguments,
+		Method_setVariableValue,
+		Method_call,
+		Method_tostring
+	};
+};
+
+class ScalarFunctionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createInstance,
+		Method_tostring
+	};
+};
+
+class ScalarFunctionParserConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_defineBinaryFunction,
+		Method_defineUnaryFunction,
+		Method_defineNaryFunction,
+		Method_createFunction
 	};
 };
 

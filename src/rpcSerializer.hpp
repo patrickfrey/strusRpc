@@ -56,6 +56,7 @@ public:
 	void packCharp( const char* buf);
 	void packCharpp( const char** buf);
 	void packBuffer( const char* buf, std::size_t size);
+	void packBufferFloat( const double* buf, std::size_t size);
 	void packBool( bool val);
 	void packByte( unsigned char val);
 	void packIndex( const Index& index);
@@ -128,6 +129,7 @@ public:
 	const char* unpackConstCharp();
 	const char** unpackConstCharpp();
 	void unpackBuffer( const char*& buf, std::size_t& size);
+	std::vector<double> unpackBufferFloat();
 	bool unpackBool();
 	unsigned char unpackByte();
 	Index unpackIndex();
