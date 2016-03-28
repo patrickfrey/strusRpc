@@ -144,10 +144,6 @@ $syncMethods{"done"} = 1;
 my %notImplMethods = ();
 $notImplMethods{"checkStorage"} = 1;				# ...ostream reference input cannot be handled
 $notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
-$notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
-$notImplMethods{"defineUnaryFunction"} = 1;			# ...function pointers cannot be defined remotely 
-$notImplMethods{"defineBinaryFunction"} = 1;			# ...function pointers cannot be defined remotely 
-$notImplMethods{"defineNaryFunction"} = 1;			# ...function pointers cannot be defined remotely 
 
 # List of interfaces that are not implemented for RPC:
 my %notImplInterfaces = ();
@@ -159,6 +155,7 @@ my %passOwnershipParams = ();
 $passOwnershipParams{"definePostingJoinOperator"} = 1;		# QueryProcessor
 $passOwnershipParams{"defineWeightingFunction"} = 1;		# QueryProcessor
 $passOwnershipParams{"defineSummarizerFunction"} = 1;		# QueryProcessor
+$passOwnershipParams{"defineScalarFunctionParser"} = 1;		# QueryProcessor
 
 $passOwnershipParams{"defineDocumentClassDetector"} = 1;	# TextProcessor
 $passOwnershipParams{"defineTokenizer"} = 1;			# TextProcessor
@@ -179,6 +176,7 @@ $passOwnershipParams{"defineAttribute"} = 1;			# DocumentAnalyzer
 
 $passOwnershipParams{"addWeightingFunction"} = 1;		# QueryEval
 $passOwnershipParams{"addSummarizerFunction"} = 1;		# QueryEval
+$passOwnershipParams{"defineWeightingFormula"} = 1;		# QueryEval
 
 # List of methods that reset the constants map (except long living)
 my %constResetMethodMap = ();

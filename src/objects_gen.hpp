@@ -484,7 +484,8 @@ public:
 	virtual void addRestrictionFeature( const std::string& p1);
 	virtual void addExclusionFeature( const std::string& p1);
 	virtual void addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3);
-	virtual void addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, float p4);
+	virtual void addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3);
+	virtual void defineWeightingFormula( ScalarFunctionInterface* p1);
 	virtual QueryInterface* createQuery( const StorageClientInterface* p1) const;
 };
 
@@ -510,6 +511,7 @@ public:
 	virtual void setMaxNofRanks( std::size_t p1);
 	virtual void setMinRank( std::size_t p1);
 	virtual void addUserName( const std::string& p1);
+	virtual void setWeightingFormulaVariableValue( const std::string& p1, double p2);
 	virtual QueryResult evaluate( );
 };
 
@@ -531,6 +533,8 @@ public:
 	virtual void defineSummarizerFunction( const std::string& p1, SummarizerFunctionInterface* p2);
 	virtual const SummarizerFunctionInterface* getSummarizerFunction( const std::string& p1) const;
 	virtual std::vector<std::string> getFunctionList( QueryProcessorInterface::FunctionType p1) const;
+	virtual void defineScalarFunctionParser( const std::string& p1, ScalarFunctionParserInterface* p2);
+	virtual const ScalarFunctionParserInterface* getScalarFunctionParser( const std::string& p1) const;
 };
 
 class ScalarFunctionInstanceImpl
@@ -544,8 +548,6 @@ public:
 	ScalarFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_ScalarFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual std::vector<std::string> getVariables( ) const;
-	virtual std::size_t getNofArguments( ) const;
 	virtual void setVariableValue( const std::string& p1, double p2);
 	virtual double call( const double* p1, std::size_t p2) const;
 	virtual std::string tostring( ) const;
@@ -562,6 +564,9 @@ public:
 	ScalarFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_ScalarFunction, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual std::vector<std::string> getVariables( ) const;
+	virtual std::size_t getNofArguments( ) const;
+	virtual void setDefaultVariableValue( const std::string& p1, double p2);
 	virtual ScalarFunctionInstanceInterface* createInstance( ) const;
 	virtual std::string tostring( ) const;
 };
@@ -577,9 +582,6 @@ public:
 	ScalarFunctionParserImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_ScalarFunctionParser, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void defineBinaryFunction( const std::string& p1, BinaryFunction p2);
-	virtual void defineUnaryFunction( const std::string& p1, UnaryFunction p2);
-	virtual void defineNaryFunction( const std::string& p1, NaryFunction p2, std::size_t p3, std::size_t p4);
 	virtual ScalarFunctionInterface* createFunction( const std::string& p1) const;
 };
 

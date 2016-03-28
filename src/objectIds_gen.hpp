@@ -384,6 +384,7 @@ public:
 		Method_addExclusionFeature,
 		Method_addSummarizerFunction,
 		Method_addWeightingFunction,
+		Method_defineWeightingFormula,
 		Method_createQuery
 	};
 };
@@ -405,6 +406,7 @@ public:
 		Method_setMaxNofRanks,
 		Method_setMinRank,
 		Method_addUserName,
+		Method_setWeightingFormulaVariableValue,
 		Method_evaluate
 	};
 };
@@ -421,7 +423,9 @@ public:
 		Method_getWeightingFunction,
 		Method_defineSummarizerFunction,
 		Method_getSummarizerFunction,
-		Method_getFunctionList
+		Method_getFunctionList,
+		Method_defineScalarFunctionParser,
+		Method_getScalarFunctionParser
 	};
 };
 
@@ -431,8 +435,6 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_getVariables,
-		Method_getNofArguments,
 		Method_setVariableValue,
 		Method_call,
 		Method_tostring
@@ -445,6 +447,9 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_getVariables,
+		Method_getNofArguments,
+		Method_setDefaultVariableValue,
 		Method_createInstance,
 		Method_tostring
 	};
@@ -456,9 +461,6 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_defineBinaryFunction,
-		Method_defineUnaryFunction,
-		Method_defineNaryFunction,
 		Method_createFunction
 	};
 };
