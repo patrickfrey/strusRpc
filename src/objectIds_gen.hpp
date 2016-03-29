@@ -406,7 +406,7 @@ public:
 		Method_setMaxNofRanks,
 		Method_setMinRank,
 		Method_addUserName,
-		Method_setWeightingFormulaVariableValue,
+		Method_setWeightingVariableValue,
 		Method_evaluate
 	};
 };

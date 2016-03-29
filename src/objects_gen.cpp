@@ -2725,22 +2725,22 @@ try
 }
 }
 
-void QueryImpl::setWeightingFormulaVariableValue( const std::string& p1, double p2)
+void QueryImpl::setWeightingVariableValue( const std::string& p1, double p2)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_setWeightingFormulaVariableValue);
+	msg.packByte( Method_setWeightingVariableValue);
 	msg.packString( p1);
 	msg.packDouble( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::setWeightingFormulaVariableValue");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::setWeightingVariableValue");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::setWeightingFormulaVariableValue", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::setWeightingVariableValue", err.what());
 	return void();
 }
 }

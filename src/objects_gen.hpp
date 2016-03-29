@@ -511,7 +511,7 @@ public:
 	virtual void setMaxNofRanks( std::size_t p1);
 	virtual void setMinRank( std::size_t p1);
 	virtual void addUserName( const std::string& p1);
-	virtual void setWeightingFormulaVariableValue( const std::string& p1, double p2);
+	virtual void setWeightingVariableValue( const std::string& p1, double p2);
 	virtual QueryResult evaluate( );
 };
 

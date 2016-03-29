@@ -2476,14 +2476,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryConst::Method_setWeightingFormulaVariableValue:
+		case QueryConst::Method_setWeightingVariableValue:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			double p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackDouble();
-			obj->setWeightingFormulaVariableValue(p1,p2);
+			obj->setWeightingVariableValue(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
