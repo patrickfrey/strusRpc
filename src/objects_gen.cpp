@@ -3214,7 +3214,7 @@ ScalarFunctionParserImpl::~ScalarFunctionParserImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-ScalarFunctionInterface* ScalarFunctionParserImpl::createFunction( const std::string& p1) const
+ScalarFunctionInterface* ScalarFunctionParserImpl::createFunction( const std::string& p1, const std::vector<std::string>& p2) const
 {
 try
 {
@@ -3222,6 +3222,10 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createFunction);
 	msg.packString( p1);
+	msg.packSize( p2.size());
+	for (unsigned int ii=0; ii < p2.size(); ++ii) {
+		msg.packString( p2[ii]);
+	}
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_ScalarFunction;
 	msg.packObject( classId_0, objId_0);

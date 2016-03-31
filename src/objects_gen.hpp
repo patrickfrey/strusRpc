@@ -582,7 +582,7 @@ public:
 	ScalarFunctionParserImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_ScalarFunctionParser, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual ScalarFunctionInterface* createFunction( const std::string& p1) const;
+	virtual ScalarFunctionInterface* createFunction( const std::string& p1, const std::vector<std::string>& p2) const;
 };
 
 class SegmenterContextImpl
