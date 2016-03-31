@@ -4886,7 +4886,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case SummarizerFunctionConst::Method_getDescription:
 		{
 			RpcSerializer msg;
-			SummarizerFunctionInterface::Description p0;
+			FunctionDescription p0;
 			p0 = obj->getDescription();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4896,7 +4896,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packSummarizerFunctionDescription( p0);
+			msg.packFunctionDescription( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -5540,7 +5540,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case WeightingFunctionConst::Method_getDescription:
 		{
 			RpcSerializer msg;
-			WeightingFunctionInterface::Description p0;
+			FunctionDescription p0;
 			p0 = obj->getDescription();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -5550,7 +5550,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packWeightingFunctionDescription( p0);
+			msg.packFunctionDescription( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

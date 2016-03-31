@@ -850,13 +850,9 @@ sub packParameter
 	{
 		$rt .= "msg.packPostingJoinOperatorDescription( " . $id . ");";
 	}
-	elsif ($type eq "WeightingFunctionInterface::Description")
+	elsif ($type eq "FunctionDescription")
 	{
-		$rt .= "msg.packWeightingFunctionDescription( " . $id . ");";
-	}
-	elsif ($type eq "SummarizerFunctionInterface::Description")
-	{
-		$rt .= "msg.packSummarizerFunctionDescription( " . $id . ");";
+		$rt .= "msg.packFunctionDescription( " . $id . ");";
 	}
 	else
 	{
@@ -1125,13 +1121,9 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackPostingJoinOperatorDescription();";
 	}
-	elsif ($type eq "WeightingFunctionInterface::Description")
+	elsif ($type eq "FunctionDescription")
 	{
-		$rt .= "$id = serializedMsg.unpackWeightingFunctionDescription();";
-	}
-	elsif ($type eq "SummarizerFunctionInterface::Description")
-	{
-		$rt .= "$id = serializedMsg.unpackSummarizerFunctionDescription();";
+		$rt .= "$id = serializedMsg.unpackFunctionDescription();";
 	}
 	else
 	{

@@ -905,7 +905,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual SummarizerFunctionInstanceInterface* createInstance( const QueryProcessorInterface* p1) const;
-	virtual SummarizerFunctionInterface::Description getDescription( ) const;
+	virtual FunctionDescription getDescription( ) const;
 };
 
 class TextProcessorImpl
@@ -1035,7 +1035,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual WeightingFunctionInstanceInterface* createInstance( const QueryProcessorInterface* p1) const;
-	virtual WeightingFunctionInterface::Description getDescription( ) const;
+	virtual FunctionDescription getDescription( ) const;
 };
 } //namespace
 #endif

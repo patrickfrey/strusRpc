@@ -5391,7 +5391,7 @@ try
 }
 }
 
-SummarizerFunctionInterface::Description SummarizerFunctionImpl::getDescription( ) const
+FunctionDescription SummarizerFunctionImpl::getDescription( ) const
 {
 try
 {
@@ -5402,14 +5402,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	SummarizerFunctionInterface::Description p0 = serializedMsg.unpackSummarizerFunctionDescription();;
+	FunctionDescription p0 = serializedMsg.unpackFunctionDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionImpl::getDescription");
-	return SummarizerFunctionInterface::Description();
+	return FunctionDescription();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionImpl::getDescription", err.what());
-	return SummarizerFunctionInterface::Description();
+	return FunctionDescription();
 }
 }
 
@@ -6098,7 +6098,7 @@ try
 }
 }
 
-WeightingFunctionInterface::Description WeightingFunctionImpl::getDescription( ) const
+FunctionDescription WeightingFunctionImpl::getDescription( ) const
 {
 try
 {
@@ -6109,14 +6109,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	WeightingFunctionInterface::Description p0 = serializedMsg.unpackWeightingFunctionDescription();;
+	FunctionDescription p0 = serializedMsg.unpackFunctionDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionImpl::getDescription");
-	return WeightingFunctionInterface::Description();
+	return FunctionDescription();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionImpl::getDescription", err.what());
-	return WeightingFunctionInterface::Description();
+	return FunctionDescription();
 }
 }
 

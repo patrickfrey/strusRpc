@@ -574,25 +574,11 @@ void RpcSerializer::packPostingJoinOperatorDescription( const PostingJoinOperato
 	packString( val.text());
 }
 
-void RpcSerializer::packWeightingFunctionDescription( const WeightingFunctionInterface::Description& val)
+void RpcSerializer::packFunctionDescription( const FunctionDescription& val)
 {
 	packString( val.text());
-	packSize( val.param().size());
-	std::vector<WeightingFunctionInterface::Description::Param>::const_iterator vi = val.param().begin(), ve = val.param().end();
-	for (; vi != ve; ++vi)
-	{
-		packByte( (unsigned char)vi->type());
-		packString( vi->name());
-		packString( vi->text());
-		packString( vi->domain());
-	}
-}
-
-void RpcSerializer::packSummarizerFunctionDescription( const SummarizerFunctionInterface::Description& val)
-{
-	packString( val.text());
-	packSize( val.param().size());
-	std::vector<SummarizerFunctionInterface::Description::Param>::const_iterator vi = val.param().begin(), ve = val.param().end();
+	packSize( val.parameter().size());
+	std::vector<FunctionDescription::Parameter>::const_iterator vi = val.parameter().begin(), ve = val.parameter().end();
 	for (; vi != ve; ++vi)
 	{
 		packByte( (unsigned char)vi->type());
@@ -1082,28 +1068,13 @@ PostingJoinOperatorInterface::Description RpcDeserializer::unpackPostingJoinOper
 	return PostingJoinOperatorInterface::Description( unpackString());
 }
 
-WeightingFunctionInterface::Description RpcDeserializer::unpackWeightingFunctionDescription()
+FunctionDescription RpcDeserializer::unpackFunctionDescription()
 {
-	WeightingFunctionInterface::Description rt( unpackString());
+	FunctionDescription rt( unpackString());
 	unsigned int ii=0, nn=unpackSize();
 	for (; ii<nn; ++ii)
 	{
-		WeightingFunctionInterface::Description::Param::Type type = (WeightingFunctionInterface::Description::Param::Type)unpackByte();
-		std::string name( unpackString());
-		std::string text( unpackString());
-		std::string domain( unpackString());
-		rt( type, name, text, domain);
-	}
-	return rt;
-}
-
-SummarizerFunctionInterface::Description RpcDeserializer::unpackSummarizerFunctionDescription()
-{
-	SummarizerFunctionInterface::Description rt( unpackString());
-	unsigned int ii=0, nn=unpackSize();
-	for (; ii<nn; ++ii)
-	{
-		SummarizerFunctionInterface::Description::Param::Type type = (SummarizerFunctionInterface::Description::Param::Type)unpackByte();
+		FunctionDescription::Parameter::Type type = (FunctionDescription::Parameter::Type)unpackByte();
 		std::string name( unpackString());
 		std::string text( unpackString());
 		std::string domain( unpackString());

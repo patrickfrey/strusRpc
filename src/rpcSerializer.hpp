@@ -97,8 +97,7 @@ public:
 	void packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val);
 	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
 	void packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val);
-	void packWeightingFunctionDescription( const WeightingFunctionInterface::Description& val);
-	void packSummarizerFunctionDescription( const SummarizerFunctionInterface::Description& val);
+	void packFunctionDescription( const FunctionDescription& val);
 	void packCrc32();
 	const std::string& content() const
 	{
@@ -169,8 +168,7 @@ public:
 	QueryProcessorInterface::FunctionType unpackQueryProcessorFunctionType();
 	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();
 	PostingJoinOperatorInterface::Description unpackPostingJoinOperatorDescription();
-	WeightingFunctionInterface::Description unpackWeightingFunctionDescription();
-	SummarizerFunctionInterface::Description unpackSummarizerFunctionDescription();
+	FunctionDescription unpackFunctionDescription();
 	bool unpackCrc32();
 
 	std::size_t position() const
