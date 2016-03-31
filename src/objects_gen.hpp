@@ -1034,7 +1034,7 @@ public:
 	WeightingFunctionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunction, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual WeightingFunctionInstanceInterface* createInstance( ) const;
+	virtual WeightingFunctionInstanceInterface* createInstance( const QueryProcessorInterface* p1) const;
 	virtual WeightingFunctionInterface::Description getDescription( ) const;
 };
 } //namespace

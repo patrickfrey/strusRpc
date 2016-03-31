@@ -6072,13 +6072,16 @@ WeightingFunctionImpl::~WeightingFunctionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-WeightingFunctionInstanceInterface* WeightingFunctionImpl::createInstance( ) const
+WeightingFunctionInstanceInterface* WeightingFunctionImpl::createInstance( const QueryProcessorInterface* p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "QueryProcessor");
+	msg.packObject( impl_1->classId(), impl_1->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_WeightingFunctionInstance;
 	msg.packObject( classId_0, objId_0);
