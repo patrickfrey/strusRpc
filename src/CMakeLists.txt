@@ -64,7 +64,7 @@ target_link_libraries( strus_rpc_client strus_private_utils ${CMAKE_DL_LIBS} )
 # some old platforms still have real-time functions (clock_getres, clock_gettime) in librt.so
 # and not in the C library
 find_library( LIBRT_LIBRARIES rt )
-if(NOT LIBRT_LIBRARIES_NOT_FOUND)
+if(NOT LIBRT_LIBRARIES-NOTFOUND)
     target_link_libraries( strus_rpc_client_socket ${LIBRT_LIBRARIES} )
     target_link_libraries( strus_rpc_client ${LIBRT_LIBRARIES} )
 endif()
@@ -91,12 +91,12 @@ set_target_properties(
 # ------------------------------
 add_executable( strusRpcServer strusRpcServer.cpp utils.cpp ${server_source_files} )
 target_link_libraries( strusRpcServer  "${Boost_LIBRARIES}" strus_private_utils strus_error strus_utils strus_module uv ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${Intl_LIBRARIES} )
-if(NOT LIBRT_LIBRARIES_NOT_FOUND)
+if(NOT LIBRT_LIBRARIES-NOTFOUND)
     target_link_libraries( strusRpcServer ${LIBRT_LIBRARIES} )
 endif()
 # FreeBSD needs kernel data access library for libuv (-libkvm)
 find_library( LIBKVM_LIBRARIES kvm )
-if(NOT LIBKVM_LIBRARIES_NOT_FOUND)
+if(LIBKVM_LIBRARIES-NOTFOUND)
 	target_link_libraries( strusRpcServer ${LIBKVM_LIBRARIES} )
 endif()
 
