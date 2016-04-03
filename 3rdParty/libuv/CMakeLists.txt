@@ -60,6 +60,7 @@ else()
     elseif ( ${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD" )
        set( SOURCES ${SOURCES}
            ${LIBUVDIR}/src/unix/freebsd.c
+           ${LIBUVDIR}/src/unix/kqueue.c
 	 )
     elseif ( ${CMAKE_SYSTEM_NAME} STREQUAL "OpenBSD" )
        set( SOURCES ${SOURCES}
