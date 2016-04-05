@@ -24,7 +24,7 @@ using namespace strus;
 
 namespace {
 
-#define STRUS_ALTERNATIVE_CHECK_SUM
+#undef STRUS_ALTERNATIVE_CHECK_SUM
 #ifdef STRUS_ALTERNATIVE_CHECK_SUM
 
 enum AlternativeCheckProperties
@@ -261,7 +261,7 @@ void RpcSerializer::packBuffer( const char* buf, std::size_t size)
 void RpcSerializer::packBufferFloat( const double* buf, std::size_t size)
 {
 #ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "packBuffer('" << std::string(buf,size) << "')" << std::endl;
+	std::cerr << "packBufferFloat( ... )" << std::endl;
 #endif
 	if (size > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( _TXT("buffer size out of range"));
 	packScalar( m_content, (uint32_t)size);
