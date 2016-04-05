@@ -59,7 +59,7 @@ add_library( strus_rpc_client_socket SHARED ${client_socket_source_files} libstr
 target_link_libraries( strus_rpc_client_socket strus_private_utils ${Intl_LIBRARIES} ${CMAKE_DL_LIBS} uv )
 
 add_library( strus_rpc_client SHARED ${client_source_files} libstrus_rpc_client.cpp )
-target_link_libraries( strus_rpc_client strus_private_utils ${CMAKE_DL_LIBS} ${Intl_LIBRARIES} )
+target_link_libraries( strus_rpc_client strus_private_utils strus_utils ${CMAKE_DL_LIBS} ${Intl_LIBRARIES} )
 
 # some old platforms still have real-time functions (clock_getres, clock_gettime) in librt.so
 # and not in the C library
