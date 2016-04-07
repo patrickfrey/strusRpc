@@ -23,7 +23,7 @@ public:
 
 	RpcInterfaceStub( unsigned char classId_, unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_);
 	RpcInterfaceStub( const RpcInterfaceStub& o);
-	RpcInterfaceStub( ErrorBufferInterface* errorhnd_);
+	explicit RpcInterfaceStub( ErrorBufferInterface* errorhnd_);
 
 	unsigned char classId() const					{return m_classId;}
 	unsigned int objId() const					{return m_objId;}

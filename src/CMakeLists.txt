@@ -46,6 +46,8 @@ link_directories(
 	"${PROJECT_SOURCE_DIR}/src"
 	"${PROJECT_SOURCE_DIR}/3rdParty/libuv"
 	"${strusmodule_LIBRARY_DIRS}"
+	"${strus_LIBRARY_DIRS}"
+	"${strusanalyzer_LIBRARY_DIRS}"
 )
 
 
