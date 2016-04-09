@@ -2336,9 +2336,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			float p2;
+			double p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackFloat();
+			p2 = serializedMsg.unpackDouble();
 			obj->defineFeature(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4697,7 +4697,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			PostingIteratorInterface* p2;
 			std::vector<SummarizationVariable> p3;
-			float p4;
+			double p4;
 			TermStatistics p5;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
@@ -4714,7 +4714,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				
 				p3.push_back( ee);
 			}
-			p4 = serializedMsg.unpackFloat();
+			p4 = serializedMsg.unpackDouble();
 			p5 = serializedMsg.unpackTermStatistics();
 			obj->addSummarizationFeature(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
@@ -5364,14 +5364,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			PostingIteratorInterface* p2;
-			float p3;
+			double p3;
 			TermStatistics p4;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PostingIterator) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PostingIteratorInterface>( classId_2, objId_2);
-			p3 = serializedMsg.unpackFloat();
+			p3 = serializedMsg.unpackDouble();
 			p4 = serializedMsg.unpackTermStatistics();
 			obj->addWeightingFeature(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();

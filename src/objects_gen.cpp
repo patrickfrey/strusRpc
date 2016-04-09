@@ -829,7 +829,7 @@ try
 }
 }
 
-const char* DatabaseImpl::getConfigDescription( DatabaseInterface::ConfigType p1) const
+const char* DatabaseImpl::getConfigDescription( const DatabaseInterface::ConfigType& p1) const
 {
 try
 {
@@ -852,7 +852,7 @@ try
 }
 }
 
-const char** DatabaseImpl::getConfigParameters( DatabaseInterface::ConfigType p1) const
+const char** DatabaseImpl::getConfigParameters( const DatabaseInterface::ConfigType& p1) const
 {
 try
 {
@@ -1766,7 +1766,7 @@ MetaDataRestrictionImpl::~MetaDataRestrictionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void MetaDataRestrictionImpl::addCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const NumericVariant& p3, bool p4)
+void MetaDataRestrictionImpl::addCondition( const MetaDataRestrictionInterface::CompareOperator& p1, const std::string& p2, const NumericVariant& p3, bool p4)
 {
 try
 {
@@ -2564,7 +2564,7 @@ try
 }
 }
 
-void QueryImpl::defineFeature( const std::string& p1, float p2)
+void QueryImpl::defineFeature( const std::string& p1, double p2)
 {
 try
 {
@@ -2572,7 +2572,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineFeature);
 	msg.packString( p1);
-	msg.packFloat( p2);
+	msg.packDouble( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -2927,7 +2927,7 @@ try
 }
 }
 
-std::vector<std::string> QueryProcessorImpl::getFunctionList( QueryProcessorInterface::FunctionType p1) const
+std::vector<std::string> QueryProcessorImpl::getFunctionList( const QueryProcessorInterface::FunctionType& p1) const
 {
 try
 {
@@ -4805,7 +4805,7 @@ try
 }
 }
 
-const char* StorageImpl::getConfigDescription( StorageInterface::ConfigType p1) const
+const char* StorageImpl::getConfigDescription( const StorageInterface::ConfigType& p1) const
 {
 try
 {
@@ -4828,7 +4828,7 @@ try
 }
 }
 
-const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) const
+const char** StorageImpl::getConfigParameters( const StorageInterface::ConfigType& p1) const
 {
 try
 {
@@ -5197,7 +5197,7 @@ SummarizerFunctionContextImpl::~SummarizerFunctionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, float p4, const TermStatistics& p5)
+void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, double p4, const TermStatistics& p5)
 {
 try
 {
@@ -5212,7 +5212,7 @@ try
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
 		msg.packSummarizationVariable( p3[ii]);
 	}
-	msg.packFloat( p4);
+	msg.packDouble( p4);
 	msg.packTermStatistics( p5);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -5663,7 +5663,7 @@ try
 }
 }
 
-std::vector<std::string> TextProcessorImpl::getFunctionList( TextProcessorInterface::FunctionType p1) const
+std::vector<std::string> TextProcessorImpl::getFunctionList( const TextProcessorInterface::FunctionType& p1) const
 {
 try
 {
@@ -5913,7 +5913,7 @@ WeightingFunctionContextImpl::~WeightingFunctionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void WeightingFunctionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3, const TermStatistics& p4)
+void WeightingFunctionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, double p3, const TermStatistics& p4)
 {
 try
 {
@@ -5924,7 +5924,7 @@ try
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PostingIterator");
 	msg.packObject( impl_2->classId(), impl_2->objId());
-	msg.packFloat( p3);
+	msg.packDouble( p3);
 	msg.packTermStatistics( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());

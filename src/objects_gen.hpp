@@ -203,8 +203,8 @@ public:
 	virtual bool createDatabase( const std::string& p1) const;
 	virtual bool restoreDatabase( const std::string& p1, DatabaseBackupCursorInterface* p2) const;
 	virtual bool destroyDatabase( const std::string& p1) const;
-	virtual const char* getConfigDescription( DatabaseInterface::ConfigType p1) const;
-	virtual const char** getConfigParameters( DatabaseInterface::ConfigType p1) const;
+	virtual const char* getConfigDescription( const DatabaseInterface::ConfigType& p1) const;
+	virtual const char** getConfigParameters( const DatabaseInterface::ConfigType& p1) const;
 };
 
 class DatabaseTransactionImpl
@@ -368,7 +368,7 @@ public:
 	MetaDataRestrictionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataRestriction, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const NumericVariant& p3, bool p4);
+	virtual void addCondition( const MetaDataRestrictionInterface::CompareOperator& p1, const std::string& p2, const NumericVariant& p3, bool p4);
 	virtual MetaDataRestrictionInstanceInterface* createInstance( ) const;
 	virtual std::string tostring( ) const;
 };
@@ -503,7 +503,7 @@ public:
 	virtual void pushTerm( const std::string& p1, const std::string& p2);
 	virtual void pushExpression( const PostingJoinOperatorInterface* p1, std::size_t p2, int p3, unsigned int p4);
 	virtual void attachVariable( const std::string& p1);
-	virtual void defineFeature( const std::string& p1, float p2);
+	virtual void defineFeature( const std::string& p1, double p2);
 	virtual void defineTermStatistics( const std::string& p1, const std::string& p2, const TermStatistics& p3);
 	virtual void defineGlobalStatistics( const GlobalStatistics& p1);
 	virtual void addMetaDataRestrictionCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const NumericVariant& p3, bool p4);
@@ -532,7 +532,7 @@ public:
 	virtual const WeightingFunctionInterface* getWeightingFunction( const std::string& p1) const;
 	virtual void defineSummarizerFunction( const std::string& p1, SummarizerFunctionInterface* p2);
 	virtual const SummarizerFunctionInterface* getSummarizerFunction( const std::string& p1) const;
-	virtual std::vector<std::string> getFunctionList( QueryProcessorInterface::FunctionType p1) const;
+	virtual std::vector<std::string> getFunctionList( const QueryProcessorInterface::FunctionType& p1) const;
 	virtual void defineScalarFunctionParser( const std::string& p1, ScalarFunctionParserInterface* p2);
 	virtual const ScalarFunctionParserInterface* getScalarFunctionParser( const std::string& p1) const;
 };
@@ -817,8 +817,8 @@ public:
 	virtual StorageClientInterface* createClient( const std::string& p1, DatabaseClientInterface* p2, const StatisticsProcessorInterface* p3) const;
 	virtual bool createStorage( const std::string& p1, DatabaseClientInterface* p2) const;
 	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( DatabaseClientInterface* p1) const;
-	virtual const char* getConfigDescription( StorageInterface::ConfigType p1) const;
-	virtual const char** getConfigParameters( StorageInterface::ConfigType p1) const;
+	virtual const char* getConfigDescription( const StorageInterface::ConfigType& p1) const;
+	virtual const char** getConfigParameters( const StorageInterface::ConfigType& p1) const;
 };
 
 class StorageObjectBuilderImpl
@@ -872,7 +872,7 @@ public:
 	SummarizerFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, float p4, const TermStatistics& p5);
+	virtual void addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, double p4, const TermStatistics& p5);
 	virtual std::vector<SummaryElement> getSummary( const Index& p1);
 };
 
@@ -929,7 +929,7 @@ public:
 	virtual void defineTokenizer( const std::string& p1, TokenizerFunctionInterface* p2);
 	virtual void defineNormalizer( const std::string& p1, NormalizerFunctionInterface* p2);
 	virtual void defineAggregator( const std::string& p1, AggregatorFunctionInterface* p2);
-	virtual std::vector<std::string> getFunctionList( TextProcessorInterface::FunctionType p1) const;
+	virtual std::vector<std::string> getFunctionList( const TextProcessorInterface::FunctionType& p1) const;
 };
 
 class TokenizerFunctionContextImpl
@@ -1002,7 +1002,7 @@ public:
 	WeightingFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3, const TermStatistics& p4);
+	virtual void addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, double p3, const TermStatistics& p4);
 	virtual double call( const Index& p1);
 };
 
