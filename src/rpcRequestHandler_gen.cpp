@@ -7,6 +7,7 @@
  */
 #include "rpcRequestHandler.hpp"
 #include "rpcSerializer.hpp"
+#include "strus/errorBufferInterface.hpp"
 #include "objectIds_gen.hpp"
 #include "private/internationalization.hpp"
 #include "private/dll_tags.hpp"

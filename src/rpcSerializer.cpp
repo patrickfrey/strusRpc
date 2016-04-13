@@ -9,7 +9,7 @@
 #include "hexdump.h"
 #include "private/utils.hpp"
 #include "private/internationalization.hpp"
-#include "strus/private/crc32.hpp"
+#include "strus/base/crc32.hpp"
 #include "rpcProtocolDefines.hpp"
 #include <stdexcept>
 #include <cstring>

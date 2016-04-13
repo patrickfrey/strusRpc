@@ -8,6 +8,7 @@
 #include "rpcClient.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
+#include "strus/errorBufferInterface.hpp"
 #include "objects_gen.hpp"
 #include "private/dll_tags.hpp"
 #include "private/errorUtils.hpp"

@@ -147,8 +147,6 @@ $notImplMethods{"createResultIterator"} = 1;			# ...vector of object references 
 
 # List of interfaces that are not implemented for RPC:
 my %notImplInterfaces = ();
-$notImplInterfaces{"ErrorBufferInterface"} = 1;			# ...buffers for reporting errors are internal
-$notImplInterfaces{"AnalyzerErrorBufferInterface"} = 1;		# ...buffers for reporting errors are internal
 
 # List of methods that pass interface params with ownership:
 my %passOwnershipParams = ();
@@ -1826,6 +1824,7 @@ print SRCFILE <<EOF;
  */
 #include "rpcRequestHandler.hpp"
 #include "rpcSerializer.hpp"
+#include "strus/errorBufferInterface.hpp"
 #include "objectIds_gen.hpp"
 #include "private/internationalization.hpp"
 #include "private/dll_tags.hpp"

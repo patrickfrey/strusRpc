@@ -61,7 +61,7 @@ add_library( strus_rpc_client_socket SHARED ${client_socket_source_files} libstr
 target_link_libraries( strus_rpc_client_socket strus_private_utils ${Intl_LIBRARIES} ${CMAKE_DL_LIBS} uv )
 
 add_library( strus_rpc_client SHARED ${client_source_files} libstrus_rpc_client.cpp )
-target_link_libraries( strus_rpc_client strus_private_utils strus_utils ${CMAKE_DL_LIBS} ${Intl_LIBRARIES} )
+target_link_libraries( strus_rpc_client strus_private_utils strus_base ${CMAKE_DL_LIBS} ${Intl_LIBRARIES} )
 
 # some old platforms still have real-time functions (clock_getres, clock_gettime) in librt.so
 # and not in the C library
@@ -92,7 +92,7 @@ set_target_properties(
 # PROGRAMS
 # ------------------------------
 add_executable( strusRpcServer strusRpcServer.cpp utils.cpp ${server_source_files} )
-target_link_libraries( strusRpcServer  "${Boost_LIBRARIES}" strus_private_utils strus_error strus_utils strus_module uv ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${Intl_LIBRARIES} )
+target_link_libraries( strusRpcServer  "${Boost_LIBRARIES}" strus_private_utils strus_error strus_base strus_module uv ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${Intl_LIBRARIES} )
 if(LIBRT_LIBRARIES)
     target_link_libraries( strusRpcServer ${LIBRT_LIBRARIES} )
 endif()
