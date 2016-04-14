@@ -11,7 +11,7 @@
 #include "rpcClientMessaging.hpp"
 #include "private/internationalization.hpp"
 #include "private/errorUtils.hpp"
-#include "private/dll_tags.hpp"
+#include "strus/base/dll_tags.hpp"
 
 DLL_PUBLIC strus::RpcClientMessagingInterface*
 	strus::createRpcClientMessaging(

@@ -10,7 +10,7 @@
 #include "strus/rpcClientMessagingInterface.hpp"
 #include "strus/errorBufferInterface.hpp"
 #include "rpcClient.hpp"
-#include "private/dll_tags.hpp"
+#include "strus/base/dll_tags.hpp"
 #include "private/errorUtils.hpp"
 #include "private/internationalization.hpp"
 

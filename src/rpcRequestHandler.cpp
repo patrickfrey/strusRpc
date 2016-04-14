@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 #include "rpcRequestHandler.hpp"
-#include "private/dll_tags.hpp"
+#include "strus/base/dll_tags.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/storageClientInterface.hpp"

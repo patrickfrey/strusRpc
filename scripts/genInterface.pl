@@ -1827,7 +1827,7 @@ print SRCFILE <<EOF;
 #include "strus/errorBufferInterface.hpp"
 #include "objectIds_gen.hpp"
 #include "private/internationalization.hpp"
-#include "private/dll_tags.hpp"
+#include "strus/base/dll_tags.hpp"
 #include <string>
 
 using namespace strus;
