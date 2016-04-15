@@ -468,7 +468,7 @@ void RpcSerializer::packAnalyzerAttribute( const analyzer::Attribute& val)
 void RpcSerializer::packAnalyzerMetaData( const analyzer::MetaData& val)
 {
 	packString( val.name());
-	packDouble( val.value());
+	packNumericVariant( val.value());
 }
 
 void RpcSerializer::packAnalyzerTerm( const analyzer::Term& val)
@@ -952,7 +952,7 @@ analyzer::Attribute RpcDeserializer::unpackAnalyzerAttribute()
 analyzer::MetaData RpcDeserializer::unpackAnalyzerMetaData()
 {
 	std::string name = unpackString();
-	double value = unpackDouble();
+	NumericVariant value = unpackNumericVariant();
 	return analyzer::MetaData( name, value);
 }
 
