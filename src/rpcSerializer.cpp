@@ -16,7 +16,7 @@
 #include <iostream>
 #include <limits>
 #include <netinet/in.h>
-#include <stdint.h>
+#include "strus/base/stdint.h"
 
 using namespace strus;
 

@@ -19,7 +19,7 @@ extern "C" {
 #include <cstdlib>
 #include <iostream>
 #include <sys/time.h>
-#include <stdint.h>
+#include "strus/base/stdint.h"
 #include <errno.h>
 #include <arpa/inet.h>
 
