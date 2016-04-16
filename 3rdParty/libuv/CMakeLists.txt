@@ -56,10 +56,16 @@ else()
     elseif ( ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin" )
        set( SOURCES ${SOURCES}
            ${LIBUVDIR}/src/unix/darwin.c
+           ${LIBUVDIR}/src/unix/darwin-proctitle.c
+           ${LIBUVDIR}/src/unix/fsevents.c
+           ${LIBUVDIR}/src/unix/kqueue.c
+           ${LIBUVDIR}/src/unix/proctitle.c
 	 )
+       add_definitions(-D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_UNLIMITED_SELECT=1)
     elseif ( ${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD" )
        set( SOURCES ${SOURCES}
            ${LIBUVDIR}/src/unix/freebsd.c
+           ${LIBUVDIR}/src/unix/kqueue.c
 	 )
     elseif ( ${CMAKE_SYSTEM_NAME} STREQUAL "OpenBSD" )
        set( SOURCES ${SOURCES}

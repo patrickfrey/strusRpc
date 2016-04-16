@@ -1,31 +1,10 @@
 /*
----------------------------------------------------------------------
-    The C++ library strus implements basic operations to build
-    a search engine for structured search on unstructured data.
-
-    Copyright (C) 2015 Patrick Frey
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public
-    License as published by the Free Software Foundation; either
-    version 3 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
---------------------------------------------------------------------
-
-	The latest version of strus can be found at 'http://github.com/patrickfrey/strus'
-	For documentation see 'http://patrickfrey.github.com/strus'
-
---------------------------------------------------------------------
-*/
+ * Copyright (c) 2015 Patrick P. Frey
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 #ifndef _STRUS_RPC_OBJECT_IDS_HPP_INCLUDED
 #define _STRUS_RPC_OBJECT_IDS_HPP_INCLUDED
 
@@ -60,6 +39,9 @@ enum ClassId
 	ClassId_QueryEval,
 	ClassId_Query,
 	ClassId_QueryProcessor,
+	ClassId_ScalarFunctionInstance,
+	ClassId_ScalarFunction,
+	ClassId_ScalarFunctionParser,
 	ClassId_SegmenterContext,
 	ClassId_SegmenterInstance,
 	ClassId_Segmenter,
@@ -402,6 +384,7 @@ public:
 		Method_addExclusionFeature,
 		Method_addSummarizerFunction,
 		Method_addWeightingFunction,
+		Method_defineWeightingFormula,
 		Method_createQuery
 	};
 };
@@ -423,6 +406,7 @@ public:
 		Method_setMaxNofRanks,
 		Method_setMinRank,
 		Method_addUserName,
+		Method_setWeightingVariableValue,
 		Method_evaluate
 	};
 };
@@ -439,7 +423,45 @@ public:
 		Method_getWeightingFunction,
 		Method_defineSummarizerFunction,
 		Method_getSummarizerFunction,
-		Method_getFunctionList
+		Method_getFunctionList,
+		Method_defineScalarFunctionParser,
+		Method_getScalarFunctionParser
+	};
+};
+
+class ScalarFunctionInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_setVariableValue,
+		Method_call,
+		Method_tostring
+	};
+};
+
+class ScalarFunctionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getVariables,
+		Method_getNofArguments,
+		Method_setDefaultVariableValue,
+		Method_createInstance,
+		Method_tostring
+	};
+};
+
+class ScalarFunctionParserConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createFunction
 	};
 };
 

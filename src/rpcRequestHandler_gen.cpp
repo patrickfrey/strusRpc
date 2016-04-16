@@ -1,36 +1,16 @@
 /*
----------------------------------------------------------------------
-    The C++ library strus implements basic operations to build
-    a search engine for structured search on unstructured data.
-
-    Copyright (C) 2015 Patrick Frey
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public
-    License as published by the Free Software Foundation; either
-    version 3 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
---------------------------------------------------------------------
-
-	The latest version of strus can be found at 'http://github.com/patrickfrey/strus'
-	For documentation see 'http://patrickfrey.github.com/strus'
-
---------------------------------------------------------------------
-*/
+ * Copyright (c) 2015 Patrick P. Frey
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 #include "rpcRequestHandler.hpp"
 #include "rpcSerializer.hpp"
+#include "strus/errorBufferInterface.hpp"
 #include "objectIds_gen.hpp"
 #include "private/internationalization.hpp"
-#include "private/dll_tags.hpp"
+#include "strus/base/dll_tags.hpp"
 #include <string>
 
 using namespace strus;
@@ -1520,7 +1500,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case MetaDataReaderConst::Method_getValue:
 		{
 			RpcSerializer msg;
-			ArithmeticVariant p0;
+			NumericVariant p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
 			p0 = obj->getValue(p1);
@@ -1532,7 +1512,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packArithmeticVariant( p0);
+			msg.packNumericVariant( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -1624,11 +1604,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			MetaDataRestrictionInterface::CompareOperator p1;
 			std::string p2;
-			ArithmeticVariant p3;
+			NumericVariant p3;
 			bool p4;
 			p1 = serializedMsg.unpackMetaDataRestrictionCompareOperator();
 			p2 = serializedMsg.unpackString();
-			p3 = serializedMsg.unpackArithmeticVariant();
+			p3 = serializedMsg.unpackNumericVariant();
 			p4 = serializedMsg.unpackBool();
 			obj->addCondition(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
@@ -2211,7 +2191,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			WeightingFunctionInstanceInterface* p2;
 			std::vector<QueryEvalInterface::FeatureParameter> p3;
-			float p4;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
@@ -2223,8 +2202,29 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				QueryEvalInterface::FeatureParameter ee = serializedMsg.unpackFeatureParameter();
 				p3.push_back( ee);
 			}
-			p4 = serializedMsg.unpackFloat();
-			obj->addWeightingFunction(p1,p2,p3,p4);
+			obj->addWeightingFunction(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				unmarkObjectsToRelease();
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case QueryEvalConst::Method_defineWeightingFormula:
+		{
+			RpcSerializer msg;
+			ScalarFunctionInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_ScalarFunction) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getObject<ScalarFunctionInterface>( classId_1, objId_1);
+			markObjectToRelease( classId_1, objId_1);
+			obj->defineWeightingFormula(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -2337,9 +2337,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			float p2;
+			double p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackFloat();
+			p2 = serializedMsg.unpackDouble();
 			obj->defineFeature(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -2392,11 +2392,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			MetaDataRestrictionInterface::CompareOperator p1;
 			std::string p2;
-			ArithmeticVariant p3;
+			NumericVariant p3;
 			bool p4;
 			p1 = serializedMsg.unpackMetaDataRestrictionCompareOperator();
 			p2 = serializedMsg.unpackString();
-			p3 = serializedMsg.unpackArithmeticVariant();
+			p3 = serializedMsg.unpackNumericVariant();
 			p4 = serializedMsg.unpackBool();
 			obj->addMetaDataRestrictionCondition(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
@@ -2467,6 +2467,24 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			p1 = serializedMsg.unpackString();
 			obj->addUserName(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case QueryConst::Method_setWeightingVariableValue:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			double p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDouble();
+			obj->setWeightingVariableValue(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -2663,6 +2681,265 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packCrc32();
 			return msg.content();
+		}
+		case QueryProcessorConst::Method_defineScalarFunctionParser:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			ScalarFunctionParserInterface* p2;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_2; unsigned int objId_2;
+			serializedMsg.unpackObject( classId_2, objId_2);
+			if (classId_2 != ClassId_ScalarFunctionParser) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p2 = getObject<ScalarFunctionParserInterface>( classId_2, objId_2);
+			markObjectToRelease( classId_2, objId_2);
+			obj->defineScalarFunctionParser(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				unmarkObjectsToRelease();
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case QueryProcessorConst::Method_getScalarFunctionParser:
+		{
+			RpcSerializer msg;
+			const ScalarFunctionParserInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->getScalarFunctionParser(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_ScalarFunctionInstance:
+	{
+	ScalarFunctionInstanceInterface* obj = getObject<ScalarFunctionInstanceInterface>( classId, objId);
+	switch( (ScalarFunctionInstanceConst::MethodId)methodId)
+	{
+		case ScalarFunctionInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ScalarFunctionInstanceConst::Method_setVariableValue:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			double p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDouble();
+			obj->setVariableValue(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case ScalarFunctionInstanceConst::Method_call:
+		{
+			RpcSerializer msg;
+			double p0;
+			const double* p1;
+			std::size_t p2;
+			std::vector<double> buf_1 = serializedMsg.unpackBufferFloat();
+			p1 = buf_1.data();
+			p2 = buf_1.size();
+			p0 = obj->call(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packDouble( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case ScalarFunctionInstanceConst::Method_tostring:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			p0 = obj->tostring();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_ScalarFunction:
+	{
+	ScalarFunctionInterface* obj = getObject<ScalarFunctionInterface>( classId, objId);
+	switch( (ScalarFunctionConst::MethodId)methodId)
+	{
+		case ScalarFunctionConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ScalarFunctionConst::Method_getVariables:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getVariables();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case ScalarFunctionConst::Method_getNofArguments:
+		{
+			RpcSerializer msg;
+			std::size_t p0;
+			p0 = obj->getNofArguments();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case ScalarFunctionConst::Method_setDefaultVariableValue:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			double p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDouble();
+			obj->setDefaultVariableValue(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case ScalarFunctionConst::Method_createInstance:
+		{
+			RpcSerializer msg;
+			ScalarFunctionInstanceInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createInstance();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case ScalarFunctionConst::Method_tostring:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			p0 = obj->tostring();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_ScalarFunctionParser:
+	{
+	ScalarFunctionParserInterface* obj = getObject<ScalarFunctionParserInterface>( classId, objId);
+	switch( (ScalarFunctionParserConst::MethodId)methodId)
+	{
+		case ScalarFunctionParserConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ScalarFunctionParserConst::Method_createFunction:
+		{
+			RpcSerializer msg;
+			ScalarFunctionInterface* p0;
+			std::string p1;
+			std::vector<std::string> p2;
+			p1 = serializedMsg.unpackString();
+			std::size_t n2 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n2; ++ii) {
+				std::string ee = serializedMsg.unpackString();
+				p2.push_back( ee);
+			}
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createFunction(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
 		}
 	}
 	break;
@@ -3753,9 +4030,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			ArithmeticVariant p2;
+			NumericVariant p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackArithmeticVariant();
+			p2 = serializedMsg.unpackNumericVariant();
 			obj->setMetaData(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -3832,9 +4109,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			ArithmeticVariant p2;
+			NumericVariant p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackArithmeticVariant();
+			p2 = serializedMsg.unpackNumericVariant();
 			obj->setMetaData(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4356,10 +4633,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			Index p1;
 			std::string p2;
-			ArithmeticVariant p3;
+			NumericVariant p3;
 			p1 = serializedMsg.unpackIndex();
 			p2 = serializedMsg.unpackString();
-			p3 = serializedMsg.unpackArithmeticVariant();
+			p3 = serializedMsg.unpackNumericVariant();
 			obj->updateMetaData(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4421,7 +4698,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			PostingIteratorInterface* p2;
 			std::vector<SummarizationVariable> p3;
-			float p4;
+			double p4;
 			TermStatistics p5;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
@@ -4438,7 +4715,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				
 				p3.push_back( ee);
 			}
-			p4 = serializedMsg.unpackFloat();
+			p4 = serializedMsg.unpackDouble();
 			p5 = serializedMsg.unpackTermStatistics();
 			obj->addSummarizationFeature(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
@@ -4508,9 +4785,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			ArithmeticVariant p2;
+			NumericVariant p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackArithmeticVariant();
+			p2 = serializedMsg.unpackNumericVariant();
 			obj->addNumericParameter(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4610,7 +4887,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case SummarizerFunctionConst::Method_getDescription:
 		{
 			RpcSerializer msg;
-			SummarizerFunctionInterface::Description p0;
+			FunctionDescription p0;
 			p0 = obj->getDescription();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4620,7 +4897,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packSummarizerFunctionDescription( p0);
+			msg.packFunctionDescription( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -5088,14 +5365,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			PostingIteratorInterface* p2;
-			float p3;
+			double p3;
 			TermStatistics p4;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PostingIterator) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PostingIteratorInterface>( classId_2, objId_2);
-			p3 = serializedMsg.unpackFloat();
+			p3 = serializedMsg.unpackDouble();
 			p4 = serializedMsg.unpackTermStatistics();
 			obj->addWeightingFeature(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
@@ -5162,9 +5439,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			ArithmeticVariant p2;
+			NumericVariant p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackArithmeticVariant();
+			p2 = serializedMsg.unpackNumericVariant();
 			obj->addNumericParameter(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -5241,9 +5518,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			WeightingFunctionInstanceInterface* p0;
+			const QueryProcessorInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_QueryProcessor) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<QueryProcessorInterface>( classId_1, objId_1);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createInstance();
+			p0 = obj->createInstance(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5259,7 +5541,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case WeightingFunctionConst::Method_getDescription:
 		{
 			RpcSerializer msg;
-			WeightingFunctionInterface::Description p0;
+			FunctionDescription p0;
 			p0 = obj->getDescription();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -5269,7 +5551,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packWeightingFunctionDescription( p0);
+			msg.packFunctionDescription( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

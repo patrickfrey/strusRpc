@@ -1,43 +1,22 @@
 /*
----------------------------------------------------------------------
-    The C++ library strus implements basic operations to build
-    a search engine for structured search on unstructured data.
-
-    Copyright (C) 2015 Patrick Frey
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public
-    License as published by the Free Software Foundation; either
-    version 3 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
---------------------------------------------------------------------
-
-	The latest version of strus can be found at 'http://github.com/patrickfrey/strus'
-	For documentation see 'http://patrickfrey.github.com/strus'
-
---------------------------------------------------------------------
-*/
+ * Copyright (c) 2014 Patrick P. Frey
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 #include "rpcSerializer.hpp"
 #include "hexdump.h"
 #include "private/utils.hpp"
 #include "private/internationalization.hpp"
-#include "strus/private/crc32.hpp"
+#include "strus/base/crc32.hpp"
 #include "rpcProtocolDefines.hpp"
 #include <stdexcept>
 #include <cstring>
 #include <iostream>
 #include <limits>
 #include <netinet/in.h>
-#include <stdint.h>
+#include "strus/base/stdint.h"
 
 using namespace strus;
 
@@ -45,7 +24,7 @@ using namespace strus;
 
 namespace {
 
-#define STRUS_ALTERNATIVE_CHECK_SUM
+#undef STRUS_ALTERNATIVE_CHECK_SUM
 #ifdef STRUS_ALTERNATIVE_CHECK_SUM
 
 enum AlternativeCheckProperties
@@ -279,6 +258,20 @@ void RpcSerializer::packBuffer( const char* buf, std::size_t size)
 	m_content.append( buf, size);
 }
 
+void RpcSerializer::packBufferFloat( const double* buf, std::size_t size)
+{
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packBufferFloat( ... )" << std::endl;
+#endif
+	if (size > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( _TXT("buffer size out of range"));
+	packScalar( m_content, (uint32_t)size);
+	std::size_t ii=0;
+	for (ii=0; ii<size; ++ii)
+	{
+		packDouble( buf[ii]);
+	}
+}
+
 void RpcSerializer::packBool( bool val)
 {
 #ifdef STRUS_LOWLEVEL_DEBUG
@@ -355,15 +348,15 @@ void RpcSerializer::packSize( std::size_t size)
 	packScalar( m_content, (uint32_t)size);
 }
 
-void RpcSerializer::packArithmeticVariant( const ArithmeticVariant& val)
+void RpcSerializer::packNumericVariant( const NumericVariant& val)
 {
 	packByte( (unsigned char)val.type);
 	switch (val.type)
 	{
-		case ArithmeticVariant::Null: break;
-		case ArithmeticVariant::Int: packInt( val.variant.Int); break;
-		case ArithmeticVariant::UInt: packUint( val.variant.UInt); break;
-		case ArithmeticVariant::Float: packDouble( val.variant.Float); break;
+		case NumericVariant::Null: break;
+		case NumericVariant::Int: packInt( val.variant.Int); break;
+		case NumericVariant::UInt: packUint( val.variant.UInt); break;
+		case NumericVariant::Float: packDouble( val.variant.Float); break;
 	}
 }
 
@@ -475,7 +468,7 @@ void RpcSerializer::packAnalyzerAttribute( const analyzer::Attribute& val)
 void RpcSerializer::packAnalyzerMetaData( const analyzer::MetaData& val)
 {
 	packString( val.name());
-	packDouble( val.value());
+	packNumericVariant( val.value());
 }
 
 void RpcSerializer::packAnalyzerTerm( const analyzer::Term& val)
@@ -581,25 +574,11 @@ void RpcSerializer::packPostingJoinOperatorDescription( const PostingJoinOperato
 	packString( val.text());
 }
 
-void RpcSerializer::packWeightingFunctionDescription( const WeightingFunctionInterface::Description& val)
+void RpcSerializer::packFunctionDescription( const FunctionDescription& val)
 {
 	packString( val.text());
-	packSize( val.param().size());
-	std::vector<WeightingFunctionInterface::Description::Param>::const_iterator vi = val.param().begin(), ve = val.param().end();
-	for (; vi != ve; ++vi)
-	{
-		packByte( (unsigned char)vi->type());
-		packString( vi->name());
-		packString( vi->text());
-		packString( vi->domain());
-	}
-}
-
-void RpcSerializer::packSummarizerFunctionDescription( const SummarizerFunctionInterface::Description& val)
-{
-	packString( val.text());
-	packSize( val.param().size());
-	std::vector<SummarizerFunctionInterface::Description::Param>::const_iterator vi = val.param().begin(), ve = val.param().end();
+	packSize( val.parameter().size());
+	std::vector<FunctionDescription::Parameter>::const_iterator vi = val.parameter().begin(), ve = val.parameter().end();
 	for (; vi != ve; ++vi)
 	{
 		packByte( (unsigned char)vi->type());
@@ -707,6 +686,27 @@ void RpcDeserializer::unpackBuffer( const char*& buf, std::size_t& size)
 #endif
 }
 
+std::vector<double> RpcDeserializer::unpackBufferFloat()
+{
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::ostringstream msg;
+#endif
+	std::vector<double> rt;
+	std::size_t ii=0, size = unpackScalar<uint32_t>( m_itr, m_end);
+	for (ii=0; ii<size; ++ii)
+	{
+		rt.push_back( unpackDouble());
+#ifdef STRUS_LOWLEVEL_DEBUG
+		if (ii) msg << ", ";
+		msg << rt.back();
+#endif
+	}
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackBufferFloat('" << msg.str() << "')" << std::endl;
+#endif
+	return rt;
+}
+
 bool RpcDeserializer::unpackBool()
 {
 	bool rt = (*m_itr++ != 0)?true:false;
@@ -789,17 +789,17 @@ std::size_t RpcDeserializer::unpackSize()
 	return rt;
 }
 
-ArithmeticVariant RpcDeserializer::unpackArithmeticVariant()
+NumericVariant RpcDeserializer::unpackNumericVariant()
 {
-	ArithmeticVariant::Type type = (ArithmeticVariant::Type)unpackByte();
+	NumericVariant::Type type = (NumericVariant::Type)unpackByte();
 	switch (type)
 	{
-		case ArithmeticVariant::Null: return ArithmeticVariant();
-		case ArithmeticVariant::Int: return ArithmeticVariant( unpackInt());
-		case ArithmeticVariant::UInt: return ArithmeticVariant( unpackUint());
-		case ArithmeticVariant::Float: return ArithmeticVariant( unpackDouble());
+		case NumericVariant::Null: return NumericVariant();
+		case NumericVariant::Int: return NumericVariant( unpackInt());
+		case NumericVariant::UInt: return NumericVariant( unpackUint());
+		case NumericVariant::Float: return NumericVariant( unpackDouble());
 	}
-	throw strus::runtime_error( _TXT("unknown type of arithmetic variant"));
+	throw strus::runtime_error( _TXT("unknown type of numeric variant"));
 }
 
 DocumentClass RpcDeserializer::unpackDocumentClass()
@@ -952,7 +952,7 @@ analyzer::Attribute RpcDeserializer::unpackAnalyzerAttribute()
 analyzer::MetaData RpcDeserializer::unpackAnalyzerMetaData()
 {
 	std::string name = unpackString();
-	double value = unpackDouble();
+	NumericVariant value = unpackNumericVariant();
 	return analyzer::MetaData( name, value);
 }
 
@@ -1068,28 +1068,13 @@ PostingJoinOperatorInterface::Description RpcDeserializer::unpackPostingJoinOper
 	return PostingJoinOperatorInterface::Description( unpackString());
 }
 
-WeightingFunctionInterface::Description RpcDeserializer::unpackWeightingFunctionDescription()
+FunctionDescription RpcDeserializer::unpackFunctionDescription()
 {
-	WeightingFunctionInterface::Description rt( unpackString());
+	FunctionDescription rt( unpackString());
 	unsigned int ii=0, nn=unpackSize();
 	for (; ii<nn; ++ii)
 	{
-		WeightingFunctionInterface::Description::Param::Type type = (WeightingFunctionInterface::Description::Param::Type)unpackByte();
-		std::string name( unpackString());
-		std::string text( unpackString());
-		std::string domain( unpackString());
-		rt( type, name, text, domain);
-	}
-	return rt;
-}
-
-SummarizerFunctionInterface::Description RpcDeserializer::unpackSummarizerFunctionDescription()
-{
-	SummarizerFunctionInterface::Description rt( unpackString());
-	unsigned int ii=0, nn=unpackSize();
-	for (; ii<nn; ++ii)
-	{
-		SummarizerFunctionInterface::Description::Param::Type type = (SummarizerFunctionInterface::Description::Param::Type)unpackByte();
+		FunctionDescription::Parameter::Type type = (FunctionDescription::Parameter::Type)unpackByte();
 		std::string name( unpackString());
 		std::string text( unpackString());
 		std::string domain( unpackString());

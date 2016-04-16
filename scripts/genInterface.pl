@@ -144,18 +144,16 @@ $syncMethods{"done"} = 1;
 my %notImplMethods = ();
 $notImplMethods{"checkStorage"} = 1;				# ...ostream reference input cannot be handled
 $notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
-$notImplMethods{"createResultIterator"} = 1;			# ...vector of object references as passed argument can not be handled
 
 # List of interfaces that are not implemented for RPC:
 my %notImplInterfaces = ();
-$notImplInterfaces{"ErrorBufferInterface"} = 1;			# ...buffers for reporting errors are internal
-$notImplInterfaces{"AnalyzerErrorBufferInterface"} = 1;		# ...buffers for reporting errors are internal
 
 # List of methods that pass interface params with ownership:
 my %passOwnershipParams = ();
 $passOwnershipParams{"definePostingJoinOperator"} = 1;		# QueryProcessor
 $passOwnershipParams{"defineWeightingFunction"} = 1;		# QueryProcessor
 $passOwnershipParams{"defineSummarizerFunction"} = 1;		# QueryProcessor
+$passOwnershipParams{"defineScalarFunctionParser"} = 1;		# QueryProcessor
 
 $passOwnershipParams{"defineDocumentClassDetector"} = 1;	# TextProcessor
 $passOwnershipParams{"defineTokenizer"} = 1;			# TextProcessor
@@ -176,6 +174,7 @@ $passOwnershipParams{"defineAttribute"} = 1;			# DocumentAnalyzer
 
 $passOwnershipParams{"addWeightingFunction"} = 1;		# QueryEval
 $passOwnershipParams{"addSummarizerFunction"} = 1;		# QueryEval
+$passOwnershipParams{"defineWeightingFormula"} = 1;		# QueryEval
 
 # List of methods that reset the constants map (except long living)
 my %constResetMethodMap = ();
@@ -670,9 +669,9 @@ sub packParameter
 			$rt .= "msg.packObject( impl_" . $idx . "->classId(), impl_" . $idx . "->objId());";
 		}
 	}
-	elsif ($type eq "ArithmeticVariant")
+	elsif ($type eq "NumericVariant")
 	{
-		$rt .= "msg.packArithmeticVariant( " . $id . ");";
+		$rt .= "msg.packNumericVariant( " . $id . ");";
 	}
 	elsif ($type eq "DocumentClass")
 	{
@@ -849,13 +848,9 @@ sub packParameter
 	{
 		$rt .= "msg.packPostingJoinOperatorDescription( " . $id . ");";
 	}
-	elsif ($type eq "WeightingFunctionInterface::Description")
+	elsif ($type eq "FunctionDescription")
 	{
-		$rt .= "msg.packWeightingFunctionDescription( " . $id . ");";
-	}
-	elsif ($type eq "SummarizerFunctionInterface::Description")
-	{
-		$rt .= "msg.packSummarizerFunctionDescription( " . $id . ");";
+		$rt .= "msg.packFunctionDescription( " . $id . ");";
 	}
 	else
 	{
@@ -905,9 +900,9 @@ sub unpackParameter
 			}
 		}
 	}
-	elsif ($type eq "ArithmeticVariant")
+	elsif ($type eq "NumericVariant")
 	{
-		$rt .= "$id = serializedMsg.unpackArithmeticVariant();";
+		$rt .= "$id = serializedMsg.unpackNumericVariant();";
 	}
 	elsif ($type eq "DocumentClass")
 	{
@@ -1124,13 +1119,9 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackPostingJoinOperatorDescription();";
 	}
-	elsif ($type eq "WeightingFunctionInterface::Description")
+	elsif ($type eq "FunctionDescription")
 	{
-		$rt .= "$id = serializedMsg.unpackWeightingFunctionDescription();";
-	}
-	elsif ($type eq "SummarizerFunctionInterface::Description")
-	{
-		$rt .= "$id = serializedMsg.unpackSummarizerFunctionDescription();";
+		$rt .= "$id = serializedMsg.unpackFunctionDescription();";
 	}
 	else
 	{
@@ -1359,9 +1350,18 @@ sub getMethodDeclarationSource
 		{
 			if ($pi+1 <= $#param && $param[$pi] eq "const^ char" && $param[$pi+1] eq "std::size_t")
 			{
-				# ... exception for buffer( size, len):
+				# ... exception for buffer( ptr, len):
 				$sender_code .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				$receiver_code .= "\tserializedMsg.unpackBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				++$pi;
+			}
+			elsif ($pi+1 <= $#param && $param[$pi] eq "const^ double" && $param[$pi+1] eq "std::size_t")
+			{
+				# ... exception for double buffer( ptr, len):
+				$sender_code .= "\tmsg.packBufferFloat( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				$receiver_code .= "\tstd::vector<double> buf_" . ($pi+1) . " = serializedMsg.unpackBufferFloat();\n";
+				$receiver_code .= "\tp" . ($pi+1) . " = buf_" . ($pi+1) . ".data();\n";
+				$receiver_code .= "\tp" . ($pi+2) . " = buf_" . ($pi+1) . ".size();\n";
 				++$pi;
 			}
 			else
@@ -1474,6 +1474,20 @@ sub getMethodDeclarationSource
 				$sender_output .= "\tp" . ($pi+1) . " = (const char*) ctx()->constConstructor()->get( $bpvar, p" . ($pi+2) .");\n";
 
 				$receiver_output .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				++$pi;
+			}
+			elsif ($pi+1 <= $#param && $param[$pi] eq "const^& double" && $param[$pi+1] eq "& std::size_t")
+			{
+				# ... exception for buffer( size, len):
+				my $bpvar = "bp" . ($pi+1);
+				$sender_output .= "\tstd::vector<double> buf_$bpvar;\n";
+				$sender_output .= "\tconst double* $bpvar;\n";
+				
+				$sender_output .= "\tbuf_$bpvar = serializedMsg.unpackBufferFloat();\n";
+				$sender_output .= "\t$bpvar = buf_$bpvar.data();\n";
+				$sender_output .= "\tp" . ($pi+2) . "= buf_$bpvar.size();\n";
+
+				$receiver_output .= "\tmsg.packBufferFloat( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				++$pi;
 			}
 			else
@@ -1705,33 +1719,12 @@ my $interfacefile = "src/objectIds_gen.hpp";
 open( HDRFILE, ">$interfacefile") or die "Couldn't open file $interfacefile, $!";
 print HDRFILE <<EOF;
 /*
----------------------------------------------------------------------
-    The C++ library strus implements basic operations to build
-    a search engine for structured search on unstructured data.
-
-    Copyright (C) 2015 Patrick Frey
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public
-    License as published by the Free Software Foundation; either
-    version 3 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
---------------------------------------------------------------------
-
-	The latest version of strus can be found at 'http://github.com/patrickfrey/strus'
-	For documentation see 'http://patrickfrey.github.com/strus'
-
---------------------------------------------------------------------
-*/
+ * Copyright (c) 2015 Patrick P. Frey
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 #ifndef _STRUS_RPC_OBJECT_IDS_HPP_INCLUDED
 #define _STRUS_RPC_OBJECT_IDS_HPP_INCLUDED
 EOF
@@ -1755,33 +1748,12 @@ open( HDRFILE, ">$interfacefile") or die "Couldn't open file $interfacefile, $!"
 
 print HDRFILE <<EOF;
 /*
----------------------------------------------------------------------
-    The C++ library strus implements basic operations to build
-    a search engine for structured search on unstructured data.
-
-    Copyright (C) 2015 Patrick Frey
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public
-    License as published by the Free Software Foundation; either
-    version 3 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
---------------------------------------------------------------------
-
-	The latest version of strus can be found at 'http://github.com/patrickfrey/strus'
-	For documentation see 'http://patrickfrey.github.com/strus'
-
---------------------------------------------------------------------
-*/
+ * Copyright (c) 2015 Patrick P. Frey
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 #ifndef _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #define _STRUS_RPC_OBJECTS_HPP_INCLUDED
 #include "rpcInterfaceStub.hpp"
@@ -1815,32 +1787,11 @@ open( SRCFILE, ">$sourcefile") or die "Couldn't open file $sourcefile, $!";
 
 print SRCFILE <<EOF;
 /*
----------------------------------------------------------------------
-    The C++ library strus implements basic operations to build
-    a search engine for structured search on unstructured data.
-
-    Copyright (C) 2015 Patrick Frey
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public
-    License as published by the Free Software Foundation; either
-    version 3 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
---------------------------------------------------------------------
-
-	The latest version of strus can be found at 'http://github.com/patrickfrey/strus'
-	For documentation see 'http://patrickfrey.github.com/strus'
-
---------------------------------------------------------------------
+ * Copyright (c) 2015 Patrick P. Frey
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 #include "objects_gen.hpp"
 #include "rpcSerializer.hpp"
@@ -1865,38 +1816,18 @@ open( SRCFILE, ">$sourcefile") or die "Couldn't open file $sourcefile, $!";
 
 print SRCFILE <<EOF;
 /*
----------------------------------------------------------------------
-    The C++ library strus implements basic operations to build
-    a search engine for structured search on unstructured data.
-
-    Copyright (C) 2015 Patrick Frey
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public
-    License as published by the Free Software Foundation; either
-    version 3 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
---------------------------------------------------------------------
-
-	The latest version of strus can be found at 'http://github.com/patrickfrey/strus'
-	For documentation see 'http://patrickfrey.github.com/strus'
-
---------------------------------------------------------------------
-*/
+ * Copyright (c) 2015 Patrick P. Frey
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 #include "rpcRequestHandler.hpp"
 #include "rpcSerializer.hpp"
+#include "strus/errorBufferInterface.hpp"
 #include "objectIds_gen.hpp"
 #include "private/internationalization.hpp"
-#include "private/dll_tags.hpp"
+#include "strus/base/dll_tags.hpp"
 #include <string>
 
 using namespace strus;

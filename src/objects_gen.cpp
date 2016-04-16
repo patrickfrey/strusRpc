@@ -1,30 +1,9 @@
 /*
----------------------------------------------------------------------
-    The C++ library strus implements basic operations to build
-    a search engine for structured search on unstructured data.
-
-    Copyright (C) 2015 Patrick Frey
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public
-    License as published by the Free Software Foundation; either
-    version 3 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
---------------------------------------------------------------------
-
-	The latest version of strus can be found at 'http://github.com/patrickfrey/strus'
-	For documentation see 'http://patrickfrey.github.com/strus'
-
---------------------------------------------------------------------
+ * Copyright (c) 2015 Patrick P. Frey
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 #include "objects_gen.hpp"
 #include "rpcSerializer.hpp"
@@ -850,7 +829,7 @@ try
 }
 }
 
-const char* DatabaseImpl::getConfigDescription( DatabaseInterface::ConfigType p1) const
+const char* DatabaseImpl::getConfigDescription( const DatabaseInterface::ConfigType& p1) const
 {
 try
 {
@@ -873,7 +852,7 @@ try
 }
 }
 
-const char** DatabaseImpl::getConfigParameters( DatabaseInterface::ConfigType p1) const
+const char** DatabaseImpl::getConfigParameters( const DatabaseInterface::ConfigType& p1) const
 {
 try
 {
@@ -1675,7 +1654,7 @@ try
 }
 }
 
-ArithmeticVariant MetaDataReaderImpl::getValue( const Index& p1) const
+NumericVariant MetaDataReaderImpl::getValue( const Index& p1) const
 {
 try
 {
@@ -1687,14 +1666,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	ArithmeticVariant p0 = serializedMsg.unpackArithmeticVariant();;
+	NumericVariant p0 = serializedMsg.unpackNumericVariant();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::getValue");
-	return ArithmeticVariant();
+	return NumericVariant();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataReaderImpl::getValue", err.what());
-	return ArithmeticVariant();
+	return NumericVariant();
 }
 }
 
@@ -1787,7 +1766,7 @@ MetaDataRestrictionImpl::~MetaDataRestrictionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void MetaDataRestrictionImpl::addCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
+void MetaDataRestrictionImpl::addCondition( const MetaDataRestrictionInterface::CompareOperator& p1, const std::string& p2, const NumericVariant& p3, bool p4)
 {
 try
 {
@@ -1796,7 +1775,7 @@ try
 	msg.packByte( Method_addCondition);
 	msg.packMetaDataRestrictionCompareOperator( p1);
 	msg.packString( p2);
-	msg.packArithmeticVariant( p3);
+	msg.packNumericVariant( p3);
 	msg.packBool( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -2433,7 +2412,7 @@ try
 }
 }
 
-void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, float p4)
+void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3)
 {
 try
 {
@@ -2448,7 +2427,6 @@ try
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
 		msg.packFeatureParameter( p3[ii]);
 	}
-	msg.packFloat( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
@@ -2459,6 +2437,30 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryEvalImpl::addWeightingFunction", err.what());
+	return void();
+}
+}
+
+void QueryEvalImpl::defineWeightingFormula( ScalarFunctionInterface* p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineWeightingFormula);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "ScalarFunction");
+	msg.packObject( impl_1->classId(), impl_1->objId());
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_1 = dynamic_cast<RpcInterfaceStub*>(p1);
+	done_1->release();
+	delete p1;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryEvalImpl::defineWeightingFormula");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryEvalImpl::defineWeightingFormula", err.what());
 	return void();
 }
 }
@@ -2562,7 +2564,7 @@ try
 }
 }
 
-void QueryImpl::defineFeature( const std::string& p1, float p2)
+void QueryImpl::defineFeature( const std::string& p1, double p2)
 {
 try
 {
@@ -2570,7 +2572,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineFeature);
 	msg.packString( p1);
-	msg.packFloat( p2);
+	msg.packDouble( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -2622,7 +2624,7 @@ try
 }
 }
 
-void QueryImpl::addMetaDataRestrictionCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const ArithmeticVariant& p3, bool p4)
+void QueryImpl::addMetaDataRestrictionCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const NumericVariant& p3, bool p4)
 {
 try
 {
@@ -2631,7 +2633,7 @@ try
 	msg.packByte( Method_addMetaDataRestrictionCondition);
 	msg.packMetaDataRestrictionCompareOperator( p1);
 	msg.packString( p2);
-	msg.packArithmeticVariant( p3);
+	msg.packNumericVariant( p3);
 	msg.packBool( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -2719,6 +2721,26 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::addUserName", err.what());
+	return void();
+}
+}
+
+void QueryImpl::setWeightingVariableValue( const std::string& p1, double p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_setWeightingVariableValue);
+	msg.packString( p1);
+	msg.packDouble( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::setWeightingVariableValue");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::setWeightingVariableValue", err.what());
 	return void();
 }
 }
@@ -2905,7 +2927,7 @@ try
 }
 }
 
-std::vector<std::string> QueryProcessorImpl::getFunctionList( QueryProcessorInterface::FunctionType p1) const
+std::vector<std::string> QueryProcessorImpl::getFunctionList( const QueryProcessorInterface::FunctionType& p1) const
 {
 try
 {
@@ -2930,6 +2952,293 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::getFunctionList", err.what());
 	return std::vector<std::string>();
+}
+}
+
+void QueryProcessorImpl::defineScalarFunctionParser( const std::string& p1, ScalarFunctionParserInterface* p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineScalarFunctionParser);
+	msg.packString( p1);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "ScalarFunctionParser");
+	msg.packObject( impl_2->classId(), impl_2->objId());
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
+	done_2->release();
+	delete p2;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::defineScalarFunctionParser");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::defineScalarFunctionParser", err.what());
+	return void();
+}
+}
+
+const ScalarFunctionParserInterface* QueryProcessorImpl::getScalarFunctionParser( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getScalarFunctionParser);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ScalarFunctionParser;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ScalarFunctionParserImpl const_0( objId_0, ctx(), true, errorhnd());
+	const ScalarFunctionParserInterface* p0 = (const ScalarFunctionParserImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getScalarFunctionParser");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::getScalarFunctionParser", err.what());
+	return 0;
+}
+}
+
+ScalarFunctionInstanceImpl::~ScalarFunctionInstanceImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void ScalarFunctionInstanceImpl::setVariableValue( const std::string& p1, double p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_setVariableValue);
+	msg.packString( p1);
+	msg.packDouble( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::setVariableValue");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::setVariableValue", err.what());
+	return void();
+}
+}
+
+double ScalarFunctionInstanceImpl::call( const double* p1, std::size_t p2) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_call);
+	msg.packBufferFloat( p1, p2);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	double p0 = serializedMsg.unpackDouble();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::call");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::call", err.what());
+	return 0;
+}
+}
+
+std::string ScalarFunctionInstanceImpl::tostring( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_tostring);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::tostring");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::tostring", err.what());
+	return std::string();
+}
+}
+
+ScalarFunctionImpl::~ScalarFunctionImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+std::vector<std::string> ScalarFunctionImpl::getVariables( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getVariables);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::getVariables");
+	return std::vector<std::string>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::getVariables", err.what());
+	return std::vector<std::string>();
+}
+}
+
+std::size_t ScalarFunctionImpl::getNofArguments( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getNofArguments);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::size_t p0 = serializedMsg.unpackSize();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::getNofArguments");
+	return std::size_t();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::getNofArguments", err.what());
+	return std::size_t();
+}
+}
+
+void ScalarFunctionImpl::setDefaultVariableValue( const std::string& p1, double p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_setDefaultVariableValue);
+	msg.packString( p1);
+	msg.packDouble( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::setDefaultVariableValue");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::setDefaultVariableValue", err.what());
+	return void();
+}
+}
+
+ScalarFunctionInstanceInterface* ScalarFunctionImpl::createInstance( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createInstance);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ScalarFunctionInstance;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ScalarFunctionInstanceInterface* p0 = new ScalarFunctionInstanceImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::createInstance");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::createInstance", err.what());
+	return 0;
+}
+}
+
+std::string ScalarFunctionImpl::tostring( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_tostring);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::tostring");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::tostring", err.what());
+	return std::string();
+}
+}
+
+ScalarFunctionParserImpl::~ScalarFunctionParserImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+ScalarFunctionInterface* ScalarFunctionParserImpl::createFunction( const std::string& p1, const std::vector<std::string>& p2) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createFunction);
+	msg.packString( p1);
+	msg.packSize( p2.size());
+	for (unsigned int ii=0; ii < p2.size(); ++ii) {
+		msg.packString( p2[ii]);
+	}
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ScalarFunction;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ScalarFunctionInterface* p0 = new ScalarFunctionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionParserImpl::createFunction");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionParserImpl::createFunction", err.what());
+	return 0;
 }
 }
 
@@ -4140,7 +4449,7 @@ try
 }
 }
 
-void StorageDocumentImpl::setMetaData( const std::string& p1, const ArithmeticVariant& p2)
+void StorageDocumentImpl::setMetaData( const std::string& p1, const NumericVariant& p2)
 {
 try
 {
@@ -4148,7 +4457,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMetaData);
 	msg.packString( p1);
-	msg.packArithmeticVariant( p2);
+	msg.packNumericVariant( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -4228,7 +4537,7 @@ StorageDocumentUpdateImpl::~StorageDocumentUpdateImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void StorageDocumentUpdateImpl::setMetaData( const std::string& p1, const ArithmeticVariant& p2)
+void StorageDocumentUpdateImpl::setMetaData( const std::string& p1, const NumericVariant& p2)
 {
 try
 {
@@ -4236,7 +4545,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_setMetaData);
 	msg.packString( p1);
-	msg.packArithmeticVariant( p2);
+	msg.packNumericVariant( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -4496,7 +4805,7 @@ try
 }
 }
 
-const char* StorageImpl::getConfigDescription( StorageInterface::ConfigType p1) const
+const char* StorageImpl::getConfigDescription( const StorageInterface::ConfigType& p1) const
 {
 try
 {
@@ -4519,7 +4828,7 @@ try
 }
 }
 
-const char** StorageImpl::getConfigParameters( StorageInterface::ConfigType p1) const
+const char** StorageImpl::getConfigParameters( const StorageInterface::ConfigType& p1) const
 {
 try
 {
@@ -4817,7 +5126,7 @@ try
 }
 }
 
-void StorageTransactionImpl::updateMetaData( const Index& p1, const std::string& p2, const ArithmeticVariant& p3)
+void StorageTransactionImpl::updateMetaData( const Index& p1, const std::string& p2, const NumericVariant& p3)
 {
 try
 {
@@ -4826,7 +5135,7 @@ try
 	msg.packByte( Method_updateMetaData);
 	msg.packIndex( p1);
 	msg.packString( p2);
-	msg.packArithmeticVariant( p3);
+	msg.packNumericVariant( p3);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -4888,7 +5197,7 @@ SummarizerFunctionContextImpl::~SummarizerFunctionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, float p4, const TermStatistics& p5)
+void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, double p4, const TermStatistics& p5)
 {
 try
 {
@@ -4903,7 +5212,7 @@ try
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
 		msg.packSummarizationVariable( p3[ii]);
 	}
-	msg.packFloat( p4);
+	msg.packDouble( p4);
 	msg.packTermStatistics( p5);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -4974,7 +5283,7 @@ try
 }
 }
 
-void SummarizerFunctionInstanceImpl::addNumericParameter( const std::string& p1, const ArithmeticVariant& p2)
+void SummarizerFunctionInstanceImpl::addNumericParameter( const std::string& p1, const NumericVariant& p2)
 {
 try
 {
@@ -4982,7 +5291,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addNumericParameter);
 	msg.packString( p1);
-	msg.packArithmeticVariant( p2);
+	msg.packNumericVariant( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -5082,7 +5391,7 @@ try
 }
 }
 
-SummarizerFunctionInterface::Description SummarizerFunctionImpl::getDescription( ) const
+FunctionDescription SummarizerFunctionImpl::getDescription( ) const
 {
 try
 {
@@ -5093,14 +5402,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	SummarizerFunctionInterface::Description p0 = serializedMsg.unpackSummarizerFunctionDescription();;
+	FunctionDescription p0 = serializedMsg.unpackFunctionDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionImpl::getDescription");
-	return SummarizerFunctionInterface::Description();
+	return FunctionDescription();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionImpl::getDescription", err.what());
-	return SummarizerFunctionInterface::Description();
+	return FunctionDescription();
 }
 }
 
@@ -5354,7 +5663,7 @@ try
 }
 }
 
-std::vector<std::string> TextProcessorImpl::getFunctionList( TextProcessorInterface::FunctionType p1) const
+std::vector<std::string> TextProcessorImpl::getFunctionList( const TextProcessorInterface::FunctionType& p1) const
 {
 try
 {
@@ -5604,7 +5913,7 @@ WeightingFunctionContextImpl::~WeightingFunctionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void WeightingFunctionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, float p3, const TermStatistics& p4)
+void WeightingFunctionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, double p3, const TermStatistics& p4)
 {
 try
 {
@@ -5615,7 +5924,7 @@ try
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PostingIterator");
 	msg.packObject( impl_2->classId(), impl_2->objId());
-	msg.packFloat( p3);
+	msg.packDouble( p3);
 	msg.packTermStatistics( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -5681,7 +5990,7 @@ try
 }
 }
 
-void WeightingFunctionInstanceImpl::addNumericParameter( const std::string& p1, const ArithmeticVariant& p2)
+void WeightingFunctionInstanceImpl::addNumericParameter( const std::string& p1, const NumericVariant& p2)
 {
 try
 {
@@ -5689,7 +5998,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addNumericParameter);
 	msg.packString( p1);
-	msg.packArithmeticVariant( p2);
+	msg.packNumericVariant( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -5763,13 +6072,16 @@ WeightingFunctionImpl::~WeightingFunctionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-WeightingFunctionInstanceInterface* WeightingFunctionImpl::createInstance( ) const
+WeightingFunctionInstanceInterface* WeightingFunctionImpl::createInstance( const QueryProcessorInterface* p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "QueryProcessor");
+	msg.packObject( impl_1->classId(), impl_1->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_WeightingFunctionInstance;
 	msg.packObject( classId_0, objId_0);
@@ -5786,7 +6098,7 @@ try
 }
 }
 
-WeightingFunctionInterface::Description WeightingFunctionImpl::getDescription( ) const
+FunctionDescription WeightingFunctionImpl::getDescription( ) const
 {
 try
 {
@@ -5797,14 +6109,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	WeightingFunctionInterface::Description p0 = serializedMsg.unpackWeightingFunctionDescription();;
+	FunctionDescription p0 = serializedMsg.unpackFunctionDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionImpl::getDescription");
-	return WeightingFunctionInterface::Description();
+	return FunctionDescription();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionImpl::getDescription", err.what());
-	return WeightingFunctionInterface::Description();
+	return FunctionDescription();
 }
 }
 

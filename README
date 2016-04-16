@@ -1,6 +1,11 @@
-This Project implements proxy classes for the strus storage and analyzer interfaces 
-that forward all calls to strus to an RPC server (strusRpcServer).
+This Project implements RPC proxy classes for the Strus storage and analyzer interfaces.
 
-Interface documentation at http://patrickfrey.github.io/strusRpc/doc/doxygen/html/index.html.
+Licenced as MPLv2 (Mozilla Public License, Version 2 - https://www.mozilla.org/en-US/MPL/2.0)
 
-Strus project homepage at http://project-strus.net.
+Strus project homepage at http://project-strus.net with articles, links, documentation.
+Binary packages available.
+
+* Contributors welcome
+* Open for sharing ideas
+* Open for interesting projects
+

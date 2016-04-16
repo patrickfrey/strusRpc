@@ -67,6 +67,7 @@
 %define fedora 0
 %define fc21 0
 %define fc22 0
+%define fc23 0
 %if 0%{?fedora_version} == 21
 %define dist fc21
 %define fc21 1
@@ -75,6 +76,11 @@
 %if 0%{?fedora_version} == 22
 %define dist fc22
 %define fc22 1
+%define fedora 1
+%endif
+%if 0%{?fedora_version} == 23
+%define dist fc23
+%define fc23 1
 %define fedora 1
 %endif
 
@@ -118,7 +124,7 @@ Name: strusrpc
 %define main_version @STRUS_VERSION@
 Version: %{main_version}
 Release: @STRUS_MAJOR_VERSION@.@STRUS_MINOR_VERSION@
-License: GPLv3
+License: MPLv2
 Group: Development/Libraries/C++
 
 Source: %{name}_%{main_version}.tar.gz
@@ -207,12 +213,15 @@ BuildRequires: boost-devel
 %endif
 %endif
 
+BuildRequires: strusbase-devel >= %{dep_version}
 BuildRequires: strus-devel >= %{dep_version}
 BuildRequires: strusanalyzer-devel >= %{dep_version}
 BuildRequires: strusmodule-devel >= %{dep_version}
+BuildRequires: strusbase >= %{dep_version}
 BuildRequires: strus >= %{dep_version}
 BuildRequires: strusanalyzer >= %{dep_version}
 BuildRequires: strusmodule >= %{dep_version}
+Requires: strusbase >= %{dep_version}
 Requires: strus >= %{dep_version}
 Requires: strusanalyzer >= %{dep_version}
 Requires: strusmodule >= %{dep_version}
@@ -285,6 +294,21 @@ make test
 %{_includedir}/strus/lib/*.hpp
 
 %changelog
+* Fri Apr 15 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.8.1-0.1
+- adapt interface changes from strus core: analyzer metadata element value is now a numeric variant instead of a double
+
+* Wed Apr 13 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.8.0-0.1
+- adapted interface changes from strus core
+
+* Sun Apr 3 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.7.1-0.1
+- adapted interface changes from strus core
+
+* Wed Mar 30 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.7.0-0.1
+- adapted interface changes from strus core: introducing scalar function objects used for combining ranking functions or to pass functions to weighting functions or summarizers
+
+* Mon Mar 21 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.6.0-0.1
+- changed license from GPLv3 to MPLv2 (Mozilla Public License, Version 2)
+
 * Sun Mar 6 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.5.0-0.1
 - adapted core interface changes
 

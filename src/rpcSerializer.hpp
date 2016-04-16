@@ -1,31 +1,10 @@
 /*
----------------------------------------------------------------------
-    The C++ library strus implements basic operations to build
-    a search engine for structured search on unstructured data.
-
-    Copyright (C) 2015 Patrick Frey
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public
-    License as published by the Free Software Foundation; either
-    version 3 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
---------------------------------------------------------------------
-
-	The latest version of strus can be found at 'http://github.com/patrickfrey/strus'
-	For documentation see 'http://patrickfrey.github.com/strus'
-
---------------------------------------------------------------------
-*/
+ * Copyright (c) 2014 Patrick P. Frey
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 #ifndef _STRUS_RPC_MESSAGE_STUB_HPP_INCLUDED
 #define _STRUS_RPC_MESSAGE_STUB_HPP_INCLUDED
 #include <string>
@@ -35,7 +14,7 @@
 #include "strus/documentClass.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/queryAnalyzerInterface.hpp"
-#include "strus/arithmeticVariant.hpp"
+#include "strus/numericVariant.hpp"
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/termStatistics.hpp"
 #include "strus/globalStatistics.hpp"
@@ -77,6 +56,7 @@ public:
 	void packCharp( const char* buf);
 	void packCharpp( const char** buf);
 	void packBuffer( const char* buf, std::size_t size);
+	void packBufferFloat( const double* buf, std::size_t size);
 	void packBool( bool val);
 	void packByte( unsigned char val);
 	void packIndex( const Index& index);
@@ -86,7 +66,7 @@ public:
 	void packFloat( float val);
 	void packDouble( double val);
 	void packSize( std::size_t size);
-	void packArithmeticVariant( const ArithmeticVariant& val);
+	void packNumericVariant( const NumericVariant& val);
 	void packDocumentClass( const DocumentClass& prop);
 	void packTermStatistics( const TermStatistics& stats);
 	void packGlobalStatistics( const GlobalStatistics& stats);
@@ -117,8 +97,7 @@ public:
 	void packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val);
 	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
 	void packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val);
-	void packWeightingFunctionDescription( const WeightingFunctionInterface::Description& val);
-	void packSummarizerFunctionDescription( const SummarizerFunctionInterface::Description& val);
+	void packFunctionDescription( const FunctionDescription& val);
 	void packCrc32();
 	const std::string& content() const
 	{
@@ -149,6 +128,7 @@ public:
 	const char* unpackConstCharp();
 	const char** unpackConstCharpp();
 	void unpackBuffer( const char*& buf, std::size_t& size);
+	std::vector<double> unpackBufferFloat();
 	bool unpackBool();
 	unsigned char unpackByte();
 	Index unpackIndex();
@@ -158,7 +138,7 @@ public:
 	float unpackFloat();
 	double unpackDouble();
 	std::size_t unpackSize();
-	ArithmeticVariant unpackArithmeticVariant();
+	NumericVariant unpackNumericVariant();
 	DocumentClass unpackDocumentClass();
 	TermStatistics unpackTermStatistics();
 	GlobalStatistics unpackGlobalStatistics();
@@ -188,8 +168,7 @@ public:
 	QueryProcessorInterface::FunctionType unpackQueryProcessorFunctionType();
 	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();
 	PostingJoinOperatorInterface::Description unpackPostingJoinOperatorDescription();
-	WeightingFunctionInterface::Description unpackWeightingFunctionDescription();
-	SummarizerFunctionInterface::Description unpackSummarizerFunctionDescription();
+	FunctionDescription unpackFunctionDescription();
 	bool unpackCrc32();
 
 	std::size_t position() const
