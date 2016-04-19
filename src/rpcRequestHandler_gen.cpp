@@ -36,7 +36,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case AggregatorFunctionInstanceConst::Method_evaluate:
 		{
 			RpcSerializer msg;
-			double p0;
+			NumericVariant p0;
 			analyzer::Document p1;
 			p1 = serializedMsg.unpackAnalyzerDocument();
 			p0 = obj->evaluate(p1);
@@ -48,7 +48,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packDouble( p0);
+			msg.packNumericVariant( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

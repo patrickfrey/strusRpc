@@ -23,7 +23,7 @@ AggregatorFunctionInstanceImpl::~AggregatorFunctionInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-double AggregatorFunctionInstanceImpl::evaluate( const analyzer::Document& p1) const
+NumericVariant AggregatorFunctionInstanceImpl::evaluate( const analyzer::Document& p1) const
 {
 try
 {
@@ -35,14 +35,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	double p0 = serializedMsg.unpackDouble();;
+	NumericVariant p0 = serializedMsg.unpackNumericVariant();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AggregatorFunctionInstanceImpl::evaluate");
-	return 0;
+	return NumericVariant();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "AggregatorFunctionInstanceImpl::evaluate", err.what());
-	return 0;
+	return NumericVariant();
 }
 }
 

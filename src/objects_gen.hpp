@@ -79,7 +79,7 @@ public:
 	AggregatorFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual double evaluate( const analyzer::Document& p1) const;
+	virtual NumericVariant evaluate( const analyzer::Document& p1) const;
 };
 
 class AggregatorFunctionImpl
