@@ -139,15 +139,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case AnalyzerObjectBuilderConst::Method_createSegmenter:
+		case AnalyzerObjectBuilderConst::Method_getSegmenter:
 		{
 			RpcSerializer msg;
-			SegmenterInterface* p0;
+			const SegmenterInterface* p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createSegmenter(p1);
+			p0 = obj->getSegmenter(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -156,7 +156,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
+			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
 		}
@@ -164,8 +164,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			DocumentAnalyzerInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
+			const SegmenterInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_Segmenter) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<SegmenterInterface>( classId_1, objId_1);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createDocumentAnalyzer(p1);
@@ -4463,9 +4466,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			const StatisticsProcessorInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->getStatisticsProcessor();
+			p0 = obj->getStatisticsProcessor(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -4475,50 +4480,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			defineConstObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-		case StorageObjectBuilderConst::Method_createStorageClient:
-		{
-			RpcSerializer msg;
-			StorageClientInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createStorageClient(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-		case StorageObjectBuilderConst::Method_createAlterMetaDataTable:
-		{
-			RpcSerializer msg;
-			StorageAlterMetaDataTableInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createAlterMetaDataTable(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			releaseObjectsMarked();
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
 		}

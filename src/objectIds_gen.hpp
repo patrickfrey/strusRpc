@@ -98,7 +98,7 @@ public:
 	{
 		Method_Destructor,
 		Method_getTextProcessor,
-		Method_createSegmenter,
+		Method_getSegmenter,
 		Method_createDocumentAnalyzer,
 		Method_createQueryAnalyzer
 	};
@@ -659,8 +659,6 @@ public:
 		Method_getDatabase,
 		Method_getQueryProcessor,
 		Method_getStatisticsProcessor,
-		Method_createStorageClient,
-		Method_createAlterMetaDataTable,
 		Method_createQueryEval
 	};
 };

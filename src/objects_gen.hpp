@@ -109,8 +109,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_AnalyzerObjectBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual const TextProcessorInterface* getTextProcessor( ) const;
-	virtual SegmenterInterface* createSegmenter( const std::string& p1) const;
-	virtual DocumentAnalyzerInterface* createDocumentAnalyzer( const std::string& p1) const;
+	virtual const SegmenterInterface* getSegmenter( const std::string& p1) const;
+	virtual DocumentAnalyzerInterface* createDocumentAnalyzer( const SegmenterInterface* p1) const;
 	virtual QueryAnalyzerInterface* createQueryAnalyzer( ) const;
 };
 
@@ -833,9 +833,7 @@ public:
 	virtual const StorageInterface* getStorage( ) const;
 	virtual const DatabaseInterface* getDatabase( const std::string& p1) const;
 	virtual const QueryProcessorInterface* getQueryProcessor( ) const;
-	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
-	virtual StorageClientInterface* createStorageClient( const std::string& p1) const;
-	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( const std::string& p1) const;
+	virtual const StatisticsProcessorInterface* getStatisticsProcessor( const std::string& p1) const;
 	virtual QueryEvalInterface* createQueryEval( ) const;
 };
 
