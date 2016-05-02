@@ -8,6 +8,7 @@ set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -fPIC -O${STRUS_OPTIMIZATION_
 # --------------------------------------
 set( private_utils_source_files
 	utils.cpp
+	traceUtils.cpp
 	internationalization.cpp
 )
 

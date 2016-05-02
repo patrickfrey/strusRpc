@@ -8,6 +8,7 @@
 #include "strus/lib/module.hpp"
 #include "strus/lib/error.hpp"
 #include "strus/lib/storage_objbuild.hpp"
+#include "strus/reference.hpp"
 #include "rpcRequestHandler.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
@@ -19,6 +20,7 @@
 #include "private/errorUtils.hpp"
 #include "private/internationalization.hpp"
 #include "private/utils.hpp"
+#include "private/traceUtils.hpp"
 #include "rpcSerializer.hpp"
 extern "C" {
 #include "server.h"
@@ -61,6 +63,8 @@ static void printUsage()
 	std::cout << "    " << _TXT("Implicitely create storage with <CONFIG> if it does not exist yet") << std::endl;
 	std::cout << "-l|--logfile <FILE>" << std::endl;
 	std::cout << "    " << _TXT("Write logs to file <FILE>") << std::endl;
+	std::cout << "-T|--trace <CONFIG>" << std::endl;
+	std::cout << "    " << _TXT("Print method call traces configured with <CONFIG>") << std::endl;
 }
 
 static strus::ErrorBufferInterface* g_errorBuffer = 0;
@@ -285,6 +289,7 @@ int main( int argc, const char* argv[])
 	std::vector<std::string> moduledirs;
 	std::vector<std::string> modules;
 	std::vector<std::string> resourcedirs;
+	std::vector<std::string> tracecfglist;
 	std::string storageconfig;
 	bool doCreateIfNotExist = false;
 	unsigned int nofThreads = 0;
@@ -368,6 +373,12 @@ int main( int argc, const char* argv[])
 			{
 				doCreateIfNotExist = true;
 			}
+			else if (0==std::strcmp( argv[argi], "-T") || 0==std::strcmp( argv[argi], "--trace"))
+			{
+				++argi;
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument (trace configuration)"), "--trace");
+				tracecfglist.push_back( argv[argi]);
+			}
 			else if (0==std::strcmp( argv[argi], "-t") || 0==std::strcmp( argv[argi], "--threads"))
 			{
 				++argi;
@@ -432,6 +443,20 @@ int main( int argc, const char* argv[])
 		{
 			throw strus::runtime_error(_TXT("error in initialization: %s"), g_errorBuffer->fetchError());
 		}
+
+		// Declare trace proxy objects:
+		typedef strus::Reference<strus::TraceProxy> TraceReference;
+		std::vector<TraceReference> trace;
+		if (!tracecfglist.empty())
+		{
+			std::vector<std::string>::const_iterator ti = tracecfglist.begin(), te = tracecfglist.end();
+			for (; ti != te; ++ti)
+			{
+				trace.push_back( new strus::TraceProxy( g_moduleLoader, *ti, g_errorBuffer));
+			}
+		}
+
+		// Create objects:
 		std::auto_ptr<strus::StorageObjectBuilderInterface>
 			storageBuilder( g_moduleLoader->createStorageObjectBuilder());
 		if (!storageBuilder.get())
@@ -444,6 +469,19 @@ int main( int argc, const char* argv[])
 		{
 			throw strus::runtime_error( _TXT("failed to create analyzer builder"));
 		}
+
+		// Create proxy objects if tracing enabled:
+		std::vector<TraceReference>::const_iterator ti = trace.begin(), te = trace.end();
+		for (; ti != te; ++ti)
+		{
+			strus::AnalyzerObjectBuilderInterface* aproxy = (*ti)->createProxy( analyzerBuilder.get());
+			analyzerBuilder.release();
+			analyzerBuilder.reset( aproxy);
+			strus::StorageObjectBuilderInterface* sproxy = (*ti)->createProxy( storageBuilder.get());
+			storageBuilder.release();
+			storageBuilder.reset( sproxy);
+		}
+
 		std::auto_ptr<strus::StorageClientInterface> storageClient;
 
 		g_storageObjectBuilder = storageBuilder.get();
