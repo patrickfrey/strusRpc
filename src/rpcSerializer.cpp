@@ -107,6 +107,7 @@ void unpack<1>( char const*& itr, const char* end, void* ptr)
 	*(char*)ptr = *itr++;
 }
 
+#ifdef UNUSED_PACK_SCALAR_16_BITS_DISABLED
 template <>
 void pack<2>( std::string& buf, const void* ptr)
 {
@@ -122,6 +123,7 @@ void unpack<2>( char const*& itr, const char* end, void* ptr)
 	itr += 2;
 	*(uint16_t*)ptr = ntohs( val);
 }
+#endif
 
 template <>
 void pack<4>( std::string& buf, const void* ptr)
