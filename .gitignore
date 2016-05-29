@@ -54,3 +54,5 @@ dist/redhat/strusrpc.spec
 
 # Compiled Programs
 src/strusRpcServer
+
+.travis.yml
