@@ -492,7 +492,7 @@ void RpcSerializer::packAnalyzerTermVector( const analyzer::TermVector& val)
 
 void RpcSerializer::packAnalyzerToken( const analyzer::Token& val)
 {
-	packUint( val.docpos);
+	packUint( val.ordpos);
 	packUint( val.strpos);
 	packUint( val.strsize);
 }
