@@ -110,6 +110,7 @@ public:
 
 	virtual const TextProcessorInterface* getTextProcessor( ) const;
 	virtual const SegmenterInterface* getSegmenter( const std::string& p1) const;
+	virtual const SegmenterInterface* findMimeTypeSegmenter( const std::string& p1) const;
 	virtual DocumentAnalyzerInterface* createDocumentAnalyzer( const SegmenterInterface* p1) const;
 	virtual QueryAnalyzerInterface* createQueryAnalyzer( ) const;
 };

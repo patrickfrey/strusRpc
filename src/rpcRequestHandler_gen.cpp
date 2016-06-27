@@ -160,6 +160,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case AnalyzerObjectBuilderConst::Method_findMimeTypeSegmenter:
+		{
+			RpcSerializer msg;
+			const SegmenterInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->findMimeTypeSegmenter(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case AnalyzerObjectBuilderConst::Method_createDocumentAnalyzer:
 		{
 			RpcSerializer msg;

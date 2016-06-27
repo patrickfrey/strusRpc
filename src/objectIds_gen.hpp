@@ -99,6 +99,7 @@ public:
 		Method_Destructor,
 		Method_getTextProcessor,
 		Method_getSegmenter,
+		Method_findMimeTypeSegmenter,
 		Method_createDocumentAnalyzer,
 		Method_createQueryAnalyzer
 	};
