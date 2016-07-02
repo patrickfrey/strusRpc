@@ -45,6 +45,7 @@ enum ClassId
 	ClassId_SegmenterContext,
 	ClassId_SegmenterInstance,
 	ClassId_Segmenter,
+	ClassId_SegmenterMarkupContext,
 	ClassId_StatisticsBuilder,
 	ClassId_StatisticsIterator,
 	ClassId_StatisticsProcessor,
@@ -485,7 +486,8 @@ public:
 		Method_Destructor,
 		Method_defineSelectorExpression,
 		Method_defineSubSection,
-		Method_createContext
+		Method_createContext,
+		Method_createMarkupContext
 	};
 };
 
@@ -497,6 +499,18 @@ public:
 		Method_Destructor,
 		Method_mimeType,
 		Method_createInstance
+	};
+};
+
+class SegmenterMarkupContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getNext,
+		Method_putMarkup,
+		Method_getContent
 	};
 };
 

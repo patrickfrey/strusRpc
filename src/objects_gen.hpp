@@ -22,6 +22,7 @@
 #include "strus/segmenterContextInterface.hpp"
 #include "strus/segmenterInstanceInterface.hpp"
 #include "strus/segmenterInterface.hpp"
+#include "strus/segmenterMarkupContextInterface.hpp"
 #include "strus/textProcessorInterface.hpp"
 #include "strus/tokenizerFunctionContextInterface.hpp"
 #include "strus/tokenizerFunctionInstanceInterface.hpp"
@@ -613,6 +614,7 @@ public:
 	virtual void defineSelectorExpression( int p1, const std::string& p2);
 	virtual void defineSubSection( int p1, int p2, const std::string& p3);
 	virtual SegmenterContextInterface* createContext( const DocumentClass& p1) const;
+	virtual SegmenterMarkupContextInterface* createMarkupContext( const DocumentClass& p1, const std::string& p2) const;
 };
 
 class SegmenterImpl
@@ -628,6 +630,22 @@ public:
 
 	virtual const char* mimeType( ) const;
 	virtual SegmenterInstanceInterface* createInstance( ) const;
+};
+
+class SegmenterMarkupContextImpl
+		:public RpcInterfaceStub
+		,public strus::SegmenterMarkupContextInterface
+		,public strus::SegmenterMarkupContextConst
+{
+public:
+	virtual ~SegmenterMarkupContextImpl();
+
+	SegmenterMarkupContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SegmenterMarkupContext, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual int getNext( SegmenterPosition& p1, const char*& p2, std::size_t& p3);
+	virtual void putMarkup( std::size_t p1, std::size_t p2, const std::string& p3);
+	virtual std::string getContent( ) const;
 };
 
 class StatisticsBuilderImpl

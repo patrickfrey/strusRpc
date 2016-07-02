@@ -3093,6 +3093,29 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case SegmenterInstanceConst::Method_createMarkupContext:
+		{
+			RpcSerializer msg;
+			SegmenterMarkupContextInterface* p0;
+			DocumentClass p1;
+			std::string p2;
+			p1 = serializedMsg.unpackDocumentClass();
+			p2 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createMarkupContext(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 	}
 	break;
 	}
@@ -3141,6 +3164,78 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_SegmenterMarkupContext:
+	{
+	SegmenterMarkupContextInterface* obj = getObject<SegmenterMarkupContextInterface>( classId, objId);
+	switch( (SegmenterMarkupContextConst::MethodId)methodId)
+	{
+		case SegmenterMarkupContextConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case SegmenterMarkupContextConst::Method_getNext:
+		{
+			RpcSerializer msg;
+			int p0;
+			SegmenterPosition p1;
+			const char* p2;
+			std::size_t p3;
+			p0 = obj->getNext(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packInt( p0);
+			msg.packGlobalCounter( p1);
+			msg.packBuffer( p2, p3);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SegmenterMarkupContextConst::Method_putMarkup:
+		{
+			RpcSerializer msg;
+			std::size_t p1;
+			std::size_t p2;
+			std::string p3;
+			p1 = serializedMsg.unpackSize();
+			p2 = serializedMsg.unpackSize();
+			p3 = serializedMsg.unpackString();
+			obj->putMarkup(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SegmenterMarkupContextConst::Method_getContent:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			p0 = obj->getContent();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
