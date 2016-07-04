@@ -643,8 +643,12 @@ public:
 	SegmenterMarkupContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SegmenterMarkupContext, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual int getNext( SegmenterPosition& p1, const char*& p2, std::size_t& p3);
-	virtual void putMarkup( std::size_t p1, std::size_t p2, const std::string& p3);
+	virtual bool getNext( SegmenterPosition& p1, const char*& p2, std::size_t& p3);
+	virtual std::string tagName( const SegmenterPosition& p1) const;
+	virtual int tagLevel( const SegmenterPosition& p1) const;
+	virtual void putOpenTag( const SegmenterPosition& p1, std::size_t p2, const std::string& p3);
+	virtual void putAttribute( const SegmenterPosition& p1, std::size_t p2, const std::string& p3, const std::string& p4);
+	virtual void putCloseTag( const SegmenterPosition& p1, std::size_t p2, const std::string& p3);
 	virtual std::string getContent( ) const;
 };
 

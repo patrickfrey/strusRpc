@@ -3181,7 +3181,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case SegmenterMarkupContextConst::Method_getNext:
 		{
 			RpcSerializer msg;
-			int p0;
+			bool p0;
 			SegmenterPosition p1;
 			const char* p2;
 			std::size_t p3;
@@ -3194,22 +3194,102 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packInt( p0);
+			msg.packBool( p0);
 			msg.packGlobalCounter( p1);
 			msg.packBuffer( p2, p3);
 			msg.packCrc32();
 			return msg.content();
 		}
-		case SegmenterMarkupContextConst::Method_putMarkup:
+		case SegmenterMarkupContextConst::Method_tagName:
 		{
 			RpcSerializer msg;
-			std::size_t p1;
+			std::string p0;
+			SegmenterPosition p1;
+			p1 = serializedMsg.unpackGlobalCounter();
+			p0 = obj->tagName(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SegmenterMarkupContextConst::Method_tagLevel:
+		{
+			RpcSerializer msg;
+			int p0;
+			SegmenterPosition p1;
+			p1 = serializedMsg.unpackGlobalCounter();
+			p0 = obj->tagLevel(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packInt( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SegmenterMarkupContextConst::Method_putOpenTag:
+		{
+			RpcSerializer msg;
+			SegmenterPosition p1;
 			std::size_t p2;
 			std::string p3;
-			p1 = serializedMsg.unpackSize();
+			p1 = serializedMsg.unpackGlobalCounter();
 			p2 = serializedMsg.unpackSize();
 			p3 = serializedMsg.unpackString();
-			obj->putMarkup(p1,p2,p3);
+			obj->putOpenTag(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SegmenterMarkupContextConst::Method_putAttribute:
+		{
+			RpcSerializer msg;
+			SegmenterPosition p1;
+			std::size_t p2;
+			std::string p3;
+			std::string p4;
+			p1 = serializedMsg.unpackGlobalCounter();
+			p2 = serializedMsg.unpackSize();
+			p3 = serializedMsg.unpackString();
+			p4 = serializedMsg.unpackString();
+			obj->putAttribute(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SegmenterMarkupContextConst::Method_putCloseTag:
+		{
+			RpcSerializer msg;
+			SegmenterPosition p1;
+			std::size_t p2;
+			std::string p3;
+			p1 = serializedMsg.unpackGlobalCounter();
+			p2 = serializedMsg.unpackSize();
+			p3 = serializedMsg.unpackString();
+			obj->putCloseTag(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

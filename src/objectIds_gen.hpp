@@ -509,7 +509,11 @@ public:
 	{
 		Method_Destructor,
 		Method_getNext,
-		Method_putMarkup,
+		Method_tagName,
+		Method_tagLevel,
+		Method_putOpenTag,
+		Method_putAttribute,
+		Method_putCloseTag,
 		Method_getContent
 	};
 };

@@ -3492,7 +3492,7 @@ SegmenterMarkupContextImpl::~SegmenterMarkupContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-int SegmenterMarkupContextImpl::getNext( SegmenterPosition& p1, const char*& p2, std::size_t& p3)
+bool SegmenterMarkupContextImpl::getNext( SegmenterPosition& p1, const char*& p2, std::size_t& p3)
 {
 try
 {
@@ -3503,7 +3503,7 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	int p0 = serializedMsg.unpackInt();;
+	bool p0 = serializedMsg.unpackBool();;
 	p1 = serializedMsg.unpackGlobalCounter();
 	const char* bp2;
 	serializedMsg.unpackBuffer( bp2, p3);
@@ -3511,30 +3511,119 @@ try
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::getNext");
-	return 0;
+	return false;
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::getNext", err.what());
-	return 0;
+	return false;
 }
 }
 
-void SegmenterMarkupContextImpl::putMarkup( std::size_t p1, std::size_t p2, const std::string& p3)
+std::string SegmenterMarkupContextImpl::tagName( const SegmenterPosition& p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_putMarkup);
-	msg.packSize( p1);
+	msg.packByte( Method_tagName);
+	msg.packGlobalCounter( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::tagName");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::tagName", err.what());
+	return std::string();
+}
+}
+
+int SegmenterMarkupContextImpl::tagLevel( const SegmenterPosition& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_tagLevel);
+	msg.packGlobalCounter( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	int p0 = serializedMsg.unpackInt();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::tagLevel");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::tagLevel", err.what());
+	return 0;
+}
+}
+
+void SegmenterMarkupContextImpl::putOpenTag( const SegmenterPosition& p1, std::size_t p2, const std::string& p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_putOpenTag);
+	msg.packGlobalCounter( p1);
 	msg.packSize( p2);
 	msg.packString( p3);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::putMarkup");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::putOpenTag");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::putMarkup", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::putOpenTag", err.what());
+	return void();
+}
+}
+
+void SegmenterMarkupContextImpl::putAttribute( const SegmenterPosition& p1, std::size_t p2, const std::string& p3, const std::string& p4)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_putAttribute);
+	msg.packGlobalCounter( p1);
+	msg.packSize( p2);
+	msg.packString( p3);
+	msg.packString( p4);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::putAttribute");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::putAttribute", err.what());
+	return void();
+}
+}
+
+void SegmenterMarkupContextImpl::putCloseTag( const SegmenterPosition& p1, std::size_t p2, const std::string& p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_putCloseTag);
+	msg.packGlobalCounter( p1);
+	msg.packSize( p2);
+	msg.packString( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::putCloseTag");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::putCloseTag", err.what());
 	return void();
 }
 }
