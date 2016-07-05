@@ -497,6 +497,17 @@ void RpcSerializer::packAnalyzerToken( const analyzer::Token& val)
 	packUint( val.strsize);
 }
 
+void RpcSerializer::packSegmenterOptions( const SegmenterOptions& opts)
+{
+	std::vector<SegmenterOptions::Item>::const_iterator oi = opts.items().begin(), oe = opts.items().end();
+	packSize( oe-oi);
+	for (; oi != oe; ++oi)
+	{
+		packString( oi->first);
+		packString( oi->second);
+	}
+}
+
 void RpcSerializer::packWeightedDocument( const WeightedDocument& val)
 {
 	packIndex( val.docno());
@@ -983,6 +994,17 @@ analyzer::Token RpcDeserializer::unpackAnalyzerToken()
 	unsigned int strpos = unpackUint();
 	unsigned int strsize = unpackUint();
 	return analyzer::Token( docpos, strpos, strsize);
+}
+
+SegmenterOptions RpcDeserializer::unpackSegmenterOptions()
+{
+	SegmenterOptions rt;
+	std::size_t ii = 0, size = unpackSize();
+	for (; ii < size; ++ii)
+	{
+		rt( unpackString(), unpackString());
+	}
+	return rt;
 }
 
 WeightedDocument RpcDeserializer::unpackWeightedDocument()

@@ -189,7 +189,7 @@ try
 }
 }
 
-DocumentAnalyzerInterface* AnalyzerObjectBuilderImpl::createDocumentAnalyzer( const SegmenterInterface* p1) const
+DocumentAnalyzerInterface* AnalyzerObjectBuilderImpl::createDocumentAnalyzer( const SegmenterInterface* p1, const SegmenterOptions& p2) const
 {
 try
 {
@@ -199,6 +199,7 @@ try
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Segmenter");
 	msg.packObject( impl_1->classId(), impl_1->objId());
+	msg.packSegmenterOptions( p2);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzer;
 	msg.packObject( classId_0, objId_0);
@@ -3459,13 +3460,14 @@ try
 }
 }
 
-SegmenterInstanceInterface* SegmenterImpl::createInstance( ) const
+SegmenterInstanceInterface* SegmenterImpl::createInstance( const SegmenterOptions& p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
+	msg.packSegmenterOptions( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_SegmenterInstance;
 	msg.packObject( classId_0, objId_0);

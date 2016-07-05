@@ -186,13 +186,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			DocumentAnalyzerInterface* p0;
 			const SegmenterInterface* p1;
+			SegmenterOptions p2;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_Segmenter) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getConstObject<SegmenterInterface>( classId_1, objId_1);
+			p2 = serializedMsg.unpackSegmenterOptions();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createDocumentAnalyzer(p1);
+			p0 = obj->createDocumentAnalyzer(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3150,9 +3152,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			SegmenterInstanceInterface* p0;
+			SegmenterOptions p1;
+			p1 = serializedMsg.unpackSegmenterOptions();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createInstance();
+			p0 = obj->createInstance(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

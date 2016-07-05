@@ -112,7 +112,7 @@ public:
 	virtual const TextProcessorInterface* getTextProcessor( ) const;
 	virtual const SegmenterInterface* getSegmenter( const std::string& p1) const;
 	virtual const SegmenterInterface* findMimeTypeSegmenter( const std::string& p1) const;
-	virtual DocumentAnalyzerInterface* createDocumentAnalyzer( const SegmenterInterface* p1) const;
+	virtual DocumentAnalyzerInterface* createDocumentAnalyzer( const SegmenterInterface* p1, const SegmenterOptions& p2) const;
 	virtual QueryAnalyzerInterface* createQueryAnalyzer( ) const;
 };
 
@@ -629,7 +629,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_Segmenter, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual const char* mimeType( ) const;
-	virtual SegmenterInstanceInterface* createInstance( ) const;
+	virtual SegmenterInstanceInterface* createInstance( const SegmenterOptions& p1) const;
 };
 
 class SegmenterMarkupContextImpl
