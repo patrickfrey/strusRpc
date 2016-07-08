@@ -3520,6 +3520,29 @@ try
 }
 }
 
+unsigned int SegmenterMarkupContextImpl::segmentSize( const SegmenterPosition& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_segmentSize);
+	msg.packGlobalCounter( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	unsigned int p0 = serializedMsg.unpackUint();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::segmentSize");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::segmentSize", err.what());
+	return 0;
+}
+}
+
 std::string SegmenterMarkupContextImpl::tagName( const SegmenterPosition& p1) const
 {
 try

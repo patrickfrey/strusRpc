@@ -644,6 +644,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_SegmenterMarkupContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual bool getNext( SegmenterPosition& p1, const char*& p2, std::size_t& p3);
+	virtual unsigned int segmentSize( const SegmenterPosition& p1);
 	virtual std::string tagName( const SegmenterPosition& p1) const;
 	virtual int tagLevel( const SegmenterPosition& p1) const;
 	virtual void putOpenTag( const SegmenterPosition& p1, std::size_t p2, const std::string& p3);

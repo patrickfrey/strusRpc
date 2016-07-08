@@ -509,6 +509,7 @@ public:
 	{
 		Method_Destructor,
 		Method_getNext,
+		Method_segmentSize,
 		Method_tagName,
 		Method_tagLevel,
 		Method_putOpenTag,
