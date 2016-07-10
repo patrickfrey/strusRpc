@@ -291,8 +291,11 @@ make test
 %{_includedir}/strus/lib/*.hpp
 
 %changelog
+* Sun Jul 10 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.10.1-0.1
+- adapt interface changes in strus analyzer (document markup interface)
+
 * Tue Jul 5 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.10.0-0.1
-- adapted interface changes in strus analyzer
+- adapt interface changes in strus analyzer
 
 * Thu Apr 28 2016 Patrick Frey <patrickpfrey@yahoo.com> 0.9.0-0.1
 - changes in the object builder interfaces

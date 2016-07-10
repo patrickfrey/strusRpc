@@ -1,5 +1,9 @@
+strusrpc (0.10.1-1) unstable; urgency=low
+  * adapt interface changes in strus analyzer (document markup interface)
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Sun, 10 Jul 2016 19:00:00 +0100
+
 strusrpc (0.10.0-1) unstable; urgency=low
-  * adapted interface changes in strus analyzer
+  * adapt interface changes in strus analyzer
  -- Patrick Frey <patrickpfrey@yahoo.com>  Tue, 5 Jul 2016 13:00:00 +0100
 
 strusrpc (0.9.0-1) unstable; urgency=low
