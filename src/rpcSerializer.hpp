@@ -11,6 +11,7 @@
 #include "rpcInterfaceStub.hpp"
 #include "strus/index.hpp"
 #include "strus/textProcessorInterface.hpp"
+#include "strus/segmenterOptions.hpp"
 #include "strus/documentClass.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/queryAnalyzerInterface.hpp"
@@ -86,6 +87,7 @@ public:
 	void packAnalyzerTerm( const analyzer::Term& val);
 	void packAnalyzerTermVector( const analyzer::TermVector& val);
 	void packAnalyzerToken( const analyzer::Token& val);
+	void packSegmenterOptions( const SegmenterOptions& opts);
 	void packWeightedDocument( const WeightedDocument& val);
 	void packResultDocument( const ResultDocument& val);
 	void packQueryResult( const QueryResult& val);
@@ -157,6 +159,7 @@ public:
 	analyzer::Term unpackAnalyzerTerm();
 	analyzer::TermVector unpackAnalyzerTermVector();
 	analyzer::Token unpackAnalyzerToken();
+	SegmenterOptions unpackSegmenterOptions();
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();
 	QueryResult unpackQueryResult();

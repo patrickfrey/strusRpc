@@ -22,6 +22,7 @@
 #include "strus/segmenterContextInterface.hpp"
 #include "strus/segmenterInstanceInterface.hpp"
 #include "strus/segmenterInterface.hpp"
+#include "strus/segmenterMarkupContextInterface.hpp"
 #include "strus/textProcessorInterface.hpp"
 #include "strus/tokenizerFunctionContextInterface.hpp"
 #include "strus/tokenizerFunctionInstanceInterface.hpp"
@@ -79,7 +80,7 @@ public:
 	AggregatorFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual double evaluate( const analyzer::Document& p1) const;
+	virtual NumericVariant evaluate( const analyzer::Document& p1) const;
 };
 
 class AggregatorFunctionImpl
@@ -109,8 +110,9 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_AnalyzerObjectBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual const TextProcessorInterface* getTextProcessor( ) const;
-	virtual SegmenterInterface* createSegmenter( const std::string& p1) const;
-	virtual DocumentAnalyzerInterface* createDocumentAnalyzer( const std::string& p1) const;
+	virtual const SegmenterInterface* getSegmenter( const std::string& p1) const;
+	virtual const SegmenterInterface* findMimeTypeSegmenter( const std::string& p1) const;
+	virtual DocumentAnalyzerInterface* createDocumentAnalyzer( const SegmenterInterface* p1, const SegmenterOptions& p2) const;
 	virtual QueryAnalyzerInterface* createQueryAnalyzer( ) const;
 };
 
@@ -612,6 +614,7 @@ public:
 	virtual void defineSelectorExpression( int p1, const std::string& p2);
 	virtual void defineSubSection( int p1, int p2, const std::string& p3);
 	virtual SegmenterContextInterface* createContext( const DocumentClass& p1) const;
+	virtual SegmenterMarkupContextInterface* createMarkupContext( const DocumentClass& p1, const std::string& p2) const;
 };
 
 class SegmenterImpl
@@ -626,7 +629,28 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_Segmenter, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual const char* mimeType( ) const;
-	virtual SegmenterInstanceInterface* createInstance( ) const;
+	virtual SegmenterInstanceInterface* createInstance( const SegmenterOptions& p1) const;
+};
+
+class SegmenterMarkupContextImpl
+		:public RpcInterfaceStub
+		,public strus::SegmenterMarkupContextInterface
+		,public strus::SegmenterMarkupContextConst
+{
+public:
+	virtual ~SegmenterMarkupContextImpl();
+
+	SegmenterMarkupContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SegmenterMarkupContext, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual bool getNext( SegmenterPosition& p1, const char*& p2, std::size_t& p3);
+	virtual unsigned int segmentSize( const SegmenterPosition& p1);
+	virtual std::string tagName( const SegmenterPosition& p1) const;
+	virtual int tagLevel( const SegmenterPosition& p1) const;
+	virtual void putOpenTag( const SegmenterPosition& p1, std::size_t p2, const std::string& p3);
+	virtual void putAttribute( const SegmenterPosition& p1, std::size_t p2, const std::string& p3, const std::string& p4);
+	virtual void putCloseTag( const SegmenterPosition& p1, std::size_t p2, const std::string& p3);
+	virtual std::string getContent( ) const;
 };
 
 class StatisticsBuilderImpl
@@ -833,9 +857,7 @@ public:
 	virtual const StorageInterface* getStorage( ) const;
 	virtual const DatabaseInterface* getDatabase( const std::string& p1) const;
 	virtual const QueryProcessorInterface* getQueryProcessor( ) const;
-	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
-	virtual StorageClientInterface* createStorageClient( const std::string& p1) const;
-	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( const std::string& p1) const;
+	virtual const StatisticsProcessorInterface* getStatisticsProcessor( const std::string& p1) const;
 	virtual QueryEvalInterface* createQueryEval( ) const;
 };
 

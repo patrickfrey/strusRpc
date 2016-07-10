@@ -45,6 +45,7 @@ enum ClassId
 	ClassId_SegmenterContext,
 	ClassId_SegmenterInstance,
 	ClassId_Segmenter,
+	ClassId_SegmenterMarkupContext,
 	ClassId_StatisticsBuilder,
 	ClassId_StatisticsIterator,
 	ClassId_StatisticsProcessor,
@@ -98,7 +99,8 @@ public:
 	{
 		Method_Destructor,
 		Method_getTextProcessor,
-		Method_createSegmenter,
+		Method_getSegmenter,
+		Method_findMimeTypeSegmenter,
 		Method_createDocumentAnalyzer,
 		Method_createQueryAnalyzer
 	};
@@ -484,7 +486,8 @@ public:
 		Method_Destructor,
 		Method_defineSelectorExpression,
 		Method_defineSubSection,
-		Method_createContext
+		Method_createContext,
+		Method_createMarkupContext
 	};
 };
 
@@ -496,6 +499,23 @@ public:
 		Method_Destructor,
 		Method_mimeType,
 		Method_createInstance
+	};
+};
+
+class SegmenterMarkupContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getNext,
+		Method_segmentSize,
+		Method_tagName,
+		Method_tagLevel,
+		Method_putOpenTag,
+		Method_putAttribute,
+		Method_putCloseTag,
+		Method_getContent
 	};
 };
 
@@ -659,8 +679,6 @@ public:
 		Method_getDatabase,
 		Method_getQueryProcessor,
 		Method_getStatisticsProcessor,
-		Method_createStorageClient,
-		Method_createAlterMetaDataTable,
 		Method_createQueryEval
 	};
 };

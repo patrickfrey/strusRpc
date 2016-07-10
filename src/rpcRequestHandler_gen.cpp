@@ -36,7 +36,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case AggregatorFunctionInstanceConst::Method_evaluate:
 		{
 			RpcSerializer msg;
-			double p0;
+			NumericVariant p0;
 			analyzer::Document p1;
 			p1 = serializedMsg.unpackAnalyzerDocument();
 			p0 = obj->evaluate(p1);
@@ -48,7 +48,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packDouble( p0);
+			msg.packNumericVariant( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -139,15 +139,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case AnalyzerObjectBuilderConst::Method_createSegmenter:
+		case AnalyzerObjectBuilderConst::Method_getSegmenter:
 		{
 			RpcSerializer msg;
-			SegmenterInterface* p0;
+			const SegmenterInterface* p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createSegmenter(p1);
+			p0 = obj->getSegmenter(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -156,7 +156,28 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case AnalyzerObjectBuilderConst::Method_findMimeTypeSegmenter:
+		{
+			RpcSerializer msg;
+			const SegmenterInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->findMimeTypeSegmenter(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
 		}
@@ -164,11 +185,16 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			DocumentAnalyzerInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
+			const SegmenterInterface* p1;
+			SegmenterOptions p2;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_Segmenter) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<SegmenterInterface>( classId_1, objId_1);
+			p2 = serializedMsg.unpackSegmenterOptions();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createDocumentAnalyzer(p1);
+			p0 = obj->createDocumentAnalyzer(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3069,6 +3095,29 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case SegmenterInstanceConst::Method_createMarkupContext:
+		{
+			RpcSerializer msg;
+			SegmenterMarkupContextInterface* p0;
+			DocumentClass p1;
+			std::string p2;
+			p1 = serializedMsg.unpackDocumentClass();
+			p2 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createMarkupContext(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 	}
 	break;
 	}
@@ -3103,9 +3152,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			SegmenterInstanceInterface* p0;
+			SegmenterOptions p1;
+			p1 = serializedMsg.unpackSegmenterOptions();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createInstance();
+			p0 = obj->createInstance(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3117,6 +3168,177 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_SegmenterMarkupContext:
+	{
+	SegmenterMarkupContextInterface* obj = getObject<SegmenterMarkupContextInterface>( classId, objId);
+	switch( (SegmenterMarkupContextConst::MethodId)methodId)
+	{
+		case SegmenterMarkupContextConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case SegmenterMarkupContextConst::Method_getNext:
+		{
+			RpcSerializer msg;
+			bool p0;
+			SegmenterPosition p1;
+			const char* p2;
+			std::size_t p3;
+			p0 = obj->getNext(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packGlobalCounter( p1);
+			msg.packBuffer( p2, p3);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SegmenterMarkupContextConst::Method_segmentSize:
+		{
+			RpcSerializer msg;
+			unsigned int p0;
+			SegmenterPosition p1;
+			p1 = serializedMsg.unpackGlobalCounter();
+			p0 = obj->segmentSize(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packUint( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SegmenterMarkupContextConst::Method_tagName:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			SegmenterPosition p1;
+			p1 = serializedMsg.unpackGlobalCounter();
+			p0 = obj->tagName(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SegmenterMarkupContextConst::Method_tagLevel:
+		{
+			RpcSerializer msg;
+			int p0;
+			SegmenterPosition p1;
+			p1 = serializedMsg.unpackGlobalCounter();
+			p0 = obj->tagLevel(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packInt( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SegmenterMarkupContextConst::Method_putOpenTag:
+		{
+			RpcSerializer msg;
+			SegmenterPosition p1;
+			std::size_t p2;
+			std::string p3;
+			p1 = serializedMsg.unpackGlobalCounter();
+			p2 = serializedMsg.unpackSize();
+			p3 = serializedMsg.unpackString();
+			obj->putOpenTag(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SegmenterMarkupContextConst::Method_putAttribute:
+		{
+			RpcSerializer msg;
+			SegmenterPosition p1;
+			std::size_t p2;
+			std::string p3;
+			std::string p4;
+			p1 = serializedMsg.unpackGlobalCounter();
+			p2 = serializedMsg.unpackSize();
+			p3 = serializedMsg.unpackString();
+			p4 = serializedMsg.unpackString();
+			obj->putAttribute(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SegmenterMarkupContextConst::Method_putCloseTag:
+		{
+			RpcSerializer msg;
+			SegmenterPosition p1;
+			std::size_t p2;
+			std::string p3;
+			p1 = serializedMsg.unpackGlobalCounter();
+			p2 = serializedMsg.unpackSize();
+			p3 = serializedMsg.unpackString();
+			obj->putCloseTag(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SegmenterMarkupContextConst::Method_getContent:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			p0 = obj->getContent();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -4463,9 +4685,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			const StatisticsProcessorInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->getStatisticsProcessor();
+			p0 = obj->getStatisticsProcessor(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -4475,50 +4699,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			defineConstObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-		case StorageObjectBuilderConst::Method_createStorageClient:
-		{
-			RpcSerializer msg;
-			StorageClientInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createStorageClient(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-		case StorageObjectBuilderConst::Method_createAlterMetaDataTable:
-		{
-			RpcSerializer msg;
-			StorageAlterMetaDataTableInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createAlterMetaDataTable(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			releaseObjectsMarked();
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
 		}

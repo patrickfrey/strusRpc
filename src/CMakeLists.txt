@@ -8,6 +8,7 @@ set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -fPIC -O${STRUS_OPTIMIZATION_
 # --------------------------------------
 set( private_utils_source_files
 	utils.cpp
+	traceUtils.cpp
 	internationalization.cpp
 )
 
@@ -92,7 +93,7 @@ set_target_properties(
 # PROGRAMS
 # ------------------------------
 add_executable( strusRpcServer strusRpcServer.cpp utils.cpp ${server_source_files} )
-target_link_libraries( strusRpcServer  "${Boost_LIBRARIES}" strus_private_utils strus_error strus_base strus_module uv ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${Intl_LIBRARIES} )
+target_link_libraries( strusRpcServer  "${Boost_LIBRARIES}" strus_storage_objbuild strus_private_utils strus_error strus_base strus_module uv ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${Intl_LIBRARIES} )
 if(LIBRT_LIBRARIES)
     target_link_libraries( strusRpcServer ${LIBRT_LIBRARIES} )
 endif()
