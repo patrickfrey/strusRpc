@@ -2796,6 +2796,28 @@ try
 }
 }
 
+std::string QueryImpl::tostring( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_tostring);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::tostring");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::tostring", err.what());
+	return std::string();
+}
+}
+
 QueryProcessorImpl::~QueryProcessorImpl()
 {
 	if (isConst()) return;

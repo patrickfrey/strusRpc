@@ -409,7 +409,8 @@ public:
 		Method_setMinRank,
 		Method_addUserName,
 		Method_setWeightingVariableValue,
-		Method_evaluate
+		Method_evaluate,
+		Method_tostring
 	};
 };
 
