@@ -63,6 +63,9 @@
 #include "strus/summarizerFunctionInstanceInterface.hpp"
 #include "strus/summarizerFunctionInterface.hpp"
 #include "strus/valueIteratorInterface.hpp"
+#include "strus/vectorSpaceModelBuilderInterface.hpp"
+#include "strus/vectorSpaceModelInstanceInterface.hpp"
+#include "strus/vectorSpaceModelInterface.hpp"
 #include "strus/weightingFunctionContextInterface.hpp"
 #include "strus/weightingFunctionInstanceInterface.hpp"
 #include "strus/weightingFunctionInterface.hpp"
@@ -859,6 +862,7 @@ public:
 	virtual const DatabaseInterface* getDatabase( const std::string& p1) const;
 	virtual const QueryProcessorInterface* getQueryProcessor( ) const;
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( const std::string& p1) const;
+	virtual const VectorSpaceModelInterface* getVectorSpaceModel( const std::string& p1) const;
 	virtual QueryEvalInterface* createQueryEval( ) const;
 };
 
@@ -1010,6 +1014,53 @@ public:
 
 	virtual void skip( const char* p1, std::size_t p2);
 	virtual std::vector<std::string> fetchValues( std::size_t p1);
+};
+
+class VectorSpaceModelBuilderImpl
+		:public RpcInterfaceStub
+		,public strus::VectorSpaceModelBuilderInterface
+		,public strus::VectorSpaceModelBuilderConst
+{
+public:
+	virtual ~VectorSpaceModelBuilderImpl();
+
+	VectorSpaceModelBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelBuilder, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void addSampleVector( const std::vector<double>& p1);
+	virtual void finalize( );
+	virtual bool store( );
+};
+
+class VectorSpaceModelInstanceImpl
+		:public RpcInterfaceStub
+		,public strus::VectorSpaceModelInstanceInterface
+		,public strus::VectorSpaceModelInstanceConst
+{
+public:
+	virtual ~VectorSpaceModelInstanceImpl();
+
+	VectorSpaceModelInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelInstance, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual std::vector<Index> mapVectorToFeatures( const std::vector<double>& p1) const;
+	virtual unsigned int nofFeatures( ) const;
+	virtual std::string config( ) const;
+};
+
+class VectorSpaceModelImpl
+		:public RpcInterfaceStub
+		,public strus::VectorSpaceModelInterface
+		,public strus::VectorSpaceModelConst
+{
+public:
+	virtual ~VectorSpaceModelImpl();
+
+	VectorSpaceModelImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModel, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual VectorSpaceModelInstanceInterface* createInstance( const std::string& p1) const;
+	virtual VectorSpaceModelBuilderInterface* createBuilder( const std::string& p1) const;
 };
 
 class WeightingFunctionContextImpl

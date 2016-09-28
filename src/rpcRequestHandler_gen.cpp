@@ -4719,6 +4719,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case StorageObjectBuilderConst::Method_getVectorSpaceModel:
+		{
+			RpcSerializer msg;
+			const VectorSpaceModelInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->getVectorSpaceModel(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case StorageObjectBuilderConst::Method_createQueryEval:
 		{
 			RpcSerializer msg;
@@ -5543,6 +5564,198 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packCrc32();
 			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_VectorSpaceModelBuilder:
+	{
+	VectorSpaceModelBuilderInterface* obj = getObject<VectorSpaceModelBuilderInterface>( classId, objId);
+	switch( (VectorSpaceModelBuilderConst::MethodId)methodId)
+	{
+		case VectorSpaceModelBuilderConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case VectorSpaceModelBuilderConst::Method_addSampleVector:
+		{
+			RpcSerializer msg;
+			std::vector<double> p1;
+			std::size_t n1 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n1; ++ii) {
+				double ee = serializedMsg.unpackDouble();
+				p1.push_back( ee);
+			}
+			obj->addSampleVector(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case VectorSpaceModelBuilderConst::Method_finalize:
+		{
+			RpcSerializer msg;
+			obj->finalize();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case VectorSpaceModelBuilderConst::Method_store:
+		{
+			RpcSerializer msg;
+			bool p0;
+			p0 = obj->store();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_VectorSpaceModelInstance:
+	{
+	VectorSpaceModelInstanceInterface* obj = getObject<VectorSpaceModelInstanceInterface>( classId, objId);
+	switch( (VectorSpaceModelInstanceConst::MethodId)methodId)
+	{
+		case VectorSpaceModelInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case VectorSpaceModelInstanceConst::Method_mapVectorToFeatures:
+		{
+			RpcSerializer msg;
+			std::vector<Index> p0;
+			std::vector<double> p1;
+			std::size_t n1 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n1; ++ii) {
+				double ee = serializedMsg.unpackDouble();
+				p1.push_back( ee);
+			}
+			p0 = obj->mapVectorToFeatures(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packIndex( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelInstanceConst::Method_nofFeatures:
+		{
+			RpcSerializer msg;
+			unsigned int p0;
+			p0 = obj->nofFeatures();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packUint( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelInstanceConst::Method_config:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			p0 = obj->config();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_VectorSpaceModel:
+	{
+	VectorSpaceModelInterface* obj = getObject<VectorSpaceModelInterface>( classId, objId);
+	switch( (VectorSpaceModelConst::MethodId)methodId)
+	{
+		case VectorSpaceModelConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case VectorSpaceModelConst::Method_createInstance:
+		{
+			RpcSerializer msg;
+			VectorSpaceModelInstanceInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createInstance(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case VectorSpaceModelConst::Method_createBuilder:
+		{
+			RpcSerializer msg;
+			VectorSpaceModelBuilderInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createBuilder(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
 		}
 	}
 	break;
