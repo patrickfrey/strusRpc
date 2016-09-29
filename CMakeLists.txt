@@ -25,7 +25,6 @@ find_strus_package( analyzer )
 find_strus_package( module )
 
 set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
-set( CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON )
 configure_file( "${PROJECT_SOURCE_DIR}/include/strus/versionRpc.hpp.in"  "${PROJECT_SOURCE_DIR}/include/strus/versionRpc.hpp"  @ONLY )
 configure_file( "${PROJECT_SOURCE_DIR}/src/rpcProtocolDefines.hpp.in"  "${PROJECT_SOURCE_DIR}/src/rpcProtocolDefines.hpp"  @ONLY )
 configure_file( "${PROJECT_SOURCE_DIR}/dist/obs/deploy_to_obs.sh.in"  "${PROJECT_SOURCE_DIR}/dist/obs/deploy_to_obs.sh"  @ONLY )

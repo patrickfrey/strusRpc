@@ -70,10 +70,12 @@ else()
     elseif ( ${CMAKE_SYSTEM_NAME} STREQUAL "OpenBSD" )
        set( SOURCES ${SOURCES}
            ${LIBUVDIR}/src/unix/openbsd.c
+           ${LIBUVDIR}/src/unix/kqueue.c
 	 )
     elseif ( ${CMAKE_SYSTEM_NAME} STREQUAL "NetBSD" )
         set( SOURCES ${SOURCES}
            ${LIBUVDIR}/src/unix/netbsd.c
+           ${LIBUVDIR}/src/unix/kqueue.c
 	 )
     elseif  ( ${CMAKE_SYSTEM_NAME} STREQUAL "SunOS" )
         set( SOURCES ${SOURCES}
