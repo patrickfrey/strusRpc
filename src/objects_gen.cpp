@@ -6230,7 +6230,7 @@ VectorSpaceModelInstanceImpl::~VectorSpaceModelInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::vector<Index> VectorSpaceModelInstanceImpl::mapVectorToFeatures( const std::vector<double>& p1) const
+std::vector<unsigned int> VectorSpaceModelInstanceImpl::mapVectorToFeatures( const std::vector<double>& p1) const
 {
 try
 {
@@ -6245,19 +6245,19 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::vector<Index> p0;
+	std::vector<unsigned int> p0;
 	std::size_t n0 = serializedMsg.unpackSize();
 	for (std::size_t ii=0; ii < n0; ++ii) {
-		Index elem_p0 = serializedMsg.unpackIndex();
+		unsigned int elem_p0 = serializedMsg.unpackUint();
 		p0.push_back( elem_p0);
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::mapVectorToFeatures");
-	return std::vector<Index>();
+	return std::vector<unsigned int>();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::mapVectorToFeatures", err.what());
-	return std::vector<Index>();
+	return std::vector<unsigned int>();
 }
 }
 

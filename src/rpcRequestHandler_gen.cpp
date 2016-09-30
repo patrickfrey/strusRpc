@@ -5645,7 +5645,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case VectorSpaceModelInstanceConst::Method_mapVectorToFeatures:
 		{
 			RpcSerializer msg;
-			std::vector<Index> p0;
+			std::vector<unsigned int> p0;
 			std::vector<double> p1;
 			std::size_t n1 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n1; ++ii) {
@@ -5663,7 +5663,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packIndex( p0[ii]);
+				msg.packUint( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();

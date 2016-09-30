@@ -1043,7 +1043,7 @@ public:
 	VectorSpaceModelInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual std::vector<Index> mapVectorToFeatures( const std::vector<double>& p1) const;
+	virtual std::vector<unsigned int> mapVectorToFeatures( const std::vector<double>& p1) const;
 	virtual unsigned int nofFeatures( ) const;
 	virtual std::string config( ) const;
 };
