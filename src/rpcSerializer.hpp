@@ -11,8 +11,8 @@
 #include "rpcInterfaceStub.hpp"
 #include "strus/index.hpp"
 #include "strus/textProcessorInterface.hpp"
-#include "strus/segmenterOptions.hpp"
-#include "strus/documentClass.hpp"
+#include "strus/analyzer/segmenterOptions.hpp"
+#include "strus/analyzer/documentClass.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/queryAnalyzerInterface.hpp"
 #include "strus/numericVariant.hpp"
@@ -36,7 +36,14 @@
 #include "strus/statisticsProcessorInterface.hpp"
 #include "strus/statisticsViewerInterface.hpp"
 #include "strus/analyzer/token.hpp"
+#include "strus/analyzer/idToken.hpp"
+#include "strus/analyzer/tokenMarkup.hpp"
+#include "strus/analyzer/tokenPatternMatchStatistics.hpp"
+#include "strus/analyzer/charRegexMatchOptions.hpp"
+#include "strus/analyzer/positionBind.hpp"
+#include "strus/analyzer/tokenPatternMatchOptions.hpp"
 #include "strus/analyzer/term.hpp"
+#include "strus/analyzer/tokenPatternMatchResult.hpp"
 #include "strus/analyzer/metaData.hpp"
 #include "strus/analyzer/attribute.hpp"
 #include "strus/analyzer/document.hpp"
@@ -68,7 +75,7 @@ public:
 	void packDouble( double val);
 	void packSize( std::size_t size);
 	void packNumericVariant( const NumericVariant& val);
-	void packDocumentClass( const DocumentClass& prop);
+	void packDocumentClass( const analyzer::DocumentClass& prop);
 	void packTermStatistics( const TermStatistics& stats);
 	void packGlobalStatistics( const GlobalStatistics& stats);
 	void packMetaDataRestrictionCompareOperator( MetaDataRestrictionInterface::CompareOperator val);
@@ -87,7 +94,13 @@ public:
 	void packAnalyzerTerm( const analyzer::Term& val);
 	void packAnalyzerTermVector( const analyzer::TermVector& val);
 	void packAnalyzerToken( const analyzer::Token& val);
-	void packSegmenterOptions( const SegmenterOptions& opts);
+	void packAnalyzerIdToken( const analyzer::IdToken& val);
+	void packAnalyzerCharRegexMatchOptions( const analyzer::CharRegexMatchOptions& val);
+	void packAnalyzerTokenPatternMatchOptions( const analyzer::TokenPatternMatchOptions& val);
+	void packAnalyzerTokenMarkup( const analyzer::TokenMarkup& val);
+	void packAnalyzerTokenPatternMatchResult( const analyzer::TokenPatternMatchResult& val);
+	void packAnalyzerTokenPatternMatchStatistics( const analyzer::TokenPatternMatchStatistics& val);
+	void packSegmenterOptions( const analyzer::SegmenterOptions& opts);
 	void packWeightedDocument( const WeightedDocument& val);
 	void packResultDocument( const ResultDocument& val);
 	void packQueryResult( const QueryResult& val);
@@ -141,7 +154,7 @@ public:
 	double unpackDouble();
 	std::size_t unpackSize();
 	NumericVariant unpackNumericVariant();
-	DocumentClass unpackDocumentClass();
+	analyzer::DocumentClass unpackDocumentClass();
 	TermStatistics unpackTermStatistics();
 	GlobalStatistics unpackGlobalStatistics();
 	MetaDataRestrictionInterface::CompareOperator unpackMetaDataRestrictionCompareOperator();
@@ -159,7 +172,13 @@ public:
 	analyzer::Term unpackAnalyzerTerm();
 	analyzer::TermVector unpackAnalyzerTermVector();
 	analyzer::Token unpackAnalyzerToken();
-	SegmenterOptions unpackSegmenterOptions();
+	analyzer::IdToken unpackAnalyzerIdToken();
+	analyzer::CharRegexMatchOptions unpackAnalyzerCharRegexMatchOptions();
+	analyzer::TokenPatternMatchOptions unpackAnalyzerTokenPatternMatchOptions();
+	analyzer::TokenMarkup unpackAnalyzerTokenMarkup();
+	analyzer::TokenPatternMatchResult unpackAnalyzerTokenPatternMatchResult();
+	analyzer::TokenPatternMatchStatistics unpackAnalyzerTokenPatternMatchStatistics();
+	analyzer::SegmenterOptions unpackSegmenterOptions();
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();
 	QueryResult unpackQueryResult();
