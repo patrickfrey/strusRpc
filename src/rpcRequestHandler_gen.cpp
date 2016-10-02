@@ -2012,6 +2012,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case PatternLexerConst::Method_getDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->getDescription();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -2288,6 +2305,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case PatternMatcherConst::Method_getDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->getDescription();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -5849,6 +5883,48 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case TextProcessorConst::Method_getPatternLexer:
+		{
+			RpcSerializer msg;
+			const PatternLexerInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->getPatternLexer(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case TextProcessorConst::Method_getPatternMatcher:
+		{
+			RpcSerializer msg;
+			const PatternMatcherInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->getPatternMatcher(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case TextProcessorConst::Method_detectDocumentClass:
 		{
 			RpcSerializer msg;
@@ -5962,6 +6038,48 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case TextProcessorConst::Method_definePatternLexer:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			PatternLexerInterface* p2;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_2; unsigned int objId_2;
+			serializedMsg.unpackObject( classId_2, objId_2);
+			if (classId_2 != ClassId_PatternLexer) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p2 = getObject<PatternLexerInterface>( classId_2, objId_2);
+			obj->definePatternLexer(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case TextProcessorConst::Method_definePatternMatcher:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			PatternMatcherInterface* p2;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_2; unsigned int objId_2;
+			serializedMsg.unpackObject( classId_2, objId_2);
+			if (classId_2 != ClassId_PatternMatcher) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p2 = getObject<PatternMatcherInterface>( classId_2, objId_2);
+			obj->definePatternMatcher(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}

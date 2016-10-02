@@ -378,7 +378,8 @@ public:
 	{
 		Method_Destructor,
 		Method_getCompileOptions,
-		Method_createInstance
+		Method_createInstance,
+		Method_getDescription
 	};
 };
 
@@ -418,7 +419,8 @@ public:
 	{
 		Method_Destructor,
 		Method_getCompileOptions,
-		Method_createInstance
+		Method_createInstance,
+		Method_getDescription
 	};
 };
 
@@ -859,11 +861,15 @@ public:
 		Method_getTokenizer,
 		Method_getNormalizer,
 		Method_getAggregator,
+		Method_getPatternLexer,
+		Method_getPatternMatcher,
 		Method_detectDocumentClass,
 		Method_defineDocumentClassDetector,
 		Method_defineTokenizer,
 		Method_defineNormalizer,
 		Method_defineAggregator,
+		Method_definePatternLexer,
+		Method_definePatternMatcher,
 		Method_getFunctionList
 	};
 };

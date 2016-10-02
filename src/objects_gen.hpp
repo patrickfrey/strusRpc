@@ -474,6 +474,7 @@ public:
 
 	virtual std::vector<std::string> getCompileOptions( ) const;
 	virtual PatternLexerInstanceInterface* createInstance( ) const;
+	virtual const char* getDescription( ) const;
 };
 
 class PatternMatcherContextImpl
@@ -526,6 +527,7 @@ public:
 
 	virtual std::vector<std::string> getCompileOptions( ) const;
 	virtual PatternMatcherInstanceInterface* createInstance( ) const;
+	virtual const char* getDescription( ) const;
 };
 
 class PatternMatcherProgramInstanceImpl
@@ -1090,11 +1092,15 @@ public:
 	virtual const TokenizerFunctionInterface* getTokenizer( const std::string& p1) const;
 	virtual const NormalizerFunctionInterface* getNormalizer( const std::string& p1) const;
 	virtual const AggregatorFunctionInterface* getAggregator( const std::string& p1) const;
+	virtual const PatternLexerInterface* getPatternLexer( const std::string& p1) const;
+	virtual const PatternMatcherInterface* getPatternMatcher( const std::string& p1) const;
 	virtual bool detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3) const;
 	virtual void defineDocumentClassDetector( DocumentClassDetectorInterface* p1);
 	virtual void defineTokenizer( const std::string& p1, TokenizerFunctionInterface* p2);
 	virtual void defineNormalizer( const std::string& p1, NormalizerFunctionInterface* p2);
 	virtual void defineAggregator( const std::string& p1, AggregatorFunctionInterface* p2);
+	virtual void definePatternLexer( const std::string& p1, PatternLexerInterface* p2);
+	virtual void definePatternMatcher( const std::string& p1, PatternMatcherInterface* p2);
 	virtual std::vector<std::string> getFunctionList( const TextProcessorInterface::FunctionType& p1) const;
 };
 

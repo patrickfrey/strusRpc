@@ -2212,6 +2212,28 @@ try
 }
 }
 
+const char* PatternLexerImpl::getDescription( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getDescription);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerImpl::getDescription");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerImpl::getDescription", err.what());
+	return 0;
+}
+}
+
 PatternMatcherContextImpl::~PatternMatcherContextImpl()
 {
 	if (isConst()) return;
@@ -2522,6 +2544,28 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherImpl::createInstance", err.what());
+	return 0;
+}
+}
+
+const char* PatternMatcherImpl::getDescription( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getDescription);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherImpl::getDescription");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherImpl::getDescription", err.what());
 	return 0;
 }
 }
@@ -6480,6 +6524,56 @@ try
 }
 }
 
+const PatternLexerInterface* TextProcessorImpl::getPatternLexer( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getPatternLexer);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_PatternLexer;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	PatternLexerImpl const_0( objId_0, ctx(), true, errorhnd());
+	const PatternLexerInterface* p0 = (const PatternLexerImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getPatternLexer");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getPatternLexer", err.what());
+	return 0;
+}
+}
+
+const PatternMatcherInterface* TextProcessorImpl::getPatternMatcher( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getPatternMatcher);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_PatternMatcher;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	PatternMatcherImpl const_0( objId_0, ctx(), true, errorhnd());
+	const PatternMatcherInterface* p0 = (const PatternMatcherImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getPatternMatcher");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getPatternMatcher", err.what());
+	return 0;
+}
+}
+
 bool TextProcessorImpl::detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3) const
 {
 try
@@ -6599,6 +6693,50 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::defineAggregator", err.what());
+	return void();
+}
+}
+
+void TextProcessorImpl::definePatternLexer( const std::string& p1, PatternLexerInterface* p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_definePatternLexer);
+	msg.packString( p1);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PatternLexer");
+	msg.packObject( impl_2->classId(), impl_2->objId());
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::definePatternLexer");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::definePatternLexer", err.what());
+	return void();
+}
+}
+
+void TextProcessorImpl::definePatternMatcher( const std::string& p1, PatternMatcherInterface* p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_definePatternMatcher);
+	msg.packString( p1);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PatternMatcher");
+	msg.packObject( impl_2->classId(), impl_2->objId());
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::definePatternMatcher");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::definePatternMatcher", err.what());
 	return void();
 }
 }
