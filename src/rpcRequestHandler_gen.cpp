@@ -316,210 +316,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_CharRegexMatchContext:
-	{
-	CharRegexMatchContextInterface* obj = getObject<CharRegexMatchContextInterface>( classId, objId);
-	switch( (CharRegexMatchContextConst::MethodId)methodId)
-	{
-		case CharRegexMatchContextConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case CharRegexMatchContextConst::Method_match:
-		{
-			RpcSerializer msg;
-			std::vector<analyzer::IdToken> p0;
-			const char* p1;
-			std::size_t p2;
-			serializedMsg.unpackBuffer( p1, p2);
-			p0 = obj->match(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packAnalyzerIdToken( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-	}
-	break;
-	}
-	case ClassId_CharRegexMatchInstance:
-	{
-	CharRegexMatchInstanceInterface* obj = getObject<CharRegexMatchInstanceInterface>( classId, objId);
-	switch( (CharRegexMatchInstanceConst::MethodId)methodId)
-	{
-		case CharRegexMatchInstanceConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case CharRegexMatchInstanceConst::Method_definePattern:
-		{
-			RpcSerializer msg;
-			unsigned int p1;
-			std::string p2;
-			unsigned int p3;
-			unsigned int p4;
-			analyzer::PositionBind p5;
-			p1 = serializedMsg.unpackUint();
-			p2 = serializedMsg.unpackString();
-			p3 = serializedMsg.unpackUint();
-			p4 = serializedMsg.unpackUint();
-			p5 = (analyzer::PositionBind)serializedMsg.unpackByte();
-			obj->definePattern(p1,p2,p3,p4,p5);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case CharRegexMatchInstanceConst::Method_defineSymbol:
-		{
-			RpcSerializer msg;
-			unsigned int p1;
-			unsigned int p2;
-			std::string p3;
-			p1 = serializedMsg.unpackUint();
-			p2 = serializedMsg.unpackUint();
-			p3 = serializedMsg.unpackString();
-			obj->defineSymbol(p1,p2,p3);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case CharRegexMatchInstanceConst::Method_getSymbol:
-		{
-			RpcSerializer msg;
-			unsigned int p0;
-			unsigned int p1;
-			std::string p2;
-			p1 = serializedMsg.unpackUint();
-			p2 = serializedMsg.unpackString();
-			p0 = obj->getSymbol(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packUint( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case CharRegexMatchInstanceConst::Method_compile:
-		{
-			RpcSerializer msg;
-			bool p0;
-			analyzer::CharRegexMatchOptions p1;
-			p1 = serializedMsg.unpackAnalyzerCharRegexMatchOptions();
-			p0 = obj->compile(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case CharRegexMatchInstanceConst::Method_createContext:
-		{
-			RpcSerializer msg;
-			CharRegexMatchContextInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createContext();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-	}
-	break;
-	}
-	case ClassId_CharRegexMatch:
-	{
-	CharRegexMatchInterface* obj = getObject<CharRegexMatchInterface>( classId, objId);
-	switch( (CharRegexMatchConst::MethodId)methodId)
-	{
-		case CharRegexMatchConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case CharRegexMatchConst::Method_getCompileOptions:
-		{
-			RpcSerializer msg;
-			std::vector<std::string> p0;
-			p0 = obj->getCompileOptions();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packString( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case CharRegexMatchConst::Method_createInstance:
-		{
-			RpcSerializer msg;
-			CharRegexMatchInstanceInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createInstance();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-	}
-	break;
-	}
 	case ClassId_DatabaseBackupCursor:
 	{
 	DatabaseBackupCursorInterface* obj = getObject<DatabaseBackupCursorInterface>( classId, objId);
@@ -2015,17 +1811,498 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_PatternMatchProgramInstance:
+	case ClassId_PatternLexerContext:
 	{
-	PatternMatchProgramInstanceInterface* obj = getObject<PatternMatchProgramInstanceInterface>( classId, objId);
-	switch( (PatternMatchProgramInstanceConst::MethodId)methodId)
+	PatternLexerContextInterface* obj = getObject<PatternLexerContextInterface>( classId, objId);
+	switch( (PatternLexerContextConst::MethodId)methodId)
 	{
-		case PatternMatchProgramInstanceConst::Method_Destructor:
+		case PatternLexerContextConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case PatternMatchProgramInstanceConst::Method_load:
+		case PatternLexerContextConst::Method_match:
+		{
+			RpcSerializer msg;
+			std::vector<analyzer::PatternLexem> p0;
+			const char* p1;
+			std::size_t p2;
+			serializedMsg.unpackBuffer( p1, p2);
+			p0 = obj->match(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packAnalyzerPatternLexem( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_PatternLexerInstance:
+	{
+	PatternLexerInstanceInterface* obj = getObject<PatternLexerInstanceInterface>( classId, objId);
+	switch( (PatternLexerInstanceConst::MethodId)methodId)
+	{
+		case PatternLexerInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PatternLexerInstanceConst::Method_definePattern:
+		{
+			RpcSerializer msg;
+			unsigned int p1;
+			std::string p2;
+			unsigned int p3;
+			unsigned int p4;
+			analyzer::PositionBind p5;
+			p1 = serializedMsg.unpackUint();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackUint();
+			p4 = serializedMsg.unpackUint();
+			p5 = (analyzer::PositionBind)serializedMsg.unpackByte();
+			obj->definePattern(p1,p2,p3,p4,p5);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PatternLexerInstanceConst::Method_defineSymbol:
+		{
+			RpcSerializer msg;
+			unsigned int p1;
+			unsigned int p2;
+			std::string p3;
+			p1 = serializedMsg.unpackUint();
+			p2 = serializedMsg.unpackUint();
+			p3 = serializedMsg.unpackString();
+			obj->defineSymbol(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PatternLexerInstanceConst::Method_getSymbol:
+		{
+			RpcSerializer msg;
+			unsigned int p0;
+			unsigned int p1;
+			std::string p2;
+			p1 = serializedMsg.unpackUint();
+			p2 = serializedMsg.unpackString();
+			p0 = obj->getSymbol(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packUint( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PatternLexerInstanceConst::Method_compile:
+		{
+			RpcSerializer msg;
+			bool p0;
+			analyzer::PatternLexerOptions p1;
+			p1 = serializedMsg.unpackAnalyzerPatternLexerOptions();
+			p0 = obj->compile(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PatternLexerInstanceConst::Method_createContext:
+		{
+			RpcSerializer msg;
+			PatternLexerContextInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createContext();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_PatternLexer:
+	{
+	PatternLexerInterface* obj = getObject<PatternLexerInterface>( classId, objId);
+	switch( (PatternLexerConst::MethodId)methodId)
+	{
+		case PatternLexerConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PatternLexerConst::Method_getCompileOptions:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getCompileOptions();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PatternLexerConst::Method_createInstance:
+		{
+			RpcSerializer msg;
+			PatternLexerInstanceInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createInstance();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_PatternMatcherContext:
+	{
+	PatternMatcherContextInterface* obj = getObject<PatternMatcherContextInterface>( classId, objId);
+	switch( (PatternMatcherContextConst::MethodId)methodId)
+	{
+		case PatternMatcherContextConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PatternMatcherContextConst::Method_putInput:
+		{
+			RpcSerializer msg;
+			analyzer::PatternLexem p1;
+			p1 = serializedMsg.unpackAnalyzerPatternLexem();
+			obj->putInput(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PatternMatcherContextConst::Method_fetchResults:
+		{
+			RpcSerializer msg;
+			std::vector<analyzer::PatternMatcherResult> p0;
+			p0 = obj->fetchResults();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packAnalyzerPatternMatcherResult( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PatternMatcherContextConst::Method_getStatistics:
+		{
+			RpcSerializer msg;
+			analyzer::PatternMatcherStatistics p0;
+			p0 = obj->getStatistics();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerPatternMatcherStatistics( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_PatternMatcherInstance:
+	{
+	PatternMatcherInstanceInterface* obj = getObject<PatternMatcherInstanceInterface>( classId, objId);
+	switch( (PatternMatcherInstanceConst::MethodId)methodId)
+	{
+		case PatternMatcherInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PatternMatcherInstanceConst::Method_defineTermFrequency:
+		{
+			RpcSerializer msg;
+			unsigned int p1;
+			double p2;
+			p1 = serializedMsg.unpackUint();
+			p2 = serializedMsg.unpackDouble();
+			obj->defineTermFrequency(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PatternMatcherInstanceConst::Method_pushTerm:
+		{
+			RpcSerializer msg;
+			unsigned int p1;
+			p1 = serializedMsg.unpackUint();
+			obj->pushTerm(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PatternMatcherInstanceConst::Method_pushExpression:
+		{
+			RpcSerializer msg;
+			PatternMatcherInstanceInterface::JoinOperation p1;
+			std::size_t p2;
+			unsigned int p3;
+			unsigned int p4;
+			p1 = (PatternMatcherInstanceInterface::JoinOperation)serializedMsg.unpackByte();
+			p2 = serializedMsg.unpackSize();
+			p3 = serializedMsg.unpackUint();
+			p4 = serializedMsg.unpackUint();
+			obj->pushExpression(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PatternMatcherInstanceConst::Method_pushPattern:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->pushPattern(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PatternMatcherInstanceConst::Method_attachVariable:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			float p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackFloat();
+			obj->attachVariable(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PatternMatcherInstanceConst::Method_definePattern:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			bool p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackBool();
+			obj->definePattern(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PatternMatcherInstanceConst::Method_compile:
+		{
+			RpcSerializer msg;
+			bool p0;
+			analyzer::PatternMatcherOptions p1;
+			p1 = serializedMsg.unpackAnalyzerPatternMatcherOptions();
+			p0 = obj->compile(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PatternMatcherInstanceConst::Method_createContext:
+		{
+			RpcSerializer msg;
+			PatternMatcherContextInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createContext();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_PatternMatcher:
+	{
+	PatternMatcherInterface* obj = getObject<PatternMatcherInterface>( classId, objId);
+	switch( (PatternMatcherConst::MethodId)methodId)
+	{
+		case PatternMatcherConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PatternMatcherConst::Method_getCompileOptions:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getCompileOptions();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PatternMatcherConst::Method_createInstance:
+		{
+			RpcSerializer msg;
+			PatternMatcherInstanceInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createInstance();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_PatternMatcherProgramInstance:
+	{
+	PatternMatcherProgramInstanceInterface* obj = getObject<PatternMatcherProgramInstanceInterface>( classId, objId);
+	switch( (PatternMatcherProgramInstanceConst::MethodId)methodId)
+	{
+		case PatternMatcherProgramInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PatternMatcherProgramInstanceConst::Method_load:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -2044,7 +2321,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case PatternMatchProgramInstanceConst::Method_compile:
+		case PatternMatcherProgramInstanceConst::Method_compile:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -2061,13 +2338,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case PatternMatchProgramInstanceConst::Method_getCharRegexMatchInstance:
+		case PatternMatcherProgramInstanceConst::Method_getPatternLexerInstance:
 		{
 			RpcSerializer msg;
-			const CharRegexMatchInstanceInterface* p0;
+			const PatternLexerInstanceInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->getCharRegexMatchInstance();
+			p0 = obj->getPatternLexerInstance();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -2080,13 +2357,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case PatternMatchProgramInstanceConst::Method_getTokenPatternMatchInstance:
+		case PatternMatcherProgramInstanceConst::Method_getPatternMatcherInstance:
 		{
 			RpcSerializer msg;
-			const TokenPatternMatchInstanceInterface* p0;
+			const PatternMatcherInstanceInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->getTokenPatternMatchInstance();
+			p0 = obj->getPatternMatcherInstance();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -2099,7 +2376,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case PatternMatchProgramInstanceConst::Method_tokenName:
+		case PatternMatcherProgramInstanceConst::Method_tokenName:
 		{
 			RpcSerializer msg;
 			const char* p0;
@@ -2121,20 +2398,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_PatternMatchProgram:
+	case ClassId_PatternMatcherProgram:
 	{
-	PatternMatchProgramInterface* obj = getObject<PatternMatchProgramInterface>( classId, objId);
-	switch( (PatternMatchProgramConst::MethodId)methodId)
+	PatternMatcherProgramInterface* obj = getObject<PatternMatcherProgramInterface>( classId, objId);
+	switch( (PatternMatcherProgramConst::MethodId)methodId)
 	{
-		case PatternMatchProgramConst::Method_Destructor:
+		case PatternMatcherProgramConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case PatternMatchProgramConst::Method_createInstance:
+		case PatternMatcherProgramConst::Method_createInstance:
 		{
 			RpcSerializer msg;
-			PatternMatchProgramInstanceInterface* p0;
+			PatternMatcherProgramInstanceInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createInstance();
@@ -5795,283 +6072,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createContext();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-	}
-	break;
-	}
-	case ClassId_TokenPatternMatchContext:
-	{
-	TokenPatternMatchContextInterface* obj = getObject<TokenPatternMatchContextInterface>( classId, objId);
-	switch( (TokenPatternMatchContextConst::MethodId)methodId)
-	{
-		case TokenPatternMatchContextConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case TokenPatternMatchContextConst::Method_putInput:
-		{
-			RpcSerializer msg;
-			analyzer::IdToken p1;
-			p1 = serializedMsg.unpackAnalyzerIdToken();
-			obj->putInput(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case TokenPatternMatchContextConst::Method_fetchResults:
-		{
-			RpcSerializer msg;
-			std::vector<analyzer::TokenPatternMatchResult> p0;
-			p0 = obj->fetchResults();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packAnalyzerTokenPatternMatchResult( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case TokenPatternMatchContextConst::Method_getStatistics:
-		{
-			RpcSerializer msg;
-			analyzer::TokenPatternMatchStatistics p0;
-			p0 = obj->getStatistics();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerTokenPatternMatchStatistics( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-	}
-	break;
-	}
-	case ClassId_TokenPatternMatchInstance:
-	{
-	TokenPatternMatchInstanceInterface* obj = getObject<TokenPatternMatchInstanceInterface>( classId, objId);
-	switch( (TokenPatternMatchInstanceConst::MethodId)methodId)
-	{
-		case TokenPatternMatchInstanceConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case TokenPatternMatchInstanceConst::Method_defineTermFrequency:
-		{
-			RpcSerializer msg;
-			unsigned int p1;
-			double p2;
-			p1 = serializedMsg.unpackUint();
-			p2 = serializedMsg.unpackDouble();
-			obj->defineTermFrequency(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case TokenPatternMatchInstanceConst::Method_pushTerm:
-		{
-			RpcSerializer msg;
-			unsigned int p1;
-			p1 = serializedMsg.unpackUint();
-			obj->pushTerm(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case TokenPatternMatchInstanceConst::Method_pushExpression:
-		{
-			RpcSerializer msg;
-			TokenPatternMatchInstanceInterface::JoinOperation p1;
-			std::size_t p2;
-			unsigned int p3;
-			unsigned int p4;
-			p1 = (TokenPatternMatchInstanceInterface::JoinOperation)serializedMsg.unpackByte();
-			p2 = serializedMsg.unpackSize();
-			p3 = serializedMsg.unpackUint();
-			p4 = serializedMsg.unpackUint();
-			obj->pushExpression(p1,p2,p3,p4);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case TokenPatternMatchInstanceConst::Method_pushPattern:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			obj->pushPattern(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case TokenPatternMatchInstanceConst::Method_attachVariable:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			float p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackFloat();
-			obj->attachVariable(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case TokenPatternMatchInstanceConst::Method_definePattern:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			bool p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackBool();
-			obj->definePattern(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case TokenPatternMatchInstanceConst::Method_compile:
-		{
-			RpcSerializer msg;
-			bool p0;
-			analyzer::TokenPatternMatchOptions p1;
-			p1 = serializedMsg.unpackAnalyzerTokenPatternMatchOptions();
-			p0 = obj->compile(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case TokenPatternMatchInstanceConst::Method_createContext:
-		{
-			RpcSerializer msg;
-			TokenPatternMatchContextInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createContext();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-	}
-	break;
-	}
-	case ClassId_TokenPatternMatch:
-	{
-	TokenPatternMatchInterface* obj = getObject<TokenPatternMatchInterface>( classId, objId);
-	switch( (TokenPatternMatchConst::MethodId)methodId)
-	{
-		case TokenPatternMatchConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case TokenPatternMatchConst::Method_getCompileOptions:
-		{
-			RpcSerializer msg;
-			std::vector<std::string> p0;
-			p0 = obj->getCompileOptions();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packString( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case TokenPatternMatchConst::Method_createInstance:
-		{
-			RpcSerializer msg;
-			TokenPatternMatchInstanceInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createInstance();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

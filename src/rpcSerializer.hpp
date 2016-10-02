@@ -36,14 +36,14 @@
 #include "strus/statisticsProcessorInterface.hpp"
 #include "strus/statisticsViewerInterface.hpp"
 #include "strus/analyzer/token.hpp"
-#include "strus/analyzer/idToken.hpp"
+#include "strus/analyzer/patternLexem.hpp"
 #include "strus/analyzer/tokenMarkup.hpp"
-#include "strus/analyzer/tokenPatternMatchStatistics.hpp"
-#include "strus/analyzer/charRegexMatchOptions.hpp"
 #include "strus/analyzer/positionBind.hpp"
-#include "strus/analyzer/tokenPatternMatchOptions.hpp"
+#include "strus/analyzer/patternLexerOptions.hpp"
+#include "strus/analyzer/patternMatcherStatistics.hpp"
+#include "strus/analyzer/patternMatcherOptions.hpp"
+#include "strus/analyzer/patternMatcherResult.hpp"
 #include "strus/analyzer/term.hpp"
-#include "strus/analyzer/tokenPatternMatchResult.hpp"
 #include "strus/analyzer/metaData.hpp"
 #include "strus/analyzer/attribute.hpp"
 #include "strus/analyzer/document.hpp"
@@ -94,12 +94,12 @@ public:
 	void packAnalyzerTerm( const analyzer::Term& val);
 	void packAnalyzerTermVector( const analyzer::TermVector& val);
 	void packAnalyzerToken( const analyzer::Token& val);
-	void packAnalyzerIdToken( const analyzer::IdToken& val);
-	void packAnalyzerCharRegexMatchOptions( const analyzer::CharRegexMatchOptions& val);
-	void packAnalyzerTokenPatternMatchOptions( const analyzer::TokenPatternMatchOptions& val);
+	void packAnalyzerPatternLexem( const analyzer::PatternLexem& val);
+	void packAnalyzerPatternLexerOptions( const analyzer::PatternLexerOptions& val);
+	void packAnalyzerPatternMatcherOptions( const analyzer::PatternMatcherOptions& val);
 	void packAnalyzerTokenMarkup( const analyzer::TokenMarkup& val);
-	void packAnalyzerTokenPatternMatchResult( const analyzer::TokenPatternMatchResult& val);
-	void packAnalyzerTokenPatternMatchStatistics( const analyzer::TokenPatternMatchStatistics& val);
+	void packAnalyzerPatternMatcherResult( const analyzer::PatternMatcherResult& val);
+	void packAnalyzerPatternMatcherStatistics( const analyzer::PatternMatcherStatistics& val);
 	void packSegmenterOptions( const analyzer::SegmenterOptions& opts);
 	void packWeightedDocument( const WeightedDocument& val);
 	void packResultDocument( const ResultDocument& val);
@@ -172,12 +172,12 @@ public:
 	analyzer::Term unpackAnalyzerTerm();
 	analyzer::TermVector unpackAnalyzerTermVector();
 	analyzer::Token unpackAnalyzerToken();
-	analyzer::IdToken unpackAnalyzerIdToken();
-	analyzer::CharRegexMatchOptions unpackAnalyzerCharRegexMatchOptions();
-	analyzer::TokenPatternMatchOptions unpackAnalyzerTokenPatternMatchOptions();
+	analyzer::PatternLexem unpackAnalyzerPatternLexem();
+	analyzer::PatternLexerOptions unpackAnalyzerPatternLexerOptions();
+	analyzer::PatternMatcherOptions unpackAnalyzerPatternMatcherOptions();
 	analyzer::TokenMarkup unpackAnalyzerTokenMarkup();
-	analyzer::TokenPatternMatchResult unpackAnalyzerTokenPatternMatchResult();
-	analyzer::TokenPatternMatchStatistics unpackAnalyzerTokenPatternMatchStatistics();
+	analyzer::PatternMatcherResult unpackAnalyzerPatternMatcherResult();
+	analyzer::PatternMatcherStatistics unpackAnalyzerPatternMatcherStatistics();
 	analyzer::SegmenterOptions unpackSegmenterOptions();
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();

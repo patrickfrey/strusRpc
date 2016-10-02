@@ -16,9 +16,6 @@ enum ClassId
 	ClassId_AggregatorFunction,
 	ClassId_AnalyzerObjectBuilder,
 	ClassId_AttributeReader,
-	ClassId_CharRegexMatchContext,
-	ClassId_CharRegexMatchInstance,
-	ClassId_CharRegexMatch,
 	ClassId_DatabaseBackupCursor,
 	ClassId_DatabaseClient,
 	ClassId_DatabaseCursor,
@@ -36,8 +33,14 @@ enum ClassId
 	ClassId_NormalizerFunctionContext,
 	ClassId_NormalizerFunctionInstance,
 	ClassId_NormalizerFunction,
-	ClassId_PatternMatchProgramInstance,
-	ClassId_PatternMatchProgram,
+	ClassId_PatternLexerContext,
+	ClassId_PatternLexerInstance,
+	ClassId_PatternLexer,
+	ClassId_PatternMatcherContext,
+	ClassId_PatternMatcherInstance,
+	ClassId_PatternMatcher,
+	ClassId_PatternMatcherProgramInstance,
+	ClassId_PatternMatcherProgram,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
 	ClassId_QueryAnalyzer,
@@ -69,9 +72,6 @@ enum ClassId
 	ClassId_TextProcessor,
 	ClassId_TokenMarkupContext,
 	ClassId_TokenMarkupInstance,
-	ClassId_TokenPatternMatchContext,
-	ClassId_TokenPatternMatchInstance,
-	ClassId_TokenPatternMatch,
 	ClassId_TokenizerFunctionContext,
 	ClassId_TokenizerFunctionInstance,
 	ClassId_TokenizerFunction,
@@ -129,41 +129,6 @@ public:
 		Method_skipDoc,
 		Method_getValue,
 		Method_getAttributeNames
-	};
-};
-
-class CharRegexMatchContextConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_match
-	};
-};
-
-class CharRegexMatchInstanceConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_definePattern,
-		Method_defineSymbol,
-		Method_getSymbol,
-		Method_compile,
-		Method_createContext
-	};
-};
-
-class CharRegexMatchConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_getCompileOptions,
-		Method_createInstance
 	};
 };
 
@@ -382,7 +347,82 @@ public:
 	};
 };
 
-class PatternMatchProgramInstanceConst
+class PatternLexerContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_match
+	};
+};
+
+class PatternLexerInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_definePattern,
+		Method_defineSymbol,
+		Method_getSymbol,
+		Method_compile,
+		Method_createContext
+	};
+};
+
+class PatternLexerConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getCompileOptions,
+		Method_createInstance
+	};
+};
+
+class PatternMatcherContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_putInput,
+		Method_fetchResults,
+		Method_getStatistics
+	};
+};
+
+class PatternMatcherInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_defineTermFrequency,
+		Method_pushTerm,
+		Method_pushExpression,
+		Method_pushPattern,
+		Method_attachVariable,
+		Method_definePattern,
+		Method_compile,
+		Method_createContext
+	};
+};
+
+class PatternMatcherConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getCompileOptions,
+		Method_createInstance
+	};
+};
+
+class PatternMatcherProgramInstanceConst
 {
 public:
 	enum MethodId
@@ -390,13 +430,13 @@ public:
 		Method_Destructor,
 		Method_load,
 		Method_compile,
-		Method_getCharRegexMatchInstance,
-		Method_getTokenPatternMatchInstance,
+		Method_getPatternLexerInstance,
+		Method_getPatternMatcherInstance,
 		Method_tokenName
 	};
 };
 
-class PatternMatchProgramConst
+class PatternMatcherProgramConst
 {
 public:
 	enum MethodId
@@ -846,46 +886,6 @@ public:
 	{
 		Method_Destructor,
 		Method_createContext
-	};
-};
-
-class TokenPatternMatchContextConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_putInput,
-		Method_fetchResults,
-		Method_getStatistics
-	};
-};
-
-class TokenPatternMatchInstanceConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_defineTermFrequency,
-		Method_pushTerm,
-		Method_pushExpression,
-		Method_pushPattern,
-		Method_attachVariable,
-		Method_definePattern,
-		Method_compile,
-		Method_createContext
-	};
-};
-
-class TokenPatternMatchConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_getCompileOptions,
-		Method_createInstance
 	};
 };
 

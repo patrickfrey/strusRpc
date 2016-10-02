@@ -808,35 +808,35 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerToken( " . $id . ");";
 	}
-	elsif ($type eq "analyzer::IdToken")
+	elsif ($type eq "analyzer::PatternLexem")
 	{
-		$rt .= "msg.packAnalyzerIdToken( " . $id . ");";
+		$rt .= "msg.packAnalyzerPatternLexem( " . $id . ");";
 	}
 	elsif ($type eq "analyzer::PositionBind")
 	{
 		$rt .= "msg.packByte( " . $id . ");";
 	}
-	elsif ($type eq "analyzer::CharRegexMatchOptions")
+	elsif ($type eq "analyzer::PatternLexerOptions")
 	{
-		$rt .= "msg.packAnalyzerCharRegexMatchOptions( " . $id . ");";
+		$rt .= "msg.packAnalyzerPatternLexerOptions( " . $id . ");";
 	}
-	elsif ($type eq "analyzer::TokenPatternMatchOptions")
+	elsif ($type eq "analyzer::PatternMatcherOptions")
 	{
-		$rt .= "msg.packAnalyzerTokenPatternMatchOptions( " . $id . ");";
+		$rt .= "msg.packAnalyzerPatternMatcherOptions( " . $id . ");";
 	}
 	elsif ($type eq "analyzer::TokenMarkup")
 	{
 		$rt .= "msg.packAnalyzerTokenMarkup( " . $id . ");";
 	}
-	elsif ($type eq "analyzer::TokenPatternMatchResult")
+	elsif ($type eq "analyzer::PatternMatcherResult")
 	{
-		$rt .= "msg.packAnalyzerTokenPatternMatchResult( " . $id . ");";
+		$rt .= "msg.packAnalyzerPatternMatcherResult( " . $id . ");";
 	}
-	elsif ($type eq "analyzer::TokenPatternMatchStatistics")
+	elsif ($type eq "analyzer::PatternMatcherStatistics")
 	{
-		$rt .= "msg.packAnalyzerTokenPatternMatchStatistics( " . $id . ");";
+		$rt .= "msg.packAnalyzerPatternMatcherStatistics( " . $id . ");";
 	}
-	elsif ($type eq "TokenPatternMatchInstanceInterface::JoinOperation")
+	elsif ($type eq "PatternMatcherInstanceInterface::JoinOperation")
 	{
 		$rt .= "msg.packByte( " . $id . ");";
 	}
@@ -1107,37 +1107,37 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerToken();";
 	}
-	elsif ($type eq "analyzer::IdToken")
+	elsif ($type eq "analyzer::PatternLexem")
 	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerIdToken();";
+		$rt .= "$id = serializedMsg.unpackAnalyzerPatternLexem();";
 	}
 	elsif ($type eq "analyzer::PositionBind")
 	{
 		$rt .= "$id = (analyzer::PositionBind)serializedMsg.unpackByte();";
 	}
-	elsif ($type eq "analyzer::CharRegexMatchOptions")
+	elsif ($type eq "analyzer::PatternLexerOptions")
 	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerCharRegexMatchOptions();";
+		$rt .= "$id = serializedMsg.unpackAnalyzerPatternLexerOptions();";
 	}
-	elsif ($type eq "analyzer::TokenPatternMatchOptions")
+	elsif ($type eq "analyzer::PatternMatcherOptions")
 	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerTokenPatternMatchOptions();";
+		$rt .= "$id = serializedMsg.unpackAnalyzerPatternMatcherOptions();";
 	}
 	elsif ($type eq "analyzer::TokenMarkup")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerTokenMarkup();";
 	}
-	elsif ($type eq "analyzer::TokenPatternMatchResult")
+	elsif ($type eq "analyzer::PatternMatcherResult")
 	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerTokenPatternMatchResult();";
+		$rt .= "$id = serializedMsg.unpackAnalyzerPatternMatcherResult();";
 	}
-	elsif ($type eq "analyzer::TokenPatternMatchStatistics")
+	elsif ($type eq "analyzer::PatternMatcherStatistics")
 	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerTokenPatternMatchStatistics();";
+		$rt .= "$id = serializedMsg.unpackAnalyzerPatternMatcherStatistics();";
 	}
-	elsif ($type eq "TokenPatternMatchInstanceInterface::JoinOperation")
+	elsif ($type eq "PatternMatcherInstanceInterface::JoinOperation")
 	{
-		$rt .= "$id = (TokenPatternMatchInstanceInterface::JoinOperation)serializedMsg.unpackByte();";
+		$rt .= "$id = (PatternMatcherInstanceInterface::JoinOperation)serializedMsg.unpackByte();";
 	}
 	elsif ($type eq "analyzer::Term")
 	{
