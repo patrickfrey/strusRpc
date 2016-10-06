@@ -39,8 +39,6 @@ enum ClassId
 	ClassId_PatternMatcherContext,
 	ClassId_PatternMatcherInstance,
 	ClassId_PatternMatcher,
-	ClassId_PatternMatcherProgramInstance,
-	ClassId_PatternMatcherProgram,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
 	ClassId_QueryAnalyzer,
@@ -421,30 +419,6 @@ public:
 		Method_getCompileOptions,
 		Method_createInstance,
 		Method_getDescription
-	};
-};
-
-class PatternMatcherProgramInstanceConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_load,
-		Method_compile,
-		Method_getPatternLexerInstance,
-		Method_getPatternMatcherInstance,
-		Method_tokenName
-	};
-};
-
-class PatternMatcherProgramConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_createInstance
 	};
 };
 

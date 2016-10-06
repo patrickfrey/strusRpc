@@ -24,8 +24,6 @@
 #include "strus/patternMatcherContextInterface.hpp"
 #include "strus/patternMatcherInstanceInterface.hpp"
 #include "strus/patternMatcherInterface.hpp"
-#include "strus/patternMatcherProgramInstanceInterface.hpp"
-#include "strus/patternMatcherProgramInterface.hpp"
 #include "strus/queryAnalyzerInterface.hpp"
 #include "strus/segmenterContextInterface.hpp"
 #include "strus/segmenterInstanceInterface.hpp"
@@ -528,38 +526,6 @@ public:
 	virtual std::vector<std::string> getCompileOptions( ) const;
 	virtual PatternMatcherInstanceInterface* createInstance( ) const;
 	virtual const char* getDescription( ) const;
-};
-
-class PatternMatcherProgramInstanceImpl
-		:public RpcInterfaceStub
-		,public strus::PatternMatcherProgramInstanceInterface
-		,public strus::PatternMatcherProgramInstanceConst
-{
-public:
-	virtual ~PatternMatcherProgramInstanceImpl();
-
-	PatternMatcherProgramInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_PatternMatcherProgramInstance, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual bool load( const std::string& p1);
-	virtual bool compile( );
-	virtual const PatternLexerInstanceInterface* getPatternLexerInstance( ) const;
-	virtual const PatternMatcherInstanceInterface* getPatternMatcherInstance( ) const;
-	virtual const char* tokenName( unsigned int p1) const;
-};
-
-class PatternMatcherProgramImpl
-		:public RpcInterfaceStub
-		,public strus::PatternMatcherProgramInterface
-		,public strus::PatternMatcherProgramConst
-{
-public:
-	virtual ~PatternMatcherProgramImpl();
-
-	PatternMatcherProgramImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_PatternMatcherProgram, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual PatternMatcherProgramInstanceInterface* createInstance( ) const;
 };
 
 class PostingIteratorImpl
@@ -1204,7 +1170,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addSampleVector( const std::vector<double>& p1);
-	virtual void finalize( );
+	virtual bool finalize( );
 	virtual bool store( );
 };
 
