@@ -1201,6 +1201,7 @@ public:
 	VectorSpaceModelImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModel, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual bool destroyModel( const std::string& p1) const;
 	virtual VectorSpaceModelInstanceInterface* createInstance( const std::string& p1) const;
 	virtual VectorSpaceModelBuilderInterface* createBuilder( const std::string& p1) const;
 };
