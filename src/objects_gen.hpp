@@ -1169,7 +1169,7 @@ public:
 	VectorSpaceModelBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addSampleVector( const std::vector<double>& p1);
+	virtual void addVector( const std::vector<double>& p1);
 	virtual bool finalize( );
 	virtual bool store( );
 };

@@ -6926,13 +6926,13 @@ VectorSpaceModelBuilderImpl::~VectorSpaceModelBuilderImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void VectorSpaceModelBuilderImpl::addSampleVector( const std::vector<double>& p1)
+void VectorSpaceModelBuilderImpl::addVector( const std::vector<double>& p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_addSampleVector);
+	msg.packByte( Method_addVector);
 	msg.packSize( p1.size());
 	for (unsigned int ii=0; ii < p1.size(); ++ii) {
 		msg.packDouble( p1[ii]);
@@ -6940,10 +6940,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelBuilderImpl::addSampleVector");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelBuilderImpl::addVector");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelBuilderImpl::addSampleVector", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelBuilderImpl::addVector", err.what());
 	return void();
 }
 }

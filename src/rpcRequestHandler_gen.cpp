@@ -6274,7 +6274,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case VectorSpaceModelBuilderConst::Method_addSampleVector:
+		case VectorSpaceModelBuilderConst::Method_addVector:
 		{
 			RpcSerializer msg;
 			std::vector<double> p1;
@@ -6283,7 +6283,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				double ee = serializedMsg.unpackDouble();
 				p1.push_back( ee);
 			}
-			obj->addSampleVector(p1);
+			obj->addVector(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
