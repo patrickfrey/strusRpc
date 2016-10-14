@@ -6367,6 +6367,50 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case VectorSpaceModelInstanceConst::Method_mapIndexToFeatures:
+		{
+			RpcSerializer msg;
+			std::vector<unsigned int> p0;
+			unsigned int p1;
+			p1 = serializedMsg.unpackUint();
+			p0 = obj->mapIndexToFeatures(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packUint( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelInstanceConst::Method_mapFeatureToIndices:
+		{
+			RpcSerializer msg;
+			std::vector<unsigned int> p0;
+			unsigned int p1;
+			p1 = serializedMsg.unpackUint();
+			p0 = obj->mapFeatureToIndices(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packUint( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
 		case VectorSpaceModelInstanceConst::Method_nofFeatures:
 		{
 			RpcSerializer msg;

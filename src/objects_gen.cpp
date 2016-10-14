@@ -7033,6 +7033,62 @@ try
 }
 }
 
+std::vector<unsigned int> VectorSpaceModelInstanceImpl::mapIndexToFeatures( unsigned int p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_mapIndexToFeatures);
+	msg.packUint( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<unsigned int> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		unsigned int elem_p0 = serializedMsg.unpackUint();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::mapIndexToFeatures");
+	return std::vector<unsigned int>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::mapIndexToFeatures", err.what());
+	return std::vector<unsigned int>();
+}
+}
+
+std::vector<unsigned int> VectorSpaceModelInstanceImpl::mapFeatureToIndices( unsigned int p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_mapFeatureToIndices);
+	msg.packUint( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<unsigned int> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		unsigned int elem_p0 = serializedMsg.unpackUint();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::mapFeatureToIndices");
+	return std::vector<unsigned int>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::mapFeatureToIndices", err.what());
+	return std::vector<unsigned int>();
+}
+}
+
 unsigned int VectorSpaceModelInstanceImpl::nofFeatures( ) const
 {
 try

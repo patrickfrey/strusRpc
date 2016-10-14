@@ -931,6 +931,8 @@ public:
 	{
 		Method_Destructor,
 		Method_mapVectorToFeatures,
+		Method_mapIndexToFeatures,
+		Method_mapFeatureToIndices,
 		Method_nofFeatures,
 		Method_config
 	};

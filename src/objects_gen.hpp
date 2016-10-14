@@ -1186,6 +1186,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual std::vector<unsigned int> mapVectorToFeatures( const std::vector<double>& p1) const;
+	virtual std::vector<unsigned int> mapIndexToFeatures( unsigned int p1) const;
+	virtual std::vector<unsigned int> mapFeatureToIndices( unsigned int p1) const;
 	virtual unsigned int nofFeatures( ) const;
 	virtual std::string config( ) const;
 };
