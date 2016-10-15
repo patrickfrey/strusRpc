@@ -6277,13 +6277,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case VectorSpaceModelBuilderConst::Method_addVector:
 		{
 			RpcSerializer msg;
-			std::vector<double> p1;
-			std::size_t n1 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n1; ++ii) {
+			std::string p1;
+			std::vector<double> p2;
+			p1 = serializedMsg.unpackString();
+			std::size_t n2 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n2; ++ii) {
 				double ee = serializedMsg.unpackDouble();
-				p1.push_back( ee);
+				p2.push_back( ee);
 			}
-			obj->addVector(p1);
+			obj->addVector(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6425,6 +6427,42 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packUint( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelInstanceConst::Method_nofSamples:
+		{
+			RpcSerializer msg;
+			unsigned int p0;
+			p0 = obj->nofSamples();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packUint( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelInstanceConst::Method_sampleName:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			unsigned int p1;
+			p1 = serializedMsg.unpackUint();
+			p0 = obj->sampleName(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

@@ -934,6 +934,8 @@ public:
 		Method_mapIndexToFeatures,
 		Method_mapFeatureToIndices,
 		Method_nofFeatures,
+		Method_nofSamples,
+		Method_sampleName,
 		Method_config
 	};
 };
