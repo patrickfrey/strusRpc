@@ -918,7 +918,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_addVector,
+		Method_addSampleVector,
 		Method_finalize,
 		Method_store
 	};
@@ -931,8 +931,9 @@ public:
 	{
 		Method_Destructor,
 		Method_mapVectorToFeatures,
-		Method_mapIndexToFeatures,
-		Method_mapFeatureToIndices,
+		Method_sampleFeatures,
+		Method_sampleVector,
+		Method_featureSamples,
 		Method_nofFeatures,
 		Method_nofSamples,
 		Method_sampleName,

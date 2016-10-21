@@ -6274,7 +6274,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case VectorSpaceModelBuilderConst::Method_addVector:
+		case VectorSpaceModelBuilderConst::Method_addSampleVector:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -6285,7 +6285,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				double ee = serializedMsg.unpackDouble();
 				p2.push_back( ee);
 			}
-			obj->addVector(p1,p2);
+			obj->addSampleVector(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6369,13 +6369,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelInstanceConst::Method_mapIndexToFeatures:
+		case VectorSpaceModelInstanceConst::Method_sampleFeatures:
 		{
 			RpcSerializer msg;
 			std::vector<unsigned int> p0;
 			unsigned int p1;
 			p1 = serializedMsg.unpackUint();
-			p0 = obj->mapIndexToFeatures(p1);
+			p0 = obj->sampleFeatures(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6391,13 +6391,35 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelInstanceConst::Method_mapFeatureToIndices:
+		case VectorSpaceModelInstanceConst::Method_sampleVector:
+		{
+			RpcSerializer msg;
+			std::vector<double> p0;
+			unsigned int p1;
+			p1 = serializedMsg.unpackUint();
+			p0 = obj->sampleVector(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packDouble( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelInstanceConst::Method_featureSamples:
 		{
 			RpcSerializer msg;
 			std::vector<unsigned int> p0;
 			unsigned int p1;
 			p1 = serializedMsg.unpackUint();
-			p0 = obj->mapFeatureToIndices(p1);
+			p0 = obj->featureSamples(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
