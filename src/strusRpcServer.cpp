@@ -235,15 +235,16 @@ enum
 	STRUS_ERR_SIGNALEV=3
 };
 
-static void createStorageIfNotExist( const std::string& cfg)
+static void createStorageIfNotExist( const std::string& config)
 {
-	const strus::DatabaseInterface* dbi = g_storageObjectBuilder->getDatabase( cfg);
+	std::string configstr( config);
+	std::string dbname;
+	(void)strus::extractStringFromConfigString( dbname, configstr, "database", errorhnd);
+	if (errorhnd->hasError()) throw strus::runtime_error(_TXT("cannot evaluate database: %s"), errorhnd->fetchError());
+
+	const strus::DatabaseInterface* dbi = g_storageObjectBuilder->getDatabase( dbname);
 	if (dbi->exists( cfg)) return;
 	const strus::StorageInterface* sti = g_storageObjectBuilder->getStorage();
-
-	std::string storagecfg( cfg);
-	std::string dbname;
-	(void)strus::extractStringFromConfigString( dbname, storagecfg, "database", g_errorBuffer);
 
 	//... In storage_cfg is now the pure storage configuration without the database settings
 	sti->createStorage( storagecfg, dbi);
