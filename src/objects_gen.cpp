@@ -5565,7 +5565,7 @@ StorageImpl::~StorageImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-StorageClientInterface* StorageImpl::createClient( const std::string& p1, DatabaseClientInterface* p2, const StatisticsProcessorInterface* p3) const
+StorageClientInterface* StorageImpl::createClient( const std::string& p1, const DatabaseInterface* p2, const StatisticsProcessorInterface* p3) const
 {
 try
 {
@@ -5574,7 +5574,7 @@ try
 	msg.packByte( Method_createClient);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "DatabaseClient");
+	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Database");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
 	if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "StatisticsProcessor");
@@ -5585,9 +5585,6 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	StorageClientInterface* p0 = new StorageClientImpl( objId_0, ctx(), false, errorhnd());
-	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
-	done_2->release();
-	delete p2;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageImpl::createClient");
@@ -5598,7 +5595,7 @@ try
 }
 }
 
-bool StorageImpl::createStorage( const std::string& p1, DatabaseClientInterface* p2) const
+bool StorageImpl::createStorage( const std::string& p1, const DatabaseInterface* p2) const
 {
 try
 {
@@ -5607,7 +5604,7 @@ try
 	msg.packByte( Method_createStorage);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "DatabaseClient");
+	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Database");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
@@ -5624,25 +5621,23 @@ try
 }
 }
 
-StorageAlterMetaDataTableInterface* StorageImpl::createAlterMetaDataTable( DatabaseClientInterface* p1) const
+StorageAlterMetaDataTableInterface* StorageImpl::createAlterMetaDataTable( const std::string& p1, const DatabaseInterface* p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createAlterMetaDataTable);
-	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "DatabaseClient");
-	msg.packObject( impl_1->classId(), impl_1->objId());
+	msg.packString( p1);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Database");
+	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StorageAlterMetaDataTable;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	StorageAlterMetaDataTableInterface* p0 = new StorageAlterMetaDataTableImpl( objId_0, ctx(), false, errorhnd());
-	RpcInterfaceStub* done_1 = dynamic_cast<RpcInterfaceStub*>(p1);
-	done_1->release();
-	delete p1;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageImpl::createAlterMetaDataTable");

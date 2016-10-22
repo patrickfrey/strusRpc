@@ -241,35 +241,16 @@ static void createStorageIfNotExist( const std::string& cfg)
 	if (dbi->exists( cfg)) return;
 	const strus::StorageInterface* sti = g_storageObjectBuilder->getStorage();
 
-	std::string databasecfg( cfg);
+	std::string storagecfg( cfg);
 	std::string dbname;
-	(void)strus::extractStringFromConfigString( dbname, databasecfg, "database", g_errorBuffer);
-	std::string storagecfg( databasecfg);
+	(void)strus::extractStringFromConfigString( dbname, storagecfg, "database", g_errorBuffer);
 
-	strus::removeKeysFromConfigString(
-			databasecfg,
-			sti->getConfigParameters(
-				strus::StorageInterface::CmdCreateClient), g_errorBuffer);
-	//... In database_cfg is now the pure database configuration without the storage settings
-
-	strus::removeKeysFromConfigString(
-			storagecfg,
-			dbi->getConfigParameters(
-				strus::DatabaseInterface::CmdCreateClient), g_errorBuffer);
 	//... In storage_cfg is now the pure storage configuration without the database settings
+	sti->createStorage( storagecfg, dbi);
 	if (g_errorBuffer->hasError())
 	{
 		throw strus::runtime_error(_TXT("error creating storage"));
 	}
-	dbi->createDatabase( databasecfg);
-
-	std::auto_ptr<strus::DatabaseClientInterface>
-		database( dbi->createClient( databasecfg));
-	if (!database.get())
-	{
-		throw strus::runtime_error(_TXT("error creating storage"));
-	}
-	sti->createStorage( storagecfg, database.get());
 }
 
 

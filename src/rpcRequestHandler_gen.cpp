@@ -5022,13 +5022,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			StorageClientInterface* p0;
 			std::string p1;
-			DatabaseClientInterface* p2;
+			const DatabaseInterface* p2;
 			const StatisticsProcessorInterface* p3;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_DatabaseClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p2 = getObject<DatabaseClientInterface>( classId_2, objId_2);
+			if (classId_2 != ClassId_Database) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
 			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
@@ -5057,12 +5057,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			bool p0;
 			std::string p1;
-			DatabaseClientInterface* p2;
+			const DatabaseInterface* p2;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_DatabaseClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p2 = getObject<DatabaseClientInterface>( classId_2, objId_2);
+			if (classId_2 != ClassId_Database) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
 			p0 = obj->createStorage(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -5080,15 +5080,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			StorageAlterMetaDataTableInterface* p0;
-			DatabaseClientInterface* p1;
-			unsigned char classId_1; unsigned int objId_1;
-			serializedMsg.unpackObject( classId_1, objId_1);
-			if (classId_1 != ClassId_DatabaseClient) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p1 = getObject<DatabaseClientInterface>( classId_1, objId_1);
-			markObjectToRelease( classId_1, objId_1);
+			std::string p1;
+			const DatabaseInterface* p2;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_2; unsigned int objId_2;
+			serializedMsg.unpackObject( classId_2, objId_2);
+			if (classId_2 != ClassId_Database) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
+			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createAlterMetaDataTable(p1);
+			p0 = obj->createAlterMetaDataTable(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

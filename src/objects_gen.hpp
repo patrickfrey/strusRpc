@@ -949,9 +949,9 @@ public:
 	StorageImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Storage, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual StorageClientInterface* createClient( const std::string& p1, DatabaseClientInterface* p2, const StatisticsProcessorInterface* p3) const;
-	virtual bool createStorage( const std::string& p1, DatabaseClientInterface* p2) const;
-	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( DatabaseClientInterface* p1) const;
+	virtual StorageClientInterface* createClient( const std::string& p1, const DatabaseInterface* p2, const StatisticsProcessorInterface* p3) const;
+	virtual bool createStorage( const std::string& p1, const DatabaseInterface* p2) const;
+	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual const char* getConfigDescription( const StorageInterface::ConfigType& p1) const;
 	virtual const char** getConfigParameters( const StorageInterface::ConfigType& p1) const;
 };
