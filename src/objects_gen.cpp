@@ -6949,6 +6949,28 @@ try
 }
 }
 
+bool VectorSpaceModelBuilderImpl::commit( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_commit);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelBuilderImpl::commit");
+	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelBuilderImpl::commit", err.what());
+	return false;
+}
+}
+
 bool VectorSpaceModelBuilderImpl::finalize( )
 {
 try
@@ -6971,28 +6993,6 @@ try
 }
 }
 
-bool VectorSpaceModelBuilderImpl::store( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_store);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelBuilderImpl::store");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelBuilderImpl::store", err.what());
-	return false;
-}
-}
-
 VectorSpaceModelInstanceImpl::~VectorSpaceModelInstanceImpl()
 {
 	if (isConst()) return;
@@ -7003,7 +7003,7 @@ VectorSpaceModelInstanceImpl::~VectorSpaceModelInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::vector<unsigned int> VectorSpaceModelInstanceImpl::mapVectorToFeatures( const std::vector<double>& p1) const
+std::vector<Index> VectorSpaceModelInstanceImpl::mapVectorToFeatures( const std::vector<double>& p1) const
 {
 try
 {
@@ -7018,58 +7018,58 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::vector<unsigned int> p0;
+	std::vector<Index> p0;
 	std::size_t n0 = serializedMsg.unpackSize();
 	for (std::size_t ii=0; ii < n0; ++ii) {
-		unsigned int elem_p0 = serializedMsg.unpackUint();
+		Index elem_p0 = serializedMsg.unpackIndex();
 		p0.push_back( elem_p0);
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::mapVectorToFeatures");
-	return std::vector<unsigned int>();
+	return std::vector<Index>();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::mapVectorToFeatures", err.what());
-	return std::vector<unsigned int>();
+	return std::vector<Index>();
 }
 }
 
-std::vector<unsigned int> VectorSpaceModelInstanceImpl::sampleFeatures( unsigned int p1) const
+std::vector<Index> VectorSpaceModelInstanceImpl::sampleFeatures( const Index& p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_sampleFeatures);
-	msg.packUint( p1);
+	msg.packIndex( p1);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::vector<unsigned int> p0;
+	std::vector<Index> p0;
 	std::size_t n0 = serializedMsg.unpackSize();
 	for (std::size_t ii=0; ii < n0; ++ii) {
-		unsigned int elem_p0 = serializedMsg.unpackUint();
+		Index elem_p0 = serializedMsg.unpackIndex();
 		p0.push_back( elem_p0);
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::sampleFeatures");
-	return std::vector<unsigned int>();
+	return std::vector<Index>();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::sampleFeatures", err.what());
-	return std::vector<unsigned int>();
+	return std::vector<Index>();
 }
 }
 
-std::vector<double> VectorSpaceModelInstanceImpl::sampleVector( unsigned int p1) const
+std::vector<double> VectorSpaceModelInstanceImpl::sampleVector( const Index& p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_sampleVector);
-	msg.packUint( p1);
+	msg.packIndex( p1);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -7090,31 +7090,31 @@ try
 }
 }
 
-std::vector<unsigned int> VectorSpaceModelInstanceImpl::featureSamples( unsigned int p1) const
+std::vector<Index> VectorSpaceModelInstanceImpl::featureSamples( const Index& p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_featureSamples);
-	msg.packUint( p1);
+	msg.packIndex( p1);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::vector<unsigned int> p0;
+	std::vector<Index> p0;
 	std::size_t n0 = serializedMsg.unpackSize();
 	for (std::size_t ii=0; ii < n0; ++ii) {
-		unsigned int elem_p0 = serializedMsg.unpackUint();
+		Index elem_p0 = serializedMsg.unpackIndex();
 		p0.push_back( elem_p0);
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::featureSamples");
-	return std::vector<unsigned int>();
+	return std::vector<Index>();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::featureSamples", err.what());
-	return std::vector<unsigned int>();
+	return std::vector<Index>();
 }
 }
 
@@ -7162,14 +7162,14 @@ try
 }
 }
 
-std::string VectorSpaceModelInstanceImpl::sampleName( unsigned int p1) const
+std::string VectorSpaceModelInstanceImpl::sampleName( const Index& p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_sampleName);
-	msg.packUint( p1);
+	msg.packIndex( p1);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -7217,37 +7217,17 @@ VectorSpaceModelImpl::~VectorSpaceModelImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-bool VectorSpaceModelImpl::destroyModel( const std::string& p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_destroyModel);
-	msg.packString( p1);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelImpl::destroyModel");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelImpl::destroyModel", err.what());
-	return false;
-}
-}
-
-VectorSpaceModelInstanceInterface* VectorSpaceModelImpl::createInstance( const std::string& p1) const
+VectorSpaceModelInstanceInterface* VectorSpaceModelImpl::createInstance( const DatabaseInterface* p1, const std::string& p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
-	msg.packString( p1);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Database");
+	msg.packObject( impl_1->classId(), impl_1->objId());
+	msg.packString( p2);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_VectorSpaceModelInstance;
 	msg.packObject( classId_0, objId_0);
@@ -7264,14 +7244,17 @@ try
 }
 }
 
-VectorSpaceModelBuilderInterface* VectorSpaceModelImpl::createBuilder( const std::string& p1) const
+VectorSpaceModelBuilderInterface* VectorSpaceModelImpl::createBuilder( const DatabaseInterface* p1, const std::string& p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createBuilder);
-	msg.packString( p1);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Database");
+	msg.packObject( impl_1->classId(), impl_1->objId());
+	msg.packString( p2);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_VectorSpaceModelBuilder;
 	msg.packObject( classId_0, objId_0);

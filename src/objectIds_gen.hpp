@@ -919,8 +919,8 @@ public:
 	{
 		Method_Destructor,
 		Method_addSampleVector,
-		Method_finalize,
-		Method_store
+		Method_commit,
+		Method_finalize
 	};
 };
 
@@ -947,7 +947,6 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_destroyModel,
 		Method_createInstance,
 		Method_createBuilder
 	};

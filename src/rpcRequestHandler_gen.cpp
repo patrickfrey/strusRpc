@@ -6296,11 +6296,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case VectorSpaceModelBuilderConst::Method_finalize:
+		case VectorSpaceModelBuilderConst::Method_commit:
 		{
 			RpcSerializer msg;
 			bool p0;
-			p0 = obj->finalize();
+			p0 = obj->commit();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6313,11 +6313,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelBuilderConst::Method_store:
+		case VectorSpaceModelBuilderConst::Method_finalize:
 		{
 			RpcSerializer msg;
 			bool p0;
-			p0 = obj->store();
+			p0 = obj->finalize();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6346,7 +6346,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case VectorSpaceModelInstanceConst::Method_mapVectorToFeatures:
 		{
 			RpcSerializer msg;
-			std::vector<unsigned int> p0;
+			std::vector<Index> p0;
 			std::vector<double> p1;
 			std::size_t n1 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n1; ++ii) {
@@ -6364,7 +6364,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packUint( p0[ii]);
+				msg.packIndex( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();
@@ -6372,9 +6372,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case VectorSpaceModelInstanceConst::Method_sampleFeatures:
 		{
 			RpcSerializer msg;
-			std::vector<unsigned int> p0;
-			unsigned int p1;
-			p1 = serializedMsg.unpackUint();
+			std::vector<Index> p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
 			p0 = obj->sampleFeatures(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -6386,7 +6386,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packUint( p0[ii]);
+				msg.packIndex( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();
@@ -6395,8 +6395,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::vector<double> p0;
-			unsigned int p1;
-			p1 = serializedMsg.unpackUint();
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
 			p0 = obj->sampleVector(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -6416,9 +6416,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case VectorSpaceModelInstanceConst::Method_featureSamples:
 		{
 			RpcSerializer msg;
-			std::vector<unsigned int> p0;
-			unsigned int p1;
-			p1 = serializedMsg.unpackUint();
+			std::vector<Index> p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
 			p0 = obj->featureSamples(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -6430,7 +6430,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packUint( p0[ii]);
+				msg.packIndex( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();
@@ -6473,8 +6473,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p0;
-			unsigned int p1;
-			p1 = serializedMsg.unpackUint();
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
 			p0 = obj->sampleName(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -6518,34 +6518,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case VectorSpaceModelConst::Method_destroyModel:
-		{
-			RpcSerializer msg;
-			bool p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			p0 = obj->destroyModel(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
 		case VectorSpaceModelConst::Method_createInstance:
 		{
 			RpcSerializer msg;
 			VectorSpaceModelInstanceInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
+			const DatabaseInterface* p1;
+			std::string p2;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_Database) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<DatabaseInterface>( classId_1, objId_1);
+			p2 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createInstance(p1);
+			p0 = obj->createInstance(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6562,11 +6548,16 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			VectorSpaceModelBuilderInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
+			const DatabaseInterface* p1;
+			std::string p2;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_Database) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<DatabaseInterface>( classId_1, objId_1);
+			p2 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createBuilder(p1);
+			p0 = obj->createBuilder(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
