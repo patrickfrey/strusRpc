@@ -1169,7 +1169,7 @@ public:
 	VectorSpaceModelBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addSampleVector( const std::string& p1, const std::vector<double>& p2);
+	virtual void addFeature( const std::string& p1, const std::vector<double>& p2);
 	virtual bool commit( );
 	virtual bool finalize( );
 };
@@ -1185,13 +1185,13 @@ public:
 	VectorSpaceModelInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual std::vector<Index> mapVectorToFeatures( const std::vector<double>& p1) const;
-	virtual std::vector<Index> sampleFeatures( const Index& p1) const;
-	virtual std::vector<double> sampleVector( const Index& p1) const;
-	virtual std::vector<Index> featureSamples( const Index& p1) const;
+	virtual std::vector<Index> mapVectorToConcepts( const std::vector<double>& p1) const;
+	virtual std::vector<Index> featureConcepts( const Index& p1) const;
+	virtual std::vector<double> featureVector( const Index& p1) const;
+	virtual std::string featureName( const Index& p1) const;
+	virtual std::vector<Index> conceptFeatures( const Index& p1) const;
+	virtual unsigned int nofConcepts( ) const;
 	virtual unsigned int nofFeatures( ) const;
-	virtual unsigned int nofSamples( ) const;
-	virtual std::string sampleName( const Index& p1) const;
 	virtual std::string config( ) const;
 };
 

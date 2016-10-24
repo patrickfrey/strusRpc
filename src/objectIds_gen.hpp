@@ -918,7 +918,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_addSampleVector,
+		Method_addFeature,
 		Method_commit,
 		Method_finalize
 	};
@@ -930,13 +930,13 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_mapVectorToFeatures,
-		Method_sampleFeatures,
-		Method_sampleVector,
-		Method_featureSamples,
+		Method_mapVectorToConcepts,
+		Method_featureConcepts,
+		Method_featureVector,
+		Method_featureName,
+		Method_conceptFeatures,
+		Method_nofConcepts,
 		Method_nofFeatures,
-		Method_nofSamples,
-		Method_sampleName,
 		Method_config
 	};
 };
