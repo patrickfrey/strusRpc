@@ -7212,7 +7212,7 @@ VectorSpaceModelImpl::~VectorSpaceModelImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-bool VectorSpaceModelImpl::createRepository( const std::string& p1, const DatabaseInterface* p2)
+bool VectorSpaceModelImpl::createRepository( const std::string& p1, const DatabaseInterface* p2) const
 {
 try
 {
@@ -7238,7 +7238,7 @@ try
 }
 }
 
-bool VectorSpaceModelImpl::resetRepository( const std::string& p1, const DatabaseInterface* p2)
+bool VectorSpaceModelImpl::resetRepository( const std::string& p1, const DatabaseInterface* p2) const
 {
 try
 {
