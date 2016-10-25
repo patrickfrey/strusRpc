@@ -1206,8 +1206,8 @@ public:
 	VectorSpaceModelImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModel, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual VectorSpaceModelInstanceInterface* createInstance( const DatabaseInterface* p1, const std::string& p2) const;
-	virtual VectorSpaceModelBuilderInterface* createBuilder( const DatabaseInterface* p1, const std::string& p2) const;
+	virtual VectorSpaceModelInstanceInterface* createInstance( const std::string& p1, const DatabaseInterface* p2) const;
+	virtual VectorSpaceModelBuilderInterface* createBuilder( const std::string& p1, const DatabaseInterface* p2) const;
 };
 
 class WeightingFunctionContextImpl

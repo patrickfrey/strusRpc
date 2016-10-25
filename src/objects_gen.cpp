@@ -7212,17 +7212,17 @@ VectorSpaceModelImpl::~VectorSpaceModelImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-VectorSpaceModelInstanceInterface* VectorSpaceModelImpl::createInstance( const DatabaseInterface* p1, const std::string& p2) const
+VectorSpaceModelInstanceInterface* VectorSpaceModelImpl::createInstance( const std::string& p1, const DatabaseInterface* p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createInstance);
-	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Database");
-	msg.packObject( impl_1->classId(), impl_1->objId());
-	msg.packString( p2);
+	msg.packString( p1);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Database");
+	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_VectorSpaceModelInstance;
 	msg.packObject( classId_0, objId_0);
@@ -7239,17 +7239,17 @@ try
 }
 }
 
-VectorSpaceModelBuilderInterface* VectorSpaceModelImpl::createBuilder( const DatabaseInterface* p1, const std::string& p2) const
+VectorSpaceModelBuilderInterface* VectorSpaceModelImpl::createBuilder( const std::string& p1, const DatabaseInterface* p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createBuilder);
-	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Database");
-	msg.packObject( impl_1->classId(), impl_1->objId());
-	msg.packString( p2);
+	msg.packString( p1);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Database");
+	msg.packObject( impl_2->classId(), impl_2->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_VectorSpaceModelBuilder;
 	msg.packObject( classId_0, objId_0);
