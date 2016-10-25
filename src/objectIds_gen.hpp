@@ -947,6 +947,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_createRepository,
+		Method_resetRepository,
 		Method_createInstance,
 		Method_createBuilder
 	};
