@@ -175,6 +175,7 @@ public:
 	virtual void writeImm( const char* p1, std::size_t p2, const char* p3, std::size_t p4);
 	virtual void removeImm( const char* p1, std::size_t p2);
 	virtual bool readValue( const char* p1, std::size_t p2, std::string& p3, const DatabaseOptions& p4) const;
+	virtual std::string config( ) const;
 };
 
 class DatabaseCursorImpl
@@ -859,6 +860,7 @@ public:
 	StorageClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageClient, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual std::string config( ) const;
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2) const;
 	virtual PostingIteratorInterface* createBrowsePostingIterator( const MetaDataRestrictionInterface* p1, const Index& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;

@@ -524,6 +524,28 @@ try
 }
 }
 
+std::string DatabaseClientImpl::config( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_config);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseClientImpl::config");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseClientImpl::config", err.what());
+	return std::string();
+}
+}
+
 DatabaseCursorImpl::~DatabaseCursorImpl()
 {
 	if (isConst()) return;
@@ -4693,6 +4715,28 @@ StorageClientImpl::~StorageClientImpl()
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+}
+
+std::string StorageClientImpl::config( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_config);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::config");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::config", err.what());
+	return std::string();
+}
 }
 
 PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const std::string& p1, const std::string& p2) const

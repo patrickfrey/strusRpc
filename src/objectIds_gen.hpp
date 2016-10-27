@@ -151,7 +151,8 @@ public:
 		Method_createBackupCursor,
 		Method_writeImm,
 		Method_removeImm,
-		Method_readValue
+		Method_readValue,
+		Method_config
 	};
 };
 
@@ -676,6 +677,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_config,
 		Method_createTermPostingIterator,
 		Method_createBrowsePostingIterator,
 		Method_createForwardIterator,
