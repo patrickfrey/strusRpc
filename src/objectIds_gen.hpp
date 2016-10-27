@@ -936,6 +936,7 @@ public:
 		Method_featureConcepts,
 		Method_featureVector,
 		Method_featureName,
+		Method_featureIndex,
 		Method_conceptFeatures,
 		Method_nofConcepts,
 		Method_nofFeatures,
