@@ -1192,6 +1192,8 @@ public:
 	virtual std::vector<double> featureVector( const Index& p1) const;
 	virtual std::string featureName( const Index& p1) const;
 	virtual Index featureIndex( const std::string& p1) const;
+	virtual std::vector<std::string> attributes( const std::string& p1, const Index& p2) const;
+	virtual std::vector<std::string> attributeNames( ) const;
 	virtual std::vector<Index> conceptFeatures( const Index& p1) const;
 	virtual unsigned int nofConcepts( ) const;
 	virtual unsigned int nofFeatures( ) const;
