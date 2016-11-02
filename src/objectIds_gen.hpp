@@ -932,6 +932,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_preload,
 		Method_mapVectorToConcepts,
 		Method_featureConcepts,
 		Method_featureVector,

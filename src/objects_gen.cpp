@@ -7042,6 +7042,24 @@ VectorSpaceModelInstanceImpl::~VectorSpaceModelInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+void VectorSpaceModelInstanceImpl::preload( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_preload);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::preload");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::preload", err.what());
+	return void();
+}
+}
+
 std::vector<Index> VectorSpaceModelInstanceImpl::mapVectorToConcepts( const std::vector<double>& p1) const
 {
 try

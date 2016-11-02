@@ -6379,6 +6379,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case VectorSpaceModelInstanceConst::Method_preload:
+		{
+			RpcSerializer msg;
+			obj->preload();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case VectorSpaceModelInstanceConst::Method_mapVectorToConcepts:
 		{
 			RpcSerializer msg;

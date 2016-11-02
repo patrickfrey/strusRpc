@@ -1187,6 +1187,7 @@ public:
 	VectorSpaceModelInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelInstance, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual void preload( );
 	virtual std::vector<Index> mapVectorToConcepts( const std::vector<double>& p1) const;
 	virtual std::vector<Index> featureConcepts( const Index& p1) const;
 	virtual std::vector<double> featureVector( const Index& p1) const;
