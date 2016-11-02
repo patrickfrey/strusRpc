@@ -75,6 +75,7 @@ enum ClassId
 	ClassId_TokenizerFunction,
 	ClassId_ValueIterator,
 	ClassId_VectorSpaceModelBuilder,
+	ClassId_VectorSpaceModelDump,
 	ClassId_VectorSpaceModelInstance,
 	ClassId_VectorSpaceModel,
 	ClassId_WeightingFunctionContext,
@@ -700,8 +701,7 @@ public:
 		Method_createUpdateStatisticsIterator,
 		Method_getStatisticsProcessor,
 		Method_createDocumentChecker,
-		Method_checkStorage,
-		Method_createDump
+		Method_checkStorage
 	};
 };
 
@@ -756,7 +756,8 @@ public:
 		Method_createStorage,
 		Method_createAlterMetaDataTable,
 		Method_getConfigDescription,
-		Method_getConfigParameters
+		Method_getConfigParameters,
+		Method_createDump
 	};
 };
 
@@ -926,6 +927,16 @@ public:
 	};
 };
 
+class VectorSpaceModelDumpConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_nextChunk
+	};
+};
+
 class VectorSpaceModelInstanceConst
 {
 public:
@@ -956,7 +967,8 @@ public:
 		Method_createRepository,
 		Method_resetRepository,
 		Method_createInstance,
-		Method_createBuilder
+		Method_createBuilder,
+		Method_createDump
 	};
 };
 

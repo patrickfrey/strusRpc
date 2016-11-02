@@ -72,6 +72,7 @@
 #include "strus/summarizerFunctionInterface.hpp"
 #include "strus/valueIteratorInterface.hpp"
 #include "strus/vectorSpaceModelBuilderInterface.hpp"
+#include "strus/vectorSpaceModelDumpInterface.hpp"
 #include "strus/vectorSpaceModelInstanceInterface.hpp"
 #include "strus/vectorSpaceModelInterface.hpp"
 #include "strus/weightingFunctionContextInterface.hpp"
@@ -884,7 +885,6 @@ public:
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
 	virtual bool checkStorage( std::ostream& p1) const;
-	virtual StorageDumpInterface* createDump( const std::string& p1) const;
 };
 
 class StorageDocumentImpl
@@ -956,6 +956,7 @@ public:
 	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual const char* getConfigDescription( const StorageInterface::ConfigType& p1) const;
 	virtual const char** getConfigParameters( const StorageInterface::ConfigType& p1) const;
+	virtual StorageDumpInterface* createDump( const std::string& p1, const DatabaseInterface* p2, const std::string& p3) const;
 };
 
 class StorageObjectBuilderImpl
@@ -1176,6 +1177,20 @@ public:
 	virtual bool finalize( );
 };
 
+class VectorSpaceModelDumpImpl
+		:public RpcInterfaceStub
+		,public strus::VectorSpaceModelDumpInterface
+		,public strus::VectorSpaceModelDumpConst
+{
+public:
+	virtual ~VectorSpaceModelDumpImpl();
+
+	VectorSpaceModelDumpImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelDump, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual bool nextChunk( const char*& p1, std::size_t& p2);
+};
+
 class VectorSpaceModelInstanceImpl
 		:public RpcInterfaceStub
 		,public strus::VectorSpaceModelInstanceInterface
@@ -1216,6 +1231,7 @@ public:
 	virtual bool resetRepository( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual VectorSpaceModelInstanceInterface* createInstance( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual VectorSpaceModelBuilderInterface* createBuilder( const std::string& p1, const DatabaseInterface* p2) const;
+	virtual VectorSpaceModelDumpInterface* createDump( const std::string& p1, const DatabaseInterface* p2, const std::string& p3) const;
 };
 
 class WeightingFunctionContextImpl

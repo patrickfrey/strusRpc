@@ -4740,27 +4740,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packString( "the method 'checkStorage' is not implemented for RPC");
 			return msg.content();
 		}
-		case StorageClientConst::Method_createDump:
-		{
-			RpcSerializer msg;
-			StorageDumpInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createDump(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
 	}
 	break;
 	}
@@ -5176,6 +5155,34 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCharpp( p0);
 			msg.packCrc32();
 			return msg.content();
+		}
+		case StorageConst::Method_createDump:
+		{
+			RpcSerializer msg;
+			StorageDumpInterface* p0;
+			std::string p1;
+			const DatabaseInterface* p2;
+			std::string p3;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_2; unsigned int objId_2;
+			serializedMsg.unpackObject( classId_2, objId_2);
+			if (classId_2 != ClassId_Database) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
+			p3 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createDump(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
 		}
 	}
 	break;
@@ -6369,6 +6376,39 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_VectorSpaceModelDump:
+	{
+	VectorSpaceModelDumpInterface* obj = getObject<VectorSpaceModelDumpInterface>( classId, objId);
+	switch( (VectorSpaceModelDumpConst::MethodId)methodId)
+	{
+		case VectorSpaceModelDumpConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case VectorSpaceModelDumpConst::Method_nextChunk:
+		{
+			RpcSerializer msg;
+			bool p0;
+			const char* p1;
+			std::size_t p2;
+			p0 = obj->nextChunk(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packBuffer( p1, p2);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_VectorSpaceModelInstance:
 	{
 	VectorSpaceModelInstanceInterface* obj = getObject<VectorSpaceModelInstanceInterface>( classId, objId);
@@ -6719,6 +6759,34 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createBuilder(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case VectorSpaceModelConst::Method_createDump:
+		{
+			RpcSerializer msg;
+			VectorSpaceModelDumpInterface* p0;
+			std::string p1;
+			const DatabaseInterface* p2;
+			std::string p3;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_2; unsigned int objId_2;
+			serializedMsg.unpackObject( classId_2, objId_2);
+			if (classId_2 != ClassId_Database) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
+			p3 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createDump(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
