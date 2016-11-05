@@ -800,9 +800,9 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerTerm( " . $id . ");";
 	}
-	elsif ($type eq "analyzer::TermVector")
+	elsif ($type eq "analyzer::TermArray")
 	{
-		$rt .= "msg.packAnalyzerTermVector( " . $id . ");";
+		$rt .= "msg.packAnalyzerTermArray( " . $id . ");";
 	}
 	elsif ($type eq "analyzer::Token")
 	{
@@ -1143,9 +1143,9 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerTerm();";
 	}
-	elsif ($type eq "analyzer::TermVector")
+	elsif ($type eq "analyzer::TermArray")
 	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerTermVector();";
+		$rt .= "$id = serializedMsg.unpackAnalyzerTermArray();";
 	}
 	elsif ($type eq "WeightedDocument")
 	{

@@ -579,7 +579,7 @@ public:
 
 	virtual void definePhraseType( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual std::vector<analyzer::Term> analyzePhrase( const std::string& p1, const std::string& p2) const;
-	virtual std::vector<analyzer::TermVector> analyzePhraseBulk( const std::vector<QueryAnalyzerInterface::Phrase>& p1) const;
+	virtual std::vector<analyzer::TermArray> analyzePhraseBulk( const std::vector<QueryAnalyzerInterface::Phrase>& p1) const;
 };
 
 class QueryEvalImpl

@@ -92,7 +92,7 @@ public:
 	void packAnalyzerAttribute( const analyzer::Attribute& val);
 	void packAnalyzerMetaData( const analyzer::MetaData& val);
 	void packAnalyzerTerm( const analyzer::Term& val);
-	void packAnalyzerTermVector( const analyzer::TermVector& val);
+	void packAnalyzerTermArray( const analyzer::TermArray& val);
 	void packAnalyzerToken( const analyzer::Token& val);
 	void packAnalyzerPatternLexem( const analyzer::PatternLexem& val);
 	void packAnalyzerPatternLexerOptions( const analyzer::PatternLexerOptions& val);
@@ -170,7 +170,7 @@ public:
 	analyzer::Attribute unpackAnalyzerAttribute();
 	analyzer::MetaData unpackAnalyzerMetaData();
 	analyzer::Term unpackAnalyzerTerm();
-	analyzer::TermVector unpackAnalyzerTermVector();
+	analyzer::TermArray unpackAnalyzerTermArray();
 	analyzer::Token unpackAnalyzerToken();
 	analyzer::PatternLexem unpackAnalyzerPatternLexem();
 	analyzer::PatternLexerOptions unpackAnalyzerPatternLexerOptions();

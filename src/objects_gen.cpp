@@ -2895,7 +2895,7 @@ try
 }
 }
 
-std::vector<analyzer::TermVector> QueryAnalyzerImpl::analyzePhraseBulk( const std::vector<QueryAnalyzerInterface::Phrase>& p1) const
+std::vector<analyzer::TermArray> QueryAnalyzerImpl::analyzePhraseBulk( const std::vector<QueryAnalyzerInterface::Phrase>& p1) const
 {
 try
 {
@@ -2910,19 +2910,19 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::vector<analyzer::TermVector> p0;
+	std::vector<analyzer::TermArray> p0;
 	std::size_t n0 = serializedMsg.unpackSize();
 	for (std::size_t ii=0; ii < n0; ++ii) {
-		analyzer::TermVector elem_p0 = serializedMsg.unpackAnalyzerTermVector();
+		analyzer::TermArray elem_p0 = serializedMsg.unpackAnalyzerTermArray();
 		p0.push_back( elem_p0);
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::analyzePhraseBulk");
-	return std::vector<analyzer::TermVector>();
+	return std::vector<analyzer::TermArray>();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::analyzePhraseBulk", err.what());
-	return std::vector<analyzer::TermVector>();
+	return std::vector<analyzer::TermArray>();
 }
 }
 

@@ -480,9 +480,9 @@ void RpcSerializer::packAnalyzerTerm( const analyzer::Term& val)
 	packIndex( val.pos());
 }
 
-void RpcSerializer::packAnalyzerTermVector( const analyzer::TermVector& val)
+void RpcSerializer::packAnalyzerTermArray( const analyzer::TermArray& val)
 {
-	analyzer::TermVector::const_iterator ti = val.begin(), te = val.end();
+	analyzer::TermArray::const_iterator ti = val.begin(), te = val.end();
 	packSize( te-ti);
 	for (; ti != te; ++ti)
 	{
@@ -1056,9 +1056,9 @@ analyzer::Term RpcDeserializer::unpackAnalyzerTerm()
 	return analyzer::Term( type, value, pos);
 }
 
-analyzer::TermVector RpcDeserializer::unpackAnalyzerTermVector()
+analyzer::TermArray RpcDeserializer::unpackAnalyzerTermArray()
 {
-	analyzer::TermVector rt;
+	analyzer::TermArray rt;
 	std::size_t ii = 0, size = unpackSize();
 	for (; ii<size; ++ii)
 	{

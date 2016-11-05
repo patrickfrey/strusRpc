@@ -2609,7 +2609,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryAnalyzerConst::Method_analyzePhraseBulk:
 		{
 			RpcSerializer msg;
-			std::vector<analyzer::TermVector> p0;
+			std::vector<analyzer::TermArray> p0;
 			std::vector<QueryAnalyzerInterface::Phrase> p1;
 			std::size_t n1 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n1; ++ii) {
@@ -2627,7 +2627,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packAnalyzerTermVector( p0[ii]);
+				msg.packAnalyzerTermArray( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();
