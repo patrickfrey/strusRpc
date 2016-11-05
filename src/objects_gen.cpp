@@ -7036,6 +7036,28 @@ try
 }
 }
 
+bool VectorSpaceModelBuilderImpl::rebase( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_rebase);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelBuilderImpl::rebase");
+	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelBuilderImpl::rebase", err.what());
+	return false;
+}
+}
+
 VectorSpaceModelDumpImpl::~VectorSpaceModelDumpImpl()
 {
 	if (isConst()) return;

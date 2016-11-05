@@ -923,7 +923,8 @@ public:
 		Method_Destructor,
 		Method_addFeature,
 		Method_commit,
-		Method_finalize
+		Method_finalize,
+		Method_rebase
 	};
 };
 

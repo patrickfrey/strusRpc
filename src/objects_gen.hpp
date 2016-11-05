@@ -1175,6 +1175,7 @@ public:
 	virtual void addFeature( const std::string& p1, const std::vector<double>& p2);
 	virtual bool commit( );
 	virtual bool finalize( );
+	virtual bool rebase( );
 };
 
 class VectorSpaceModelDumpImpl
