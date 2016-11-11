@@ -160,12 +160,6 @@ $passOwnershipParams{"defineTokenizer"} = 1;			# TextProcessor
 $passOwnershipParams{"defineNormalizer"} = 1;			# TextProcessor
 $passOwnershipParams{"defineAggregator"} = 1;			# TextProcessor
 
-$passOwnershipParams{"createClient"} = 1;			# Storage
-$passOwnershipParams{"createAlterMetaDataTable"} = 1;		# Storage
-$passOwnershipParams{"createBrowsePostingIterator"} = 1;	# Storage
-
-$passOwnershipParams{"definePhraseType"} = 1;			# QueryAnalyzer
-
 $passOwnershipParams{"addSearchIndexFeature"} = 1;		# DocumentAnalyzer
 $passOwnershipParams{"addForwardIndexFeature"} = 1;		# DocumentAnalyzer
 $passOwnershipParams{"defineMetaData"} = 1;			# DocumentAnalyzer
@@ -764,7 +758,7 @@ sub packParameter
 	{
 		$rt .= "msg.packGlobalCounter( " . $id . ");";
 	}
-	elsif ($type eq "DocumentAnalyzerInterface::FeatureOptions")
+	elsif ($type eq "analyzer::FeatureOptions")
 	{
 		$rt .= "msg.packFeatureOptions( " . $id . ");";
 	}
@@ -788,6 +782,10 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerDocument( " . $id . ");";
 	}
+	elsif ($type eq "analyzer::Query")
+	{
+		$rt .= "msg.packAnalyzerQuery( " . $id . ");";
+	}
 	elsif ($type eq "analyzer::Attribute")
 	{
 		$rt .= "msg.packAnalyzerAttribute( " . $id . ");";
@@ -807,6 +805,10 @@ sub packParameter
 	elsif ($type eq "analyzer::Token")
 	{
 		$rt .= "msg.packAnalyzerToken( " . $id . ");";
+	}
+	elsif ($type eq "QueryAnalyzerContextInterface::GroupBy")
+	{
+		$rt .= "msg.packAnalyzerGroupBy( " . $id . ");";
 	}
 	elsif ($type eq "analyzer::PatternLexem")
 	{
@@ -855,10 +857,6 @@ sub packParameter
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
 		$rt .= "msg.packFeatureParameter( " . $id . ");";
-	}
-	elsif ($type eq "QueryAnalyzerInterface::Phrase")
-	{
-		$rt .= "msg.packPhrase( " . $id . ");";
 	}
 	elsif ($type eq "StorageClientInterface::DocumentStatisticsType")
 	{
@@ -1052,7 +1050,7 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackGlobalCounter();";
 	}
-	elsif ($type eq "DocumentAnalyzerInterface::FeatureOptions")
+	elsif ($type eq "analyzer::FeatureOptions")
 	{
 		$rt .= "$id = serializedMsg.unpackFeatureOptions();";
 	}
@@ -1095,6 +1093,10 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerDocument();";
 	}
+	elsif ($type eq "analyzer::Query")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerQuery();";
+	}
 	elsif ($type eq "analyzer::Attribute")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerAttribute();";
@@ -1106,6 +1108,10 @@ sub unpackParameter
 	elsif ($type eq "analyzer::Token")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerToken();";
+	}
+	elsif ($type eq "QueryAnalyzerContextInterface::GroupBy")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerGroupBy();";
 	}
 	elsif ($type eq "analyzer::PatternLexem")
 	{
@@ -1162,10 +1168,6 @@ sub unpackParameter
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
 		$rt .= "$id = serializedMsg.unpackFeatureParameter();";
-	}
-	elsif ($type eq "QueryAnalyzerInterface::Phrase")
-	{
-		$rt .= "$id = serializedMsg.unpackPhrase();";
 	}
 	elsif ($type eq "StorageClientInterface::DocumentStatisticsType")
 	{
@@ -1427,7 +1429,7 @@ sub getMethodDeclarationSource
 				$receiver_code .= "\tserializedMsg.unpackBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				++$pi;
 			}
-			elsif ($pi+1 <= $#param && $param[$pi] eq "const^ double" && $param[$pi+1] eq "std::size_t")
+			elsif ($pi+1 <= $#param && $param[$pi] eq "const^ double" && $param[$pi+1] eq "unsigned_int")
 			{
 				# ... exception for double buffer( ptr, len):
 				$sender_code .= "\tmsg.packBufferFloat( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
@@ -1548,7 +1550,7 @@ sub getMethodDeclarationSource
 				$receiver_output .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				++$pi;
 			}
-			elsif ($pi+1 <= $#param && $param[$pi] eq "const^& double" && $param[$pi+1] eq "& std::size_t")
+			elsif ($pi+1 <= $#param && $param[$pi] eq "const^& double" && $param[$pi+1] eq "& unsigned_int")
 			{
 				# ... exception for buffer( size, len):
 				my $bpvar = "bp" . ($pi+1);

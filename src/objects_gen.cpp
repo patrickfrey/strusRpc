@@ -1121,7 +1121,7 @@ DocumentAnalyzerImpl::~DocumentAnalyzerImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void DocumentAnalyzerImpl::addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5)
+void DocumentAnalyzerImpl::addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5)
 {
 try
 {
@@ -1159,7 +1159,7 @@ try
 }
 }
 
-void DocumentAnalyzerImpl::addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5)
+void DocumentAnalyzerImpl::addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5)
 {
 try
 {
@@ -2819,6 +2819,84 @@ try
 }
 }
 
+QueryAnalyzerContextImpl::~QueryAnalyzerContextImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void QueryAnalyzerContextImpl::putField( unsigned int p1, const std::string& p2, const std::string& p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_putField);
+	msg.packUint( p1);
+	msg.packString( p2);
+	msg.packString( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerContextImpl::putField");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerContextImpl::putField", err.what());
+	return void();
+}
+}
+
+void QueryAnalyzerContextImpl::groupElements( unsigned int p1, const std::vector<unsigned int>& p2, const QueryAnalyzerContextInterface::GroupBy& p3, bool p4)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_groupElements);
+	msg.packUint( p1);
+	msg.packSize( p2.size());
+	for (unsigned int ii=0; ii < p2.size(); ++ii) {
+		msg.packUint( p2[ii]);
+	}
+	msg.packAnalyzerGroupBy( p3);
+	msg.packBool( p4);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerContextImpl::groupElements");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerContextImpl::groupElements", err.what());
+	return void();
+}
+}
+
+analyzer::Query QueryAnalyzerContextImpl::analyze( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_analyze);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::Query p0 = serializedMsg.unpackAnalyzerQuery();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerContextImpl::analyze");
+	return analyzer::Query();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerContextImpl::analyze", err.what());
+	return analyzer::Query();
+}
+}
+
 QueryAnalyzerImpl::~QueryAnalyzerImpl()
 {
 	if (isConst()) return;
@@ -2829,13 +2907,13 @@ QueryAnalyzerImpl::~QueryAnalyzerImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void QueryAnalyzerImpl::definePhraseType( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
+void QueryAnalyzerImpl::addSearchIndexElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_definePhraseType);
+	msg.packByte( Method_addSearchIndexElement);
 	msg.packString( p1);
 	msg.packString( p2);
 	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
@@ -2849,80 +2927,64 @@ try
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
-	done_3->release();
-	delete p3;
-	for (std::size_t ai_4=0; ai_4 < p4.size(); ++ai_4) {
-		RpcInterfaceStub* done_4 = dynamic_cast<RpcInterfaceStub*>(p4[ai_4]);
-		done_4->release();
-		delete p4[ai_4];
-	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::definePhraseType");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addSearchIndexElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::definePhraseType", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addSearchIndexElement", err.what());
 	return void();
 }
 }
 
-std::vector<analyzer::Term> QueryAnalyzerImpl::analyzePhrase( const std::string& p1, const std::string& p2) const
+void QueryAnalyzerImpl::addMetaDataElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_analyzePhrase);
+	msg.packByte( Method_addMetaDataElement);
 	msg.packString( p1);
 	msg.packString( p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<analyzer::Term> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		analyzer::Term elem_p0 = serializedMsg.unpackAnalyzerTerm();
-		p0.push_back( elem_p0);
+	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
+	if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "TokenizerFunctionInstance");
+	msg.packObject( impl_3->classId(), impl_3->objId());
+	msg.packSize( p4.size());
+	for (unsigned int ii=0; ii < p4.size(); ++ii) {
+		const RpcInterfaceStub* impl_4 = dynamic_cast<const RpcInterfaceStub*>(p4[ii]);
+		if (!impl_4) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
+		msg.packObject( impl_4->classId(), impl_4->objId());
 	}
-	return p0;
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::analyzePhrase");
-	return std::vector<analyzer::Term>();
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addMetaDataElement");
+	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::analyzePhrase", err.what());
-	return std::vector<analyzer::Term>();
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addMetaDataElement", err.what());
+	return void();
 }
 }
 
-std::vector<analyzer::TermArray> QueryAnalyzerImpl::analyzePhraseBulk( const std::vector<QueryAnalyzerInterface::Phrase>& p1) const
+QueryAnalyzerContextInterface* QueryAnalyzerImpl::createContext( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_analyzePhraseBulk);
-	msg.packSize( p1.size());
-	for (unsigned int ii=0; ii < p1.size(); ++ii) {
-		msg.packPhrase( p1[ii]);
-	}
+	msg.packByte( Method_createContext);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_QueryAnalyzerContext;
+	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<analyzer::TermArray> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		analyzer::TermArray elem_p0 = serializedMsg.unpackAnalyzerTermArray();
-		p0.push_back( elem_p0);
-	}
+	ctx()->rpc_sendMessage( msg.content());
+	QueryAnalyzerContextInterface* p0 = new QueryAnalyzerContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::analyzePhraseBulk");
-	return std::vector<analyzer::TermArray>();
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::createContext");
+	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::analyzePhraseBulk", err.what());
-	return std::vector<analyzer::TermArray>();
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::createContext", err.what());
+	return 0;
 }
 }
 
@@ -3152,7 +3214,7 @@ try
 }
 }
 
-void QueryImpl::pushExpression( const PostingJoinOperatorInterface* p1, std::size_t p2, int p3, unsigned int p4)
+void QueryImpl::pushExpression( const PostingJoinOperatorInterface* p1, unsigned int p2, int p3, unsigned int p4)
 {
 try
 {
@@ -3162,7 +3224,7 @@ try
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PostingJoinOperator");
 	msg.packObject( impl_1->classId(), impl_1->objId());
-	msg.packSize( p2);
+	msg.packUint( p2);
 	msg.packInt( p3);
 	msg.packUint( p4);
 	msg.packCrc32();
@@ -3688,7 +3750,7 @@ try
 }
 }
 
-double ScalarFunctionInstanceImpl::call( const double* p1, std::size_t p2) const
+double ScalarFunctionInstanceImpl::call( const double* p1, unsigned int p2) const
 {
 try
 {
@@ -3770,7 +3832,7 @@ try
 }
 }
 
-std::size_t ScalarFunctionImpl::getNofArguments( ) const
+unsigned int ScalarFunctionImpl::getNofArguments( ) const
 {
 try
 {
@@ -3781,14 +3843,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::size_t p0 = serializedMsg.unpackSize();;
+	unsigned int p0 = serializedMsg.unpackUint();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::getNofArguments");
-	return std::size_t();
+	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::getNofArguments", err.what());
-	return std::size_t();
+	return 0;
 }
 }
 
@@ -6052,6 +6114,28 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::rollback", err.what());
 	return void();
+}
+}
+
+unsigned int StorageTransactionImpl::nofDocumentsAffected( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_nofDocumentsAffected);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	unsigned int p0 = serializedMsg.unpackUint();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageTransactionImpl::nofDocumentsAffected");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::nofDocumentsAffected", err.what());
+	return 0;
 }
 }
 

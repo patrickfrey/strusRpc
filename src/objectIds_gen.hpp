@@ -41,6 +41,7 @@ enum ClassId
 	ClassId_PatternMatcher,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
+	ClassId_QueryAnalyzerContext,
 	ClassId_QueryAnalyzer,
 	ClassId_QueryEval,
 	ClassId_Query,
@@ -452,15 +453,27 @@ public:
 	};
 };
 
+class QueryAnalyzerContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_putField,
+		Method_groupElements,
+		Method_analyze
+	};
+};
+
 class QueryAnalyzerConst
 {
 public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_definePhraseType,
-		Method_analyzePhrase,
-		Method_analyzePhraseBulk
+		Method_addSearchIndexElement,
+		Method_addMetaDataElement,
+		Method_createContext
 	};
 };
 
@@ -788,7 +801,8 @@ public:
 		Method_deleteUserAccessRights,
 		Method_updateMetaData,
 		Method_commit,
-		Method_rollback
+		Method_rollback,
+		Method_nofDocumentsAffected
 	};
 };
 

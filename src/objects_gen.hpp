@@ -24,6 +24,7 @@
 #include "strus/patternMatcherContextInterface.hpp"
 #include "strus/patternMatcherInstanceInterface.hpp"
 #include "strus/patternMatcherInterface.hpp"
+#include "strus/queryAnalyzerContextInterface.hpp"
 #include "strus/queryAnalyzerInterface.hpp"
 #include "strus/segmenterContextInterface.hpp"
 #include "strus/segmenterInstanceInterface.hpp"
@@ -265,8 +266,8 @@ public:
 	DocumentAnalyzerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzer, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
-	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const DocumentAnalyzerInterface::FeatureOptions& p5);
+	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5);
+	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5);
 	virtual void defineMetaData( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void defineAggregatedMetaData( const std::string& p1, AggregatorFunctionInstanceInterface* p2);
 	virtual void defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
@@ -566,6 +567,22 @@ public:
 	virtual PostingJoinOperatorInterface::Description getDescription( ) const;
 };
 
+class QueryAnalyzerContextImpl
+		:public RpcInterfaceStub
+		,public strus::QueryAnalyzerContextInterface
+		,public strus::QueryAnalyzerContextConst
+{
+public:
+	virtual ~QueryAnalyzerContextImpl();
+
+	QueryAnalyzerContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzerContext, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void putField( unsigned int p1, const std::string& p2, const std::string& p3);
+	virtual void groupElements( unsigned int p1, const std::vector<unsigned int>& p2, const QueryAnalyzerContextInterface::GroupBy& p3, bool p4);
+	virtual analyzer::Query analyze( ) const;
+};
+
 class QueryAnalyzerImpl
 		:public RpcInterfaceStub
 		,public strus::QueryAnalyzerInterface
@@ -577,9 +594,9 @@ public:
 	QueryAnalyzerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzer, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void definePhraseType( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
-	virtual std::vector<analyzer::Term> analyzePhrase( const std::string& p1, const std::string& p2) const;
-	virtual std::vector<analyzer::TermArray> analyzePhraseBulk( const std::vector<QueryAnalyzerInterface::Phrase>& p1) const;
+	virtual void addSearchIndexElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
+	virtual void addMetaDataElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
+	virtual QueryAnalyzerContextInterface* createContext( ) const;
 };
 
 class QueryEvalImpl
@@ -615,7 +632,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_Query, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void pushTerm( const std::string& p1, const std::string& p2);
-	virtual void pushExpression( const PostingJoinOperatorInterface* p1, std::size_t p2, int p3, unsigned int p4);
+	virtual void pushExpression( const PostingJoinOperatorInterface* p1, unsigned int p2, int p3, unsigned int p4);
 	virtual void attachVariable( const std::string& p1);
 	virtual void defineFeature( const std::string& p1, double p2);
 	virtual void defineTermStatistics( const std::string& p1, const std::string& p2, const TermStatistics& p3);
@@ -664,7 +681,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_ScalarFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void setVariableValue( const std::string& p1, double p2);
-	virtual double call( const double* p1, std::size_t p2) const;
+	virtual double call( const double* p1, unsigned int p2) const;
 	virtual std::string tostring( ) const;
 };
 
@@ -680,7 +697,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_ScalarFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual std::vector<std::string> getVariables( ) const;
-	virtual std::size_t getNofArguments( ) const;
+	virtual unsigned int getNofArguments( ) const;
 	virtual void setDefaultVariableValue( const std::string& p1, double p2);
 	virtual ScalarFunctionInstanceInterface* createInstance( ) const;
 	virtual std::string tostring( ) const;
@@ -996,6 +1013,7 @@ public:
 	virtual void updateMetaData( const Index& p1, const std::string& p2, const NumericVariant& p3);
 	virtual bool commit( );
 	virtual void rollback( );
+	virtual unsigned int nofDocumentsAffected( ) const;
 };
 
 class SummarizerFunctionContextImpl
