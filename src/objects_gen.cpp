@@ -7206,16 +7206,44 @@ try
 }
 }
 
-std::vector<Index> VectorSpaceModelInstanceImpl::mapVectorToConcepts( const std::vector<double>& p1) const
+std::vector<std::string> VectorSpaceModelInstanceImpl::conceptClassNames( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_conceptClassNames);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::conceptClassNames");
+	return std::vector<std::string>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::conceptClassNames", err.what());
+	return std::vector<std::string>();
+}
+}
+
+std::vector<Index> VectorSpaceModelInstanceImpl::mapVectorToConcepts( const std::string& p1, const std::vector<double>& p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_mapVectorToConcepts);
-	msg.packSize( p1.size());
-	for (unsigned int ii=0; ii < p1.size(); ++ii) {
-		msg.packDouble( p1[ii]);
+	msg.packString( p1);
+	msg.packSize( p2.size());
+	for (unsigned int ii=0; ii < p2.size(); ++ii) {
+		msg.packDouble( p2[ii]);
 	}
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
@@ -7237,14 +7265,15 @@ try
 }
 }
 
-std::vector<Index> VectorSpaceModelInstanceImpl::featureConcepts( const Index& p1) const
+std::vector<Index> VectorSpaceModelInstanceImpl::featureConcepts( const std::string& p1, const Index& p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_featureConcepts);
-	msg.packIndex( p1);
+	msg.packString( p1);
+	msg.packIndex( p2);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -7395,14 +7424,15 @@ try
 }
 }
 
-std::vector<Index> VectorSpaceModelInstanceImpl::conceptFeatures( const Index& p1) const
+std::vector<Index> VectorSpaceModelInstanceImpl::conceptFeatures( const std::string& p1, const Index& p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_conceptFeatures);
-	msg.packIndex( p1);
+	msg.packString( p1);
+	msg.packIndex( p2);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -7423,13 +7453,14 @@ try
 }
 }
 
-unsigned int VectorSpaceModelInstanceImpl::nofConcepts( ) const
+unsigned int VectorSpaceModelInstanceImpl::nofConcepts( const std::string& p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_nofConcepts);
+	msg.packString( p1);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());

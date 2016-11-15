@@ -6528,17 +6528,39 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case VectorSpaceModelInstanceConst::Method_conceptClassNames:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->conceptClassNames();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
 		case VectorSpaceModelInstanceConst::Method_mapVectorToConcepts:
 		{
 			RpcSerializer msg;
 			std::vector<Index> p0;
-			std::vector<double> p1;
-			std::size_t n1 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n1; ++ii) {
+			std::string p1;
+			std::vector<double> p2;
+			p1 = serializedMsg.unpackString();
+			std::size_t n2 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n2; ++ii) {
 				double ee = serializedMsg.unpackDouble();
-				p1.push_back( ee);
+				p2.push_back( ee);
 			}
-			p0 = obj->mapVectorToConcepts(p1);
+			p0 = obj->mapVectorToConcepts(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6558,9 +6580,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::vector<Index> p0;
-			Index p1;
-			p1 = serializedMsg.unpackIndex();
-			p0 = obj->featureConcepts(p1);
+			std::string p1;
+			Index p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackIndex();
+			p0 = obj->featureConcepts(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6684,9 +6708,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::vector<Index> p0;
-			Index p1;
-			p1 = serializedMsg.unpackIndex();
-			p0 = obj->conceptFeatures(p1);
+			std::string p1;
+			Index p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackIndex();
+			p0 = obj->conceptFeatures(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6706,7 +6732,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			unsigned int p0;
-			p0 = obj->nofConcepts();
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->nofConcepts(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
