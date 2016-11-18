@@ -1191,9 +1191,9 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addFeature( const std::string& p1, const std::vector<double>& p2);
-	virtual bool commit( );
-	virtual bool finalize( );
-	virtual bool rebase( );
+	virtual bool done( );
+	virtual bool run( const std::string& p1);
+	virtual std::vector<std::string> commands( ) const;
 };
 
 class VectorSpaceModelDumpImpl

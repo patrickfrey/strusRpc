@@ -6417,11 +6417,30 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case VectorSpaceModelBuilderConst::Method_commit:
+		case VectorSpaceModelBuilderConst::Method_done:
 		{
 			RpcSerializer msg;
 			bool p0;
-			p0 = obj->commit();
+			p0 = obj->done();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeSynchronize);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelBuilderConst::Method_run:
+		{
+			RpcSerializer msg;
+			bool p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->run(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6434,11 +6453,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelBuilderConst::Method_finalize:
+		case VectorSpaceModelBuilderConst::Method_commands:
 		{
 			RpcSerializer msg;
-			bool p0;
-			p0 = obj->finalize();
+			std::vector<std::string> p0;
+			p0 = obj->commands();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6447,24 +6466,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelBuilderConst::Method_rebase:
-		{
-			RpcSerializer msg;
-			bool p0;
-			p0 = obj->rebase();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
 			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
