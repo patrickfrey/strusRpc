@@ -938,7 +938,8 @@ public:
 		Method_addFeature,
 		Method_done,
 		Method_run,
-		Method_commands
+		Method_commands,
+		Method_commandDescription
 	};
 };
 
