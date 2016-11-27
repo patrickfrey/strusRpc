@@ -1194,6 +1194,7 @@ public:
 	virtual bool done( );
 	virtual bool run( const std::string& p1);
 	virtual std::vector<std::string> commands( ) const;
+	virtual std::string commandDescription( const std::string& p1) const;
 };
 
 class VectorSpaceModelDumpImpl

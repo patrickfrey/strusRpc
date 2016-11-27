@@ -6473,6 +6473,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case VectorSpaceModelBuilderConst::Method_commandDescription:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->commandDescription(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
