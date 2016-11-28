@@ -937,9 +937,7 @@ public:
 		Method_Destructor,
 		Method_addFeature,
 		Method_done,
-		Method_run,
-		Method_commands,
-		Method_commandDescription
+		Method_run
 	};
 };
 
@@ -985,6 +983,8 @@ public:
 		Method_resetRepository,
 		Method_createInstance,
 		Method_createBuilder,
+		Method_builderCommands,
+		Method_builderCommandDescription,
 		Method_createDump
 	};
 };
