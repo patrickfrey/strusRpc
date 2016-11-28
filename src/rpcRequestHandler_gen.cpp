@@ -6453,45 +6453,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelBuilderConst::Method_commands:
-		{
-			RpcSerializer msg;
-			std::vector<std::string> p0;
-			p0 = obj->commands();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packString( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelBuilderConst::Method_commandDescription:
-		{
-			RpcSerializer msg;
-			std::string p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			p0 = obj->commandDescription(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packString( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
 	}
 	break;
 	}
@@ -6917,6 +6878,45 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case VectorSpaceModelConst::Method_builderCommands:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->builderCommands();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelConst::Method_builderCommandDescription:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->builderCommandDescription(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 		case VectorSpaceModelConst::Method_createDump:
 		{

@@ -7121,56 +7121,6 @@ try
 }
 }
 
-std::vector<std::string> VectorSpaceModelBuilderImpl::commands( ) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_commands);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<std::string> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		std::string elem_p0 = serializedMsg.unpackString();
-		p0.push_back( elem_p0);
-	}
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelBuilderImpl::commands");
-	return std::vector<std::string>();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelBuilderImpl::commands", err.what());
-	return std::vector<std::string>();
-}
-}
-
-std::string VectorSpaceModelBuilderImpl::commandDescription( const std::string& p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_commandDescription);
-	msg.packString( p1);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::string p0 = serializedMsg.unpackString();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelBuilderImpl::commandDescription");
-	return std::string();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelBuilderImpl::commandDescription", err.what());
-	return std::string();
-}
-}
-
 VectorSpaceModelDumpImpl::~VectorSpaceModelDumpImpl()
 {
 	if (isConst()) return;
@@ -7662,6 +7612,56 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelImpl::createBuilder", err.what());
 	return 0;
+}
+}
+
+std::vector<std::string> VectorSpaceModelImpl::builderCommands( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_builderCommands);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelImpl::builderCommands");
+	return std::vector<std::string>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelImpl::builderCommands", err.what());
+	return std::vector<std::string>();
+}
+}
+
+std::string VectorSpaceModelImpl::builderCommandDescription( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_builderCommandDescription);
+	msg.packString( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelImpl::builderCommandDescription");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelImpl::builderCommandDescription", err.what());
+	return std::string();
 }
 }
 
