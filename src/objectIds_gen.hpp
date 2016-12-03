@@ -39,6 +39,8 @@ enum ClassId
 	ClassId_PatternMatcherContext,
 	ClassId_PatternMatcherInstance,
 	ClassId_PatternMatcher,
+	ClassId_PatternTermFeederInstance,
+	ClassId_PatternTermFeeder,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
 	ClassId_QueryAnalyzerContext,
@@ -364,7 +366,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_definePattern,
+		Method_defineLexem,
 		Method_defineSymbol,
 		Method_getSymbol,
 		Method_compile,
@@ -422,6 +424,29 @@ public:
 		Method_getCompileOptions,
 		Method_createInstance,
 		Method_getDescription
+	};
+};
+
+class PatternTermFeederInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_defineLexem,
+		Method_defineSymbol,
+		Method_getSymbol,
+		Method_mapTerms
+	};
+};
+
+class PatternTermFeederConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createInstance
 	};
 };
 

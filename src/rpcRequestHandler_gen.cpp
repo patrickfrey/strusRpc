@@ -1872,7 +1872,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case PatternLexerInstanceConst::Method_definePattern:
+		case PatternLexerInstanceConst::Method_defineLexem:
 		{
 			RpcSerializer msg;
 			unsigned int p1;
@@ -1885,7 +1885,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p3 = serializedMsg.unpackUint();
 			p4 = serializedMsg.unpackUint();
 			p5 = (analyzer::PositionBind)serializedMsg.unpackByte();
-			obj->definePattern(p1,p2,p3,p4,p5);
+			obj->defineLexem(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -2337,6 +2337,136 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCharp( p0);
 			msg.packCrc32();
 			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_PatternTermFeederInstance:
+	{
+	PatternTermFeederInstanceInterface* obj = getObject<PatternTermFeederInstanceInterface>( classId, objId);
+	switch( (PatternTermFeederInstanceConst::MethodId)methodId)
+	{
+		case PatternTermFeederInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PatternTermFeederInstanceConst::Method_defineLexem:
+		{
+			RpcSerializer msg;
+			unsigned int p1;
+			std::string p2;
+			p1 = serializedMsg.unpackUint();
+			p2 = serializedMsg.unpackString();
+			obj->defineLexem(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PatternTermFeederInstanceConst::Method_defineSymbol:
+		{
+			RpcSerializer msg;
+			unsigned int p1;
+			unsigned int p2;
+			std::string p3;
+			p1 = serializedMsg.unpackUint();
+			p2 = serializedMsg.unpackUint();
+			p3 = serializedMsg.unpackString();
+			obj->defineSymbol(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PatternTermFeederInstanceConst::Method_getSymbol:
+		{
+			RpcSerializer msg;
+			unsigned int p0;
+			unsigned int p1;
+			std::string p2;
+			p1 = serializedMsg.unpackUint();
+			p2 = serializedMsg.unpackString();
+			p0 = obj->getSymbol(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packUint( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PatternTermFeederInstanceConst::Method_mapTerms:
+		{
+			RpcSerializer msg;
+			std::vector<analyzer::PatternLexem> p0;
+			std::vector<analyzer::Term> p1;
+			std::size_t n1 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n1; ++ii) {
+				analyzer::Term ee = serializedMsg.unpackAnalyzerTerm();
+				p1.push_back( ee);
+			}
+			p0 = obj->mapTerms(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packAnalyzerPatternLexem( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_PatternTermFeeder:
+	{
+	PatternTermFeederInterface* obj = getObject<PatternTermFeederInterface>( classId, objId);
+	switch( (PatternTermFeederConst::MethodId)methodId)
+	{
+		case PatternTermFeederConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PatternTermFeederConst::Method_createInstance:
+		{
+			RpcSerializer msg;
+			PatternTermFeederInstanceInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createInstance();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
 		}
 	}
 	break;
