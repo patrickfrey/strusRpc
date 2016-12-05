@@ -984,6 +984,7 @@ public:
 	{
 		Method_Destructor,
 		Method_preload,
+		Method_findSimFeatures,
 		Method_conceptClassNames,
 		Method_mapVectorToConcepts,
 		Method_featureConcepts,

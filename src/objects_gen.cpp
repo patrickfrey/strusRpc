@@ -7360,6 +7360,37 @@ try
 }
 }
 
+std::vector<Index> VectorSpaceModelInstanceImpl::findSimFeatures( const std::vector<double>& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_findSimFeatures);
+	msg.packSize( p1.size());
+	for (unsigned int ii=0; ii < p1.size(); ++ii) {
+		msg.packDouble( p1[ii]);
+	}
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<Index> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		Index elem_p0 = serializedMsg.unpackIndex();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::findSimFeatures");
+	return std::vector<Index>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::findSimFeatures", err.what());
+	return std::vector<Index>();
+}
+}
+
 std::vector<std::string> VectorSpaceModelInstanceImpl::conceptClassNames( ) const
 {
 try
