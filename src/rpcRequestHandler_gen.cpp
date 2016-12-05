@@ -2436,6 +2436,40 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case PatternTermFeederInstanceConst::Method_mapResults:
+		{
+			RpcSerializer msg;
+			std::vector<analyzer::Term> p0;
+			std::string p1;
+			std::vector<analyzer::PatternMatcherResult> p2;
+			std::vector<analyzer::Term> p3;
+			p1 = serializedMsg.unpackString();
+			std::size_t n2 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n2; ++ii) {
+				analyzer::PatternMatcherResult ee = serializedMsg.unpackAnalyzerPatternMatcherResult();
+				p2.push_back( ee);
+			}
+			std::size_t n3 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n3; ++ii) {
+				analyzer::Term ee = serializedMsg.unpackAnalyzerTerm();
+				p3.push_back( ee);
+			}
+			p0 = obj->mapResults(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packAnalyzerTerm( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}

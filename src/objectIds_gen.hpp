@@ -436,7 +436,8 @@ public:
 		Method_defineLexem,
 		Method_defineSymbol,
 		Method_getSymbol,
-		Method_mapTerms
+		Method_mapTerms,
+		Method_mapResults
 	};
 };
 

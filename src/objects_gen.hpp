@@ -547,7 +547,8 @@ public:
 	virtual void defineLexem( unsigned int p1, const std::string& p2);
 	virtual void defineSymbol( unsigned int p1, unsigned int p2, const std::string& p3);
 	virtual unsigned int getSymbol( unsigned int p1, const std::string& p2) const;
-	virtual std::vector<analyzer::PatternLexem> mapTerms( const std::vector<analyzer::Term>& p1);
+	virtual std::vector<analyzer::PatternLexem> mapTerms( const std::vector<analyzer::Term>& p1) const;
+	virtual std::vector<analyzer::Term> mapResults( const std::string& p1, const std::vector<analyzer::PatternMatcherResult>& p2, const std::vector<analyzer::Term>& p3) const;
 };
 
 class PatternTermFeederImpl

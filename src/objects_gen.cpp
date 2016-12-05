@@ -2667,7 +2667,7 @@ try
 }
 }
 
-std::vector<analyzer::PatternLexem> PatternTermFeederInstanceImpl::mapTerms( const std::vector<analyzer::Term>& p1)
+std::vector<analyzer::PatternLexem> PatternTermFeederInstanceImpl::mapTerms( const std::vector<analyzer::Term>& p1) const
 {
 try
 {
@@ -2695,6 +2695,42 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::mapTerms", err.what());
 	return std::vector<analyzer::PatternLexem>();
+}
+}
+
+std::vector<analyzer::Term> PatternTermFeederInstanceImpl::mapResults( const std::string& p1, const std::vector<analyzer::PatternMatcherResult>& p2, const std::vector<analyzer::Term>& p3) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_mapResults);
+	msg.packString( p1);
+	msg.packSize( p2.size());
+	for (unsigned int ii=0; ii < p2.size(); ++ii) {
+		msg.packAnalyzerPatternMatcherResult( p2[ii]);
+	}
+	msg.packSize( p3.size());
+	for (unsigned int ii=0; ii < p3.size(); ++ii) {
+		msg.packAnalyzerTerm( p3[ii]);
+	}
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<analyzer::Term> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		analyzer::Term elem_p0 = serializedMsg.unpackAnalyzerTerm();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::mapResults");
+	return std::vector<analyzer::Term>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::mapResults", err.what());
+	return std::vector<analyzer::Term>();
 }
 }
 
