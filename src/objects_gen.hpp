@@ -1255,17 +1255,16 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void preload( );
-	virtual std::vector<Index> findSimFeatures( const std::vector<double>& p1) const;
 	virtual std::vector<std::string> conceptClassNames( ) const;
-	virtual std::vector<Index> mapVectorToConcepts( const std::string& p1, const std::vector<double>& p2) const;
+	virtual std::vector<Index> conceptFeatures( const std::string& p1, const Index& p2) const;
+	virtual unsigned int nofConcepts( const std::string& p1) const;
+	virtual std::vector<Index> findSimilarFeatures( const std::vector<double>& p1) const;
 	virtual std::vector<Index> featureConcepts( const std::string& p1, const Index& p2) const;
 	virtual std::vector<double> featureVector( const Index& p1) const;
 	virtual std::string featureName( const Index& p1) const;
 	virtual Index featureIndex( const std::string& p1) const;
-	virtual std::vector<std::string> attributes( const std::string& p1, const Index& p2) const;
-	virtual std::vector<std::string> attributeNames( ) const;
-	virtual std::vector<Index> conceptFeatures( const std::string& p1, const Index& p2) const;
-	virtual unsigned int nofConcepts( const std::string& p1) const;
+	virtual std::vector<std::string> featureAttributes( const std::string& p1, const Index& p2) const;
+	virtual std::vector<std::string> featureAttributeNames( ) const;
 	virtual unsigned int nofFeatures( ) const;
 	virtual std::string config( ) const;
 };

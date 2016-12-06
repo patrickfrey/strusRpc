@@ -7360,37 +7360,6 @@ try
 }
 }
 
-std::vector<Index> VectorSpaceModelInstanceImpl::findSimFeatures( const std::vector<double>& p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_findSimFeatures);
-	msg.packSize( p1.size());
-	for (unsigned int ii=0; ii < p1.size(); ++ii) {
-		msg.packDouble( p1[ii]);
-	}
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<Index> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		Index elem_p0 = serializedMsg.unpackIndex();
-		p0.push_back( elem_p0);
-	}
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::findSimFeatures");
-	return std::vector<Index>();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::findSimFeatures", err.what());
-	return std::vector<Index>();
-}
-}
-
 std::vector<std::string> VectorSpaceModelInstanceImpl::conceptClassNames( ) const
 {
 try
@@ -7418,17 +7387,68 @@ try
 }
 }
 
-std::vector<Index> VectorSpaceModelInstanceImpl::mapVectorToConcepts( const std::string& p1, const std::vector<double>& p2) const
+std::vector<Index> VectorSpaceModelInstanceImpl::conceptFeatures( const std::string& p1, const Index& p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_mapVectorToConcepts);
+	msg.packByte( Method_conceptFeatures);
 	msg.packString( p1);
-	msg.packSize( p2.size());
-	for (unsigned int ii=0; ii < p2.size(); ++ii) {
-		msg.packDouble( p2[ii]);
+	msg.packIndex( p2);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<Index> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		Index elem_p0 = serializedMsg.unpackIndex();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::conceptFeatures");
+	return std::vector<Index>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::conceptFeatures", err.what());
+	return std::vector<Index>();
+}
+}
+
+unsigned int VectorSpaceModelInstanceImpl::nofConcepts( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_nofConcepts);
+	msg.packString( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	unsigned int p0 = serializedMsg.unpackUint();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::nofConcepts");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::nofConcepts", err.what());
+	return 0;
+}
+}
+
+std::vector<Index> VectorSpaceModelInstanceImpl::findSimilarFeatures( const std::vector<double>& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_findSimilarFeatures);
+	msg.packSize( p1.size());
+	for (unsigned int ii=0; ii < p1.size(); ++ii) {
+		msg.packDouble( p1[ii]);
 	}
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
@@ -7442,10 +7462,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::mapVectorToConcepts");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::findSimilarFeatures");
 	return std::vector<Index>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::mapVectorToConcepts", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::findSimilarFeatures", err.what());
 	return std::vector<Index>();
 }
 }
@@ -7553,13 +7573,13 @@ try
 }
 }
 
-std::vector<std::string> VectorSpaceModelInstanceImpl::attributes( const std::string& p1, const Index& p2) const
+std::vector<std::string> VectorSpaceModelInstanceImpl::featureAttributes( const std::string& p1, const Index& p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_attributes);
+	msg.packByte( Method_featureAttributes);
 	msg.packString( p1);
 	msg.packIndex( p2);
 	msg.packCrc32();
@@ -7574,21 +7594,21 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::attributes");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::featureAttributes");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::attributes", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::featureAttributes", err.what());
 	return std::vector<std::string>();
 }
 }
 
-std::vector<std::string> VectorSpaceModelInstanceImpl::attributeNames( ) const
+std::vector<std::string> VectorSpaceModelInstanceImpl::featureAttributeNames( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_attributeNames);
+	msg.packByte( Method_featureAttributeNames);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -7601,63 +7621,11 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::attributeNames");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::featureAttributeNames");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::attributeNames", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::featureAttributeNames", err.what());
 	return std::vector<std::string>();
-}
-}
-
-std::vector<Index> VectorSpaceModelInstanceImpl::conceptFeatures( const std::string& p1, const Index& p2) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_conceptFeatures);
-	msg.packString( p1);
-	msg.packIndex( p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<Index> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		Index elem_p0 = serializedMsg.unpackIndex();
-		p0.push_back( elem_p0);
-	}
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::conceptFeatures");
-	return std::vector<Index>();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::conceptFeatures", err.what());
-	return std::vector<Index>();
-}
-}
-
-unsigned int VectorSpaceModelInstanceImpl::nofConcepts( const std::string& p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_nofConcepts);
-	msg.packString( p1);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	unsigned int p0 = serializedMsg.unpackUint();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorSpaceModelInstanceImpl::nofConcepts");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorSpaceModelInstanceImpl::nofConcepts", err.what());
-	return 0;
 }
 }
 
