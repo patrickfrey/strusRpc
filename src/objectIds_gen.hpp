@@ -436,7 +436,8 @@ public:
 		Method_defineLexem,
 		Method_defineSymbol,
 		Method_getSymbol,
-		Method_mapTerms
+		Method_mapTerms,
+		Method_mapResults
 	};
 };
 
@@ -984,15 +985,15 @@ public:
 		Method_Destructor,
 		Method_preload,
 		Method_conceptClassNames,
-		Method_mapVectorToConcepts,
+		Method_conceptFeatures,
+		Method_nofConcepts,
+		Method_findSimilarFeatures,
 		Method_featureConcepts,
 		Method_featureVector,
 		Method_featureName,
 		Method_featureIndex,
-		Method_attributes,
-		Method_attributeNames,
-		Method_conceptFeatures,
-		Method_nofConcepts,
+		Method_featureAttributes,
+		Method_featureAttributeNames,
 		Method_nofFeatures,
 		Method_config
 	};
