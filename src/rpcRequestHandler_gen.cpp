@@ -6986,12 +6986,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::vector<Index> p0;
 			std::vector<double> p1;
+			unsigned int p2;
 			std::size_t n1 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n1; ++ii) {
 				double ee = serializedMsg.unpackDouble();
 				p1.push_back( ee);
 			}
-			p0 = obj->findSimilarFeatures(p1);
+			p2 = serializedMsg.unpackUint();
+			p0 = obj->findSimilarFeatures(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

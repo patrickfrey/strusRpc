@@ -1267,7 +1267,7 @@ public:
 	virtual std::vector<std::string> conceptClassNames( ) const;
 	virtual std::vector<Index> conceptFeatures( const std::string& p1, const Index& p2) const;
 	virtual unsigned int nofConcepts( const std::string& p1) const;
-	virtual std::vector<Index> findSimilarFeatures( const std::vector<double>& p1) const;
+	virtual std::vector<Index> findSimilarFeatures( const std::vector<double>& p1, unsigned int p2) const;
 	virtual std::vector<Index> featureConcepts( const std::string& p1, const Index& p2) const;
 	virtual std::vector<double> featureVector( const Index& p1) const;
 	virtual std::string featureName( const Index& p1) const;

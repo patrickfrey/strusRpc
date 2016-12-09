@@ -7661,7 +7661,7 @@ try
 }
 }
 
-std::vector<Index> VectorSpaceModelInstanceImpl::findSimilarFeatures( const std::vector<double>& p1) const
+std::vector<Index> VectorSpaceModelInstanceImpl::findSimilarFeatures( const std::vector<double>& p1, unsigned int p2) const
 {
 try
 {
@@ -7672,6 +7672,7 @@ try
 	for (unsigned int ii=0; ii < p1.size(); ++ii) {
 		msg.packDouble( p1[ii]);
 	}
+	msg.packUint( p2);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
