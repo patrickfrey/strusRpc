@@ -231,6 +231,12 @@ public:
 		Method_defineAggregatedMetaData,
 		Method_defineAttribute,
 		Method_defineSubDocument,
+		Method_definePatternMatcherPostProc,
+		Method_definePatternMatcherPreProc,
+		Method_addSearchIndexFeatureFromPatternMatch,
+		Method_addForwardIndexFeatureFromPatternMatch,
+		Method_defineMetaDataFromPatternMatch,
+		Method_defineAttributeFromPatternMatch,
 		Method_analyze,
 		Method_createContext
 	};
@@ -435,9 +441,8 @@ public:
 		Method_Destructor,
 		Method_defineLexem,
 		Method_defineSymbol,
-		Method_getSymbol,
-		Method_mapTerms,
-		Method_mapResults
+		Method_getLexem,
+		Method_getSymbol
 	};
 };
 
@@ -499,6 +504,10 @@ public:
 		Method_Destructor,
 		Method_addSearchIndexElement,
 		Method_addMetaDataElement,
+		Method_definePatternMatcherPostProc,
+		Method_definePatternMatcherPreProc,
+		Method_addSearchIndexFeatureFromPatternMatch,
+		Method_defineMetaDataFromPatternMatch,
 		Method_createContext
 	};
 };

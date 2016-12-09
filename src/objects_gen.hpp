@@ -274,6 +274,12 @@ public:
 	virtual void defineAggregatedMetaData( const std::string& p1, AggregatorFunctionInstanceInterface* p2);
 	virtual void defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void defineSubDocument( const std::string& p1, const std::string& p2);
+	virtual void definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3);
+	virtual void definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4);
+	virtual void addSearchIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, const analyzer::FeatureOptions& p4);
+	virtual void addForwardIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, const analyzer::FeatureOptions& p4);
+	virtual void defineMetaDataFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3);
+	virtual void defineAttributeFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3);
 	virtual analyzer::Document analyze( const std::string& p1, const analyzer::DocumentClass& p2) const;
 	virtual DocumentAnalyzerContextInterface* createContext( const analyzer::DocumentClass& p1) const;
 };
@@ -546,9 +552,8 @@ public:
 
 	virtual void defineLexem( unsigned int p1, const std::string& p2);
 	virtual void defineSymbol( unsigned int p1, unsigned int p2, const std::string& p3);
+	virtual unsigned int getLexem( const std::string& p1) const;
 	virtual unsigned int getSymbol( unsigned int p1, const std::string& p2) const;
-	virtual std::vector<analyzer::PatternLexem> mapTerms( const std::vector<analyzer::Term>& p1) const;
-	virtual std::vector<analyzer::Term> mapResults( const std::string& p1, const std::vector<analyzer::PatternMatcherResult>& p2, const std::vector<analyzer::Term>& p3) const;
 };
 
 class PatternTermFeederImpl
@@ -630,6 +635,10 @@ public:
 
 	virtual void addSearchIndexElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void addMetaDataElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
+	virtual void definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3);
+	virtual void definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4);
+	virtual void addSearchIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3);
+	virtual void defineMetaDataFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3);
 	virtual QueryAnalyzerContextInterface* createContext( ) const;
 };
 
