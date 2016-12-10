@@ -1316,6 +1316,35 @@ try
 }
 }
 
+void DocumentAnalyzerImpl::addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addPatternLexem);
+	msg.packString( p1);
+	msg.packString( p2);
+	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
+	if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "TokenizerFunctionInstance");
+	msg.packObject( impl_3->classId(), impl_3->objId());
+	msg.packSize( p4.size());
+	for (unsigned int ii=0; ii < p4.size(); ++ii) {
+		const RpcInterfaceStub* impl_4 = dynamic_cast<const RpcInterfaceStub*>(p4[ii]);
+		if (!impl_4) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
+		msg.packObject( impl_4->classId(), impl_4->objId());
+	}
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addPatternLexem");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addPatternLexem", err.what());
+	return void();
+}
+}
+
 void DocumentAnalyzerImpl::definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3)
 {
 try
@@ -3166,7 +3195,7 @@ try
 }
 }
 
-analyzer::Query QueryAnalyzerContextImpl::analyze( ) const
+analyzer::Query QueryAnalyzerContextImpl::analyze( )
 {
 try
 {
@@ -3252,6 +3281,35 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addMetaDataElement", err.what());
+	return void();
+}
+}
+
+void QueryAnalyzerImpl::addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addPatternLexem);
+	msg.packString( p1);
+	msg.packString( p2);
+	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
+	if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "TokenizerFunctionInstance");
+	msg.packObject( impl_3->classId(), impl_3->objId());
+	msg.packSize( p4.size());
+	for (unsigned int ii=0; ii < p4.size(); ++ii) {
+		const RpcInterfaceStub* impl_4 = dynamic_cast<const RpcInterfaceStub*>(p4[ii]);
+		if (!impl_4) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
+		msg.packObject( impl_4->classId(), impl_4->objId());
+	}
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addPatternLexem");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addPatternLexem", err.what());
 	return void();
 }
 }
