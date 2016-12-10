@@ -1191,6 +1191,38 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case DocumentAnalyzerConst::Method_addPatternLexem:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			TokenizerFunctionInstanceInterface* p3;
+			std::vector<NormalizerFunctionInstanceInterface*> p4;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			unsigned char classId_3; unsigned int objId_3;
+			serializedMsg.unpackObject( classId_3, objId_3);
+			if (classId_3 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p3 = getObject<TokenizerFunctionInstanceInterface>( classId_3, objId_3);
+			std::size_t n4 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n4; ++ii) {
+				unsigned char classId_; unsigned int objId_;
+				serializedMsg.unpackObject( classId_, objId_);
+				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
+				p4.push_back( ee);
+			}
+			obj->addPatternLexem(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case DocumentAnalyzerConst::Method_definePatternMatcherPostProc:
 		{
 			RpcSerializer msg;
@@ -2967,6 +2999,38 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p4.push_back( ee);
 			}
 			obj->addMetaDataElement(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case QueryAnalyzerConst::Method_addPatternLexem:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			TokenizerFunctionInstanceInterface* p3;
+			std::vector<NormalizerFunctionInstanceInterface*> p4;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			unsigned char classId_3; unsigned int objId_3;
+			serializedMsg.unpackObject( classId_3, objId_3);
+			if (classId_3 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p3 = getObject<TokenizerFunctionInstanceInterface>( classId_3, objId_3);
+			std::size_t n4 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n4; ++ii) {
+				unsigned char classId_; unsigned int objId_;
+				serializedMsg.unpackObject( classId_, objId_);
+				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
+				p4.push_back( ee);
+			}
+			obj->addPatternLexem(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
