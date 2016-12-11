@@ -443,6 +443,7 @@ public:
 		Method_defineLexem,
 		Method_defineSymbol,
 		Method_getLexem,
+		Method_lexemTypes,
 		Method_getSymbol
 	};
 };
