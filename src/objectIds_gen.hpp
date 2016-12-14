@@ -892,6 +892,7 @@ public:
 		Method_getAggregator,
 		Method_getPatternLexer,
 		Method_getPatternMatcher,
+		Method_getPatternTermFeeder,
 		Method_detectDocumentClass,
 		Method_defineDocumentClassDetector,
 		Method_defineTokenizer,

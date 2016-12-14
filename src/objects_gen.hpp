@@ -1127,6 +1127,7 @@ public:
 	virtual const AggregatorFunctionInterface* getAggregator( const std::string& p1) const;
 	virtual const PatternLexerInterface* getPatternLexer( const std::string& p1) const;
 	virtual const PatternMatcherInterface* getPatternMatcher( const std::string& p1) const;
+	virtual const PatternTermFeederInterface* getPatternTermFeeder( ) const;
 	virtual bool detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3) const;
 	virtual void defineDocumentClassDetector( DocumentClassDetectorInterface* p1);
 	virtual void defineTokenizer( const std::string& p1, TokenizerFunctionInterface* p2);

@@ -7024,6 +7024,30 @@ try
 }
 }
 
+const PatternTermFeederInterface* TextProcessorImpl::getPatternTermFeeder( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getPatternTermFeeder);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_PatternTermFeeder;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	PatternTermFeederImpl const_0( objId_0, ctx(), true, errorhnd());
+	const PatternTermFeederInterface* p0 = (const PatternTermFeederImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getPatternTermFeeder");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getPatternTermFeeder", err.what());
+	return 0;
+}
+}
+
 bool TextProcessorImpl::detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3) const
 {
 try
