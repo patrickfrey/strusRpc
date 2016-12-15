@@ -733,6 +733,7 @@ public:
 		Method_config,
 		Method_createTermPostingIterator,
 		Method_createBrowsePostingIterator,
+		Method_createFieldPostingIterator,
 		Method_createForwardIterator,
 		Method_createDocumentTermIterator,
 		Method_createInvAclIterator,
@@ -864,6 +865,7 @@ public:
 		Method_Destructor,
 		Method_addStringParameter,
 		Method_addNumericParameter,
+		Method_defineResultName,
 		Method_createFunctionContext,
 		Method_tostring
 	};
