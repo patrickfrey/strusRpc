@@ -725,6 +725,12 @@ void RpcSerializer::packFunctionDescription( const FunctionDescription& val)
 	}
 }
 
+void RpcSerializer::packVectorSpaceModelSearchResult( const VectorSpaceModelSearchInterface::Result& val)
+{
+	packIndex( val.featidx());
+	packDouble( val.weight());
+}
+
 void RpcSerializer::packCrc32()
 {
 #if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM
@@ -1357,6 +1363,13 @@ FunctionDescription RpcDeserializer::unpackFunctionDescription()
 		rt( type, name, text, domain);
 	}
 	return rt;
+}
+
+VectorSpaceModelSearchInterface::Result RpcDeserializer::unpackVectorSpaceModelSearchResult()
+{
+	Index featidx = unpackIndex();
+	double weight = unpackDouble();
+	return VectorSpaceModelSearchInterface::Result( featidx, weight);
 }
 
 

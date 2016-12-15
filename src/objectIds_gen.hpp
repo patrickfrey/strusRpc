@@ -78,9 +78,10 @@ enum ClassId
 	ClassId_TokenizerFunction,
 	ClassId_ValueIterator,
 	ClassId_VectorSpaceModelBuilder,
+	ClassId_VectorSpaceModelClient,
 	ClassId_VectorSpaceModelDump,
-	ClassId_VectorSpaceModelInstance,
 	ClassId_VectorSpaceModel,
+	ClassId_VectorSpaceModelSearch,
 	ClassId_WeightingFunctionContext,
 	ClassId_WeightingFunctionInstance,
 	ClassId_WeightingFunction
@@ -980,27 +981,16 @@ public:
 	};
 };
 
-class VectorSpaceModelDumpConst
+class VectorSpaceModelClientConst
 {
 public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_nextChunk
-	};
-};
-
-class VectorSpaceModelInstanceConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_preload,
+		Method_createSearcher,
 		Method_conceptClassNames,
 		Method_conceptFeatures,
 		Method_nofConcepts,
-		Method_findSimilarFeatures,
 		Method_featureConcepts,
 		Method_featureVector,
 		Method_featureName,
@@ -1012,6 +1002,16 @@ public:
 	};
 };
 
+class VectorSpaceModelDumpConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_nextChunk
+	};
+};
+
 class VectorSpaceModelConst
 {
 public:
@@ -1020,11 +1020,21 @@ public:
 		Method_Destructor,
 		Method_createRepository,
 		Method_resetRepository,
-		Method_createInstance,
+		Method_createClient,
 		Method_createBuilder,
 		Method_builderCommands,
 		Method_builderCommandDescription,
 		Method_createDump
+	};
+};
+
+class VectorSpaceModelSearchConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_findSimilar
 	};
 };
 

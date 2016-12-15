@@ -36,6 +36,7 @@
 #include "strus/metaDataRestrictionInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
 #include "strus/statisticsViewerInterface.hpp"
+#include "strus/vectorSpaceModelSearchInterface.hpp"
 #include "strus/analyzer/token.hpp"
 #include "strus/analyzer/patternLexem.hpp"
 #include "strus/analyzer/tokenMarkup.hpp"
@@ -115,6 +116,8 @@ public:
 	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
 	void packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val);
 	void packFunctionDescription( const FunctionDescription& val);
+	void packVectorSpaceModelSearchResult( const VectorSpaceModelSearchInterface::Result& val);
+
 	void packCrc32();
 	const std::string& content() const
 	{
@@ -194,6 +197,8 @@ public:
 	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();
 	PostingJoinOperatorInterface::Description unpackPostingJoinOperatorDescription();
 	FunctionDescription unpackFunctionDescription();
+	VectorSpaceModelSearchInterface::Result unpackVectorSpaceModelSearchResult();
+
 	bool unpackCrc32();
 
 	std::size_t position() const

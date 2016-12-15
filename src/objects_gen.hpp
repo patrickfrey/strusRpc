@@ -75,9 +75,10 @@
 #include "strus/summarizerFunctionInterface.hpp"
 #include "strus/valueIteratorInterface.hpp"
 #include "strus/vectorSpaceModelBuilderInterface.hpp"
+#include "strus/vectorSpaceModelClientInterface.hpp"
 #include "strus/vectorSpaceModelDumpInterface.hpp"
-#include "strus/vectorSpaceModelInstanceInterface.hpp"
 #include "strus/vectorSpaceModelInterface.hpp"
+#include "strus/vectorSpaceModelSearchInterface.hpp"
 #include "strus/weightingFunctionContextInterface.hpp"
 #include "strus/weightingFunctionInstanceInterface.hpp"
 #include "strus/weightingFunctionInterface.hpp"
@@ -1242,6 +1243,31 @@ public:
 	virtual bool run( const std::string& p1);
 };
 
+class VectorSpaceModelClientImpl
+		:public RpcInterfaceStub
+		,public strus::VectorSpaceModelClientInterface
+		,public strus::VectorSpaceModelClientConst
+{
+public:
+	virtual ~VectorSpaceModelClientImpl();
+
+	VectorSpaceModelClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelClient, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual VectorSpaceModelSearchInterface* createSearcher( const Index& p1, const Index& p2) const;
+	virtual std::vector<std::string> conceptClassNames( ) const;
+	virtual std::vector<Index> conceptFeatures( const std::string& p1, const Index& p2) const;
+	virtual unsigned int nofConcepts( const std::string& p1) const;
+	virtual std::vector<Index> featureConcepts( const std::string& p1, const Index& p2) const;
+	virtual std::vector<double> featureVector( const Index& p1) const;
+	virtual std::string featureName( const Index& p1) const;
+	virtual Index featureIndex( const std::string& p1) const;
+	virtual std::vector<std::string> featureAttributes( const std::string& p1, const Index& p2) const;
+	virtual std::vector<std::string> featureAttributeNames( ) const;
+	virtual unsigned int nofFeatures( ) const;
+	virtual std::string config( ) const;
+};
+
 class VectorSpaceModelDumpImpl
 		:public RpcInterfaceStub
 		,public strus::VectorSpaceModelDumpInterface
@@ -1254,32 +1280,6 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelDump, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual bool nextChunk( const char*& p1, std::size_t& p2);
-};
-
-class VectorSpaceModelInstanceImpl
-		:public RpcInterfaceStub
-		,public strus::VectorSpaceModelInstanceInterface
-		,public strus::VectorSpaceModelInstanceConst
-{
-public:
-	virtual ~VectorSpaceModelInstanceImpl();
-
-	VectorSpaceModelInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelInstance, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual void preload( );
-	virtual std::vector<std::string> conceptClassNames( ) const;
-	virtual std::vector<Index> conceptFeatures( const std::string& p1, const Index& p2) const;
-	virtual unsigned int nofConcepts( const std::string& p1) const;
-	virtual std::vector<Index> findSimilarFeatures( const std::vector<double>& p1, unsigned int p2) const;
-	virtual std::vector<Index> featureConcepts( const std::string& p1, const Index& p2) const;
-	virtual std::vector<double> featureVector( const Index& p1) const;
-	virtual std::string featureName( const Index& p1) const;
-	virtual Index featureIndex( const std::string& p1) const;
-	virtual std::vector<std::string> featureAttributes( const std::string& p1, const Index& p2) const;
-	virtual std::vector<std::string> featureAttributeNames( ) const;
-	virtual unsigned int nofFeatures( ) const;
-	virtual std::string config( ) const;
 };
 
 class VectorSpaceModelImpl
@@ -1295,11 +1295,25 @@ public:
 
 	virtual bool createRepository( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual bool resetRepository( const std::string& p1, const DatabaseInterface* p2) const;
-	virtual VectorSpaceModelInstanceInterface* createInstance( const std::string& p1, const DatabaseInterface* p2) const;
+	virtual VectorSpaceModelClientInterface* createClient( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual VectorSpaceModelBuilderInterface* createBuilder( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual std::vector<std::string> builderCommands( ) const;
 	virtual std::string builderCommandDescription( const std::string& p1) const;
 	virtual VectorSpaceModelDumpInterface* createDump( const std::string& p1, const DatabaseInterface* p2, const std::string& p3) const;
+};
+
+class VectorSpaceModelSearchImpl
+		:public RpcInterfaceStub
+		,public strus::VectorSpaceModelSearchInterface
+		,public strus::VectorSpaceModelSearchConst
+{
+public:
+	virtual ~VectorSpaceModelSearchImpl();
+
+	VectorSpaceModelSearchImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelSearch, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual std::vector<VectorSpaceModelSearchInterface::Result> findSimilar( const std::vector<double>& p1, unsigned int p2) const;
 };
 
 class WeightingFunctionContextImpl

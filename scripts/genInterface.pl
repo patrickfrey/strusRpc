@@ -886,6 +886,10 @@ sub packParameter
 	{
 		$rt .= "msg.packFunctionDescription( " . $id . ");";
 	}
+	elsif ($type eq "VectorSpaceModelSearchInterface::Result")
+	{
+		$rt .= "msg.packVectorSpaceModelSearchResult( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -1196,6 +1200,10 @@ sub unpackParameter
 	elsif ($type eq "FunctionDescription")
 	{
 		$rt .= "$id = serializedMsg.unpackFunctionDescription();";
+	}
+	elsif ($type eq "VectorSpaceModelSearchInterface::Result")
+	{
+		$rt .= "$id = serializedMsg.unpackVectorSpaceModelSearchResult();";
 	}
 	else
 	{

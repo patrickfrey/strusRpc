@@ -6964,6 +6964,267 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_VectorSpaceModelClient:
+	{
+	VectorSpaceModelClientInterface* obj = getObject<VectorSpaceModelClientInterface>( classId, objId);
+	switch( (VectorSpaceModelClientConst::MethodId)methodId)
+	{
+		case VectorSpaceModelClientConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case VectorSpaceModelClientConst::Method_createSearcher:
+		{
+			RpcSerializer msg;
+			VectorSpaceModelSearchInterface* p0;
+			Index p1;
+			Index p2;
+			p1 = serializedMsg.unpackIndex();
+			p2 = serializedMsg.unpackIndex();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createSearcher(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case VectorSpaceModelClientConst::Method_conceptClassNames:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->conceptClassNames();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelClientConst::Method_conceptFeatures:
+		{
+			RpcSerializer msg;
+			std::vector<Index> p0;
+			std::string p1;
+			Index p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackIndex();
+			p0 = obj->conceptFeatures(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packIndex( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelClientConst::Method_nofConcepts:
+		{
+			RpcSerializer msg;
+			unsigned int p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->nofConcepts(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packUint( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelClientConst::Method_featureConcepts:
+		{
+			RpcSerializer msg;
+			std::vector<Index> p0;
+			std::string p1;
+			Index p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackIndex();
+			p0 = obj->featureConcepts(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packIndex( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelClientConst::Method_featureVector:
+		{
+			RpcSerializer msg;
+			std::vector<double> p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->featureVector(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packDouble( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelClientConst::Method_featureName:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->featureName(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelClientConst::Method_featureIndex:
+		{
+			RpcSerializer msg;
+			Index p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->featureIndex(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndex( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelClientConst::Method_featureAttributes:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			std::string p1;
+			Index p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackIndex();
+			p0 = obj->featureAttributes(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelClientConst::Method_featureAttributeNames:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->featureAttributeNames();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelClientConst::Method_nofFeatures:
+		{
+			RpcSerializer msg;
+			unsigned int p0;
+			p0 = obj->nofFeatures();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packUint( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorSpaceModelClientConst::Method_config:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			p0 = obj->config();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_VectorSpaceModelDump:
 	{
 	VectorSpaceModelDumpInterface* obj = getObject<VectorSpaceModelDumpInterface>( classId, objId);
@@ -6991,286 +7252,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packBuffer( p1, p2);
-			msg.packCrc32();
-			return msg.content();
-		}
-	}
-	break;
-	}
-	case ClassId_VectorSpaceModelInstance:
-	{
-	VectorSpaceModelInstanceInterface* obj = getObject<VectorSpaceModelInstanceInterface>( classId, objId);
-	switch( (VectorSpaceModelInstanceConst::MethodId)methodId)
-	{
-		case VectorSpaceModelInstanceConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case VectorSpaceModelInstanceConst::Method_preload:
-		{
-			RpcSerializer msg;
-			obj->preload();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case VectorSpaceModelInstanceConst::Method_conceptClassNames:
-		{
-			RpcSerializer msg;
-			std::vector<std::string> p0;
-			p0 = obj->conceptClassNames();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packString( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelInstanceConst::Method_conceptFeatures:
-		{
-			RpcSerializer msg;
-			std::vector<Index> p0;
-			std::string p1;
-			Index p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackIndex();
-			p0 = obj->conceptFeatures(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packIndex( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelInstanceConst::Method_nofConcepts:
-		{
-			RpcSerializer msg;
-			unsigned int p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			p0 = obj->nofConcepts(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packUint( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelInstanceConst::Method_findSimilarFeatures:
-		{
-			RpcSerializer msg;
-			std::vector<Index> p0;
-			std::vector<double> p1;
-			unsigned int p2;
-			std::size_t n1 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n1; ++ii) {
-				double ee = serializedMsg.unpackDouble();
-				p1.push_back( ee);
-			}
-			p2 = serializedMsg.unpackUint();
-			p0 = obj->findSimilarFeatures(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packIndex( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelInstanceConst::Method_featureConcepts:
-		{
-			RpcSerializer msg;
-			std::vector<Index> p0;
-			std::string p1;
-			Index p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackIndex();
-			p0 = obj->featureConcepts(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packIndex( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelInstanceConst::Method_featureVector:
-		{
-			RpcSerializer msg;
-			std::vector<double> p0;
-			Index p1;
-			p1 = serializedMsg.unpackIndex();
-			p0 = obj->featureVector(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packDouble( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelInstanceConst::Method_featureName:
-		{
-			RpcSerializer msg;
-			std::string p0;
-			Index p1;
-			p1 = serializedMsg.unpackIndex();
-			p0 = obj->featureName(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packString( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelInstanceConst::Method_featureIndex:
-		{
-			RpcSerializer msg;
-			Index p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			p0 = obj->featureIndex(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packIndex( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelInstanceConst::Method_featureAttributes:
-		{
-			RpcSerializer msg;
-			std::vector<std::string> p0;
-			std::string p1;
-			Index p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackIndex();
-			p0 = obj->featureAttributes(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packString( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelInstanceConst::Method_featureAttributeNames:
-		{
-			RpcSerializer msg;
-			std::vector<std::string> p0;
-			p0 = obj->featureAttributeNames();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packString( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelInstanceConst::Method_nofFeatures:
-		{
-			RpcSerializer msg;
-			unsigned int p0;
-			p0 = obj->nofFeatures();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packUint( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorSpaceModelInstanceConst::Method_config:
-		{
-			RpcSerializer msg;
-			std::string p0;
-			p0 = obj->config();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packString( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -7335,10 +7316,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelConst::Method_createInstance:
+		case VectorSpaceModelConst::Method_createClient:
 		{
 			RpcSerializer msg;
-			VectorSpaceModelInstanceInterface* p0;
+			VectorSpaceModelClientInterface* p0;
 			std::string p1;
 			const DatabaseInterface* p2;
 			p1 = serializedMsg.unpackString();
@@ -7348,7 +7329,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createInstance(p1,p2);
+			p0 = obj->createClient(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -7453,6 +7434,47 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_VectorSpaceModelSearch:
+	{
+	VectorSpaceModelSearchInterface* obj = getObject<VectorSpaceModelSearchInterface>( classId, objId);
+	switch( (VectorSpaceModelSearchConst::MethodId)methodId)
+	{
+		case VectorSpaceModelSearchConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case VectorSpaceModelSearchConst::Method_findSimilar:
+		{
+			RpcSerializer msg;
+			std::vector<VectorSpaceModelSearchInterface::Result> p0;
+			std::vector<double> p1;
+			unsigned int p2;
+			std::size_t n1 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n1; ++ii) {
+				double ee = serializedMsg.unpackDouble();
+				p1.push_back( ee);
+			}
+			p2 = serializedMsg.unpackUint();
+			p0 = obj->findSimilar(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packVectorSpaceModelSearchResult( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
