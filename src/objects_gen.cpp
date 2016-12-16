@@ -3696,6 +3696,26 @@ try
 }
 }
 
+void QueryImpl::pushDocField( const std::string& p1, const std::string& p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_pushDocField);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::pushDocField");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::pushDocField", err.what());
+	return void();
+}
+}
+
 void QueryImpl::pushExpression( const PostingJoinOperatorInterface* p1, unsigned int p2, int p3, unsigned int p4)
 {
 try

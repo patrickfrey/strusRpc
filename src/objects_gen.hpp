@@ -679,6 +679,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_Query, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void pushTerm( const std::string& p1, const std::string& p2);
+	virtual void pushDocField( const std::string& p1, const std::string& p2);
 	virtual void pushExpression( const PostingJoinOperatorInterface* p1, unsigned int p2, int p3, unsigned int p4);
 	virtual void attachVariable( const std::string& p1);
 	virtual void defineFeature( const std::string& p1, double p2);

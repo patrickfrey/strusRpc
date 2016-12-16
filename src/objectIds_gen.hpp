@@ -540,6 +540,7 @@ public:
 	{
 		Method_Destructor,
 		Method_pushTerm,
+		Method_pushDocField,
 		Method_pushExpression,
 		Method_attachVariable,
 		Method_defineFeature,
