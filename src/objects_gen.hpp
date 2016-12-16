@@ -74,11 +74,11 @@
 #include "strus/summarizerFunctionInstanceInterface.hpp"
 #include "strus/summarizerFunctionInterface.hpp"
 #include "strus/valueIteratorInterface.hpp"
-#include "strus/vectorSpaceModelBuilderInterface.hpp"
-#include "strus/vectorSpaceModelClientInterface.hpp"
-#include "strus/vectorSpaceModelDumpInterface.hpp"
-#include "strus/vectorSpaceModelInterface.hpp"
-#include "strus/vectorSpaceModelSearchInterface.hpp"
+#include "strus/vectorStorageBuilderInterface.hpp"
+#include "strus/vectorStorageClientInterface.hpp"
+#include "strus/vectorStorageDumpInterface.hpp"
+#include "strus/vectorStorageInterface.hpp"
+#include "strus/vectorStorageSearchInterface.hpp"
 #include "strus/weightingFunctionContextInterface.hpp"
 #include "strus/weightingFunctionInstanceInterface.hpp"
 #include "strus/weightingFunctionInterface.hpp"
@@ -1039,7 +1039,7 @@ public:
 	virtual const DatabaseInterface* getDatabase( const std::string& p1) const;
 	virtual const QueryProcessorInterface* getQueryProcessor( ) const;
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( const std::string& p1) const;
-	virtual const VectorSpaceModelInterface* getVectorSpaceModel( const std::string& p1) const;
+	virtual const VectorStorageInterface* getVectorStorage( const std::string& p1) const;
 	virtual QueryEvalInterface* createQueryEval( ) const;
 };
 
@@ -1229,34 +1229,34 @@ public:
 	virtual std::vector<std::string> fetchValues( std::size_t p1);
 };
 
-class VectorSpaceModelBuilderImpl
+class VectorStorageBuilderImpl
 		:public RpcInterfaceStub
-		,public strus::VectorSpaceModelBuilderInterface
-		,public strus::VectorSpaceModelBuilderConst
+		,public strus::VectorStorageBuilderInterface
+		,public strus::VectorStorageBuilderConst
 {
 public:
-	virtual ~VectorSpaceModelBuilderImpl();
+	virtual ~VectorStorageBuilderImpl();
 
-	VectorSpaceModelBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelBuilder, objId_, ctx_, isConst_, errorhnd_){}
+	VectorStorageBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addFeature( const std::string& p1, const std::vector<double>& p2);
 	virtual bool done( );
 	virtual bool run( const std::string& p1);
 };
 
-class VectorSpaceModelClientImpl
+class VectorStorageClientImpl
 		:public RpcInterfaceStub
-		,public strus::VectorSpaceModelClientInterface
-		,public strus::VectorSpaceModelClientConst
+		,public strus::VectorStorageClientInterface
+		,public strus::VectorStorageClientConst
 {
 public:
-	virtual ~VectorSpaceModelClientImpl();
+	virtual ~VectorStorageClientImpl();
 
-	VectorSpaceModelClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelClient, objId_, ctx_, isConst_, errorhnd_){}
+	VectorStorageClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageClient, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual VectorSpaceModelSearchInterface* createSearcher( const Index& p1, const Index& p2) const;
+	virtual VectorStorageSearchInterface* createSearcher( const Index& p1, const Index& p2) const;
 	virtual std::vector<std::string> conceptClassNames( ) const;
 	virtual std::vector<Index> conceptFeatures( const std::string& p1, const Index& p2) const;
 	virtual unsigned int nofConcepts( const std::string& p1) const;
@@ -1270,52 +1270,52 @@ public:
 	virtual std::string config( ) const;
 };
 
-class VectorSpaceModelDumpImpl
+class VectorStorageDumpImpl
 		:public RpcInterfaceStub
-		,public strus::VectorSpaceModelDumpInterface
-		,public strus::VectorSpaceModelDumpConst
+		,public strus::VectorStorageDumpInterface
+		,public strus::VectorStorageDumpConst
 {
 public:
-	virtual ~VectorSpaceModelDumpImpl();
+	virtual ~VectorStorageDumpImpl();
 
-	VectorSpaceModelDumpImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelDump, objId_, ctx_, isConst_, errorhnd_){}
+	VectorStorageDumpImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageDump, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual bool nextChunk( const char*& p1, std::size_t& p2);
 };
 
-class VectorSpaceModelImpl
+class VectorStorageImpl
 		:public RpcInterfaceStub
-		,public strus::VectorSpaceModelInterface
-		,public strus::VectorSpaceModelConst
+		,public strus::VectorStorageInterface
+		,public strus::VectorStorageConst
 {
 public:
-	virtual ~VectorSpaceModelImpl();
+	virtual ~VectorStorageImpl();
 
-	VectorSpaceModelImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModel, objId_, ctx_, isConst_, errorhnd_){}
+	VectorStorageImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorage, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual bool createRepository( const std::string& p1, const DatabaseInterface* p2) const;
-	virtual bool resetRepository( const std::string& p1, const DatabaseInterface* p2) const;
-	virtual VectorSpaceModelClientInterface* createClient( const std::string& p1, const DatabaseInterface* p2) const;
-	virtual VectorSpaceModelBuilderInterface* createBuilder( const std::string& p1, const DatabaseInterface* p2) const;
+	virtual bool createStorage( const std::string& p1, const DatabaseInterface* p2) const;
+	virtual bool resetStorage( const std::string& p1, const DatabaseInterface* p2) const;
+	virtual VectorStorageClientInterface* createClient( const std::string& p1, const DatabaseInterface* p2) const;
+	virtual VectorStorageBuilderInterface* createBuilder( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual std::vector<std::string> builderCommands( ) const;
 	virtual std::string builderCommandDescription( const std::string& p1) const;
-	virtual VectorSpaceModelDumpInterface* createDump( const std::string& p1, const DatabaseInterface* p2, const std::string& p3) const;
+	virtual VectorStorageDumpInterface* createDump( const std::string& p1, const DatabaseInterface* p2, const std::string& p3) const;
 };
 
-class VectorSpaceModelSearchImpl
+class VectorStorageSearchImpl
 		:public RpcInterfaceStub
-		,public strus::VectorSpaceModelSearchInterface
-		,public strus::VectorSpaceModelSearchConst
+		,public strus::VectorStorageSearchInterface
+		,public strus::VectorStorageSearchConst
 {
 public:
-	virtual ~VectorSpaceModelSearchImpl();
+	virtual ~VectorStorageSearchImpl();
 
-	VectorSpaceModelSearchImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_VectorSpaceModelSearch, objId_, ctx_, isConst_, errorhnd_){}
+	VectorStorageSearchImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageSearch, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual std::vector<VectorSpaceModelSearchInterface::Result> findSimilar( const std::vector<double>& p1, unsigned int p2) const;
+	virtual std::vector<VectorStorageSearchInterface::Result> findSimilar( const std::vector<double>& p1, unsigned int p2) const;
 };
 
 class WeightingFunctionContextImpl

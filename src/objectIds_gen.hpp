@@ -77,11 +77,11 @@ enum ClassId
 	ClassId_TokenizerFunctionInstance,
 	ClassId_TokenizerFunction,
 	ClassId_ValueIterator,
-	ClassId_VectorSpaceModelBuilder,
-	ClassId_VectorSpaceModelClient,
-	ClassId_VectorSpaceModelDump,
-	ClassId_VectorSpaceModel,
-	ClassId_VectorSpaceModelSearch,
+	ClassId_VectorStorageBuilder,
+	ClassId_VectorStorageClient,
+	ClassId_VectorStorageDump,
+	ClassId_VectorStorage,
+	ClassId_VectorStorageSearch,
 	ClassId_WeightingFunctionContext,
 	ClassId_WeightingFunctionInstance,
 	ClassId_WeightingFunction
@@ -824,7 +824,7 @@ public:
 		Method_getDatabase,
 		Method_getQueryProcessor,
 		Method_getStatisticsProcessor,
-		Method_getVectorSpaceModel,
+		Method_getVectorStorage,
 		Method_createQueryEval
 	};
 };
@@ -971,7 +971,7 @@ public:
 	};
 };
 
-class VectorSpaceModelBuilderConst
+class VectorStorageBuilderConst
 {
 public:
 	enum MethodId
@@ -983,7 +983,7 @@ public:
 	};
 };
 
-class VectorSpaceModelClientConst
+class VectorStorageClientConst
 {
 public:
 	enum MethodId
@@ -1004,7 +1004,7 @@ public:
 	};
 };
 
-class VectorSpaceModelDumpConst
+class VectorStorageDumpConst
 {
 public:
 	enum MethodId
@@ -1014,14 +1014,14 @@ public:
 	};
 };
 
-class VectorSpaceModelConst
+class VectorStorageConst
 {
 public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createRepository,
-		Method_resetRepository,
+		Method_createStorage,
+		Method_resetStorage,
 		Method_createClient,
 		Method_createBuilder,
 		Method_builderCommands,
@@ -1030,7 +1030,7 @@ public:
 	};
 };
 
-class VectorSpaceModelSearchConst
+class VectorStorageSearchConst
 {
 public:
 	enum MethodId

@@ -5850,15 +5850,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case StorageObjectBuilderConst::Method_getVectorSpaceModel:
+		case StorageObjectBuilderConst::Method_getVectorStorage:
 		{
 			RpcSerializer msg;
-			const VectorSpaceModelInterface* p0;
+			const VectorStorageInterface* p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->getVectorSpaceModel(p1);
+			p0 = obj->getVectorStorage(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6934,17 +6934,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_VectorSpaceModelBuilder:
+	case ClassId_VectorStorageBuilder:
 	{
-	VectorSpaceModelBuilderInterface* obj = getObject<VectorSpaceModelBuilderInterface>( classId, objId);
-	switch( (VectorSpaceModelBuilderConst::MethodId)methodId)
+	VectorStorageBuilderInterface* obj = getObject<VectorStorageBuilderInterface>( classId, objId);
+	switch( (VectorStorageBuilderConst::MethodId)methodId)
 	{
-		case VectorSpaceModelBuilderConst::Method_Destructor:
+		case VectorStorageBuilderConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case VectorSpaceModelBuilderConst::Method_addFeature:
+		case VectorStorageBuilderConst::Method_addFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -6966,7 +6966,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case VectorSpaceModelBuilderConst::Method_done:
+		case VectorStorageBuilderConst::Method_done:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -6983,7 +6983,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelBuilderConst::Method_run:
+		case VectorStorageBuilderConst::Method_run:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -7005,20 +7005,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_VectorSpaceModelClient:
+	case ClassId_VectorStorageClient:
 	{
-	VectorSpaceModelClientInterface* obj = getObject<VectorSpaceModelClientInterface>( classId, objId);
-	switch( (VectorSpaceModelClientConst::MethodId)methodId)
+	VectorStorageClientInterface* obj = getObject<VectorStorageClientInterface>( classId, objId);
+	switch( (VectorStorageClientConst::MethodId)methodId)
 	{
-		case VectorSpaceModelClientConst::Method_Destructor:
+		case VectorStorageClientConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case VectorSpaceModelClientConst::Method_createSearcher:
+		case VectorStorageClientConst::Method_createSearcher:
 		{
 			RpcSerializer msg;
-			VectorSpaceModelSearchInterface* p0;
+			VectorStorageSearchInterface* p0;
 			Index p1;
 			Index p2;
 			p1 = serializedMsg.unpackIndex();
@@ -7038,7 +7038,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case VectorSpaceModelClientConst::Method_conceptClassNames:
+		case VectorStorageClientConst::Method_conceptClassNames:
 		{
 			RpcSerializer msg;
 			std::vector<std::string> p0;
@@ -7058,7 +7058,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelClientConst::Method_conceptFeatures:
+		case VectorStorageClientConst::Method_conceptFeatures:
 		{
 			RpcSerializer msg;
 			std::vector<Index> p0;
@@ -7082,7 +7082,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelClientConst::Method_nofConcepts:
+		case VectorStorageClientConst::Method_nofConcepts:
 		{
 			RpcSerializer msg;
 			unsigned int p0;
@@ -7101,7 +7101,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelClientConst::Method_featureConcepts:
+		case VectorStorageClientConst::Method_featureConcepts:
 		{
 			RpcSerializer msg;
 			std::vector<Index> p0;
@@ -7125,7 +7125,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelClientConst::Method_featureVector:
+		case VectorStorageClientConst::Method_featureVector:
 		{
 			RpcSerializer msg;
 			std::vector<double> p0;
@@ -7147,7 +7147,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelClientConst::Method_featureName:
+		case VectorStorageClientConst::Method_featureName:
 		{
 			RpcSerializer msg;
 			std::string p0;
@@ -7166,7 +7166,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelClientConst::Method_featureIndex:
+		case VectorStorageClientConst::Method_featureIndex:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -7185,7 +7185,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelClientConst::Method_featureAttributes:
+		case VectorStorageClientConst::Method_featureAttributes:
 		{
 			RpcSerializer msg;
 			std::vector<std::string> p0;
@@ -7209,7 +7209,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelClientConst::Method_featureAttributeNames:
+		case VectorStorageClientConst::Method_featureAttributeNames:
 		{
 			RpcSerializer msg;
 			std::vector<std::string> p0;
@@ -7229,7 +7229,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelClientConst::Method_nofFeatures:
+		case VectorStorageClientConst::Method_nofFeatures:
 		{
 			RpcSerializer msg;
 			unsigned int p0;
@@ -7246,7 +7246,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelClientConst::Method_config:
+		case VectorStorageClientConst::Method_config:
 		{
 			RpcSerializer msg;
 			std::string p0;
@@ -7266,17 +7266,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_VectorSpaceModelDump:
+	case ClassId_VectorStorageDump:
 	{
-	VectorSpaceModelDumpInterface* obj = getObject<VectorSpaceModelDumpInterface>( classId, objId);
-	switch( (VectorSpaceModelDumpConst::MethodId)methodId)
+	VectorStorageDumpInterface* obj = getObject<VectorStorageDumpInterface>( classId, objId);
+	switch( (VectorStorageDumpConst::MethodId)methodId)
 	{
-		case VectorSpaceModelDumpConst::Method_Destructor:
+		case VectorStorageDumpConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case VectorSpaceModelDumpConst::Method_nextChunk:
+		case VectorStorageDumpConst::Method_nextChunk:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -7299,17 +7299,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_VectorSpaceModel:
+	case ClassId_VectorStorage:
 	{
-	VectorSpaceModelInterface* obj = getObject<VectorSpaceModelInterface>( classId, objId);
-	switch( (VectorSpaceModelConst::MethodId)methodId)
+	VectorStorageInterface* obj = getObject<VectorStorageInterface>( classId, objId);
+	switch( (VectorStorageConst::MethodId)methodId)
 	{
-		case VectorSpaceModelConst::Method_Destructor:
+		case VectorStorageConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case VectorSpaceModelConst::Method_createRepository:
+		case VectorStorageConst::Method_createStorage:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -7320,7 +7320,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_Database) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
-			p0 = obj->createRepository(p1,p2);
+			p0 = obj->createStorage(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -7333,7 +7333,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelConst::Method_resetRepository:
+		case VectorStorageConst::Method_resetStorage:
 		{
 			RpcSerializer msg;
 			bool p0;
@@ -7344,7 +7344,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_Database) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
-			p0 = obj->resetRepository(p1,p2);
+			p0 = obj->resetStorage(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -7357,10 +7357,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelConst::Method_createClient:
+		case VectorStorageConst::Method_createClient:
 		{
 			RpcSerializer msg;
-			VectorSpaceModelClientInterface* p0;
+			VectorStorageClientInterface* p0;
 			std::string p1;
 			const DatabaseInterface* p2;
 			p1 = serializedMsg.unpackString();
@@ -7383,10 +7383,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case VectorSpaceModelConst::Method_createBuilder:
+		case VectorStorageConst::Method_createBuilder:
 		{
 			RpcSerializer msg;
-			VectorSpaceModelBuilderInterface* p0;
+			VectorStorageBuilderInterface* p0;
 			std::string p1;
 			const DatabaseInterface* p2;
 			p1 = serializedMsg.unpackString();
@@ -7409,7 +7409,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case VectorSpaceModelConst::Method_builderCommands:
+		case VectorStorageConst::Method_builderCommands:
 		{
 			RpcSerializer msg;
 			std::vector<std::string> p0;
@@ -7429,7 +7429,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelConst::Method_builderCommandDescription:
+		case VectorStorageConst::Method_builderCommandDescription:
 		{
 			RpcSerializer msg;
 			std::string p0;
@@ -7448,10 +7448,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorSpaceModelConst::Method_createDump:
+		case VectorStorageConst::Method_createDump:
 		{
 			RpcSerializer msg;
-			VectorSpaceModelDumpInterface* p0;
+			VectorStorageDumpInterface* p0;
 			std::string p1;
 			const DatabaseInterface* p2;
 			std::string p3;
@@ -7479,20 +7479,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_VectorSpaceModelSearch:
+	case ClassId_VectorStorageSearch:
 	{
-	VectorSpaceModelSearchInterface* obj = getObject<VectorSpaceModelSearchInterface>( classId, objId);
-	switch( (VectorSpaceModelSearchConst::MethodId)methodId)
+	VectorStorageSearchInterface* obj = getObject<VectorStorageSearchInterface>( classId, objId);
+	switch( (VectorStorageSearchConst::MethodId)methodId)
 	{
-		case VectorSpaceModelSearchConst::Method_Destructor:
+		case VectorStorageSearchConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case VectorSpaceModelSearchConst::Method_findSimilar:
+		case VectorStorageSearchConst::Method_findSimilar:
 		{
 			RpcSerializer msg;
-			std::vector<VectorSpaceModelSearchInterface::Result> p0;
+			std::vector<VectorStorageSearchInterface::Result> p0;
 			std::vector<double> p1;
 			unsigned int p2;
 			std::size_t n1 = serializedMsg.unpackSize();
@@ -7512,7 +7512,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packVectorSpaceModelSearchResult( p0[ii]);
+				msg.packVectorStorageSearchResult( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();

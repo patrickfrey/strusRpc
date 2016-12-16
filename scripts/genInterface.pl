@@ -886,9 +886,9 @@ sub packParameter
 	{
 		$rt .= "msg.packFunctionDescription( " . $id . ");";
 	}
-	elsif ($type eq "VectorSpaceModelSearchInterface::Result")
+	elsif ($type eq "VectorStorageSearchInterface::Result")
 	{
-		$rt .= "msg.packVectorSpaceModelSearchResult( " . $id . ");";
+		$rt .= "msg.packVectorStorageSearchResult( " . $id . ");";
 	}
 	else
 	{
@@ -1201,9 +1201,9 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackFunctionDescription();";
 	}
-	elsif ($type eq "VectorSpaceModelSearchInterface::Result")
+	elsif ($type eq "VectorStorageSearchInterface::Result")
 	{
-		$rt .= "$id = serializedMsg.unpackVectorSpaceModelSearchResult();";
+		$rt .= "$id = serializedMsg.unpackVectorStorageSearchResult();";
 	}
 	else
 	{

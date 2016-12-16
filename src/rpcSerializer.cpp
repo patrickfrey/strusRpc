@@ -725,7 +725,7 @@ void RpcSerializer::packFunctionDescription( const FunctionDescription& val)
 	}
 }
 
-void RpcSerializer::packVectorSpaceModelSearchResult( const VectorSpaceModelSearchInterface::Result& val)
+void RpcSerializer::packVectorStorageSearchResult( const VectorStorageSearchInterface::Result& val)
 {
 	packIndex( val.featidx());
 	packDouble( val.weight());
@@ -1365,11 +1365,11 @@ FunctionDescription RpcDeserializer::unpackFunctionDescription()
 	return rt;
 }
 
-VectorSpaceModelSearchInterface::Result RpcDeserializer::unpackVectorSpaceModelSearchResult()
+VectorStorageSearchInterface::Result RpcDeserializer::unpackVectorStorageSearchResult()
 {
 	Index featidx = unpackIndex();
 	double weight = unpackDouble();
-	return VectorSpaceModelSearchInterface::Result( featidx, weight);
+	return VectorStorageSearchInterface::Result( featidx, weight);
 }
 
 
