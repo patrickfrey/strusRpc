@@ -510,8 +510,8 @@ public:
 		Method_addPatternLexem,
 		Method_definePatternMatcherPostProc,
 		Method_definePatternMatcherPreProc,
-		Method_addSearchIndexFeatureFromPatternMatch,
-		Method_defineMetaDataFromPatternMatch,
+		Method_addSearchIndexElementFromPatternMatch,
+		Method_addMetaDataElementFromPatternMatch,
 		Method_createContext
 	};
 };

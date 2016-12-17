@@ -3119,7 +3119,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_addSearchIndexFeatureFromPatternMatch:
+		case QueryAnalyzerConst::Method_addSearchIndexElementFromPatternMatch:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3135,7 +3135,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p3.push_back( ee);
 			}
-			obj->addSearchIndexFeatureFromPatternMatch(p1,p2,p3);
+			obj->addSearchIndexElementFromPatternMatch(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3146,7 +3146,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_defineMetaDataFromPatternMatch:
+		case QueryAnalyzerConst::Method_addMetaDataElementFromPatternMatch:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3162,7 +3162,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p3.push_back( ee);
 			}
-			obj->defineMetaDataFromPatternMatch(p1,p2,p3);
+			obj->addMetaDataElementFromPatternMatch(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

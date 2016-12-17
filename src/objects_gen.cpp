@@ -3395,13 +3395,13 @@ try
 }
 }
 
-void QueryAnalyzerImpl::addSearchIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
+void QueryAnalyzerImpl::addSearchIndexElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_addSearchIndexFeatureFromPatternMatch);
+	msg.packByte( Method_addSearchIndexElementFromPatternMatch);
 	msg.packString( p1);
 	msg.packString( p2);
 	msg.packSize( p3.size());
@@ -3413,21 +3413,21 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addSearchIndexFeatureFromPatternMatch");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addSearchIndexElementFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addSearchIndexFeatureFromPatternMatch", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addSearchIndexElementFromPatternMatch", err.what());
 	return void();
 }
 }
 
-void QueryAnalyzerImpl::defineMetaDataFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
+void QueryAnalyzerImpl::addMetaDataElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineMetaDataFromPatternMatch);
+	msg.packByte( Method_addMetaDataElementFromPatternMatch);
 	msg.packString( p1);
 	msg.packString( p2);
 	msg.packSize( p3.size());
@@ -3439,10 +3439,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::defineMetaDataFromPatternMatch");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addMetaDataElementFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::defineMetaDataFromPatternMatch", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addMetaDataElementFromPatternMatch", err.what());
 	return void();
 }
 }
