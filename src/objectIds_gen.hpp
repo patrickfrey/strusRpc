@@ -364,7 +364,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_match
+		Method_match,
+		Method_reset
 	};
 };
 
@@ -402,7 +403,8 @@ public:
 		Method_Destructor,
 		Method_putInput,
 		Method_fetchResults,
-		Method_getStatistics
+		Method_getStatistics,
+		Method_reset
 	};
 };
 

@@ -2239,6 +2239,24 @@ try
 }
 }
 
+void PatternLexerContextImpl::reset( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_reset);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerContextImpl::reset");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerContextImpl::reset", err.what());
+	return void();
+}
+}
+
 PatternLexerInstanceImpl::~PatternLexerInstanceImpl()
 {
 	if (isConst()) return;
@@ -2520,6 +2538,24 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherContextImpl::getStatistics", err.what());
 	return analyzer::PatternMatcherStatistics();
+}
+}
+
+void PatternMatcherContextImpl::reset( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_reset);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherContextImpl::reset");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherContextImpl::reset", err.what());
+	return void();
 }
 }
 

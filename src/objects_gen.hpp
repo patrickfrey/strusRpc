@@ -452,6 +452,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_PatternLexerContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual std::vector<analyzer::PatternLexem> match( const char* p1, std::size_t p2);
+	virtual void reset( );
 };
 
 class PatternLexerInstanceImpl
@@ -502,6 +503,7 @@ public:
 	virtual void putInput( const analyzer::PatternLexem& p1);
 	virtual std::vector<analyzer::PatternMatcherResult> fetchResults( ) const;
 	virtual analyzer::PatternMatcherStatistics getStatistics( ) const;
+	virtual void reset( );
 };
 
 class PatternMatcherInstanceImpl
