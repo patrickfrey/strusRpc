@@ -2073,7 +2073,7 @@ try
 }
 }
 
-NormalizerFunctionContextImpl::~NormalizerFunctionContextImpl()
+NormalizerFunctionInstanceImpl::~NormalizerFunctionInstanceImpl()
 {
 	if (isConst()) return;
 	RpcSerializer msg;
@@ -2083,7 +2083,7 @@ NormalizerFunctionContextImpl::~NormalizerFunctionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::string NormalizerFunctionContextImpl::normalize( const char* p1, std::size_t p2)
+std::string NormalizerFunctionInstanceImpl::normalize( const char* p1, std::size_t p2) const
 {
 try
 {
@@ -2098,44 +2098,11 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "NormalizerFunctionContextImpl::normalize");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "NormalizerFunctionInstanceImpl::normalize");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "NormalizerFunctionContextImpl::normalize", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "NormalizerFunctionInstanceImpl::normalize", err.what());
 	return std::string();
-}
-}
-
-NormalizerFunctionInstanceImpl::~NormalizerFunctionInstanceImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-NormalizerFunctionContextInterface* NormalizerFunctionInstanceImpl::createFunctionContext( ) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createFunctionContext);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_NormalizerFunctionContext;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	NormalizerFunctionContextInterface* p0 = new NormalizerFunctionContextImpl( objId_0, ctx(), false, errorhnd());
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "NormalizerFunctionInstanceImpl::createFunctionContext");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "NormalizerFunctionInstanceImpl::createFunctionContext", err.what());
-	return 0;
 }
 }
 
@@ -7438,44 +7405,6 @@ try
 }
 }
 
-TokenizerFunctionContextImpl::~TokenizerFunctionContextImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-std::vector<analyzer::Token> TokenizerFunctionContextImpl::tokenize( const char* p1, std::size_t p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_tokenize);
-	msg.packBuffer( p1, p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<analyzer::Token> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		analyzer::Token elem_p0 = serializedMsg.unpackAnalyzerToken();
-		p0.push_back( elem_p0);
-	}
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TokenizerFunctionContextImpl::tokenize");
-	return std::vector<analyzer::Token>();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TokenizerFunctionContextImpl::tokenize", err.what());
-	return std::vector<analyzer::Token>();
-}
-}
-
 TokenizerFunctionInstanceImpl::~TokenizerFunctionInstanceImpl()
 {
 	if (isConst()) return;
@@ -7508,26 +7437,31 @@ try
 }
 }
 
-TokenizerFunctionContextInterface* TokenizerFunctionInstanceImpl::createFunctionContext( ) const
+std::vector<analyzer::Token> TokenizerFunctionInstanceImpl::tokenize( const char* p1, std::size_t p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createFunctionContext);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_TokenizerFunctionContext;
-	msg.packObject( classId_0, objId_0);
+	msg.packByte( Method_tokenize);
+	msg.packBuffer( p1, p2);
 	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	TokenizerFunctionContextInterface* p0 = new TokenizerFunctionContextImpl( objId_0, ctx(), false, errorhnd());
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<analyzer::Token> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		analyzer::Token elem_p0 = serializedMsg.unpackAnalyzerToken();
+		p0.push_back( elem_p0);
+	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TokenizerFunctionInstanceImpl::createFunctionContext");
-	return 0;
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TokenizerFunctionInstanceImpl::tokenize");
+	return std::vector<analyzer::Token>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TokenizerFunctionInstanceImpl::createFunctionContext", err.what());
-	return 0;
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "TokenizerFunctionInstanceImpl::tokenize", err.what());
+	return std::vector<analyzer::Token>();
 }
 }
 

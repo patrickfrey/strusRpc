@@ -15,7 +15,6 @@
 #include "strus/documentAnalyzerContextInterface.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/documentClassDetectorInterface.hpp"
-#include "strus/normalizerFunctionContextInterface.hpp"
 #include "strus/normalizerFunctionInstanceInterface.hpp"
 #include "strus/normalizerFunctionInterface.hpp"
 #include "strus/patternLexerContextInterface.hpp"
@@ -33,7 +32,6 @@
 #include "strus/segmenterInterface.hpp"
 #include "strus/segmenterMarkupContextInterface.hpp"
 #include "strus/textProcessorInterface.hpp"
-#include "strus/tokenizerFunctionContextInterface.hpp"
 #include "strus/tokenizerFunctionInstanceInterface.hpp"
 #include "strus/tokenizerFunctionInterface.hpp"
 #include "strus/tokenMarkupContextInterface.hpp"
@@ -397,20 +395,6 @@ public:
 	virtual std::string tostring( ) const;
 };
 
-class NormalizerFunctionContextImpl
-		:public RpcInterfaceStub
-		,public strus::NormalizerFunctionContextInterface
-		,public strus::NormalizerFunctionContextConst
-{
-public:
-	virtual ~NormalizerFunctionContextImpl();
-
-	NormalizerFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual std::string normalize( const char* p1, std::size_t p2);
-};
-
 class NormalizerFunctionInstanceImpl
 		:public RpcInterfaceStub
 		,public strus::NormalizerFunctionInstanceInterface
@@ -422,7 +406,7 @@ public:
 	NormalizerFunctionInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual NormalizerFunctionContextInterface* createFunctionContext( ) const;
+	virtual std::string normalize( const char* p1, std::size_t p2) const;
 };
 
 class NormalizerFunctionImpl
@@ -1173,20 +1157,6 @@ public:
 	virtual TokenMarkupContextInterface* createContext( ) const;
 };
 
-class TokenizerFunctionContextImpl
-		:public RpcInterfaceStub
-		,public strus::TokenizerFunctionContextInterface
-		,public strus::TokenizerFunctionContextConst
-{
-public:
-	virtual ~TokenizerFunctionContextImpl();
-
-	TokenizerFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual std::vector<analyzer::Token> tokenize( const char* p1, std::size_t p2);
-};
-
 class TokenizerFunctionInstanceImpl
 		:public RpcInterfaceStub
 		,public strus::TokenizerFunctionInstanceInterface
@@ -1199,7 +1169,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual bool concatBeforeTokenize( ) const;
-	virtual TokenizerFunctionContextInterface* createFunctionContext( ) const;
+	virtual std::vector<analyzer::Token> tokenize( const char* p1, std::size_t p2) const;
 };
 
 class TokenizerFunctionImpl

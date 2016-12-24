@@ -30,7 +30,6 @@ enum ClassId
 	ClassId_MetaDataReader,
 	ClassId_MetaDataRestrictionInstance,
 	ClassId_MetaDataRestriction,
-	ClassId_NormalizerFunctionContext,
 	ClassId_NormalizerFunctionInstance,
 	ClassId_NormalizerFunction,
 	ClassId_PatternLexerContext,
@@ -73,7 +72,6 @@ enum ClassId
 	ClassId_TextProcessor,
 	ClassId_TokenMarkupContext,
 	ClassId_TokenMarkupInstance,
-	ClassId_TokenizerFunctionContext,
 	ClassId_TokenizerFunctionInstance,
 	ClassId_TokenizerFunction,
 	ClassId_ValueIterator,
@@ -327,23 +325,13 @@ public:
 	};
 };
 
-class NormalizerFunctionContextConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_normalize
-	};
-};
-
 class NormalizerFunctionInstanceConst
 {
 public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createFunctionContext
+		Method_normalize
 	};
 };
 
@@ -931,16 +919,6 @@ public:
 	};
 };
 
-class TokenizerFunctionContextConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_tokenize
-	};
-};
-
 class TokenizerFunctionInstanceConst
 {
 public:
@@ -948,7 +926,7 @@ public:
 	{
 		Method_Destructor,
 		Method_concatBeforeTokenize,
-		Method_createFunctionContext
+		Method_tokenize
 	};
 };
 

@@ -1903,17 +1903,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_NormalizerFunctionContext:
+	case ClassId_NormalizerFunctionInstance:
 	{
-	NormalizerFunctionContextInterface* obj = getObject<NormalizerFunctionContextInterface>( classId, objId);
-	switch( (NormalizerFunctionContextConst::MethodId)methodId)
+	NormalizerFunctionInstanceInterface* obj = getObject<NormalizerFunctionInstanceInterface>( classId, objId);
+	switch( (NormalizerFunctionInstanceConst::MethodId)methodId)
 	{
-		case NormalizerFunctionContextConst::Method_Destructor:
+		case NormalizerFunctionInstanceConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case NormalizerFunctionContextConst::Method_normalize:
+		case NormalizerFunctionInstanceConst::Method_normalize:
 		{
 			RpcSerializer msg;
 			std::string p0;
@@ -1932,38 +1932,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packString( p0);
 			msg.packCrc32();
 			return msg.content();
-		}
-	}
-	break;
-	}
-	case ClassId_NormalizerFunctionInstance:
-	{
-	NormalizerFunctionInstanceInterface* obj = getObject<NormalizerFunctionInstanceInterface>( classId, objId);
-	switch( (NormalizerFunctionInstanceConst::MethodId)methodId)
-	{
-		case NormalizerFunctionInstanceConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case NormalizerFunctionInstanceConst::Method_createFunctionContext:
-		{
-			RpcSerializer msg;
-			NormalizerFunctionContextInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createFunctionContext();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
 		}
 	}
 	break;
@@ -6783,42 +6751,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_TokenizerFunctionContext:
-	{
-	TokenizerFunctionContextInterface* obj = getObject<TokenizerFunctionContextInterface>( classId, objId);
-	switch( (TokenizerFunctionContextConst::MethodId)methodId)
-	{
-		case TokenizerFunctionContextConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case TokenizerFunctionContextConst::Method_tokenize:
-		{
-			RpcSerializer msg;
-			std::vector<analyzer::Token> p0;
-			const char* p1;
-			std::size_t p2;
-			serializedMsg.unpackBuffer( p1, p2);
-			p0 = obj->tokenize(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packAnalyzerToken( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-	}
-	break;
-	}
 	case ClassId_TokenizerFunctionInstance:
 	{
 	TokenizerFunctionInstanceInterface* obj = getObject<TokenizerFunctionInstanceInterface>( classId, objId);
@@ -6846,13 +6778,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case TokenizerFunctionInstanceConst::Method_createFunctionContext:
+		case TokenizerFunctionInstanceConst::Method_tokenize:
 		{
 			RpcSerializer msg;
-			TokenizerFunctionContextInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createFunctionContext();
+			std::vector<analyzer::Token> p0;
+			const char* p1;
+			std::size_t p2;
+			serializedMsg.unpackBuffer( p1, p2);
+			p0 = obj->tokenize(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6861,9 +6794,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packAnalyzerToken( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
