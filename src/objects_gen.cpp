@@ -6181,6 +6181,7 @@ StorageClientInterface* StorageImpl::createClient( const std::string& p1, const 
 {
 try
 {
+	if (p1.empty()) return new StorageClientImpl( 0, ctx(), false, errorhnd());
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClient);

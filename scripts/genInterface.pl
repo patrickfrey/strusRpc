@@ -182,7 +182,7 @@ $constResetMethodMap{"nextChunk"} = 1;
 
 # List of hacks (client code inserted at the beginning of a method call):
 my %alternativeClientImpl = ();
-$alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx(), false, errorhnd());\n";
+$alternativeClientImpl{"StorageImpl::createClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx(), false, errorhnd());\n";
 
 # Set debug code generation ON/OFF:
 my $doGenerateDebugCode = 0;
@@ -1396,9 +1396,10 @@ sub getMethodDeclarationSource
 		{
 			$sender_code .= "\tstd::cerr << \"calling method $classname" . "::" . "$methodname\" << std::endl;\n";
 		}
-		if ($alternativeClientImpl{$methodname})
+		my $mtname = $classname . "::" . $methodname;
+		if ($alternativeClientImpl{ $mtname })
 		{
-			$sender_code .= "\t$alternativeClientImpl{$methodname}";
+			$sender_code .= "\t$alternativeClientImpl{ $mtname }";
 		}
 		$sender_code .= "\tRpcSerializer msg;\n";
 		$sender_code .= "\tmsg.packObject( classId(), objId());\n";
