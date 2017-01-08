@@ -8082,6 +8082,7 @@ VectorStorageClientInterface* VectorStorageImpl::createClient( const std::string
 {
 try
 {
+	if (p1.empty()) return new VectorStorageClientImpl( 0, ctx(), false, errorhnd());
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createClient);

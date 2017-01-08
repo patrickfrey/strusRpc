@@ -20,6 +20,8 @@ class AnalyzerObjectBuilderInterface;
 class StorageObjectBuilderInterface;
 /// \brief Forward declaration
 class StorageClientInterface;
+/// \brief Forward declaration
+class VectorStorageClientInterface;
 
 template <class Interface>
 class RpcObjDeleter
@@ -38,6 +40,7 @@ public:
 			StorageObjectBuilderInterface* storageBuilder_,
 			AnalyzerObjectBuilderInterface* analyzerBuilder_,
 			StorageClientInterface* storageClient_,
+			VectorStorageClientInterface* vectorStorageClient_,
 			ErrorBufferInterface* errorhnd_);
 	virtual ~RpcRequestHandler();
 
