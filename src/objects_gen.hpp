@@ -450,10 +450,11 @@ public:
 	PatternLexerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PatternLexerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual void defineOption( const std::string& p1, double p2);
 	virtual void defineLexem( unsigned int p1, const std::string& p2, unsigned int p3, unsigned int p4, analyzer::PositionBind p5);
 	virtual void defineSymbol( unsigned int p1, unsigned int p2, const std::string& p3);
 	virtual unsigned int getSymbol( unsigned int p1, const std::string& p2) const;
-	virtual bool compile( const analyzer::PatternLexerOptions& p1);
+	virtual bool compile( );
 	virtual PatternLexerContextInterface* createContext( ) const;
 };
 
@@ -468,7 +469,7 @@ public:
 	PatternLexerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PatternLexer, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual std::vector<std::string> getCompileOptions( ) const;
+	virtual std::vector<std::string> getCompileOptionNames( ) const;
 	virtual PatternLexerInstanceInterface* createInstance( ) const;
 	virtual const char* getDescription( ) const;
 };
@@ -501,13 +502,14 @@ public:
 	PatternMatcherInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PatternMatcherInstance, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual void defineOption( const std::string& p1, double p2);
 	virtual void defineTermFrequency( unsigned int p1, double p2);
 	virtual void pushTerm( unsigned int p1);
 	virtual void pushExpression( PatternMatcherInstanceInterface::JoinOperation p1, std::size_t p2, unsigned int p3, unsigned int p4);
 	virtual void pushPattern( const std::string& p1);
 	virtual void attachVariable( const std::string& p1, float p2);
 	virtual void definePattern( const std::string& p1, bool p2);
-	virtual bool compile( const analyzer::PatternMatcherOptions& p1);
+	virtual bool compile( );
 	virtual PatternMatcherContextInterface* createContext( ) const;
 };
 
@@ -522,7 +524,7 @@ public:
 	PatternMatcherImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PatternMatcher, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual std::vector<std::string> getCompileOptions( ) const;
+	virtual std::vector<std::string> getCompileOptionNames( ) const;
 	virtual PatternMatcherInstanceInterface* createInstance( ) const;
 	virtual const char* getDescription( ) const;
 };

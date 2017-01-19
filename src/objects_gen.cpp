@@ -2234,6 +2234,26 @@ PatternLexerInstanceImpl::~PatternLexerInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+void PatternLexerInstanceImpl::defineOption( const std::string& p1, double p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineOption);
+	msg.packString( p1);
+	msg.packDouble( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::defineOption");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::defineOption", err.what());
+	return void();
+}
+}
+
 void PatternLexerInstanceImpl::defineLexem( unsigned int p1, const std::string& p2, unsigned int p3, unsigned int p4, analyzer::PositionBind p5)
 {
 try
@@ -2302,14 +2322,13 @@ try
 }
 }
 
-bool PatternLexerInstanceImpl::compile( const analyzer::PatternLexerOptions& p1)
+bool PatternLexerInstanceImpl::compile( )
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_compile);
-	msg.packAnalyzerPatternLexerOptions( p1);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -2358,13 +2377,13 @@ PatternLexerImpl::~PatternLexerImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::vector<std::string> PatternLexerImpl::getCompileOptions( ) const
+std::vector<std::string> PatternLexerImpl::getCompileOptionNames( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_getCompileOptions);
+	msg.packByte( Method_getCompileOptionNames);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -2377,10 +2396,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerImpl::getCompileOptions");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerImpl::getCompileOptionNames");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerImpl::getCompileOptions", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerImpl::getCompileOptionNames", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -2536,6 +2555,26 @@ PatternMatcherInstanceImpl::~PatternMatcherInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+void PatternMatcherInstanceImpl::defineOption( const std::string& p1, double p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineOption);
+	msg.packString( p1);
+	msg.packDouble( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::defineOption");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::defineOption", err.what());
+	return void();
+}
+}
+
 void PatternMatcherInstanceImpl::defineTermFrequency( unsigned int p1, double p2)
 {
 try
@@ -2656,14 +2695,13 @@ try
 }
 }
 
-bool PatternMatcherInstanceImpl::compile( const analyzer::PatternMatcherOptions& p1)
+bool PatternMatcherInstanceImpl::compile( )
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_compile);
-	msg.packAnalyzerPatternMatcherOptions( p1);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -2712,13 +2750,13 @@ PatternMatcherImpl::~PatternMatcherImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::vector<std::string> PatternMatcherImpl::getCompileOptions( ) const
+std::vector<std::string> PatternMatcherImpl::getCompileOptionNames( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_getCompileOptions);
+	msg.packByte( Method_getCompileOptionNames);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -2731,10 +2769,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherImpl::getCompileOptions");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherImpl::getCompileOptionNames");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherImpl::getCompileOptions", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherImpl::getCompileOptionNames", err.what());
 	return std::vector<std::string>();
 }
 }

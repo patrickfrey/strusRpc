@@ -41,9 +41,7 @@
 #include "strus/analyzer/patternLexem.hpp"
 #include "strus/analyzer/tokenMarkup.hpp"
 #include "strus/analyzer/positionBind.hpp"
-#include "strus/analyzer/patternLexerOptions.hpp"
 #include "strus/analyzer/patternMatcherStatistics.hpp"
-#include "strus/analyzer/patternMatcherOptions.hpp"
 #include "strus/analyzer/patternMatcherResult.hpp"
 #include "strus/analyzer/term.hpp"
 #include "strus/analyzer/metaData.hpp"
@@ -99,8 +97,6 @@ public:
 	void packAnalyzerToken( const analyzer::Token& val);
 	void packAnalyzerGroupBy( const QueryAnalyzerContextInterface::GroupBy& groupBy);
 	void packAnalyzerPatternLexem( const analyzer::PatternLexem& val);
-	void packAnalyzerPatternLexerOptions( const analyzer::PatternLexerOptions& val);
-	void packAnalyzerPatternMatcherOptions( const analyzer::PatternMatcherOptions& val);
 	void packAnalyzerTokenMarkup( const analyzer::TokenMarkup& val);
 	void packAnalyzerPatternMatcherResult( const analyzer::PatternMatcherResult& val);
 	void packAnalyzerPatternMatcherStatistics( const analyzer::PatternMatcherStatistics& val);
@@ -180,8 +176,6 @@ public:
 	analyzer::Token unpackAnalyzerToken();
 	QueryAnalyzerContextInterface::GroupBy unpackAnalyzerGroupBy();
 	analyzer::PatternLexem unpackAnalyzerPatternLexem();
-	analyzer::PatternLexerOptions unpackAnalyzerPatternLexerOptions();
-	analyzer::PatternMatcherOptions unpackAnalyzerPatternMatcherOptions();
 	analyzer::TokenMarkup unpackAnalyzerTokenMarkup();
 	analyzer::PatternMatcherResult unpackAnalyzerPatternMatcherResult();
 	analyzer::PatternMatcherStatistics unpackAnalyzerPatternMatcherStatistics();

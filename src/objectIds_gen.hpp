@@ -363,6 +363,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_defineOption,
 		Method_defineLexem,
 		Method_defineSymbol,
 		Method_getSymbol,
@@ -377,7 +378,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_getCompileOptions,
+		Method_getCompileOptionNames,
 		Method_createInstance,
 		Method_getDescription
 	};
@@ -402,6 +403,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_defineOption,
 		Method_defineTermFrequency,
 		Method_pushTerm,
 		Method_pushExpression,
@@ -419,7 +421,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_getCompileOptions,
+		Method_getCompileOptionNames,
 		Method_createInstance,
 		Method_getDescription
 	};

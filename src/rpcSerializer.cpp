@@ -558,27 +558,6 @@ void RpcSerializer::packAnalyzerPatternLexem( const analyzer::PatternLexem& val)
 	packUint( val.origsize());
 }
 
-void RpcSerializer::packAnalyzerPatternLexerOptions( const analyzer::PatternLexerOptions& val)
-{
-	analyzer::PatternLexerOptions::const_iterator oi = val.begin(), oe = val.end();
-	packSize( oe-oi);
-	for (; oi != oe; ++oi)
-	{
-		packString( *oi);
-	}
-}
-
-void RpcSerializer::packAnalyzerPatternMatcherOptions( const analyzer::PatternMatcherOptions& val)
-{
-	analyzer::PatternMatcherOptions::const_iterator oi = val.begin(), oe = val.end();
-	packSize( oe-oi);
-	for (; oi != oe; ++oi)
-	{
-		packString( oi->first);
-		packDouble( oi->second);
-	}
-}
-
 void RpcSerializer::packAnalyzerTokenMarkup( const analyzer::TokenMarkup& val)
 {
 	packString( val.name());
@@ -1195,28 +1174,6 @@ analyzer::PatternLexem RpcDeserializer::unpackAnalyzerPatternLexem()
 	unsigned int origpos = unpackUint();
 	unsigned int origsize = unpackUint();
 	return analyzer::PatternLexem( id, ordpos, origseg, origpos, origsize);
-}
-
-analyzer::PatternLexerOptions RpcDeserializer::unpackAnalyzerPatternLexerOptions()
-{
-	analyzer::PatternLexerOptions rt;
-	std::size_t ii = 0, size = unpackSize();
-	for (; ii < size; ++ii)
-	{
-		rt( unpackString());
-	}
-	return rt;
-}
-
-analyzer::PatternMatcherOptions RpcDeserializer::unpackAnalyzerPatternMatcherOptions()
-{
-	analyzer::PatternMatcherOptions rt;
-	std::size_t ii = 0, size = unpackSize();
-	for (; ii < size; ++ii)
-	{
-		rt( unpackString(), unpackDouble());
-	}
-	return rt;
 }
 
 analyzer::TokenMarkup RpcDeserializer::unpackAnalyzerTokenMarkup()

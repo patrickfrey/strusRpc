@@ -819,14 +819,6 @@ sub packParameter
 	{
 		$rt .= "msg.packByte( " . $id . ");";
 	}
-	elsif ($type eq "analyzer::PatternLexerOptions")
-	{
-		$rt .= "msg.packAnalyzerPatternLexerOptions( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::PatternMatcherOptions")
-	{
-		$rt .= "msg.packAnalyzerPatternMatcherOptions( " . $id . ");";
-	}
 	elsif ($type eq "analyzer::TokenMarkup")
 	{
 		$rt .= "msg.packAnalyzerTokenMarkup( " . $id . ");";
@@ -1125,14 +1117,6 @@ sub unpackParameter
 	elsif ($type eq "analyzer::PositionBind")
 	{
 		$rt .= "$id = (analyzer::PositionBind)serializedMsg.unpackByte();";
-	}
-	elsif ($type eq "analyzer::PatternLexerOptions")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerPatternLexerOptions();";
-	}
-	elsif ($type eq "analyzer::PatternMatcherOptions")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerPatternMatcherOptions();";
 	}
 	elsif ($type eq "analyzer::TokenMarkup")
 	{

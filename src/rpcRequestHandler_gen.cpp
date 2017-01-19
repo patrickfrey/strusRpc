@@ -2056,6 +2056,24 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case PatternLexerInstanceConst::Method_defineOption:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			double p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDouble();
+			obj->defineOption(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case PatternLexerInstanceConst::Method_defineLexem:
 		{
 			RpcSerializer msg;
@@ -2125,9 +2143,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			bool p0;
-			analyzer::PatternLexerOptions p1;
-			p1 = serializedMsg.unpackAnalyzerPatternLexerOptions();
-			p0 = obj->compile(p1);
+			p0 = obj->compile();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -2172,11 +2188,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case PatternLexerConst::Method_getCompileOptions:
+		case PatternLexerConst::Method_getCompileOptionNames:
 		{
 			RpcSerializer msg;
 			std::vector<std::string> p0;
-			p0 = obj->getCompileOptions();
+			p0 = obj->getCompileOptionNames();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -2321,6 +2337,24 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case PatternMatcherInstanceConst::Method_defineOption:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			double p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDouble();
+			obj->defineOption(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case PatternMatcherInstanceConst::Method_defineTermFrequency:
 		{
 			RpcSerializer msg;
@@ -2433,9 +2467,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			bool p0;
-			analyzer::PatternMatcherOptions p1;
-			p1 = serializedMsg.unpackAnalyzerPatternMatcherOptions();
-			p0 = obj->compile(p1);
+			p0 = obj->compile();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -2480,11 +2512,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case PatternMatcherConst::Method_getCompileOptions:
+		case PatternMatcherConst::Method_getCompileOptionNames:
 		{
 			RpcSerializer msg;
 			std::vector<std::string> p0;
-			p0 = obj->getCompileOptions();
+			p0 = obj->getCompileOptionNames();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
