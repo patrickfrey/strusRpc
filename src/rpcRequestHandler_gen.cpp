@@ -7372,6 +7372,40 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case VectorStorageSearchConst::Method_findSimilarFromSelection:
+		{
+			RpcSerializer msg;
+			std::vector<VectorStorageSearchInterface::Result> p0;
+			std::vector<Index> p1;
+			std::vector<double> p2;
+			unsigned int p3;
+			std::size_t n1 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n1; ++ii) {
+				Index ee = serializedMsg.unpackIndex();
+				p1.push_back( ee);
+			}
+			std::size_t n2 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n2; ++ii) {
+				double ee = serializedMsg.unpackDouble();
+				p2.push_back( ee);
+			}
+			p3 = serializedMsg.unpackUint();
+			p0 = obj->findSimilarFromSelection(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packVectorStorageSearchResult( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
 		case VectorStorageSearchConst::Method_close:
 		{
 			RpcSerializer msg;

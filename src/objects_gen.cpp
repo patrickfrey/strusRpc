@@ -8104,6 +8104,42 @@ try
 }
 }
 
+std::vector<VectorStorageSearchInterface::Result> VectorStorageSearchImpl::findSimilarFromSelection( const std::vector<Index>& p1, const std::vector<double>& p2, unsigned int p3) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_findSimilarFromSelection);
+	msg.packSize( p1.size());
+	for (unsigned int ii=0; ii < p1.size(); ++ii) {
+		msg.packIndex( p1[ii]);
+	}
+	msg.packSize( p2.size());
+	for (unsigned int ii=0; ii < p2.size(); ++ii) {
+		msg.packDouble( p2[ii]);
+	}
+	msg.packUint( p3);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<VectorStorageSearchInterface::Result> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		VectorStorageSearchInterface::Result elem_p0 = serializedMsg.unpackVectorStorageSearchResult();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageSearchImpl::findSimilarFromSelection");
+	return std::vector<VectorStorageSearchInterface::Result>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageSearchImpl::findSimilarFromSelection", err.what());
+	return std::vector<VectorStorageSearchInterface::Result>();
+}
+}
+
 void VectorStorageSearchImpl::close( )
 {
 try

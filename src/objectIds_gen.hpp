@@ -1004,6 +1004,7 @@ public:
 	{
 		Method_Destructor,
 		Method_findSimilar,
+		Method_findSimilarFromSelection,
 		Method_close
 	};
 };
