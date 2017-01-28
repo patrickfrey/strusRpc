@@ -573,7 +573,8 @@ void RpcSerializer::packAnalyzerTokenMarkup( const analyzer::TokenMarkup& val)
 void RpcSerializer::packAnalyzerPatternMatcherResult( const analyzer::PatternMatcherResult& val)
 {
 	packCharp( val.name());
-	packUint( val.ordpos());
+	packUint( val.start_ordpos());
+	packUint( val.end_ordpos());
 	packUint( val.start_origseg());
 	packUint( val.start_origpos());
 	packUint( val.end_origseg());
@@ -584,12 +585,13 @@ void RpcSerializer::packAnalyzerPatternMatcherResult( const analyzer::PatternMat
 	for (; ri != re; ++ri)
 	{
 		packCharp( ri->name());
-		packUint( ri->ordpos());
+		packUint( ri->start_ordpos());
+		packUint( ri->end_ordpos());
 		packUint( ri->start_origseg());
 		packUint( ri->start_origpos());
 		packUint( ri->end_origseg());
 		packUint( ri->end_origpos());
-		packDouble( ri->weight());
+		packFloat( ri->weight());
 	}
 }
 
@@ -1190,7 +1192,8 @@ analyzer::TokenMarkup RpcDeserializer::unpackAnalyzerTokenMarkup()
 analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResult()
 {
 	const char* name( unpackConstCharp());
-	unsigned int ordpos = unpackUint();
+	unsigned int start_ordpos = unpackUint();
+	unsigned int end_ordpos = unpackUint();
 	unsigned int start_origseg = unpackUint();
 	unsigned int start_origpos = unpackUint();
 	unsigned int end_origseg = unpackUint();
@@ -1200,10 +1203,23 @@ analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResu
 	std::size_t ii = 0, size = unpackSize();
 	for (; ii < size; ++ii)
 	{
-		analyzer::PatternMatcherResult::Item item( unpackConstCharp(), unpackUint(), unpackUint(), unpackUint(), unpackUint(), unpackUint(), unpackDouble());
+		const char* i_name( unpackConstCharp());
+		unsigned int i_start_ordpos = unpackUint();
+		unsigned int i_end_ordpos = unpackUint();
+		unsigned int i_start_origseg = unpackUint();
+		unsigned int i_start_origpos = unpackUint();
+		unsigned int i_end_origseg = unpackUint();
+		unsigned int i_end_origpos = unpackUint();
+		float i_weight = unpackFloat();
+
+		analyzer::PatternMatcherResult::Item
+			item( i_name, i_start_ordpos, i_end_ordpos,
+			i_start_origseg, i_start_origpos,
+			i_end_origseg, i_end_origpos,
+			i_weight);
 		itemlist.push_back( item);
 	}
-	analyzer::PatternMatcherResult rt( name, ordpos, start_origseg, start_origpos, end_origseg, end_origpos, itemlist);
+	analyzer::PatternMatcherResult rt( name, start_ordpos, end_ordpos, start_origseg, start_origpos, end_origseg, end_origpos, itemlist);
 	return rt;
 }
 
