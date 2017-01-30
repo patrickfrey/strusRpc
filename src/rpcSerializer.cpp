@@ -524,6 +524,7 @@ void RpcSerializer::packAnalyzerTerm( const analyzer::Term& val)
 	packString( val.type());
 	packString( val.value());
 	packIndex( val.pos());
+	packIndex( val.len());
 }
 
 void RpcSerializer::packAnalyzerTermArray( const analyzer::TermArray& val)
@@ -1140,7 +1141,8 @@ analyzer::Term RpcDeserializer::unpackAnalyzerTerm()
 	std::string type = unpackString();
 	std::string value = unpackString();
 	unsigned int pos = (unsigned int)unpackIndex();
-	return analyzer::Term( type, value, pos);
+	unsigned int len = (unsigned int)unpackIndex();
+	return analyzer::Term( type, value, pos, len);
 }
 
 analyzer::TermArray RpcDeserializer::unpackAnalyzerTermArray()
