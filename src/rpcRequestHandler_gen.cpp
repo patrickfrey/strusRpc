@@ -2866,6 +2866,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case PostingIteratorConst::Method_length:
+		{
+			RpcSerializer msg;
+			Index p0;
+			p0 = obj->length();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndex( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -3425,9 +3442,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
+			Index p3;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			obj->pushTerm(p1,p2);
+			p3 = serializedMsg.unpackIndex();
+			obj->pushTerm(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -4898,11 +4917,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			PostingIteratorInterface* p0;
 			std::string p1;
 			std::string p2;
+			Index p3;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackIndex();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createTermPostingIterator(p1,p2);
+			p0 = obj->createTermPostingIterator(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

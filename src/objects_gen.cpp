@@ -3169,6 +3169,28 @@ try
 }
 }
 
+Index PostingIteratorImpl::length( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_length);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingIteratorImpl::length");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::length", err.what());
+	return 0;
+}
+}
+
 PostingJoinOperatorImpl::~PostingJoinOperatorImpl()
 {
 	if (isConst()) return;
@@ -3717,7 +3739,7 @@ QueryImpl::~QueryImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void QueryImpl::pushTerm( const std::string& p1, const std::string& p2)
+void QueryImpl::pushTerm( const std::string& p1, const std::string& p2, const Index& p3)
 {
 try
 {
@@ -3726,6 +3748,7 @@ try
 	msg.packByte( Method_pushTerm);
 	msg.packString( p1);
 	msg.packString( p2);
+	msg.packIndex( p3);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -5344,7 +5367,7 @@ try
 }
 }
 
-PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const std::string& p1, const std::string& p2) const
+PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3) const
 {
 try
 {
@@ -5353,6 +5376,7 @@ try
 	msg.packByte( Method_createTermPostingIterator);
 	msg.packString( p1);
 	msg.packString( p2);
+	msg.packIndex( p3);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_PostingIterator;
 	msg.packObject( classId_0, objId_0);

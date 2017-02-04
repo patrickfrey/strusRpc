@@ -464,7 +464,8 @@ public:
 		Method_documentFrequency,
 		Method_frequency,
 		Method_docno,
-		Method_posno
+		Method_posno,
+		Method_length
 	};
 };
 
