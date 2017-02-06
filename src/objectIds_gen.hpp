@@ -30,11 +30,19 @@ enum ClassId
 	ClassId_MetaDataReader,
 	ClassId_MetaDataRestrictionInstance,
 	ClassId_MetaDataRestriction,
-	ClassId_NormalizerFunctionContext,
 	ClassId_NormalizerFunctionInstance,
 	ClassId_NormalizerFunction,
+	ClassId_PatternLexerContext,
+	ClassId_PatternLexerInstance,
+	ClassId_PatternLexer,
+	ClassId_PatternMatcherContext,
+	ClassId_PatternMatcherInstance,
+	ClassId_PatternMatcher,
+	ClassId_PatternTermFeederInstance,
+	ClassId_PatternTermFeeder,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
+	ClassId_QueryAnalyzerContext,
 	ClassId_QueryAnalyzer,
 	ClassId_QueryEval,
 	ClassId_Query,
@@ -62,10 +70,16 @@ enum ClassId
 	ClassId_SummarizerFunctionInstance,
 	ClassId_SummarizerFunction,
 	ClassId_TextProcessor,
-	ClassId_TokenizerFunctionContext,
+	ClassId_TokenMarkupContext,
+	ClassId_TokenMarkupInstance,
 	ClassId_TokenizerFunctionInstance,
 	ClassId_TokenizerFunction,
 	ClassId_ValueIterator,
+	ClassId_VectorStorageClient,
+	ClassId_VectorStorageDump,
+	ClassId_VectorStorage,
+	ClassId_VectorStorageSearch,
+	ClassId_VectorStorageTransaction,
 	ClassId_WeightingFunctionContext,
 	ClassId_WeightingFunctionInstance,
 	ClassId_WeightingFunction
@@ -140,7 +154,8 @@ public:
 		Method_createBackupCursor,
 		Method_writeImm,
 		Method_removeImm,
-		Method_readValue
+		Method_readValue,
+		Method_config
 	};
 };
 
@@ -215,6 +230,13 @@ public:
 		Method_defineAggregatedMetaData,
 		Method_defineAttribute,
 		Method_defineSubDocument,
+		Method_addPatternLexem,
+		Method_definePatternMatcherPostProc,
+		Method_definePatternMatcherPreProc,
+		Method_addSearchIndexFeatureFromPatternMatch,
+		Method_addForwardIndexFeatureFromPatternMatch,
+		Method_defineMetaDataFromPatternMatch,
+		Method_defineAttributeFromPatternMatch,
 		Method_analyze,
 		Method_createContext
 	};
@@ -303,23 +325,13 @@ public:
 	};
 };
 
-class NormalizerFunctionContextConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_normalize
-	};
-};
-
 class NormalizerFunctionInstanceConst
 {
 public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createFunctionContext
+		Method_normalize
 	};
 };
 
@@ -331,6 +343,111 @@ public:
 		Method_Destructor,
 		Method_createInstance,
 		Method_getDescription
+	};
+};
+
+class PatternLexerContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_match,
+		Method_reset
+	};
+};
+
+class PatternLexerInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_defineOption,
+		Method_defineLexem,
+		Method_defineSymbol,
+		Method_getSymbol,
+		Method_compile,
+		Method_createContext
+	};
+};
+
+class PatternLexerConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getCompileOptionNames,
+		Method_createInstance,
+		Method_getDescription
+	};
+};
+
+class PatternMatcherContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_putInput,
+		Method_fetchResults,
+		Method_getStatistics,
+		Method_reset
+	};
+};
+
+class PatternMatcherInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_defineOption,
+		Method_defineTermFrequency,
+		Method_pushTerm,
+		Method_pushExpression,
+		Method_pushPattern,
+		Method_attachVariable,
+		Method_definePattern,
+		Method_compile,
+		Method_createContext
+	};
+};
+
+class PatternMatcherConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getCompileOptionNames,
+		Method_createInstance,
+		Method_getDescription
+	};
+};
+
+class PatternTermFeederInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_defineLexem,
+		Method_defineSymbol,
+		Method_getLexem,
+		Method_lexemTypes,
+		Method_getSymbol
+	};
+};
+
+class PatternTermFeederConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createInstance
 	};
 };
 
@@ -347,7 +464,8 @@ public:
 		Method_documentFrequency,
 		Method_frequency,
 		Method_docno,
-		Method_posno
+		Method_posno,
+		Method_length
 	};
 };
 
@@ -362,15 +480,32 @@ public:
 	};
 };
 
+class QueryAnalyzerContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_putField,
+		Method_groupElements,
+		Method_analyze
+	};
+};
+
 class QueryAnalyzerConst
 {
 public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_definePhraseType,
-		Method_analyzePhrase,
-		Method_analyzePhraseBulk
+		Method_addSearchIndexElement,
+		Method_addMetaDataElement,
+		Method_addPatternLexem,
+		Method_definePatternMatcherPostProc,
+		Method_definePatternMatcherPreProc,
+		Method_addSearchIndexElementFromPatternMatch,
+		Method_addMetaDataElementFromPatternMatch,
+		Method_createContext
 	};
 };
 
@@ -398,6 +533,7 @@ public:
 	{
 		Method_Destructor,
 		Method_pushTerm,
+		Method_pushDocField,
 		Method_pushExpression,
 		Method_attachVariable,
 		Method_defineFeature,
@@ -409,7 +545,8 @@ public:
 		Method_setMinRank,
 		Method_addUserName,
 		Method_setWeightingVariableValue,
-		Method_evaluate
+		Method_evaluate,
+		Method_tostring
 	};
 };
 
@@ -587,8 +724,10 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_config,
 		Method_createTermPostingIterator,
 		Method_createBrowsePostingIterator,
+		Method_createFieldPostingIterator,
 		Method_createForwardIterator,
 		Method_createDocumentTermIterator,
 		Method_createInvAclIterator,
@@ -609,8 +748,7 @@ public:
 		Method_createUpdateStatisticsIterator,
 		Method_getStatisticsProcessor,
 		Method_createDocumentChecker,
-		Method_checkStorage,
-		Method_createDump
+		Method_checkStorage
 	};
 };
 
@@ -665,7 +803,8 @@ public:
 		Method_createStorage,
 		Method_createAlterMetaDataTable,
 		Method_getConfigDescription,
-		Method_getConfigParameters
+		Method_getConfigParameters,
+		Method_createDump
 	};
 };
 
@@ -679,6 +818,7 @@ public:
 		Method_getDatabase,
 		Method_getQueryProcessor,
 		Method_getStatisticsProcessor,
+		Method_getVectorStorage,
 		Method_createQueryEval
 	};
 };
@@ -695,7 +835,8 @@ public:
 		Method_deleteUserAccessRights,
 		Method_updateMetaData,
 		Method_commit,
-		Method_rollback
+		Method_rollback,
+		Method_nofDocumentsAffected
 	};
 };
 
@@ -718,6 +859,7 @@ public:
 		Method_Destructor,
 		Method_addStringParameter,
 		Method_addNumericParameter,
+		Method_defineResultName,
 		Method_createFunctionContext,
 		Method_tostring
 	};
@@ -745,22 +887,38 @@ public:
 		Method_getTokenizer,
 		Method_getNormalizer,
 		Method_getAggregator,
+		Method_getPatternLexer,
+		Method_getPatternMatcher,
+		Method_getPatternTermFeeder,
 		Method_detectDocumentClass,
 		Method_defineDocumentClassDetector,
 		Method_defineTokenizer,
 		Method_defineNormalizer,
 		Method_defineAggregator,
+		Method_definePatternLexer,
+		Method_definePatternMatcher,
 		Method_getFunctionList
 	};
 };
 
-class TokenizerFunctionContextConst
+class TokenMarkupContextConst
 {
 public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_tokenize
+		Method_putMarkup,
+		Method_markupDocument
+	};
+};
+
+class TokenMarkupInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createContext
 	};
 };
 
@@ -771,7 +929,7 @@ public:
 	{
 		Method_Destructor,
 		Method_concatBeforeTokenize,
-		Method_createFunctionContext
+		Method_tokenize
 	};
 };
 
@@ -794,6 +952,74 @@ public:
 		Method_Destructor,
 		Method_skip,
 		Method_fetchValues
+	};
+};
+
+class VectorStorageClientConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createSearcher,
+		Method_createTransaction,
+		Method_conceptClassNames,
+		Method_conceptFeatures,
+		Method_nofConcepts,
+		Method_featureConcepts,
+		Method_featureVector,
+		Method_featureName,
+		Method_featureIndex,
+		Method_nofFeatures,
+		Method_config
+	};
+};
+
+class VectorStorageDumpConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_nextChunk
+	};
+};
+
+class VectorStorageConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createStorage,
+		Method_createClient,
+		Method_createDump,
+		Method_runBuild
+	};
+};
+
+class VectorStorageSearchConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_findSimilar,
+		Method_findSimilarFromSelection,
+		Method_close
+	};
+};
+
+class VectorStorageTransactionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addFeature,
+		Method_defineFeatureConceptRelation,
+		Method_commit,
+		Method_rollback
 	};
 };
 

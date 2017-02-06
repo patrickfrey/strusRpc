@@ -160,12 +160,6 @@ $passOwnershipParams{"defineTokenizer"} = 1;			# TextProcessor
 $passOwnershipParams{"defineNormalizer"} = 1;			# TextProcessor
 $passOwnershipParams{"defineAggregator"} = 1;			# TextProcessor
 
-$passOwnershipParams{"createClient"} = 1;			# Storage
-$passOwnershipParams{"createAlterMetaDataTable"} = 1;		# Storage
-$passOwnershipParams{"createBrowsePostingIterator"} = 1;	# Storage
-
-$passOwnershipParams{"definePhraseType"} = 1;			# QueryAnalyzer
-
 $passOwnershipParams{"addSearchIndexFeature"} = 1;		# DocumentAnalyzer
 $passOwnershipParams{"addForwardIndexFeature"} = 1;		# DocumentAnalyzer
 $passOwnershipParams{"defineMetaData"} = 1;			# DocumentAnalyzer
@@ -188,7 +182,8 @@ $constResetMethodMap{"nextChunk"} = 1;
 
 # List of hacks (client code inserted at the beginning of a method call):
 my %alternativeClientImpl = ();
-$alternativeClientImpl{"createStorageClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx(), false, errorhnd());\n";
+$alternativeClientImpl{"StorageImpl::createClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx(), false, errorhnd());\n";
+$alternativeClientImpl{"VectorStorageImpl::createClient"} = "if (p1.empty()) return new VectorStorageClientImpl( 0, ctx(), false, errorhnd());\n";
 
 # Set debug code generation ON/OFF:
 my $doGenerateDebugCode = 0;
@@ -673,7 +668,7 @@ sub packParameter
 	{
 		$rt .= "msg.packNumericVariant( " . $id . ");";
 	}
-	elsif ($type eq "DocumentClass")
+	elsif ($type eq "analyzer::DocumentClass")
 	{
 		$rt .= "msg.packDocumentClass( " . $id . ");";
 	}
@@ -756,7 +751,7 @@ sub packParameter
 	{
 		$rt .= "msg.packStorageConfigType( " . $id . ");";
 	}
-	elsif ($type eq "SegmenterOptions")
+	elsif ($type eq "analyzer::SegmenterOptions")
 	{
 		$rt .= "msg.packSegmenterOptions( " . $id . ");";
 	}
@@ -764,7 +759,7 @@ sub packParameter
 	{
 		$rt .= "msg.packGlobalCounter( " . $id . ");";
 	}
-	elsif ($type eq "DocumentAnalyzerInterface::FeatureOptions")
+	elsif ($type eq "analyzer::FeatureOptions")
 	{
 		$rt .= "msg.packFeatureOptions( " . $id . ");";
 	}
@@ -788,6 +783,10 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerDocument( " . $id . ");";
 	}
+	elsif ($type eq "analyzer::Query")
+	{
+		$rt .= "msg.packAnalyzerQuery( " . $id . ");";
+	}
 	elsif ($type eq "analyzer::Attribute")
 	{
 		$rt .= "msg.packAnalyzerAttribute( " . $id . ");";
@@ -800,13 +799,41 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerTerm( " . $id . ");";
 	}
-	elsif ($type eq "analyzer::TermVector")
+	elsif ($type eq "analyzer::TermArray")
 	{
-		$rt .= "msg.packAnalyzerTermVector( " . $id . ");";
+		$rt .= "msg.packAnalyzerTermArray( " . $id . ");";
 	}
 	elsif ($type eq "analyzer::Token")
 	{
 		$rt .= "msg.packAnalyzerToken( " . $id . ");";
+	}
+	elsif ($type eq "QueryAnalyzerContextInterface::GroupBy")
+	{
+		$rt .= "msg.packAnalyzerGroupBy( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::PatternLexem")
+	{
+		$rt .= "msg.packAnalyzerPatternLexem( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::PositionBind")
+	{
+		$rt .= "msg.packByte( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::TokenMarkup")
+	{
+		$rt .= "msg.packAnalyzerTokenMarkup( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::PatternMatcherResult")
+	{
+		$rt .= "msg.packAnalyzerPatternMatcherResult( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::PatternMatcherStatistics")
+	{
+		$rt .= "msg.packAnalyzerPatternMatcherStatistics( " . $id . ");";
+	}
+	elsif ($type eq "PatternMatcherInstanceInterface::JoinOperation")
+	{
+		$rt .= "msg.packByte( " . $id . ");";
 	}
 	elsif ($type eq "WeightedDocument")
 	{
@@ -823,10 +850,6 @@ sub packParameter
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
 		$rt .= "msg.packFeatureParameter( " . $id . ");";
-	}
-	elsif ($type eq "QueryAnalyzerInterface::Phrase")
-	{
-		$rt .= "msg.packPhrase( " . $id . ");";
 	}
 	elsif ($type eq "StorageClientInterface::DocumentStatisticsType")
 	{
@@ -855,6 +878,10 @@ sub packParameter
 	elsif ($type eq "FunctionDescription")
 	{
 		$rt .= "msg.packFunctionDescription( " . $id . ");";
+	}
+	elsif ($type eq "VectorStorageSearchInterface::Result")
+	{
+		$rt .= "msg.packVectorStorageSearchResult( " . $id . ");";
 	}
 	else
 	{
@@ -908,7 +935,7 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackNumericVariant();";
 	}
-	elsif ($type eq "DocumentClass")
+	elsif ($type eq "analyzer::DocumentClass")
 	{
 		$rt .= "$id = serializedMsg.unpackDocumentClass();";
 	}
@@ -1012,7 +1039,7 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackStorageConfigType();";
 	}
-	elsif ($type eq "SegmenterOptions")
+	elsif ($type eq "analyzer::SegmenterOptions")
 	{
 		$rt .= "$id = serializedMsg.unpackSegmenterOptions();";
 	}
@@ -1020,7 +1047,7 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackGlobalCounter();";
 	}
-	elsif ($type eq "DocumentAnalyzerInterface::FeatureOptions")
+	elsif ($type eq "analyzer::FeatureOptions")
 	{
 		$rt .= "$id = serializedMsg.unpackFeatureOptions();";
 	}
@@ -1063,6 +1090,10 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerDocument();";
 	}
+	elsif ($type eq "analyzer::Query")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerQuery();";
+	}
 	elsif ($type eq "analyzer::Attribute")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerAttribute();";
@@ -1075,13 +1106,41 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerToken();";
 	}
+	elsif ($type eq "QueryAnalyzerContextInterface::GroupBy")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerGroupBy();";
+	}
+	elsif ($type eq "analyzer::PatternLexem")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerPatternLexem();";
+	}
+	elsif ($type eq "analyzer::PositionBind")
+	{
+		$rt .= "$id = (analyzer::PositionBind)serializedMsg.unpackByte();";
+	}
+	elsif ($type eq "analyzer::TokenMarkup")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerTokenMarkup();";
+	}
+	elsif ($type eq "analyzer::PatternMatcherResult")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerPatternMatcherResult();";
+	}
+	elsif ($type eq "analyzer::PatternMatcherStatistics")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerPatternMatcherStatistics();";
+	}
+	elsif ($type eq "PatternMatcherInstanceInterface::JoinOperation")
+	{
+		$rt .= "$id = (PatternMatcherInstanceInterface::JoinOperation)serializedMsg.unpackByte();";
+	}
 	elsif ($type eq "analyzer::Term")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerTerm();";
 	}
-	elsif ($type eq "analyzer::TermVector")
+	elsif ($type eq "analyzer::TermArray")
 	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerTermVector();";
+		$rt .= "$id = serializedMsg.unpackAnalyzerTermArray();";
 	}
 	elsif ($type eq "WeightedDocument")
 	{
@@ -1098,10 +1157,6 @@ sub unpackParameter
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
 		$rt .= "$id = serializedMsg.unpackFeatureParameter();";
-	}
-	elsif ($type eq "QueryAnalyzerInterface::Phrase")
-	{
-		$rt .= "$id = serializedMsg.unpackPhrase();";
 	}
 	elsif ($type eq "StorageClientInterface::DocumentStatisticsType")
 	{
@@ -1130,6 +1185,10 @@ sub unpackParameter
 	elsif ($type eq "FunctionDescription")
 	{
 		$rt .= "$id = serializedMsg.unpackFunctionDescription();";
+	}
+	elsif ($type eq "VectorStorageSearchInterface::Result")
+	{
+		$rt .= "$id = serializedMsg.unpackVectorStorageSearchResult();";
 	}
 	else
 	{
@@ -1322,9 +1381,10 @@ sub getMethodDeclarationSource
 		{
 			$sender_code .= "\tstd::cerr << \"calling method $classname" . "::" . "$methodname\" << std::endl;\n";
 		}
-		if ($alternativeClientImpl{$methodname})
+		my $mtname = $classname . "::" . $methodname;
+		if ($alternativeClientImpl{ $mtname })
 		{
-			$sender_code .= "\t$alternativeClientImpl{$methodname}";
+			$sender_code .= "\t$alternativeClientImpl{ $mtname }";
 		}
 		$sender_code .= "\tRpcSerializer msg;\n";
 		$sender_code .= "\tmsg.packObject( classId(), objId());\n";
@@ -1363,7 +1423,7 @@ sub getMethodDeclarationSource
 				$receiver_code .= "\tserializedMsg.unpackBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				++$pi;
 			}
-			elsif ($pi+1 <= $#param && $param[$pi] eq "const^ double" && $param[$pi+1] eq "std::size_t")
+			elsif ($pi+1 <= $#param && $param[$pi] eq "const^ double" && $param[$pi+1] eq "unsigned_int")
 			{
 				# ... exception for double buffer( ptr, len):
 				$sender_code .= "\tmsg.packBufferFloat( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
@@ -1484,7 +1544,7 @@ sub getMethodDeclarationSource
 				$receiver_output .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				++$pi;
 			}
-			elsif ($pi+1 <= $#param && $param[$pi] eq "const^& double" && $param[$pi+1] eq "& std::size_t")
+			elsif ($pi+1 <= $#param && $param[$pi] eq "const^& double" && $param[$pi+1] eq "& unsigned_int")
 			{
 				# ... exception for buffer( size, len):
 				my $bpvar = "bp" . ($pi+1);

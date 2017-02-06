@@ -14,6 +14,8 @@
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/moduleLoaderInterface.hpp"
 #include "strus/errorBufferInterface.hpp"
+#include "strus/vectorStorageInterface.hpp"
+#include "strus/vectorStorageClientInterface.hpp"
 #include "strus/versionRpc.hpp"
 #include "strus/base/configParser.hpp"
 #include "strus/base/fileio.hpp"
@@ -59,6 +61,8 @@ static void printUsage()
 	std::cout << "    " << _TXT("Define configuration <CONFIG> of storage hosted by this server") << std::endl;
 	std::cout << "-S|--configfile <CFGFILE>" << std::endl;
 	std::cout << "    " << _TXT("Define storage configuration as content of file <CFGFILE>") << std::endl;
+	std::cout << "-x|--vecstorage <CONFIG>" << std::endl;
+	std::cout << "    " << _TXT("Define configuration <CONFIG> of the vector storage hosted by this server") << std::endl;
 	std::cout << "-c|--create <CONFIG>" << std::endl;
 	std::cout << "    " << _TXT("Implicitely create storage with <CONFIG> if it does not exist yet") << std::endl;
 	std::cout << "-l|--logfile <FILE>" << std::endl;
@@ -72,6 +76,7 @@ static strus::ModuleLoaderInterface* g_moduleLoader = 0;
 static strus::StorageObjectBuilderInterface* g_storageObjectBuilder = 0;
 static strus::AnalyzerObjectBuilderInterface* g_analyzerObjectBuilder = 0;
 static strus::StorageClientInterface* g_storageClient = 0;
+static strus::VectorStorageClientInterface* g_vectorStorageClient = 0;
 
 static strus_globalctx_t g_glbctx = {0,0,0,0};
 
@@ -106,7 +111,7 @@ static int request_handler(
 		if (!ctx->obj)
 		{
 			ctx->obj = new strus::RpcRequestHandler(
-					g_storageObjectBuilder, g_analyzerObjectBuilder, g_storageClient, g_errorBuffer);
+					g_storageObjectBuilder, g_analyzerObjectBuilder, g_storageClient, g_vectorStorageClient, g_errorBuffer);
 		}
 		ctx->resultbuf.clear();
 		ctx->resultbuf.append( "\0\0\0\0", sizeof( uint32_t));
@@ -235,41 +240,23 @@ enum
 	STRUS_ERR_SIGNALEV=3
 };
 
-static void createStorageIfNotExist( const std::string& cfg)
+static void createStorageIfNotExist( const std::string& config)
 {
-	const strus::DatabaseInterface* dbi = g_storageObjectBuilder->getDatabase( cfg);
-	if (dbi->exists( cfg)) return;
+	std::string configstr( config);
+	std::string dbname;
+	(void)strus::extractStringFromConfigString( dbname, configstr, "database", g_errorBuffer);
+	if (g_errorBuffer->hasError()) throw strus::runtime_error(_TXT("cannot evaluate database"));
+
+	const strus::DatabaseInterface* dbi = g_storageObjectBuilder->getDatabase( dbname);
+	if (dbi->exists( config)) return;
 	const strus::StorageInterface* sti = g_storageObjectBuilder->getStorage();
 
-	std::string databasecfg( cfg);
-	std::string dbname;
-	(void)strus::extractStringFromConfigString( dbname, databasecfg, "database", g_errorBuffer);
-	std::string storagecfg( databasecfg);
-
-	strus::removeKeysFromConfigString(
-			databasecfg,
-			sti->getConfigParameters(
-				strus::StorageInterface::CmdCreateClient), g_errorBuffer);
-	//... In database_cfg is now the pure database configuration without the storage settings
-
-	strus::removeKeysFromConfigString(
-			storagecfg,
-			dbi->getConfigParameters(
-				strus::DatabaseInterface::CmdCreateClient), g_errorBuffer);
 	//... In storage_cfg is now the pure storage configuration without the database settings
+	sti->createStorage( config, dbi);
 	if (g_errorBuffer->hasError())
 	{
 		throw strus::runtime_error(_TXT("error creating storage"));
 	}
-	dbi->createDatabase( databasecfg);
-
-	std::auto_ptr<strus::DatabaseClientInterface>
-		database( dbi->createClient( databasecfg));
-	if (!database.get())
-	{
-		throw strus::runtime_error(_TXT("error creating storage"));
-	}
-	sti->createStorage( storagecfg, database.get());
 }
 
 
@@ -291,6 +278,7 @@ int main( int argc, const char* argv[])
 	std::vector<std::string> resourcedirs;
 	std::vector<std::string> tracecfglist;
 	std::string storageconfig;
+	std::string vecstorageconfig;
 	bool doCreateIfNotExist = false;
 	unsigned int nofThreads = 0;
 	unsigned int port = 7181; //... default port
@@ -368,6 +356,14 @@ int main( int argc, const char* argv[])
 					if ((unsigned char)*di < 32) *di = ' ';
 				}
 				if (storageconfig.empty()) throw strus::runtime_error(_TXT("option %s with empty file"), "--configfile");
+			}
+			else if (0==std::strcmp( argv[argi], "-x") || 0==std::strcmp( argv[argi], "--vecstorage"))
+			{
+				if (!vecstorageconfig.empty()) throw strus::runtime_error( _TXT("option %s specified twice"), "--vecstorage");
+				++argi;
+				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--storage");
+				vecstorageconfig.append( argv[argi]);
+				if (vecstorageconfig.empty()) throw strus::runtime_error(_TXT("option %s with empty argument"), "--vecstorage");
 			}
 			else if (0==std::strcmp( argv[argi], "-c") || 0==std::strcmp( argv[argi], "--create"))
 			{
@@ -483,6 +479,7 @@ int main( int argc, const char* argv[])
 		}
 
 		std::auto_ptr<strus::StorageClientInterface> storageClient;
+		std::auto_ptr<strus::VectorStorageClientInterface> vectorStorageClient;
 
 		g_storageObjectBuilder = storageBuilder.get();
 		g_analyzerObjectBuilder = analyzerBuilder.get();
@@ -496,12 +493,21 @@ int main( int argc, const char* argv[])
 			storageClient.reset( strus::createStorageClient( g_storageObjectBuilder, g_errorBuffer, storageconfig));
 			if (!storageClient.get())
 			{
-				throw strus::runtime_error( _TXT("failed to create storage client"), storageconfig.c_str());
+				throw strus::runtime_error( _TXT("failed to create storage client %s"), storageconfig.c_str());
 			}
 			std::cerr << _TXT("strus RPC server is hosting storage ") << "'" << storageconfig << "'" << std::endl;
 			g_storageClient = storageClient.get();
 		}
-
+		if (!vecstorageconfig.empty())
+		{
+			vectorStorageClient.reset( strus::createVectorStorageClient( g_storageObjectBuilder, g_errorBuffer, vecstorageconfig));
+			if (!vectorStorageClient.get())
+			{
+				throw strus::runtime_error( _TXT("failed to create vector storage client %s"), vecstorageconfig.c_str());
+			}
+			std::cerr << _TXT("strus RPC server is hosting vector storage ") << "'" << vecstorageconfig << "'" << std::endl;
+			g_vectorStorageClient = vectorStorageClient.get();
+		}
 		// Start server:
 		std::cerr << "strus RPC server listening on port " << port << std::endl;
 		int err = strus_run_server( (unsigned short)(unsigned int)port, nofThreads, &g_glbctx);

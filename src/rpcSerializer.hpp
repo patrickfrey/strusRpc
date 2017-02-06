@@ -11,10 +11,11 @@
 #include "rpcInterfaceStub.hpp"
 #include "strus/index.hpp"
 #include "strus/textProcessorInterface.hpp"
-#include "strus/segmenterOptions.hpp"
-#include "strus/documentClass.hpp"
+#include "strus/analyzer/segmenterOptions.hpp"
+#include "strus/analyzer/documentClass.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/queryAnalyzerInterface.hpp"
+#include "strus/queryAnalyzerContextInterface.hpp"
 #include "strus/numericVariant.hpp"
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/termStatistics.hpp"
@@ -35,7 +36,13 @@
 #include "strus/metaDataRestrictionInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
 #include "strus/statisticsViewerInterface.hpp"
+#include "strus/vectorStorageSearchInterface.hpp"
 #include "strus/analyzer/token.hpp"
+#include "strus/analyzer/patternLexem.hpp"
+#include "strus/analyzer/tokenMarkup.hpp"
+#include "strus/analyzer/positionBind.hpp"
+#include "strus/analyzer/patternMatcherStatistics.hpp"
+#include "strus/analyzer/patternMatcherResult.hpp"
 #include "strus/analyzer/term.hpp"
 #include "strus/analyzer/metaData.hpp"
 #include "strus/analyzer/attribute.hpp"
@@ -68,7 +75,7 @@ public:
 	void packDouble( double val);
 	void packSize( std::size_t size);
 	void packNumericVariant( const NumericVariant& val);
-	void packDocumentClass( const DocumentClass& prop);
+	void packDocumentClass( const analyzer::DocumentClass& prop);
 	void packTermStatistics( const TermStatistics& stats);
 	void packGlobalStatistics( const GlobalStatistics& stats);
 	void packMetaDataRestrictionCompareOperator( MetaDataRestrictionInterface::CompareOperator val);
@@ -76,23 +83,28 @@ public:
 	void packDatabaseOptions( const DatabaseOptions& val);
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
 	void packStorageConfigType( const StorageInterface::ConfigType& val);
-	void packFeatureOptions( const DocumentAnalyzerInterface::FeatureOptions& val);
+	void packFeatureOptions( const analyzer::FeatureOptions& val);
 	void packSummaryElement( const SummaryElement& val);
 	void packSummarizationVariable( const SummarizationVariable& val);
 	void packDocumentTermIteratorTerm( const DocumentTermIteratorInterface::Term& term);
 	void packSlice( DatabaseCursorInterface::Slice& val);
 	void packAnalyzerDocument( const analyzer::Document& val);
+	void packAnalyzerQuery( const analyzer::Query& val);
 	void packAnalyzerAttribute( const analyzer::Attribute& val);
 	void packAnalyzerMetaData( const analyzer::MetaData& val);
 	void packAnalyzerTerm( const analyzer::Term& val);
-	void packAnalyzerTermVector( const analyzer::TermVector& val);
+	void packAnalyzerTermArray( const analyzer::TermArray& val);
 	void packAnalyzerToken( const analyzer::Token& val);
-	void packSegmenterOptions( const SegmenterOptions& opts);
+	void packAnalyzerGroupBy( const QueryAnalyzerContextInterface::GroupBy& groupBy);
+	void packAnalyzerPatternLexem( const analyzer::PatternLexem& val);
+	void packAnalyzerTokenMarkup( const analyzer::TokenMarkup& val);
+	void packAnalyzerPatternMatcherResult( const analyzer::PatternMatcherResult& val);
+	void packAnalyzerPatternMatcherStatistics( const analyzer::PatternMatcherStatistics& val);
+	void packSegmenterOptions( const analyzer::SegmenterOptions& opts);
 	void packWeightedDocument( const WeightedDocument& val);
 	void packResultDocument( const ResultDocument& val);
 	void packQueryResult( const QueryResult& val);
 	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
-	void packPhrase( const QueryAnalyzerInterface::Phrase& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
 	void packStatisticsProcessorBuilderOptions( const StatisticsProcessorInterface::BuilderOptions& val);
 	void packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val);
@@ -100,6 +112,8 @@ public:
 	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
 	void packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val);
 	void packFunctionDescription( const FunctionDescription& val);
+	void packVectorStorageSearchResult( const VectorStorageSearchInterface::Result& val);
+
 	void packCrc32();
 	const std::string& content() const
 	{
@@ -141,7 +155,7 @@ public:
 	double unpackDouble();
 	std::size_t unpackSize();
 	NumericVariant unpackNumericVariant();
-	DocumentClass unpackDocumentClass();
+	analyzer::DocumentClass unpackDocumentClass();
 	TermStatistics unpackTermStatistics();
 	GlobalStatistics unpackGlobalStatistics();
 	MetaDataRestrictionInterface::CompareOperator unpackMetaDataRestrictionCompareOperator();
@@ -149,22 +163,27 @@ public:
 	DatabaseOptions unpackDatabaseOptions();
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();
 	StorageInterface::ConfigType unpackStorageConfigType();
-	DocumentAnalyzerInterface::FeatureOptions unpackFeatureOptions();
+	analyzer::FeatureOptions unpackFeatureOptions();
 	SummaryElement unpackSummaryElement();
 	DocumentTermIteratorInterface::Term unpackDocumentTermIteratorTerm();
 	DatabaseCursorInterface::Slice unpackSlice();
 	analyzer::Document unpackAnalyzerDocument();
+	analyzer::Query unpackAnalyzerQuery();
 	analyzer::Attribute unpackAnalyzerAttribute();
 	analyzer::MetaData unpackAnalyzerMetaData();
 	analyzer::Term unpackAnalyzerTerm();
-	analyzer::TermVector unpackAnalyzerTermVector();
+	analyzer::TermArray unpackAnalyzerTermArray();
 	analyzer::Token unpackAnalyzerToken();
-	SegmenterOptions unpackSegmenterOptions();
+	QueryAnalyzerContextInterface::GroupBy unpackAnalyzerGroupBy();
+	analyzer::PatternLexem unpackAnalyzerPatternLexem();
+	analyzer::TokenMarkup unpackAnalyzerTokenMarkup();
+	analyzer::PatternMatcherResult unpackAnalyzerPatternMatcherResult();
+	analyzer::PatternMatcherStatistics unpackAnalyzerPatternMatcherStatistics();
+	analyzer::SegmenterOptions unpackSegmenterOptions();
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();
 	QueryResult unpackQueryResult();
 	QueryEvalInterface::FeatureParameter unpackFeatureParameter();
-	QueryAnalyzerInterface::Phrase unpackPhrase();
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();
 	StatisticsProcessorInterface::BuilderOptions unpackStatisticsProcessorBuilderOptions();
 	StatisticsViewerInterface::DocumentFrequencyChange unpackStatisticsViewerDocumentFrequencyChange();
@@ -172,6 +191,8 @@ public:
 	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();
 	PostingJoinOperatorInterface::Description unpackPostingJoinOperatorDescription();
 	FunctionDescription unpackFunctionDescription();
+	VectorStorageSearchInterface::Result unpackVectorStorageSearchResult();
+
 	bool unpackCrc32();
 
 	std::size_t position() const

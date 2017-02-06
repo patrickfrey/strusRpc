@@ -23,6 +23,7 @@ RpcRequestHandler::RpcRequestHandler(
 			StorageObjectBuilderInterface* storageBuilder_,
 			AnalyzerObjectBuilderInterface* analyzerBuilder_,
 			StorageClientInterface* storage_,
+			VectorStorageClientInterface* vectorStorage_,
 			ErrorBufferInterface* errorhnd_)
 		:m_errorhnd(errorhnd_)
 {
@@ -37,6 +38,10 @@ RpcRequestHandler::RpcRequestHandler(
 	if (storage_)
 	{
 		defineObjectPtr( ClassId_StorageClient, 0, storage_, 0/*deleter (object is singleton with ownership at caller)*/);
+	}
+	if (vectorStorage_)
+	{
+		defineObjectPtr( ClassId_VectorStorageClient, 0, vectorStorage_, 0/*deleter (object is singleton with ownership at caller)*/);
 	}
 }
 

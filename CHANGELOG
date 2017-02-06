@@ -1,3 +1,16 @@
+strusRpc (0.13.0)
+  * adapt interface changes in analyzer and strus core
+  * many build fixes
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Mon, 6 Feb 2017 15:00:00 +0100
+
+strusRpc (0.12.0)
+  * adapt interface changes in strus analyzer (strus stream interfaces)
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Sat, 1 Oct 2016 23:00:00 +0100
+
+strusRpc (0.11.0)
+  * adapt interface changes in strus core (vector space model)
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Wed, 28 Sep 2016 15:00:00 +0100
+
 strusRpc (0.10.1)
   * adapt interface changes in strus analyzer (document markup interface)
  -- Patrick Frey <patrickpfrey@yahoo.com>  Sun, 10 Jul 2016 19:00:00 +0100
