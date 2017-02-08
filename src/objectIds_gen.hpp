@@ -836,6 +836,7 @@ public:
 		Method_deleteDocument,
 		Method_deleteUserAccessRights,
 		Method_updateMetaData,
+		Method_updateDocumentFrequency,
 		Method_commit,
 		Method_rollback,
 		Method_nofDocumentsAffected

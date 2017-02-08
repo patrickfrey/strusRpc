@@ -6712,6 +6712,27 @@ try
 }
 }
 
+void StorageTransactionImpl::updateDocumentFrequency( const std::string& p1, const std::string& p2, int p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_updateDocumentFrequency);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packInt( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageTransactionImpl::updateDocumentFrequency");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::updateDocumentFrequency", err.what());
+	return void();
+}
+}
+
 bool StorageTransactionImpl::commit( )
 {
 try

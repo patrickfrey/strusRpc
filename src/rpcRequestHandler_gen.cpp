@@ -6104,6 +6104,26 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case StorageTransactionConst::Method_updateDocumentFrequency:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			int p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackInt();
+			obj->updateDocumentFrequency(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case StorageTransactionConst::Method_commit:
 		{
 			RpcSerializer msg;
