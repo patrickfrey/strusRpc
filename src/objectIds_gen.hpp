@@ -773,6 +773,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_addSearchIndexTerm,
+		Method_addForwardIndexTerm,
 		Method_setMetaData,
 		Method_setAttribute,
 		Method_clearAttribute,

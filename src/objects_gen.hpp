@@ -972,6 +972,8 @@ public:
 	StorageDocumentUpdateImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocumentUpdate, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual void addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
+	virtual void addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
 	virtual void setMetaData( const std::string& p1, const NumericVariant& p2);
 	virtual void setAttribute( const std::string& p1, const std::string& p2);
 	virtual void clearAttribute( const std::string& p1);

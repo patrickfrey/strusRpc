@@ -5519,6 +5519,46 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case StorageDocumentUpdateConst::Method_addSearchIndexTerm:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			Index p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackIndex();
+			obj->addSearchIndexTerm(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case StorageDocumentUpdateConst::Method_addForwardIndexTerm:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			Index p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackIndex();
+			obj->addForwardIndexTerm(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case StorageDocumentUpdateConst::Method_setMetaData:
 		{
 			RpcSerializer msg;
