@@ -775,6 +775,8 @@ public:
 		Method_Destructor,
 		Method_addSearchIndexTerm,
 		Method_addForwardIndexTerm,
+		Method_clearSearchIndexTerm,
+		Method_clearForwardIndexTerm,
 		Method_setMetaData,
 		Method_setAttribute,
 		Method_clearAttribute,

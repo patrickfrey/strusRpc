@@ -974,6 +974,8 @@ public:
 
 	virtual void addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
 	virtual void addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
+	virtual void clearSearchIndexTerm( const std::string& p1);
+	virtual void clearForwardIndexTerm( const std::string& p1);
 	virtual void setMetaData( const std::string& p1, const NumericVariant& p2);
 	virtual void setAttribute( const std::string& p1, const std::string& p2);
 	virtual void clearAttribute( const std::string& p1);
