@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR )
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR )
 
 # Patch for server.c/client.c to compile (not C99 because of non POSIX extensions)
 set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -fPIC -O${STRUS_OPTIMIZATION_LEVEL}" )
