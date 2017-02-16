@@ -773,6 +773,10 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_addSearchIndexTerm,
+		Method_addForwardIndexTerm,
+		Method_clearSearchIndexTerm,
+		Method_clearForwardIndexTerm,
 		Method_setMetaData,
 		Method_setAttribute,
 		Method_clearAttribute,
@@ -834,6 +838,7 @@ public:
 		Method_deleteDocument,
 		Method_deleteUserAccessRights,
 		Method_updateMetaData,
+		Method_updateDocumentFrequency,
 		Method_commit,
 		Method_rollback,
 		Method_nofDocumentsAffected

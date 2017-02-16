@@ -6059,6 +6059,86 @@ StorageDocumentUpdateImpl::~StorageDocumentUpdateImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+void StorageDocumentUpdateImpl::addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addSearchIndexTerm);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packIndex( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::addSearchIndexTerm");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::addSearchIndexTerm", err.what());
+	return void();
+}
+}
+
+void StorageDocumentUpdateImpl::addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addForwardIndexTerm);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packIndex( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::addForwardIndexTerm");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::addForwardIndexTerm", err.what());
+	return void();
+}
+}
+
+void StorageDocumentUpdateImpl::clearSearchIndexTerm( const std::string& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_clearSearchIndexTerm);
+	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearSearchIndexTerm");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearSearchIndexTerm", err.what());
+	return void();
+}
+}
+
+void StorageDocumentUpdateImpl::clearForwardIndexTerm( const std::string& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_clearForwardIndexTerm);
+	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearForwardIndexTerm");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearForwardIndexTerm", err.what());
+	return void();
+}
+}
+
 void StorageDocumentUpdateImpl::setMetaData( const std::string& p1, const NumericVariant& p2)
 {
 try
@@ -6666,6 +6746,27 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::updateMetaData", err.what());
+	return void();
+}
+}
+
+void StorageTransactionImpl::updateDocumentFrequency( const std::string& p1, const std::string& p2, int p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_updateDocumentFrequency);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packInt( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageTransactionImpl::updateDocumentFrequency");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::updateDocumentFrequency", err.what());
 	return void();
 }
 }

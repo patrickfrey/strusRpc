@@ -972,6 +972,10 @@ public:
 	StorageDocumentUpdateImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocumentUpdate, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual void addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
+	virtual void addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
+	virtual void clearSearchIndexTerm( const std::string& p1);
+	virtual void clearForwardIndexTerm( const std::string& p1);
 	virtual void setMetaData( const std::string& p1, const NumericVariant& p2);
 	virtual void setAttribute( const std::string& p1, const std::string& p2);
 	virtual void clearAttribute( const std::string& p1);
@@ -1049,6 +1053,7 @@ public:
 	virtual void deleteDocument( const std::string& p1);
 	virtual void deleteUserAccessRights( const std::string& p1);
 	virtual void updateMetaData( const Index& p1, const std::string& p2, const NumericVariant& p3);
+	virtual void updateDocumentFrequency( const std::string& p1, const std::string& p2, int p3);
 	virtual bool commit( );
 	virtual void rollback( );
 	virtual unsigned int nofDocumentsAffected( ) const;
