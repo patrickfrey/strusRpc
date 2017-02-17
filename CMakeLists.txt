@@ -11,6 +11,7 @@ set( STRUS_MINOR_VERSION 14 )
 set( STRUS_PATCH_VERSION 0 )
 set( STRUS_VERSION ${STRUS_MAJOR_VERSION}.${STRUS_MINOR_VERSION}.${STRUS_PATCH_VERSION} )
 
+if(NOT STRUS_ALL)
 include(cmake/dist.cmake)
 include(cmake/LinuxDistribution.cmake)
 include( cmake/build_rules.cmake )
@@ -18,6 +19,7 @@ include( cmake/boost.cmake)
 include( cmake/intl.cmake )
 find_package( Threads )
 include( cmake/find_strus_package.cmake )
+endif()
 
 find_strus_package( base )
 find_strus_package( core )
@@ -42,11 +44,15 @@ enable_testing()
 add_subdirectory( 3rdParty )
 add_subdirectory( src )
   
+if(NOT STRUS_ALL)
 include( cmake/report_build_settings.cmake )
+endif()
 
 # Install header files:
 install(DIRECTORY include/strus
           DESTINATION include
           FILES_MATCHING PATTERN "*.hpp")
 
+if(NOT STRUS_ALL)
 include( cmake/standard_targets.cmake )
+endif()
