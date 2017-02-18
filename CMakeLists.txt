@@ -24,6 +24,7 @@ endif()
 find_strus_package( base )
 find_strus_package( core )
 find_strus_package( analyzer )
+find_strus_package( trace )
 find_strus_package( module )
 
 set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
