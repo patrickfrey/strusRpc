@@ -3324,6 +3324,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			SummarizerFunctionInstanceInterface* p2;
 			std::vector<QueryEvalInterface::FeatureParameter> p3;
+			std::string p4;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
@@ -3335,7 +3336,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				QueryEvalInterface::FeatureParameter ee = serializedMsg.unpackFeatureParameter();
 				p3.push_back( ee);
 			}
-			obj->addSummarizerFunction(p1,p2,p3);
+			p4 = serializedMsg.unpackString();
+			obj->addSummarizerFunction(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3354,6 +3356,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			WeightingFunctionInstanceInterface* p2;
 			std::vector<QueryEvalInterface::FeatureParameter> p3;
+			std::string p4;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
@@ -3365,7 +3368,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				QueryEvalInterface::FeatureParameter ee = serializedMsg.unpackFeatureParameter();
 				p3.push_back( ee);
 			}
-			obj->addWeightingFunction(p1,p2,p3);
+			p4 = serializedMsg.unpackString();
+			obj->addWeightingFunction(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3668,6 +3672,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackDouble();
 			obj->setWeightingVariableValue(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case QueryConst::Method_setDebugMode:
+		{
+			RpcSerializer msg;
+			bool p1;
+			p1 = serializedMsg.unpackBool();
+			obj->setDebugMode(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

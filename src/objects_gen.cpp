@@ -3621,7 +3621,7 @@ try
 }
 }
 
-void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3)
+void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4)
 {
 try
 {
@@ -3636,6 +3636,7 @@ try
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
 		msg.packFeatureParameter( p3[ii]);
 	}
+	msg.packString( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
@@ -3650,7 +3651,7 @@ try
 }
 }
 
-void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3)
+void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4)
 {
 try
 {
@@ -3665,6 +3666,7 @@ try
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
 		msg.packFeatureParameter( p3[ii]);
 	}
+	msg.packString( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
@@ -4000,6 +4002,25 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::setWeightingVariableValue", err.what());
+	return void();
+}
+}
+
+void QueryImpl::setDebugMode( bool p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_setDebugMode);
+	msg.packBool( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::setDebugMode");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::setDebugMode", err.what());
 	return void();
 }
 }
