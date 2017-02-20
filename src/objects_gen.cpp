@@ -6899,6 +6899,29 @@ try
 }
 }
 
+std::string SummarizerFunctionContextImpl::debugCall( const Index& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_debugCall);
+	msg.packIndex( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::debugCall");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::debugCall", err.what());
+	return std::string();
+}
+}
+
 SummarizerFunctionInstanceImpl::~SummarizerFunctionInstanceImpl()
 {
 	if (isConst()) return;
@@ -8431,6 +8454,29 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::call", err.what());
 	return 0;
+}
+}
+
+std::string WeightingFunctionContextImpl::debugCall( const Index& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_debugCall);
+	msg.packIndex( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionContextImpl::debugCall");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::debugCall", err.what());
+	return std::string();
 }
 }
 

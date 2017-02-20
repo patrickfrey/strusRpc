@@ -852,7 +852,8 @@ public:
 	{
 		Method_Destructor,
 		Method_addSummarizationFeature,
-		Method_getSummary
+		Method_getSummary,
+		Method_debugCall
 	};
 };
 
@@ -1035,7 +1036,8 @@ public:
 	{
 		Method_Destructor,
 		Method_addWeightingFeature,
-		Method_call
+		Method_call,
+		Method_debugCall
 	};
 };
 
