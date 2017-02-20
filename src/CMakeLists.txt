@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR )
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR )
 
 # Patch for server.c/client.c to compile (not C99 because of non POSIX extensions)
 set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -fPIC -O${STRUS_OPTIMIZATION_LEVEL}" )
@@ -39,30 +39,34 @@ include_directories(
         "${Boost_INCLUDE_DIRS}"
 	"${PROJECT_SOURCE_DIR}/include"
 	"${PROJECT_SOURCE_DIR}/3rdParty/libuv/libuv-1.x/include"
-	"${strusmodule_INCLUDE_DIRS}"
+	"${strusbase_INCLUDE_DIRS}"
 	"${strus_INCLUDE_DIRS}"
-	"${strusanalyzer_INCLUDE_DIRS}" )
+	"${strusanalyzer_INCLUDE_DIRS}"
+	"${strustrace_INCLUDE_DIRS}"
+	"${strusmodule_INCLUDE_DIRS}"
+)
 
 link_directories(
 	"${PROJECT_SOURCE_DIR}/src"
 	"${PROJECT_SOURCE_DIR}/3rdParty/libuv"
-	"${strusmodule_LIBRARY_DIRS}"
+	"${strusbase_LIBRARY_DIRS}"
 	"${strus_LIBRARY_DIRS}"
 	"${strusanalyzer_LIBRARY_DIRS}"
+	"${strusmodule_LIBRARY_DIRS}"
 )
 
 
 # -------------------------------------------
 # LIBRARY
 # -------------------------------------------
-add_library( strus_private_utils STATIC ${private_utils_source_files} )
-target_link_libraries( strus_private_utils  "${Boost_LIBRARIES}" )
+add_library( strusrpc_private_utils STATIC ${private_utils_source_files} )
+target_link_libraries( strusrpc_private_utils  "${Boost_LIBRARIES}" )
 
 add_library( strus_rpc_client_socket SHARED ${client_socket_source_files} libstrus_rpc_client_socket.cpp )
-target_link_libraries( strus_rpc_client_socket strus_private_utils ${Intl_LIBRARIES} ${CMAKE_DL_LIBS} uv )
+target_link_libraries( strus_rpc_client_socket strusrpc_private_utils ${Intl_LIBRARIES} ${CMAKE_DL_LIBS} uv )
 
 add_library( strus_rpc_client SHARED ${client_source_files} libstrus_rpc_client.cpp )
-target_link_libraries( strus_rpc_client strus_private_utils strus_base ${CMAKE_DL_LIBS} ${Intl_LIBRARIES} )
+target_link_libraries( strus_rpc_client strusrpc_private_utils strus_base ${CMAKE_DL_LIBS} ${Intl_LIBRARIES} )
 
 # some old platforms still have real-time functions (clock_getres, clock_gettime) in librt.so
 # and not in the C library
@@ -93,7 +97,7 @@ set_target_properties(
 # PROGRAMS
 # ------------------------------
 add_executable( strusRpcServer strusRpcServer.cpp utils.cpp ${server_source_files} )
-target_link_libraries( strusRpcServer  "${Boost_LIBRARIES}" strus_storage_objbuild strus_private_utils strus_error strus_base strus_module uv ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${Intl_LIBRARIES} )
+target_link_libraries( strusRpcServer  "${Boost_LIBRARIES}" strus_storage_objbuild strusrpc_private_utils strus_error strus_base strus_module uv ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${Intl_LIBRARIES} )
 if(LIBRT_LIBRARIES)
     target_link_libraries( strusRpcServer ${LIBRT_LIBRARIES} )
 endif()
