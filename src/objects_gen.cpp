@@ -8032,6 +8032,36 @@ try
 }
 }
 
+double VectorStorageClientImpl::vectorSimilarity( const std::vector<double>& p1, const std::vector<double>& p2) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_vectorSimilarity);
+	msg.packSize( p1.size());
+	for (unsigned int ii=0; ii < p1.size(); ++ii) {
+		msg.packDouble( p1[ii]);
+	}
+	msg.packSize( p2.size());
+	for (unsigned int ii=0; ii < p2.size(); ++ii) {
+		msg.packDouble( p2[ii]);
+	}
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	double p0 = serializedMsg.unpackDouble();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::vectorSimilarity");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::vectorSimilarity", err.what());
+	return 0;
+}
+}
+
 unsigned int VectorStorageClientImpl::nofFeatures( ) const
 {
 try

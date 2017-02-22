@@ -977,6 +977,7 @@ public:
 		Method_featureVector,
 		Method_featureName,
 		Method_featureIndex,
+		Method_vectorSimilarity,
 		Method_nofFeatures,
 		Method_config
 	};

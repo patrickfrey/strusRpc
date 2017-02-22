@@ -7299,6 +7299,35 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case VectorStorageClientConst::Method_vectorSimilarity:
+		{
+			RpcSerializer msg;
+			double p0;
+			std::vector<double> p1;
+			std::vector<double> p2;
+			std::size_t n1 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n1; ++ii) {
+				double ee = serializedMsg.unpackDouble();
+				p1.push_back( ee);
+			}
+			std::size_t n2 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n2; ++ii) {
+				double ee = serializedMsg.unpackDouble();
+				p2.push_back( ee);
+			}
+			p0 = obj->vectorSimilarity(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packDouble( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case VectorStorageClientConst::Method_nofFeatures:
 		{
 			RpcSerializer msg;
