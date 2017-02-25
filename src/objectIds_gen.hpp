@@ -113,8 +113,6 @@ public:
 	{
 		Method_Destructor,
 		Method_getTextProcessor,
-		Method_getSegmenter,
-		Method_findMimeTypeSegmenter,
 		Method_createDocumentAnalyzer,
 		Method_createQueryAnalyzer
 	};
@@ -891,6 +889,8 @@ public:
 		Method_Destructor,
 		Method_addResourcePath,
 		Method_getResourcePath,
+		Method_getSegmenterByName,
+		Method_getSegmenterByMimeType,
 		Method_getTokenizer,
 		Method_getNormalizer,
 		Method_getAggregator,
@@ -899,6 +899,7 @@ public:
 		Method_getPatternTermFeeder,
 		Method_detectDocumentClass,
 		Method_defineDocumentClassDetector,
+		Method_defineSegmenter,
 		Method_defineTokenizer,
 		Method_defineNormalizer,
 		Method_defineAggregator,

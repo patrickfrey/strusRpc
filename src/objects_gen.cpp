@@ -139,56 +139,6 @@ try
 }
 }
 
-const SegmenterInterface* AnalyzerObjectBuilderImpl::getSegmenter( const std::string& p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_getSegmenter);
-	msg.packString( p1);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_Segmenter;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	SegmenterImpl const_0( objId_0, ctx(), true, errorhnd());
-	const SegmenterInterface* p0 = (const SegmenterImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::getSegmenter");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AnalyzerObjectBuilderImpl::getSegmenter", err.what());
-	return 0;
-}
-}
-
-const SegmenterInterface* AnalyzerObjectBuilderImpl::findMimeTypeSegmenter( const std::string& p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_findMimeTypeSegmenter);
-	msg.packString( p1);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_Segmenter;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	SegmenterImpl const_0( objId_0, ctx(), true, errorhnd());
-	const SegmenterInterface* p0 = (const SegmenterImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::findMimeTypeSegmenter");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AnalyzerObjectBuilderImpl::findMimeTypeSegmenter", err.what());
-	return 0;
-}
-}
-
 DocumentAnalyzerInterface* AnalyzerObjectBuilderImpl::createDocumentAnalyzer( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const
 {
 try
@@ -7175,6 +7125,56 @@ try
 }
 }
 
+const SegmenterInterface* TextProcessorImpl::getSegmenterByName( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getSegmenterByName);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Segmenter;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	SegmenterImpl const_0( objId_0, ctx(), true, errorhnd());
+	const SegmenterInterface* p0 = (const SegmenterImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getSegmenterByName");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getSegmenterByName", err.what());
+	return 0;
+}
+}
+
+const SegmenterInterface* TextProcessorImpl::getSegmenterByMimeType( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getSegmenterByMimeType);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Segmenter;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	SegmenterImpl const_0( objId_0, ctx(), true, errorhnd());
+	const SegmenterInterface* p0 = (const SegmenterImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getSegmenterByMimeType");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getSegmenterByMimeType", err.what());
+	return 0;
+}
+}
+
 const TokenizerFunctionInterface* TextProcessorImpl::getTokenizer( const std::string& p1) const
 {
 try
@@ -7368,6 +7368,28 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::defineDocumentClassDetector", err.what());
+	return void();
+}
+}
+
+void TextProcessorImpl::defineSegmenter( const std::string& p1, SegmenterInterface* p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineSegmenter);
+	msg.packString( p1);
+	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
+	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Segmenter");
+	msg.packObject( impl_2->classId(), impl_2->objId());
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineSegmenter");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::defineSegmenter", err.what());
 	return void();
 }
 }

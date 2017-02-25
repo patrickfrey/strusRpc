@@ -124,8 +124,6 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_AnalyzerObjectBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual const TextProcessorInterface* getTextProcessor( ) const;
-	virtual const SegmenterInterface* getSegmenter( const std::string& p1) const;
-	virtual const SegmenterInterface* findMimeTypeSegmenter( const std::string& p1) const;
 	virtual DocumentAnalyzerInterface* createDocumentAnalyzer( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const;
 	virtual QueryAnalyzerInterface* createQueryAnalyzer( ) const;
 };
@@ -1122,6 +1120,8 @@ public:
 
 	virtual void addResourcePath( const std::string& p1);
 	virtual std::string getResourcePath( const std::string& p1) const;
+	virtual const SegmenterInterface* getSegmenterByName( const std::string& p1) const;
+	virtual const SegmenterInterface* getSegmenterByMimeType( const std::string& p1) const;
 	virtual const TokenizerFunctionInterface* getTokenizer( const std::string& p1) const;
 	virtual const NormalizerFunctionInterface* getNormalizer( const std::string& p1) const;
 	virtual const AggregatorFunctionInterface* getAggregator( const std::string& p1) const;
@@ -1130,6 +1130,7 @@ public:
 	virtual const PatternTermFeederInterface* getPatternTermFeeder( ) const;
 	virtual bool detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3) const;
 	virtual void defineDocumentClassDetector( DocumentClassDetectorInterface* p1);
+	virtual void defineSegmenter( const std::string& p1, SegmenterInterface* p2);
 	virtual void defineTokenizer( const std::string& p1, TokenizerFunctionInterface* p2);
 	virtual void defineNormalizer( const std::string& p1, NormalizerFunctionInterface* p2);
 	virtual void defineAggregator( const std::string& p1, AggregatorFunctionInterface* p2);

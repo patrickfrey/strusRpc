@@ -139,48 +139,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case AnalyzerObjectBuilderConst::Method_getSegmenter:
-		{
-			RpcSerializer msg;
-			const SegmenterInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->getSegmenter(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineConstObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-		case AnalyzerObjectBuilderConst::Method_findMimeTypeSegmenter:
-		{
-			RpcSerializer msg;
-			const SegmenterInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->findMimeTypeSegmenter(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineConstObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
 		case AnalyzerObjectBuilderConst::Method_createDocumentAnalyzer:
 		{
 			RpcSerializer msg;
@@ -6531,6 +6489,48 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case TextProcessorConst::Method_getSegmenterByName:
+		{
+			RpcSerializer msg;
+			const SegmenterInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->getSegmenterByName(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case TextProcessorConst::Method_getSegmenterByMimeType:
+		{
+			RpcSerializer msg;
+			const SegmenterInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->getSegmenterByMimeType(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case TextProcessorConst::Method_getTokenizer:
 		{
 			RpcSerializer msg;
@@ -6696,6 +6696,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case TextProcessorConst::Method_defineSegmenter:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			SegmenterInterface* p2;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_2; unsigned int objId_2;
+			serializedMsg.unpackObject( classId_2, objId_2);
+			if (classId_2 != ClassId_Segmenter) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p2 = getObject<SegmenterInterface>( classId_2, objId_2);
+			obj->defineSegmenter(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
