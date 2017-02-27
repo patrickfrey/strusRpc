@@ -271,6 +271,7 @@ public:
 	virtual void defineAggregatedMetaData( const std::string& p1, AggregatorFunctionInstanceInterface* p2);
 	virtual void defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void defineSubDocument( const std::string& p1, const std::string& p2);
+	virtual void defineSubContent( const std::string& p1, const analyzer::DocumentClass& p2);
 	virtual void addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3);
 	virtual void definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4);
@@ -1122,6 +1123,7 @@ public:
 	virtual std::string getResourcePath( const std::string& p1) const;
 	virtual const SegmenterInterface* getSegmenterByName( const std::string& p1) const;
 	virtual const SegmenterInterface* getSegmenterByMimeType( const std::string& p1) const;
+	virtual analyzer::SegmenterOptions getSegmenterOptions( const std::string& p1) const;
 	virtual const TokenizerFunctionInterface* getTokenizer( const std::string& p1) const;
 	virtual const NormalizerFunctionInterface* getNormalizer( const std::string& p1) const;
 	virtual const AggregatorFunctionInterface* getAggregator( const std::string& p1) const;
@@ -1131,6 +1133,7 @@ public:
 	virtual bool detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3) const;
 	virtual void defineDocumentClassDetector( DocumentClassDetectorInterface* p1);
 	virtual void defineSegmenter( const std::string& p1, SegmenterInterface* p2);
+	virtual void defineSegmenterOptions( const std::string& p1, const analyzer::SegmenterOptions& p2);
 	virtual void defineTokenizer( const std::string& p1, TokenizerFunctionInterface* p2);
 	virtual void defineNormalizer( const std::string& p1, NormalizerFunctionInterface* p2);
 	virtual void defineAggregator( const std::string& p1, AggregatorFunctionInterface* p2);

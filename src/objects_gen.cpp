@@ -1266,6 +1266,26 @@ try
 }
 }
 
+void DocumentAnalyzerImpl::defineSubContent( const std::string& p1, const analyzer::DocumentClass& p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineSubContent);
+	msg.packString( p1);
+	msg.packDocumentClass( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineSubContent");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineSubContent", err.what());
+	return void();
+}
+}
+
 void DocumentAnalyzerImpl::addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
 try
@@ -7175,6 +7195,29 @@ try
 }
 }
 
+analyzer::SegmenterOptions TextProcessorImpl::getSegmenterOptions( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getSegmenterOptions);
+	msg.packString( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::SegmenterOptions p0 = serializedMsg.unpackSegmenterOptions();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getSegmenterOptions");
+	return analyzer::SegmenterOptions();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getSegmenterOptions", err.what());
+	return analyzer::SegmenterOptions();
+}
+}
+
 const TokenizerFunctionInterface* TextProcessorImpl::getTokenizer( const std::string& p1) const
 {
 try
@@ -7390,6 +7433,26 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::defineSegmenter", err.what());
+	return void();
+}
+}
+
+void TextProcessorImpl::defineSegmenterOptions( const std::string& p1, const analyzer::SegmenterOptions& p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineSegmenterOptions);
+	msg.packString( p1);
+	msg.packSegmenterOptions( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineSegmenterOptions");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::defineSegmenterOptions", err.what());
 	return void();
 }
 }

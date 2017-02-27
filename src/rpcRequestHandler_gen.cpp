@@ -1149,6 +1149,24 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case DocumentAnalyzerConst::Method_defineSubContent:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			analyzer::DocumentClass p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDocumentClass();
+			obj->defineSubContent(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case DocumentAnalyzerConst::Method_addPatternLexem:
 		{
 			RpcSerializer msg;
@@ -6531,6 +6549,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case TextProcessorConst::Method_getSegmenterOptions:
+		{
+			RpcSerializer msg;
+			analyzer::SegmenterOptions p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->getSegmenterOptions(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSegmenterOptions( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case TextProcessorConst::Method_getTokenizer:
 		{
 			RpcSerializer msg;
@@ -6710,6 +6747,24 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			if (classId_2 != ClassId_Segmenter) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<SegmenterInterface>( classId_2, objId_2);
 			obj->defineSegmenter(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case TextProcessorConst::Method_defineSegmenterOptions:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			analyzer::SegmenterOptions p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackSegmenterOptions();
+			obj->defineSegmenterOptions(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
