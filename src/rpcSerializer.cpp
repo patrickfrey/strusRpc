@@ -690,6 +690,7 @@ void RpcSerializer::packTextProcessorFunctionType( const TextProcessorInterface:
 
 void RpcSerializer::packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val)
 {
+	packString( val.name());
 	packString( val.text());
 }
 
@@ -1322,7 +1323,9 @@ TextProcessorInterface::FunctionType RpcDeserializer::unpackTextProcessorFunctio
 
 PostingJoinOperatorInterface::Description RpcDeserializer::unpackPostingJoinOperatorDescription()
 {
-	return PostingJoinOperatorInterface::Description( unpackString());
+	std::string name( unpackString());
+	std::string descr( unpackString());
+	return PostingJoinOperatorInterface::Description( name, descr);
 }
 
 FunctionDescription RpcDeserializer::unpackFunctionDescription()
