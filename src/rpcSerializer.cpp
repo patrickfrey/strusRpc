@@ -641,8 +641,8 @@ void RpcSerializer::packResultDocument( const ResultDocument& val)
 void RpcSerializer::packQueryResult( const QueryResult& val)
 {
 	packByte( val.evaluationPass());
-	packIndex( val.nofDocumentsRanked());
-	packIndex( val.nofDocumentsVisited());
+	packIndex( val.nofRanked());
+	packIndex( val.nofVisited());
 
 	std::vector<ResultDocument>::const_iterator
 		ri = val.ranks().begin(), re = val.ranks().end();
@@ -1270,15 +1270,15 @@ ResultDocument RpcDeserializer::unpackResultDocument()
 QueryResult RpcDeserializer::unpackQueryResult()
 {
 	unsigned int pass = unpackByte();
-	unsigned int nofDocumentsRanked = unpackIndex();
-	unsigned int nofDocumentsVisited = unpackIndex();
+	unsigned int nofRanked = unpackIndex();
+	unsigned int nofVisited = unpackIndex();
 	std::size_t ii=0,size=unpackSize();
 	std::vector<ResultDocument> ranks;
 	for (; ii<size; ++ii)
 	{
 		ranks.push_back( unpackResultDocument());
 	}
-	return QueryResult( pass, nofDocumentsRanked, nofDocumentsVisited, ranks);
+	return QueryResult( pass, nofRanked, nofVisited, ranks);
 }
 
 QueryEvalInterface::FeatureParameter RpcDeserializer::unpackFeatureParameter()
