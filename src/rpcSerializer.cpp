@@ -672,9 +672,9 @@ void RpcSerializer::packStatisticsProcessorBuilderOptions( const StatisticsProce
 
 void RpcSerializer::packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val)
 {
-	packCharp( val.type);
-	packCharp( val.value);
-	packInt( val.increment);
+	packCharp( val.type());
+	packCharp( val.value());
+	packInt( val.increment());
 }
 
 
@@ -1304,11 +1304,10 @@ StatisticsProcessorInterface::BuilderOptions RpcDeserializer::unpackStatisticsPr
 StatisticsViewerInterface::DocumentFrequencyChange RpcDeserializer::unpackStatisticsViewerDocumentFrequencyChange()
 {
 	typedef StatisticsViewerInterface::DocumentFrequencyChange DocumentFrequencyChange;
-	DocumentFrequencyChange rt;
-	rt.type = unpackConstCharp();
-	rt.value = unpackConstCharp();
-	rt.increment = unpackInt();
-	return rt;
+	const char* type = unpackConstCharp();
+	const char* value = unpackConstCharp();
+	int increment = unpackInt();
+	return DocumentFrequencyChange( type, value, increment);
 }
 
 QueryProcessorInterface::FunctionType RpcDeserializer::unpackQueryProcessorFunctionType()
