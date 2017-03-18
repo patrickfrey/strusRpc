@@ -799,6 +799,7 @@ public:
 
 	virtual const char* mimeType( ) const;
 	virtual SegmenterInstanceInterface* createInstance( const analyzer::SegmenterOptions& p1) const;
+	virtual const char* getDescription( ) const;
 };
 
 class SegmenterMarkupContextImpl

@@ -635,7 +635,8 @@ public:
 	{
 		Method_Destructor,
 		Method_mimeType,
-		Method_createInstance
+		Method_createInstance,
+		Method_getDescription
 	};
 };
 
