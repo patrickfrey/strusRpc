@@ -5414,6 +5414,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packString( "the method 'checkStorage' is not implemented for RPC");
 			return msg.content();
 		}
+		case StorageClientConst::Method_close:
+		{
+			RpcSerializer msg;
+			obj->close();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 	}
 	break;
 	}

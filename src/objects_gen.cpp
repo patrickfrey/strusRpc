@@ -5950,6 +5950,24 @@ bool StorageClientImpl::checkStorage( std::ostream& p1) const
 	return false;
 }
 
+void StorageClientImpl::close( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_close);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::close");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::close", err.what());
+	return void();
+}
+}
+
 StorageDocumentImpl::~StorageDocumentImpl()
 {
 	if (isConst()) return;
