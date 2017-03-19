@@ -474,6 +474,24 @@ try
 }
 }
 
+void DatabaseClientImpl::close( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_close);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseClientImpl::close");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseClientImpl::close", err.what());
+	return void();
+}
+}
+
 std::string DatabaseClientImpl::config( ) const
 {
 try
