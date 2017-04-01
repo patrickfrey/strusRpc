@@ -480,7 +480,8 @@ void RpcSerializer::packAnalyzerQuery( const analyzer::Query& val)
 					break;
 			}
 			packIndex( ei->pos());
-			packIndex( ei->fieldNo());
+			packIndex( ei->len());
+			packIndex( ei->field());
 		}
 	}
 	{
@@ -1083,6 +1084,7 @@ analyzer::Query RpcDeserializer::unpackAnalyzerQuery()
 					analyzer::MetaData elem = unpackAnalyzerMetaData();
 					unsigned int fieldNo = unpackIndex();
 					unsigned int position = unpackIndex();
+					/*len*/(void)unpackIndex();
 					rt.addMetaData( fieldNo, position, elem);
 					break;
 				}
@@ -1091,6 +1093,7 @@ analyzer::Query RpcDeserializer::unpackAnalyzerQuery()
 					analyzer::Term elem = unpackAnalyzerTerm();
 					unsigned int fieldNo = unpackIndex();
 					/*position*/(void)unpackIndex();
+					/*len*/(void)unpackIndex();
 					rt.addSearchIndexTerm( fieldNo, elem);
 					break;
 				}
