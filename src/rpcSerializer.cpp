@@ -479,7 +479,7 @@ void RpcSerializer::packAnalyzerQuery( const analyzer::Query& val)
 					packAnalyzerTerm( val.searchIndexTerm( ei->idx()));
 					break;
 			}
-			packIndex( ei->position());
+			packIndex( ei->pos());
 			packIndex( ei->fieldNo());
 		}
 	}
