@@ -593,7 +593,6 @@ void RpcSerializer::packAnalyzerPatternMatcherResult( const analyzer::PatternMat
 		packUint( ri->start_origpos());
 		packUint( ri->end_origseg());
 		packUint( ri->end_origpos());
-		packFloat( ri->weight());
 	}
 }
 
@@ -1216,13 +1215,11 @@ analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResu
 		unsigned int i_start_origpos = unpackUint();
 		unsigned int i_end_origseg = unpackUint();
 		unsigned int i_end_origpos = unpackUint();
-		float i_weight = unpackFloat();
 
 		analyzer::PatternMatcherResult::Item
 			item( i_name, i_start_ordpos, i_end_ordpos,
 			i_start_origseg, i_start_origpos,
-			i_end_origseg, i_end_origpos,
-			i_weight);
+			i_end_origseg, i_end_origpos);
 		itemlist.push_back( item);
 	}
 	analyzer::PatternMatcherResult rt( name, start_ordpos, end_ordpos, start_origseg, start_origpos, end_origseg, end_origpos, itemlist);

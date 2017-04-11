@@ -2421,10 +2421,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			float p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackFloat();
-			obj->attachVariable(p1,p2);
+			obj->attachVariable(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
