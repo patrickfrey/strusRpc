@@ -463,47 +463,30 @@ void RpcSerializer::packAnalyzerDocument( const analyzer::Document& val)
 
 void RpcSerializer::packAnalyzerQuery( const analyzer::Query& val)
 {
+	std::vector<analyzer::Query::Instruction>::const_iterator
+		ii = val.instructions().begin(), ie = val.instructions().end();
+	packSize( ie-ii);
+	for (; ii != ie; ++ii)
 	{
-		std::vector<analyzer::Query::Element>::const_iterator
-			ei = val.elements().begin(), ee = val.elements().end();
-		packSize( ee-ei);
-		for (; ei != ee; ++ei)
+		packByte( ii->opCode());
+		switch (ii->opCode())
 		{
-			packByte( ei->type());
-			switch (ei->type())
+			case analyzer::Query::Instruction::MetaData:
 			{
-				case analyzer::Query::Element::MetaData:
-					packAnalyzerMetaData( val.metadata( ei->idx()));
-					break;
-				case analyzer::Query::Element::SearchIndexTerm:
-					packAnalyzerTerm( val.searchIndexTerm( ei->idx()));
-					break;
+				const analyzer::MetaData& data = val.metadata( ii->idx());
+				packAnalyzerMetaData( data);
+				break;
 			}
-			packIndex( ei->pos());
-			packIndex( ei->len());
-			packIndex( ei->field());
-		}
-	}
-	{
-		std::vector<analyzer::Query::Instruction>::const_iterator
-			ci = val.instructions().begin(), ce = val.instructions().end();
-		packSize( ce-ci);
-		for (; ci != ce; ++ci)
-		{
-			packByte( ci->opCode());
-			switch (ci->opCode())
+			case analyzer::Query::Instruction::Term:
 			{
-				case analyzer::Query::Instruction::PushMetaData:
-				case analyzer::Query::Instruction::PushSearchIndexTerm:
-					packIndex( ci->idx());
-					break;
-				case analyzer::Query::Instruction::Operator:
-				{
-					packIndex( ci->idx());
-					packIndex( ci->nofOperands());
-					break;
-				}
+				const analyzer::Term& term = val.term( ii->idx());
+				packAnalyzerTerm( term);
+				break;
 			}
+			case analyzer::Query::Instruction::Operator:
+				packIndex( ii->idx());
+				packIndex( ii->nofOperands());
+				break;
 		}
 	}
 }
@@ -1071,54 +1054,25 @@ analyzer::Document RpcDeserializer::unpackAnalyzerDocument()
 analyzer::Query RpcDeserializer::unpackAnalyzerQuery()
 {
 	analyzer::Query rt;
+	std::size_t ii=0,size=unpackSize();
+	for (; ii<size; ++ii)
 	{
-		std::size_t ii=0,size=unpackSize();
-		for (; ii<size; ++ii)
+		analyzer::Query::Instruction::OpCode
+			opCode = (analyzer::Query::Instruction::OpCode)unpackByte();
+		switch (opCode)
 		{
-			analyzer::Query::Element::Type type = (analyzer::Query::Element::Type)unpackByte();
-			switch (type)
+			case analyzer::Query::Instruction::Term:
+				rt.pushTerm( unpackAnalyzerTerm());
+				break;
+			case analyzer::Query::Instruction::MetaData:
+				rt.pushMetaData( unpackAnalyzerMetaData());
+				break;
+			case analyzer::Query::Instruction::Operator:
 			{
-				case analyzer::Query::Element::MetaData:
-				{
-					analyzer::MetaData elem = unpackAnalyzerMetaData();
-					unsigned int fieldNo = unpackIndex();
-					unsigned int position = unpackIndex();
-					/*len*/(void)unpackIndex();
-					rt.addMetaData( fieldNo, position, elem);
-					break;
-				}
-				case analyzer::Query::Element::SearchIndexTerm:
-				{
-					analyzer::Term elem = unpackAnalyzerTerm();
-					unsigned int fieldNo = unpackIndex();
-					/*position*/(void)unpackIndex();
-					/*len*/(void)unpackIndex();
-					rt.addSearchIndexTerm( fieldNo, elem);
-					break;
-				}
-			}
-		}
-	}
-	{
-		std::size_t ii=0,size=unpackSize();
-		for (; ii<size; ++ii)
-		{
-			analyzer::Query::Instruction::OpCode opCode = (analyzer::Query::Instruction::OpCode)unpackByte();
-			switch (opCode)
-			{
-				case analyzer::Query::Instruction::PushMetaData:
-					rt.pushMetaDataOperand( unpackIndex());
-					break;
-				case analyzer::Query::Instruction::PushSearchIndexTerm:
-					rt.pushSearchIndexTermOperand( unpackIndex());
-					break;
-				case analyzer::Query::Instruction::Operator:
-				{
-					unsigned int operatorId = unpackIndex();
-					unsigned int nofOperands = unpackIndex();
-					rt.pushOperator( operatorId, nofOperands);
-					break;
-				}
+				unsigned int operatorId = unpackIndex();
+				unsigned int nofOperands = unpackIndex();
+				rt.pushOperator( operatorId, nofOperands);
+				break;
 			}
 		}
 	}
