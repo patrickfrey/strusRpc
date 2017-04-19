@@ -293,7 +293,6 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_hasElement,
 		Method_elementHandle,
 		Method_nofElements,
 		Method_skipDoc,

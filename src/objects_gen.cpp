@@ -1795,29 +1795,6 @@ MetaDataReaderImpl::~MetaDataReaderImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-bool MetaDataReaderImpl::hasElement( const std::string& p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_hasElement);
-	msg.packString( p1);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::hasElement");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataReaderImpl::hasElement", err.what());
-	return false;
-}
-}
-
 Index MetaDataReaderImpl::elementHandle( const std::string& p1) const
 {
 try
@@ -4012,7 +3989,7 @@ try
 }
 }
 
-QueryResult QueryImpl::evaluate( )
+QueryResult QueryImpl::evaluate( ) const
 {
 try
 {

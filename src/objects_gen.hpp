@@ -356,7 +356,6 @@ public:
 	MetaDataReaderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_MetaDataReader, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual bool hasElement( const std::string& p1) const;
 	virtual Index elementHandle( const std::string& p1) const;
 	virtual Index nofElements( ) const;
 	virtual void skipDoc( const Index& p1);
@@ -681,7 +680,7 @@ public:
 	virtual void addUserName( const std::string& p1);
 	virtual void setWeightingVariableValue( const std::string& p1, double p2);
 	virtual void setDebugMode( bool p1);
-	virtual QueryResult evaluate( );
+	virtual QueryResult evaluate( ) const;
 	virtual std::string tostring( ) const;
 };
 
