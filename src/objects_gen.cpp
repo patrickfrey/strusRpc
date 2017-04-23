@@ -6896,6 +6896,26 @@ try
 }
 }
 
+void SummarizerFunctionContextImpl::setVariableValue( const std::string& p1, double p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_setVariableValue);
+	msg.packString( p1);
+	msg.packDouble( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::setVariableValue");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::setVariableValue", err.what());
+	return void();
+}
+}
+
 std::vector<SummaryElement> SummarizerFunctionContextImpl::getSummary( const Index& p1)
 {
 try
@@ -7014,6 +7034,33 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::defineResultName", err.what());
 	return void();
+}
+}
+
+std::vector<std::string> SummarizerFunctionInstanceImpl::getVariables( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getVariables);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::getVariables");
+	return std::vector<std::string>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::getVariables", err.what());
+	return std::vector<std::string>();
 }
 }
 
@@ -8604,6 +8651,26 @@ try
 }
 }
 
+void WeightingFunctionContextImpl::setVariableValue( const std::string& p1, double p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_setVariableValue);
+	msg.packString( p1);
+	msg.packDouble( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionContextImpl::setVariableValue");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::setVariableValue", err.what());
+	return void();
+}
+}
+
 double WeightingFunctionContextImpl::call( const Index& p1)
 {
 try
@@ -8727,6 +8794,33 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::createFunctionContext", err.what());
 	return 0;
+}
+}
+
+std::vector<std::string> WeightingFunctionInstanceImpl::getVariables( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getVariables);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::getVariables");
+	return std::vector<std::string>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::getVariables", err.what());
+	return std::vector<std::string>();
 }
 }
 

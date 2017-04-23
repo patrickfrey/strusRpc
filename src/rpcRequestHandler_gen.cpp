@@ -6273,6 +6273,24 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case SummarizerFunctionContextConst::Method_setVariableValue:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			double p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDouble();
+			obj->setVariableValue(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case SummarizerFunctionContextConst::Method_getSummary:
 		{
 			RpcSerializer msg;
@@ -6380,6 +6398,26 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
+		}
+		case SummarizerFunctionInstanceConst::Method_getVariables:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getVariables();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
 		}
 		case SummarizerFunctionInstanceConst::Method_createFunctionContext:
 		{
@@ -7825,6 +7863,24 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case WeightingFunctionContextConst::Method_setVariableValue:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			double p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDouble();
+			obj->setVariableValue(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case WeightingFunctionContextConst::Method_call:
 		{
 			RpcSerializer msg;
@@ -7942,6 +7998,26 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case WeightingFunctionInstanceConst::Method_getVariables:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getVariables();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
 		}
 		case WeightingFunctionInstanceConst::Method_tostring:
 		{

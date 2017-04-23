@@ -1073,6 +1073,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, double p4, const TermStatistics& p5);
+	virtual void setVariableValue( const std::string& p1, double p2);
 	virtual std::vector<SummaryElement> getSummary( const Index& p1);
 	virtual std::string debugCall( const Index& p1);
 };
@@ -1091,6 +1092,7 @@ public:
 	virtual void addStringParameter( const std::string& p1, const std::string& p2);
 	virtual void addNumericParameter( const std::string& p1, const NumericVariant& p2);
 	virtual void defineResultName( const std::string& p1, const std::string& p2);
+	virtual std::vector<std::string> getVariables( ) const;
 	virtual SummarizerFunctionContextInterface* createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const;
 	virtual std::string tostring( ) const;
 };
@@ -1319,6 +1321,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, double p3, const TermStatistics& p4);
+	virtual void setVariableValue( const std::string& p1, double p2);
 	virtual double call( const Index& p1);
 	virtual std::string debugCall( const Index& p1);
 };
@@ -1337,6 +1340,7 @@ public:
 	virtual void addStringParameter( const std::string& p1, const std::string& p2);
 	virtual void addNumericParameter( const std::string& p1, const NumericVariant& p2);
 	virtual WeightingFunctionContextInterface* createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const;
+	virtual std::vector<std::string> getVariables( ) const;
 	virtual std::string tostring( ) const;
 };
 

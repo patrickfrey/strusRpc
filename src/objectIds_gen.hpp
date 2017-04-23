@@ -854,6 +854,7 @@ public:
 	{
 		Method_Destructor,
 		Method_addSummarizationFeature,
+		Method_setVariableValue,
 		Method_getSummary,
 		Method_debugCall
 	};
@@ -868,6 +869,7 @@ public:
 		Method_addStringParameter,
 		Method_addNumericParameter,
 		Method_defineResultName,
+		Method_getVariables,
 		Method_createFunctionContext,
 		Method_tostring
 	};
@@ -1044,6 +1046,7 @@ public:
 	{
 		Method_Destructor,
 		Method_addWeightingFeature,
+		Method_setVariableValue,
 		Method_call,
 		Method_debugCall
 	};
@@ -1058,6 +1061,7 @@ public:
 		Method_addStringParameter,
 		Method_addNumericParameter,
 		Method_createFunctionContext,
+		Method_getVariables,
 		Method_tostring
 	};
 };
