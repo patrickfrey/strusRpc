@@ -904,9 +904,9 @@ NumericVariant RpcDeserializer::unpackNumericVariant()
 	switch (type)
 	{
 		case NumericVariant::Null: return NumericVariant();
-		case NumericVariant::Int: return NumericVariant( unpackInt());
-		case NumericVariant::UInt: return NumericVariant( unpackUint());
-		case NumericVariant::Float: return NumericVariant( unpackDouble());
+		case NumericVariant::Int: return NumericVariant::asint( unpackInt());
+		case NumericVariant::UInt: return NumericVariant::asuint( unpackUint());
+		case NumericVariant::Float: return NumericVariant::asdouble( unpackDouble());
 	}
 	throw strus::runtime_error( _TXT("unknown type of numeric variant"));
 }
