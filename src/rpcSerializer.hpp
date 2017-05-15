@@ -71,6 +71,8 @@ public:
 	void packGlobalCounter( const GlobalCounter& index);
 	void packUint( unsigned int val);
 	void packInt( int val);
+	void packUint64( uint64_t val);
+	void packInt64( int64_t val);
 	void packFloat( float val);
 	void packDouble( double val);
 	void packSize( std::size_t size);
@@ -151,6 +153,8 @@ public:
 	GlobalCounter unpackGlobalCounter();
 	unsigned int unpackUint();
 	int unpackInt();
+	uint64_t unpackUint64();
+	int64_t unpackInt64();
 	float unpackFloat();
 	double unpackDouble();
 	std::size_t unpackSize();

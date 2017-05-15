@@ -325,6 +325,24 @@ void RpcSerializer::packInt( int val)
 	packScalar( m_content, (int32_t)val);
 }
 
+void RpcSerializer::packUint64( uint64_t val)
+{
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packUint (" << (unsigned int)val << ")" << std::endl;
+#endif
+	packScalar( m_content, val);
+}
+
+void RpcSerializer::packInt64( int64_t val)
+{
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packInt (" << val << ")" << std::endl;
+#endif
+	if (val > std::numeric_limits<int64_t>::max()
+	||  val < std::numeric_limits<int64_t>::min()) throw strus::runtime_error( _TXT("packed int out of range"));
+	packScalar( m_content, val);
+}
+
 void RpcSerializer::packFloat( float val)
 {
 #ifdef STRUS_LOWLEVEL_DEBUG
@@ -356,8 +374,8 @@ void RpcSerializer::packNumericVariant( const NumericVariant& val)
 	switch (val.type)
 	{
 		case NumericVariant::Null: break;
-		case NumericVariant::Int: packInt( val.variant.Int); break;
-		case NumericVariant::UInt: packUint( val.variant.UInt); break;
+		case NumericVariant::Int: packInt64( val.variant.Int); break;
+		case NumericVariant::UInt: packUint64( val.variant.UInt); break;
 		case NumericVariant::Float: packDouble( val.variant.Float); break;
 	}
 }
@@ -865,6 +883,24 @@ int RpcDeserializer::unpackInt()
 	int rt = unpackScalar<int32_t>( m_itr, m_end);
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackInt(" << rt << ")" << std::endl;
+#endif
+	return rt;
+}
+
+uint64_t RpcDeserializer::unpackUint64()
+{
+	uint64_t rt = unpackScalar<uint64_t>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackUint64(" << rt << ")" << std::endl;
+#endif
+	return rt;
+}
+
+int64_t RpcDeserializer::unpackInt64()
+{
+	int64_t rt = unpackScalar<int64_t>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackInt64(" << rt << ")" << std::endl;
 #endif
 	return rt;
 }
