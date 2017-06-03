@@ -5303,7 +5303,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case StorageClientConst::Method_createInitStatisticsIterator:
+		case StorageClientConst::Method_createStatisticsIterator:
 		{
 			RpcSerializer msg;
 			StatisticsIteratorInterface* p0;
@@ -5311,7 +5311,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackBool();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createInitStatisticsIterator(p1);
+			p0 = obj->createStatisticsIterator(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

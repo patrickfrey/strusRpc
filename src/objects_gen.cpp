@@ -5824,13 +5824,13 @@ try
 }
 }
 
-StatisticsIteratorInterface* StorageClientImpl::createInitStatisticsIterator( bool p1)
+StatisticsIteratorInterface* StorageClientImpl::createStatisticsIterator( bool p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createInitStatisticsIterator);
+	msg.packByte( Method_createStatisticsIterator);
 	msg.packBool( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StatisticsIterator;
@@ -5840,10 +5840,10 @@ try
 	StatisticsIteratorInterface* p0 = new StatisticsIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createInitStatisticsIterator");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createStatisticsIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createInitStatisticsIterator", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createStatisticsIterator", err.what());
 	return 0;
 }
 }

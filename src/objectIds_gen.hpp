@@ -745,7 +745,7 @@ public:
 		Method_createMetaDataRestriction,
 		Method_createAttributeReader,
 		Method_createTransaction,
-		Method_createInitStatisticsIterator,
+		Method_createStatisticsIterator,
 		Method_createUpdateStatisticsIterator,
 		Method_getStatisticsProcessor,
 		Method_createDocumentChecker,
