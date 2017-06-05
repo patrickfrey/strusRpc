@@ -3849,7 +3849,7 @@ try
 }
 }
 
-void QueryImpl::addMetaDataRestrictionCondition( MetaDataRestrictionInterface::CompareOperator p1, const std::string& p2, const NumericVariant& p3, bool p4)
+void QueryImpl::addMetaDataRestrictionCondition( const MetaDataRestrictionInterface::CompareOperator& p1, const std::string& p2, const NumericVariant& p3, bool p4)
 {
 try
 {
