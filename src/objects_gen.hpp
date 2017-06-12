@@ -867,7 +867,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsProcessor, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual StatisticsViewerInterface* createViewer( const char* p1, std::size_t p2) const;
-	virtual StatisticsBuilderInterface* createBuilder( const StatisticsProcessorInterface::BuilderOptions& p1) const;
+	virtual StatisticsBuilderInterface* createBuilder( ) const;
 };
 
 class StatisticsViewerImpl

@@ -4689,11 +4689,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			StatisticsBuilderInterface* p0;
-			StatisticsProcessorInterface::BuilderOptions p1;
-			p1 = serializedMsg.unpackStatisticsProcessorBuilderOptions();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createBuilder(p1);
+			p0 = obj->createBuilder();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

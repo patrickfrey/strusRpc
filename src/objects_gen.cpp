@@ -5114,14 +5114,13 @@ try
 }
 }
 
-StatisticsBuilderInterface* StatisticsProcessorImpl::createBuilder( const StatisticsProcessorInterface::BuilderOptions& p1) const
+StatisticsBuilderInterface* StatisticsProcessorImpl::createBuilder( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createBuilder);
-	msg.packStatisticsProcessorBuilderOptions( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StatisticsBuilder;
 	msg.packObject( classId_0, objId_0);

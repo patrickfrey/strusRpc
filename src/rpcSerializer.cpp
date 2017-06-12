@@ -665,12 +665,6 @@ void RpcSerializer::packDocumentStatisticsType( const StorageClientInterface::Do
 	packByte( val);
 }
 
-void RpcSerializer::packStatisticsProcessorBuilderOptions( const StatisticsProcessorInterface::BuilderOptions& val)
-{
-	packUint( val.maxBlockSize);
-	packByte( val.set);
-}
-
 void RpcSerializer::packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val)
 {
 	packCharp( val.type());
@@ -1281,14 +1275,6 @@ QueryEvalInterface::FeatureParameter RpcDeserializer::unpackFeatureParameter()
 StorageClientInterface::DocumentStatisticsType RpcDeserializer::unpackDocumentStatisticsType()
 {
 	return (StorageClientInterface::DocumentStatisticsType)unpackByte();
-}
-
-StatisticsProcessorInterface::BuilderOptions RpcDeserializer::unpackStatisticsProcessorBuilderOptions()
-{
-	unsigned int maxBlockSize = unpackUint();
-	typedef StatisticsProcessorInterface::BuilderOptions::Set Set;
-	Set set = (Set)unpackByte();
-	return StatisticsProcessorInterface::BuilderOptions( set, maxBlockSize);
 }
 
 StatisticsViewerInterface::DocumentFrequencyChange RpcDeserializer::unpackStatisticsViewerDocumentFrequencyChange()
