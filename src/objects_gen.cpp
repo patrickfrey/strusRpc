@@ -5823,13 +5823,13 @@ try
 }
 }
 
-StatisticsIteratorInterface* StorageClientImpl::createStatisticsIterator( bool p1)
+StatisticsIteratorInterface* StorageClientImpl::createAllStatisticsIterator( bool p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createStatisticsIterator);
+	msg.packByte( Method_createAllStatisticsIterator);
 	msg.packBool( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StatisticsIterator;
@@ -5839,21 +5839,21 @@ try
 	StatisticsIteratorInterface* p0 = new StatisticsIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createStatisticsIterator");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createAllStatisticsIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createStatisticsIterator", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createAllStatisticsIterator", err.what());
 	return 0;
 }
 }
 
-StatisticsIteratorInterface* StorageClientImpl::createUpdateStatisticsIterator( )
+StatisticsIteratorInterface* StorageClientImpl::createChangeStatisticsIterator( )
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createUpdateStatisticsIterator);
+	msg.packByte( Method_createChangeStatisticsIterator);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StatisticsIterator;
 	msg.packObject( classId_0, objId_0);
@@ -5862,10 +5862,10 @@ try
 	StatisticsIteratorInterface* p0 = new StatisticsIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createUpdateStatisticsIterator");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createChangeStatisticsIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createUpdateStatisticsIterator", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createChangeStatisticsIterator", err.what());
 	return 0;
 }
 }
