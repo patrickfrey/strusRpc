@@ -3249,7 +3249,7 @@ try
 }
 }
 
-analyzer::Query QueryAnalyzerContextImpl::analyze( )
+analyzer::QueryTermExpression QueryAnalyzerContextImpl::analyze( )
 {
 try
 {
@@ -3260,14 +3260,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	analyzer::Query p0 = serializedMsg.unpackAnalyzerQuery();;
+	analyzer::QueryTermExpression p0 = serializedMsg.unpackAnalyzerQueryTermExpression();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerContextImpl::analyze");
-	return analyzer::Query();
+	return analyzer::QueryTermExpression();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerContextImpl::analyze", err.what());
-	return analyzer::Query();
+	return analyzer::QueryTermExpression();
 }
 }
 
@@ -3281,13 +3281,13 @@ QueryAnalyzerImpl::~QueryAnalyzerImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void QueryAnalyzerImpl::addSearchIndexElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
+void QueryAnalyzerImpl::addElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_addSearchIndexElement);
+	msg.packByte( Method_addElement);
 	msg.packString( p1);
 	msg.packString( p2);
 	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
@@ -3302,39 +3302,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addSearchIndexElement");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addSearchIndexElement", err.what());
-	return void();
-}
-}
-
-void QueryAnalyzerImpl::addMetaDataElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_addMetaDataElement);
-	msg.packString( p1);
-	msg.packString( p2);
-	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
-	if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "TokenizerFunctionInstance");
-	msg.packObject( impl_3->classId(), impl_3->objId());
-	msg.packSize( p4.size());
-	for (unsigned int ii=0; ii < p4.size(); ++ii) {
-		const RpcInterfaceStub* impl_4 = dynamic_cast<const RpcInterfaceStub*>(p4[ii]);
-		if (!impl_4) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
-		msg.packObject( impl_4->classId(), impl_4->objId());
-	}
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addMetaDataElement");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addMetaDataElement", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addElement", err.what());
 	return void();
 }
 }
@@ -3422,13 +3393,13 @@ try
 }
 }
 
-void QueryAnalyzerImpl::addSearchIndexElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
+void QueryAnalyzerImpl::addElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_addSearchIndexElementFromPatternMatch);
+	msg.packByte( Method_addElementFromPatternMatch);
 	msg.packString( p1);
 	msg.packString( p2);
 	msg.packSize( p3.size());
@@ -3440,36 +3411,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addSearchIndexElementFromPatternMatch");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addElementFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addSearchIndexElementFromPatternMatch", err.what());
-	return void();
-}
-}
-
-void QueryAnalyzerImpl::addMetaDataElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_addMetaDataElementFromPatternMatch);
-	msg.packString( p1);
-	msg.packString( p2);
-	msg.packSize( p3.size());
-	for (unsigned int ii=0; ii < p3.size(); ++ii) {
-		const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3[ii]);
-		if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
-		msg.packObject( impl_3->classId(), impl_3->objId());
-	}
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addMetaDataElementFromPatternMatch");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addMetaDataElementFromPatternMatch", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addElementFromPatternMatch", err.what());
 	return void();
 }
 }

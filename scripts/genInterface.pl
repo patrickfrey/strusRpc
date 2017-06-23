@@ -779,29 +779,29 @@ sub packParameter
 	{
 		$rt .= "msg.packSlice( " . $id . ");";
 	}
+	elsif ($type eq "analyzer::QueryTerm")
+	{
+		$rt .= "msg.packAnalyzerQueryTerm( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::QueryTermExpression")
+	{
+		$rt .= "msg.packAnalyzerQueryTermExpression( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::DocumentAttribute")
+	{
+		$rt .= "msg.packAnalyzerDocumentAttribute( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::DocumentMetaData")
+	{
+		$rt .= "msg.packAnalyzerDocumentMetaData( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::DocumentTerm")
+	{
+		$rt .= "msg.packAnalyzerDocumentTerm( " . $id . ");";
+	}
 	elsif ($type eq "analyzer::Document")
 	{
 		$rt .= "msg.packAnalyzerDocument( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::Query")
-	{
-		$rt .= "msg.packAnalyzerQuery( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::Attribute")
-	{
-		$rt .= "msg.packAnalyzerAttribute( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::MetaData")
-	{
-		$rt .= "msg.packAnalyzerMetaData( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::Term")
-	{
-		$rt .= "msg.packAnalyzerTerm( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::TermArray")
-	{
-		$rt .= "msg.packAnalyzerTermArray( " . $id . ");";
 	}
 	elsif ($type eq "analyzer::Token")
 	{
@@ -1086,21 +1086,29 @@ sub unpackParameter
 			$rt .= "$id = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice$idx" . ".ptr(), slice$idx" . ".size()), slice$idx" . ".size());";
 		}
 	}
-	elsif ($type eq "analyzer::Document")
+	elsif ($type eq "analyzer::QueryTerm")
 	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerDocument();";
+		$rt .= "$id = serializedMsg.unpackAnalyzerQueryTerm();";
 	}
-	elsif ($type eq "analyzer::Query")
+	elsif ($type eq "analyzer::QueryTermExpression")
 	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerQuery();";
+		$rt .= "$id = serializedMsg.unpackAnalyzerQueryTermExpression();";
 	}
-	elsif ($type eq "analyzer::Attribute")
+	elsif ($type eq "analyzer::DocumentAttribute")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerAttribute();";
 	}
-	elsif ($type eq "analyzer::MetaData")
+	elsif ($type eq "analyzer::DocumentMetaData")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerMetaData();";
+	}
+	elsif ($type eq "analyzer::DocumentTerm")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerDocumentTerm();";
+	}
+	elsif ($type eq "analyzer::Document")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerDocument();";
 	}
 	elsif ($type eq "analyzer::Token")
 	{
@@ -1133,14 +1141,6 @@ sub unpackParameter
 	elsif ($type eq "PatternMatcherInstanceInterface::JoinOperation")
 	{
 		$rt .= "$id = (PatternMatcherInstanceInterface::JoinOperation)serializedMsg.unpackByte();";
-	}
-	elsif ($type eq "analyzer::Term")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerTerm();";
-	}
-	elsif ($type eq "analyzer::TermArray")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerTermArray();";
 	}
 	elsif ($type eq "WeightedDocument")
 	{

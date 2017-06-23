@@ -453,35 +453,42 @@ void RpcSerializer::packSlice( DatabaseCursorInterface::Slice& val)
 void RpcSerializer::packAnalyzerDocument( const analyzer::Document& val)
 {
 	packString( val.subDocumentTypeName());
-	std::vector<analyzer::Attribute>::const_iterator ai = val.attributes().begin(), ae = val.attributes().end();
+	std::vector<analyzer::DocumentAttribute>::const_iterator ai = val.attributes().begin(), ae = val.attributes().end();
 	packSize( ae-ai);
 	for (; ai != ae; ++ai)
 	{
-		packAnalyzerAttribute( *ai);
+		packAnalyzerDocumentAttribute( *ai);
 	}
-	std::vector<analyzer::MetaData>::const_iterator mi = val.metadata().begin(), me = val.metadata().end();
+	std::vector<analyzer::DocumentMetaData>::const_iterator mi = val.metadata().begin(), me = val.metadata().end();
 	packSize( me-mi);
 	for (; mi != me; ++mi)
 	{
-		packAnalyzerMetaData( *mi);
+		packAnalyzerDocumentMetaData( *mi);
 	}
-	std::vector<analyzer::Term>::const_iterator si = val.searchIndexTerms().begin(), se = val.searchIndexTerms().end();
+	std::vector<analyzer::DocumentTerm>::const_iterator si = val.searchIndexTerms().begin(), se = val.searchIndexTerms().end();
 	packSize( se-si);
 	for (; si != se; ++si)
 	{
-		packAnalyzerTerm( *si);
+		packAnalyzerDocumentTerm( *si);
 	}
-	std::vector<analyzer::Term>::const_iterator fi = val.forwardIndexTerms().begin(), fe = val.forwardIndexTerms().end();
+	std::vector<analyzer::DocumentTerm>::const_iterator fi = val.forwardIndexTerms().begin(), fe = val.forwardIndexTerms().end();
 	packSize( fe-fi);
 	for (; fi != fe; ++fi)
 	{
-		packAnalyzerTerm( *fi);
+		packAnalyzerDocumentTerm( *fi);
 	}
 }
 
-void RpcSerializer::packAnalyzerQuery( const analyzer::Query& val)
+void RpcSerializer::packAnalyzerQueryTerm( const analyzer::QueryTerm& val)
 {
-	std::vector<analyzer::Query::Instruction>::const_iterator
+	packString( val.type());
+	packString( val.value());
+	packIndex( val.len());
+}
+
+void RpcSerializer::packAnalyzerQueryTermExpression( const analyzer::QueryTermExpression& val)
+{
+	std::vector<analyzer::QueryTermExpression::Instruction>::const_iterator
 		ii = val.instructions().begin(), ie = val.instructions().end();
 	packSize( ie-ii);
 	for (; ii != ie; ++ii)
@@ -489,19 +496,13 @@ void RpcSerializer::packAnalyzerQuery( const analyzer::Query& val)
 		packByte( ii->opCode());
 		switch (ii->opCode())
 		{
-			case analyzer::Query::Instruction::MetaData:
+			case analyzer::QueryTermExpression::Instruction::Term:
 			{
-				const analyzer::MetaData& data = val.metadata( ii->idx());
-				packAnalyzerMetaData( data);
+				const analyzer::QueryTerm& term = val.term( ii->idx());
+				packAnalyzerQueryTerm( term);
 				break;
 			}
-			case analyzer::Query::Instruction::Term:
-			{
-				const analyzer::Term& term = val.term( ii->idx());
-				packAnalyzerTerm( term);
-				break;
-			}
-			case analyzer::Query::Instruction::Operator:
+			case analyzer::QueryTermExpression::Instruction::Operator:
 				packIndex( ii->idx());
 				packIndex( ii->nofOperands());
 				break;
@@ -509,34 +510,23 @@ void RpcSerializer::packAnalyzerQuery( const analyzer::Query& val)
 	}
 }
 
-void RpcSerializer::packAnalyzerAttribute( const analyzer::Attribute& val)
+void RpcSerializer::packAnalyzerDocumentAttribute( const analyzer::DocumentAttribute& val)
 {
 	packString( val.name());
 	packString( val.value());
 }
 
-void RpcSerializer::packAnalyzerMetaData( const analyzer::MetaData& val)
+void RpcSerializer::packAnalyzerDocumentMetaData( const analyzer::DocumentMetaData& val)
 {
 	packString( val.name());
 	packNumericVariant( val.value());
 }
 
-void RpcSerializer::packAnalyzerTerm( const analyzer::Term& val)
+void RpcSerializer::packAnalyzerDocumentTerm( const analyzer::DocumentTerm& val)
 {
 	packString( val.type());
 	packString( val.value());
 	packIndex( val.pos());
-	packIndex( val.len());
-}
-
-void RpcSerializer::packAnalyzerTermArray( const analyzer::TermArray& val)
-{
-	analyzer::TermArray::const_iterator ti = val.begin(), te = val.end();
-	packSize( te-ti);
-	for (; ti != te; ++ti)
-	{
-		packAnalyzerTerm( *ti);
-	}
 }
 
 void RpcSerializer::packAnalyzerToken( const analyzer::Token& val)
@@ -1081,23 +1071,28 @@ analyzer::Document RpcDeserializer::unpackAnalyzerDocument()
 	return rt;
 }
 
-analyzer::Query RpcDeserializer::unpackAnalyzerQuery()
+analyzer::QueryTerm RpcDeserializer::unpackAnalyzerQueryTerm()
 {
-	analyzer::Query rt;
+	std::string type = unpackString();
+	std::string value = unpackString();
+	unsigned int len = (unsigned int)unpackIndex();
+	return analyzer::QueryTerm( type, value, len);
+}
+
+analyzer::QueryTermExpression RpcDeserializer::unpackAnalyzerQueryTermExpression()
+{
+	analyzer::QueryTermExpression rt;
 	std::size_t ii=0,size=unpackSize();
 	for (; ii<size; ++ii)
 	{
-		analyzer::Query::Instruction::OpCode
-			opCode = (analyzer::Query::Instruction::OpCode)unpackByte();
+		analyzer::QueryTermExpression::Instruction::OpCode
+			opCode = (analyzer::QueryTermExpression::Instruction::OpCode)unpackByte();
 		switch (opCode)
 		{
-			case analyzer::Query::Instruction::Term:
-				rt.pushTerm( unpackAnalyzerTerm());
+			case analyzer::QueryTermExpression::Instruction::Term:
+				rt.pushTerm( unpackAnalyzerQueryTerm());
 				break;
-			case analyzer::Query::Instruction::MetaData:
-				rt.pushMetaData( unpackAnalyzerMetaData());
-				break;
-			case analyzer::Query::Instruction::Operator:
+			case analyzer::QueryTermExpression::Instruction::Operator:
 			{
 				unsigned int operatorId = unpackIndex();
 				unsigned int nofOperands = unpackIndex();
@@ -1109,38 +1104,26 @@ analyzer::Query RpcDeserializer::unpackAnalyzerQuery()
 	return rt;
 }
 
-analyzer::Attribute RpcDeserializer::unpackAnalyzerAttribute()
+analyzer::DocumentAttribute RpcDeserializer::unpackAnalyzerDocumentAttribute()
 {
 	std::string name = unpackString();
 	std::string value = unpackString();
-	return analyzer::Attribute( name, value);
+	return analyzer::DocumentAttribute( name, value);
 }
 
-analyzer::MetaData RpcDeserializer::unpackAnalyzerMetaData()
+analyzer::DocumentMetaData RpcDeserializer::unpackAnalyzerDocumentMetaData()
 {
 	std::string name = unpackString();
 	NumericVariant value = unpackNumericVariant();
-	return analyzer::MetaData( name, value);
+	return analyzer::DocumentMetaData( name, value);
 }
 
-analyzer::Term RpcDeserializer::unpackAnalyzerTerm()
+analyzer::DocumentTerm RpcDeserializer::unpackAnalyzerDocumentTerm()
 {
 	std::string type = unpackString();
 	std::string value = unpackString();
 	unsigned int pos = (unsigned int)unpackIndex();
-	unsigned int len = (unsigned int)unpackIndex();
-	return analyzer::Term( type, value, pos, len);
-}
-
-analyzer::TermArray RpcDeserializer::unpackAnalyzerTermArray()
-{
-	analyzer::TermArray rt;
-	std::size_t ii = 0, size = unpackSize();
-	for (; ii<size; ++ii)
-	{
-		rt.push_back( unpackAnalyzerTerm());
-	}
-	return rt;
+	return analyzer::DocumentTerm( type, value, pos);
 }
 
 analyzer::Token RpcDeserializer::unpackAnalyzerToken()

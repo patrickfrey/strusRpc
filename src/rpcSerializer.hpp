@@ -43,9 +43,9 @@
 #include "strus/analyzer/positionBind.hpp"
 #include "strus/analyzer/patternMatcherStatistics.hpp"
 #include "strus/analyzer/patternMatcherResult.hpp"
-#include "strus/analyzer/term.hpp"
-#include "strus/analyzer/metaData.hpp"
-#include "strus/analyzer/attribute.hpp"
+#include "strus/analyzer/documentTerm.hpp"
+#include "strus/analyzer/documentMetaData.hpp"
+#include "strus/analyzer/documentAttribute.hpp"
 #include "strus/analyzer/document.hpp"
 
 namespace strus {
@@ -90,12 +90,12 @@ public:
 	void packSummarizationVariable( const SummarizationVariable& val);
 	void packDocumentTermIteratorTerm( const DocumentTermIteratorInterface::Term& term);
 	void packSlice( DatabaseCursorInterface::Slice& val);
+	void packAnalyzerQueryTerm( const analyzer::QueryTerm& val);
+	void packAnalyzerQueryTermExpression( const analyzer::QueryTermExpression& val);
+	void packAnalyzerDocumentAttribute( const analyzer::DocumentAttribute& val);
+	void packAnalyzerDocumentMetaData( const analyzer::DocumentMetaData& val);
+	void packAnalyzerDocumentTerm( const analyzer::DocumentTerm& val);
 	void packAnalyzerDocument( const analyzer::Document& val);
-	void packAnalyzerQuery( const analyzer::Query& val);
-	void packAnalyzerAttribute( const analyzer::Attribute& val);
-	void packAnalyzerMetaData( const analyzer::MetaData& val);
-	void packAnalyzerTerm( const analyzer::Term& val);
-	void packAnalyzerTermArray( const analyzer::TermArray& val);
 	void packAnalyzerToken( const analyzer::Token& val);
 	void packAnalyzerGroupBy( const QueryAnalyzerContextInterface::GroupBy& groupBy);
 	void packAnalyzerPatternLexem( const analyzer::PatternLexem& val);
@@ -170,12 +170,12 @@ public:
 	SummaryElement unpackSummaryElement();
 	DocumentTermIteratorInterface::Term unpackDocumentTermIteratorTerm();
 	DatabaseCursorInterface::Slice unpackSlice();
+	analyzer::QueryTerm unpackAnalyzerQueryTerm();
+	analyzer::QueryTermExpression unpackAnalyzerQueryTermExpression();
+	analyzer::DocumentAttribute unpackAnalyzerDocumentAttribute();
+	analyzer::DocumentMetaData unpackAnalyzerDocumentMetaData();
+	analyzer::DocumentTerm unpackAnalyzerDocumentTerm();
 	analyzer::Document unpackAnalyzerDocument();
-	analyzer::Query unpackAnalyzerQuery();
-	analyzer::Attribute unpackAnalyzerAttribute();
-	analyzer::MetaData unpackAnalyzerMetaData();
-	analyzer::Term unpackAnalyzerTerm();
-	analyzer::TermArray unpackAnalyzerTermArray();
 	analyzer::Token unpackAnalyzerToken();
 	QueryAnalyzerContextInterface::GroupBy unpackAnalyzerGroupBy();
 	analyzer::PatternLexem unpackAnalyzerPatternLexem();

@@ -497,13 +497,11 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_addSearchIndexElement,
-		Method_addMetaDataElement,
+		Method_addElement,
 		Method_addPatternLexem,
 		Method_definePatternMatcherPostProc,
 		Method_definePatternMatcherPreProc,
-		Method_addSearchIndexElementFromPatternMatch,
-		Method_addMetaDataElementFromPatternMatch,
+		Method_addElementFromPatternMatch,
 		Method_createContext
 	};
 };
