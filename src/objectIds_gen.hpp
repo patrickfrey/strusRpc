@@ -127,7 +127,7 @@ public:
 		Method_elementHandle,
 		Method_skipDoc,
 		Method_getValue,
-		Method_getAttributeNames
+		Method_getNames
 	};
 };
 
@@ -298,7 +298,8 @@ public:
 		Method_skipDoc,
 		Method_getValue,
 		Method_getType,
-		Method_getName
+		Method_getName,
+		Method_getNames
 	};
 };
 

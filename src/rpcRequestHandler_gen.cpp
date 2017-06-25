@@ -251,11 +251,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case AttributeReaderConst::Method_getAttributeNames:
+		case AttributeReaderConst::Method_getNames:
 		{
 			RpcSerializer msg;
 			std::vector<std::string> p0;
-			p0 = obj->getAttributeNames();
+			p0 = obj->getNames();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1765,6 +1765,26 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case MetaDataReaderConst::Method_getNames:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getNames();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
 			msg.packCrc32();
 			return msg.content();
 		}

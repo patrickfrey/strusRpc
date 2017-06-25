@@ -142,7 +142,7 @@ public:
 	virtual Index elementHandle( const char* p1) const;
 	virtual void skipDoc( const Index& p1);
 	virtual std::string getValue( const Index& p1) const;
-	virtual std::vector<std::string> getAttributeNames( ) const;
+	virtual std::vector<std::string> getNames( ) const;
 };
 
 class DatabaseBackupCursorImpl
@@ -362,6 +362,7 @@ public:
 	virtual NumericVariant getValue( const Index& p1) const;
 	virtual const char* getType( const Index& p1) const;
 	virtual const char* getName( const Index& p1) const;
+	virtual std::vector<std::string> getNames( ) const;
 };
 
 class MetaDataRestrictionInstanceImpl
