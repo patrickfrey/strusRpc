@@ -735,6 +735,7 @@ public:
 		Method_documentFrequency,
 		Method_maxDocumentNumber,
 		Method_documentNumber,
+		Method_termTypeNumber,
 		Method_createTermTypeIterator,
 		Method_createTermValueIterator,
 		Method_createDocIdIterator,

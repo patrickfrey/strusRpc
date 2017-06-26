@@ -5087,6 +5087,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case StorageClientConst::Method_termTypeNumber:
+		{
+			RpcSerializer msg;
+			Index p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->termTypeNumber(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndex( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case StorageClientConst::Method_createTermTypeIterator:
 		{
 			RpcSerializer msg;

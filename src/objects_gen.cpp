@@ -5586,6 +5586,29 @@ try
 }
 }
 
+Index StorageClientImpl::termTypeNumber( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_termTypeNumber);
+	msg.packString( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::termTypeNumber");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::termTypeNumber", err.what());
+	return 0;
+}
+}
+
 ValueIteratorInterface* StorageClientImpl::createTermTypeIterator( ) const
 {
 try
