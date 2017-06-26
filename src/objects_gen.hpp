@@ -927,6 +927,7 @@ public:
 	virtual Index maxDocumentNumber( ) const;
 	virtual Index documentNumber( const std::string& p1) const;
 	virtual Index termTypeNumber( const std::string& p1) const;
+	virtual bool isForwardIndexTerm( const std::string& p1) const;
 	virtual ValueIteratorInterface* createTermTypeIterator( ) const;
 	virtual ValueIteratorInterface* createTermValueIterator( ) const;
 	virtual ValueIteratorInterface* createDocIdIterator( ) const;
