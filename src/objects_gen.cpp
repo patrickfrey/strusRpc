@@ -3865,6 +3865,25 @@ try
 }
 }
 
+void QueryImpl::addAccessRestriction( const std::string& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addAccessRestriction);
+	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::addAccessRestriction");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::addAccessRestriction", err.what());
+	return void();
+}
+}
+
 void QueryImpl::setMaxNofRanks( std::size_t p1)
 {
 try
@@ -3899,25 +3918,6 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::setMinRank", err.what());
-	return void();
-}
-}
-
-void QueryImpl::addUserName( const std::string& p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_addUserName);
-	msg.packString( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::addUserName");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::addUserName", err.what());
 	return void();
 }
 }

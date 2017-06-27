@@ -3546,6 +3546,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case QueryConst::Method_addAccessRestriction:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->addAccessRestriction(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case QueryConst::Method_setMaxNofRanks:
 		{
 			RpcSerializer msg;
@@ -3568,22 +3584,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::size_t p1;
 			p1 = serializedMsg.unpackSize();
 			obj->setMinRank(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case QueryConst::Method_addUserName:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			obj->addUserName(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
