@@ -36,6 +36,7 @@
 #include "strus/tokenizerFunctionInterface.hpp"
 #include "strus/tokenMarkupContextInterface.hpp"
 #include "strus/tokenMarkupInstanceInterface.hpp"
+#include "strus/aclReaderInterface.hpp"
 #include "strus/attributeReaderInterface.hpp"
 #include "strus/databaseBackupCursorInterface.hpp"
 #include "strus/databaseClientInterface.hpp"
@@ -82,6 +83,21 @@
 #include "strus/weightingFunctionInterface.hpp"
 
 namespace strus {
+
+class AclReaderImpl
+		:public RpcInterfaceStub
+		,public strus::AclReaderInterface
+		,public strus::AclReaderConst
+{
+public:
+	virtual ~AclReaderImpl();
+
+	AclReaderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_AclReader, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void skipDoc( const Index& p1);
+	virtual std::vector<std::string> getReadAccessList( ) const;
+};
 
 class AggregatorFunctionInstanceImpl
 		:public RpcInterfaceStub
@@ -922,6 +938,7 @@ public:
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;
 	virtual DocumentTermIteratorInterface* createDocumentTermIterator( const std::string& p1) const;
 	virtual InvAclIteratorInterface* createInvAclIterator( const std::string& p1) const;
+	virtual AclReaderInterface* createAclReader( ) const;
 	virtual Index nofDocumentsInserted( ) const;
 	virtual Index documentFrequency( const std::string& p1, const std::string& p2) const;
 	virtual Index maxDocumentNumber( ) const;

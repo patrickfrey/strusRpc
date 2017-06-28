@@ -23,6 +23,55 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	methodId = serializedMsg.unpackByte();
 	switch( (ClassId)classId)
 	{
+	case ClassId_AclReader:
+	{
+	AclReaderInterface* obj = getObject<AclReaderInterface>( classId, objId);
+	switch( (AclReaderConst::MethodId)methodId)
+	{
+		case AclReaderConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case AclReaderConst::Method_skipDoc:
+		{
+			RpcSerializer msg;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			obj->skipDoc(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case AclReaderConst::Method_getReadAccessList:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getReadAccessList();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_AggregatorFunctionInstance:
 	{
 	AggregatorFunctionInstanceInterface* obj = getObject<AggregatorFunctionInstanceInterface>( classId, objId);
@@ -5001,6 +5050,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createInvAclIterator(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StorageClientConst::Method_createAclReader:
+		{
+			RpcSerializer msg;
+			AclReaderInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createAclReader();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

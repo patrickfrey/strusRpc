@@ -13,6 +13,62 @@
 #include <iostream>
 using namespace strus;
 
+AclReaderImpl::~AclReaderImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void AclReaderImpl::skipDoc( const Index& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_skipDoc);
+	msg.packIndex( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AclReaderImpl::skipDoc");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "AclReaderImpl::skipDoc", err.what());
+	return void();
+}
+}
+
+std::vector<std::string> AclReaderImpl::getReadAccessList( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getReadAccessList);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AclReaderImpl::getReadAccessList");
+	return std::vector<std::string>();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "AclReaderImpl::getReadAccessList", err.what());
+	return std::vector<std::string>();
+}
+}
+
 AggregatorFunctionInstanceImpl::~AggregatorFunctionInstanceImpl()
 {
 	if (isConst()) return;
@@ -5491,6 +5547,29 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createInvAclIterator", err.what());
+	return 0;
+}
+}
+
+AclReaderInterface* StorageClientImpl::createAclReader( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createAclReader);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_AclReader;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	AclReaderInterface* p0 = new AclReaderImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createAclReader");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createAclReader", err.what());
 	return 0;
 }
 }

@@ -12,6 +12,7 @@ namespace strus {
 
 enum ClassId
 {
+	ClassId_AclReader,
 	ClassId_AggregatorFunctionInstance,
 	ClassId_AggregatorFunction,
 	ClassId_AnalyzerObjectBuilder,
@@ -83,6 +84,17 @@ enum ClassId
 	ClassId_WeightingFunctionContext,
 	ClassId_WeightingFunctionInstance,
 	ClassId_WeightingFunction
+};
+
+class AclReaderConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_skipDoc,
+		Method_getReadAccessList
+	};
 };
 
 class AggregatorFunctionInstanceConst
@@ -731,6 +743,7 @@ public:
 		Method_createForwardIterator,
 		Method_createDocumentTermIterator,
 		Method_createInvAclIterator,
+		Method_createAclReader,
 		Method_nofDocumentsInserted,
 		Method_documentFrequency,
 		Method_maxDocumentNumber,
