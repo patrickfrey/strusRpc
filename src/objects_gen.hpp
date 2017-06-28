@@ -690,7 +690,7 @@ public:
 	virtual void defineGlobalStatistics( const GlobalStatistics& p1);
 	virtual void addMetaDataRestrictionCondition( const MetaDataRestrictionInterface::CompareOperator& p1, const std::string& p2, const NumericVariant& p3, bool p4);
 	virtual void addDocumentEvaluationSet( const std::vector<Index>& p1);
-	virtual void addAccessRestriction( const std::string& p1);
+	virtual void addAccess( const std::string& p1);
 	virtual void setMaxNofRanks( std::size_t p1);
 	virtual void setMinRank( std::size_t p1);
 	virtual void setWeightingVariableValue( const std::string& p1, double p2);

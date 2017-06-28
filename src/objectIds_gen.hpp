@@ -551,7 +551,7 @@ public:
 		Method_defineGlobalStatistics,
 		Method_addMetaDataRestrictionCondition,
 		Method_addDocumentEvaluationSet,
-		Method_addAccessRestriction,
+		Method_addAccess,
 		Method_setMaxNofRanks,
 		Method_setMinRank,
 		Method_setWeightingVariableValue,

@@ -3595,12 +3595,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryConst::Method_addAccessRestriction:
+		case QueryConst::Method_addAccess:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			obj->addAccessRestriction(p1);
+			obj->addAccess(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

@@ -3921,21 +3921,21 @@ try
 }
 }
 
-void QueryImpl::addAccessRestriction( const std::string& p1)
+void QueryImpl::addAccess( const std::string& p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_addAccessRestriction);
+	msg.packByte( Method_addAccess);
 	msg.packString( p1);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::addAccessRestriction");
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::addAccess");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::addAccessRestriction", err.what());
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::addAccess", err.what());
 	return void();
 }
 }
