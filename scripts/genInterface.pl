@@ -184,6 +184,9 @@ $constResetMethodMap{"nextChunk"} = 1;
 my %alternativeClientImpl = ();
 $alternativeClientImpl{"StorageImpl::createClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx(), false, errorhnd());\n";
 $alternativeClientImpl{"VectorStorageImpl::createClient"} = "if (p1.empty()) return new VectorStorageClientImpl( 0, ctx(), false, errorhnd());\n";
+$alternativeClientImpl{"StorageClientImpl::close"} = "if (objId() == 0) return;\n";
+$alternativeClientImpl{"VectorStorageClientImpl::close"} = "if (objId() == 0) return;\n";
+$alternativeClientImpl{"DatabaseClientImpl::close"} = "if (objId() == 0) return;\n";
 
 # Set debug code generation ON/OFF:
 my $doGenerateDebugCode = 0;

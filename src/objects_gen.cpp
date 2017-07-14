@@ -534,6 +534,7 @@ void DatabaseClientImpl::close( )
 {
 try
 {
+	if (objId() == 0) return;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_close);
@@ -6026,6 +6027,7 @@ void StorageClientImpl::close( )
 {
 try
 {
+	if (objId() == 0) return;
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_close);
@@ -8365,6 +8367,25 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::config", err.what());
 	return std::string();
+}
+}
+
+void VectorStorageClientImpl::close( )
+{
+try
+{
+	if (objId() == 0) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_close);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::close");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::close", err.what());
+	return void();
 }
 }
 

@@ -1261,6 +1261,7 @@ public:
 	virtual double vectorSimilarity( const std::vector<double>& p1, const std::vector<double>& p2) const;
 	virtual unsigned int nofFeatures( ) const;
 	virtual std::string config( ) const;
+	virtual void close( );
 };
 
 class VectorStorageDumpImpl

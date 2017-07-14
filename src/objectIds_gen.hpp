@@ -1001,7 +1001,8 @@ public:
 		Method_featureIndex,
 		Method_vectorSimilarity,
 		Method_nofFeatures,
-		Method_config
+		Method_config,
+		Method_close
 	};
 };
 
