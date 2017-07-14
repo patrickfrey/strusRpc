@@ -924,8 +924,8 @@ NumericVariant RpcDeserializer::unpackNumericVariant()
 	switch (type)
 	{
 		case NumericVariant::Null: return NumericVariant();
-		case NumericVariant::Int: return NumericVariant::asint( unpackInt());
-		case NumericVariant::UInt: return NumericVariant::asuint( unpackUint());
+		case NumericVariant::Int: return NumericVariant::asint( unpackInt64());
+		case NumericVariant::UInt: return NumericVariant::asuint( unpackUint64());
 		case NumericVariant::Float: return NumericVariant::asdouble( unpackDouble());
 	}
 	throw strus::runtime_error( _TXT("unknown type of numeric variant"));
@@ -1044,29 +1044,23 @@ analyzer::Document RpcDeserializer::unpackAnalyzerDocument()
 	std::size_t ii=0,size=unpackSize();
 	for (; ii<size; ++ii)
 	{
-		std::string name = unpackString();
-		std::string value = unpackString();
-		rt.setAttribute( name, value);
+		analyzer::DocumentAttribute attr = unpackAnalyzerDocumentAttribute();
+		rt.setAttribute( attr.name(), attr.value());
 	}
 	for (ii=0,size=unpackSize(); ii<size; ++ii)
 	{
-		std::string name = unpackString();
-		double value = unpackDouble();
-		rt.setMetaData( name, value);
+		analyzer::DocumentMetaData md = unpackAnalyzerDocumentMetaData();
+		rt.setMetaData( md.name(), md.value());
 	}
 	for (ii=0,size=unpackSize(); ii<size; ++ii)
 	{
-		std::string type = unpackString();
-		std::string value = unpackString();
-		unsigned int pos = unpackUint();
-		rt.addSearchIndexTerm( type, value, pos);
+		analyzer::DocumentTerm term = unpackAnalyzerDocumentTerm();
+		rt.addSearchIndexTerm( term.type(), term.value(), term.pos());
 	}
 	for (ii=0,size=unpackSize(); ii<size; ++ii)
 	{
-		std::string type = unpackString();
-		std::string value = unpackString();
-		unsigned int pos = unpackUint();
-		rt.addForwardIndexTerm( type, value, pos);
+		analyzer::DocumentTerm term = unpackAnalyzerDocumentTerm();
+		rt.addForwardIndexTerm( term.type(), term.value(), term.pos());
 	}
 	return rt;
 }
