@@ -12,6 +12,7 @@
 
 /// \brief Define if protocol uses CRC32 checksum for verification (switched on for testing)
 #define STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM  @STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM@
+#define STRUS_RPC_PROTOCOL_WITH_TYPED_ATOMS     @STRUS_RPC_PROTOCOL_WITH_TYPED_ATOMS@
 
 #endif
 

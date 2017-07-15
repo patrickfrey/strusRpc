@@ -8,9 +8,19 @@
 #include "private/utils.hpp"
 #include "private/internationalization.hpp"
 #include "rpcClientContext.hpp"
+#include "rpcProtocolDefines.hpp"
 #include "rpcSerializer.hpp"
 #include <stdexcept>
 #include <limits>
+
+#ifndef STRUS_RPC_PROTOCOL_WITH_TYPED_ATOMS
+#error Missing include of rpcProtocolDefines.hpp
+#endif
+#if STRUS_RPC_PROTOCOL_WITH_TYPED_ATOMS
+#define EMPTY_ANSWER_SIZE 2
+#else
+#define EMPTY_ANSWER_SIZE 1
+#endif
 
 using namespace strus;
 
@@ -69,7 +79,7 @@ void RpcClientContext::rpc_synchronize() const
 	std::string answer = m_messaging->synchronize();
 	if (answer.empty()) return;
 	handleError( answer);
-	if (answer.size() > 1)
+	if (answer.size() > EMPTY_ANSWER_SIZE)
 	{
 		throw strus::runtime_error( _TXT("got unexpected (non empty) answer from server calling rpc_synchronize"));
 	}

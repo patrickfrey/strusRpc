@@ -21,6 +21,9 @@
 using namespace strus;
 
 #undef STRUS_LOWLEVEL_DEBUG
+#ifndef STRUS_RPC_PROTOCOL_WITH_TYPED_ATOMS
+#error Missing include of rpcProtocolDefines.hpp
+#endif
 
 namespace {
 
@@ -164,8 +167,6 @@ void unpack<8>( char const*& itr, const char* end, void* ptr)
 	*(uint64_t*)ptr = ((uint64_t)vhi << 32) + vlo;
 }
 
-
-
 template <typename SCALAR>
 static void packScalar( std::string& buf, const SCALAR& val)
 {
@@ -180,8 +181,46 @@ static SCALAR unpackScalar( char const*& itr, const char* end)
 }
 }
 
+enum ProtocolAtomicTypes
+{
+	ProtocolVoid,
+	ProtocolSessionId,
+	ProtocolObject,
+	ProtocolString,
+	ProtocolCharp,
+	ProtocolCharpp,
+	ProtocolBuffer,
+	ProtocolBufferFloat,
+	ProtocolBool,
+	ProtocolByte,
+	ProtocolIndex,
+	ProtocolGlobalCounter,
+	ProtocolUint,
+	ProtocolInt,
+	ProtocolUint64,
+	ProtocolInt64,
+	ProtocolDouble,
+	ProtocolFloat,
+	ProtocolSize,
+	ProtocolNumericVariant
+};
+
+#if STRUS_RPC_PROTOCOL_WITH_TYPED_ATOMS
+#define SET_TYPE( TP)\
+	packScalar( m_content, (unsigned char)(Protocol ## TP));
+#define CHECK_TYPE( TP)\
+	if (unpackScalar<unsigned char>( m_itr, m_end) != (unsigned char)(Protocol ## TP))\
+	{\
+		throw strus::runtime_error( _TXT("unpack RPC expected type " #TP));\
+	}
+#else
+#define SET_TYPE(TP)
+#define CHECK_TYPE(TP)
+#endif
+
 void RpcSerializer::packSessionId( unsigned int id_)
 {
+	SET_TYPE( SessionId)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packSessionId " << id_ << std::endl;
 #endif
@@ -190,6 +229,7 @@ void RpcSerializer::packSessionId( unsigned int id_)
 
 void RpcSerializer::packObject( unsigned char classId_, unsigned int objId_)
 {
+	SET_TYPE( Object)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packObject (" << (unsigned int)classId_ << ", " << objId_ << ")" << std::endl;
 #endif
@@ -200,6 +240,7 @@ void RpcSerializer::packObject( unsigned char classId_, unsigned int objId_)
 
 void RpcSerializer::packString( const std::string& str)
 {
+	SET_TYPE( String)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packString ('" << str << "')" << std::endl;
 #endif
@@ -211,6 +252,7 @@ void RpcSerializer::packString( const std::string& str)
 
 void RpcSerializer::packCharp( const char* buf)
 {
+	SET_TYPE( Charp)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packCharp ('" << buf << "')" << std::endl;
 #endif
@@ -220,6 +262,7 @@ void RpcSerializer::packCharp( const char* buf)
 
 void RpcSerializer::packCharpp( const char** buf)
 {
+	SET_TYPE( Charpp)
 	if (buf)
 	{
 #ifdef STRUS_LOWLEVEL_DEBUG
@@ -252,6 +295,7 @@ void RpcSerializer::packCharpp( const char** buf)
 
 void RpcSerializer::packBuffer( const char* buf, std::size_t size)
 {
+	SET_TYPE( Buffer)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packBuffer('" << std::string(buf,size) << "')" << std::endl;
 #endif
@@ -262,6 +306,7 @@ void RpcSerializer::packBuffer( const char* buf, std::size_t size)
 
 void RpcSerializer::packBufferFloat( const double* buf, std::size_t size)
 {
+	SET_TYPE( BufferFloat)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packBufferFloat( ... )" << std::endl;
 #endif
@@ -276,6 +321,7 @@ void RpcSerializer::packBufferFloat( const double* buf, std::size_t size)
 
 void RpcSerializer::packBool( bool val)
 {
+	SET_TYPE( Bool)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packBool(" << (val?"true":"false") << ")" << std::endl;
 #endif
@@ -284,6 +330,7 @@ void RpcSerializer::packBool( bool val)
 
 void RpcSerializer::packByte( unsigned char val)
 {
+	SET_TYPE( Byte)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packByte (" << (unsigned int)val << ")" << std::endl;
 #endif
@@ -292,6 +339,7 @@ void RpcSerializer::packByte( unsigned char val)
 
 void RpcSerializer::packIndex( const Index& index)
 {
+	SET_TYPE( Index)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packIndex (" << (unsigned int)index << ")" << std::endl;
 #endif
@@ -300,6 +348,7 @@ void RpcSerializer::packIndex( const Index& index)
 
 void RpcSerializer::packGlobalCounter( const GlobalCounter& index)
 {
+	SET_TYPE( GlobalCounter)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packGlobalCounter (" << (uintptr_t)index << ")" << std::endl;
 #endif
@@ -308,6 +357,7 @@ void RpcSerializer::packGlobalCounter( const GlobalCounter& index)
 
 void RpcSerializer::packUint( unsigned int val)
 {
+	SET_TYPE( Uint)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packUint (" << (unsigned int)val << ")" << std::endl;
 #endif
@@ -317,6 +367,7 @@ void RpcSerializer::packUint( unsigned int val)
 
 void RpcSerializer::packInt( int val)
 {
+	SET_TYPE( Int)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packInt (" << (signed int)val << ")" << std::endl;
 #endif
@@ -327,6 +378,7 @@ void RpcSerializer::packInt( int val)
 
 void RpcSerializer::packUint64( uint64_t val)
 {
+	SET_TYPE( Uint64)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packUint (" << (unsigned int)val << ")" << std::endl;
 #endif
@@ -335,6 +387,7 @@ void RpcSerializer::packUint64( uint64_t val)
 
 void RpcSerializer::packInt64( int64_t val)
 {
+	SET_TYPE( Int64)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packInt (" << val << ")" << std::endl;
 #endif
@@ -345,6 +398,7 @@ void RpcSerializer::packInt64( int64_t val)
 
 void RpcSerializer::packFloat( float val)
 {
+	SET_TYPE( Float)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packFloat (" << (float)val << ")" << std::endl;
 #endif
@@ -353,6 +407,7 @@ void RpcSerializer::packFloat( float val)
 
 void RpcSerializer::packDouble( double val)
 {
+	SET_TYPE( Double)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packDouble(" << (double)val << ")" << std::endl;
 #endif
@@ -361,6 +416,7 @@ void RpcSerializer::packDouble( double val)
 
 void RpcSerializer::packSize( std::size_t size)
 {
+	SET_TYPE( Size)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packSize (" << (std::size_t)size << ")" << std::endl;
 #endif
@@ -370,6 +426,7 @@ void RpcSerializer::packSize( std::size_t size)
 
 void RpcSerializer::packNumericVariant( const NumericVariant& val)
 {
+	SET_TYPE( NumericVariant)
 	packByte( (unsigned char)val.type);
 	switch (val.type)
 	{
@@ -716,6 +773,7 @@ void RpcSerializer::packCrc32()
 
 unsigned int RpcDeserializer::unpackSessionId()
 {
+	CHECK_TYPE( SessionId)
 	unsigned int rt = unpackScalar<uint32_t>( m_itr, m_end);
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackSessionId (" << rt << ")" << std::endl;
@@ -725,6 +783,7 @@ unsigned int RpcDeserializer::unpackSessionId()
 
 void RpcDeserializer::unpackObject( unsigned char& classId_, unsigned int& objId_)
 {
+	CHECK_TYPE( Object)
 	classId_ = unpackScalar<char>( m_itr, m_end);
 	objId_ = unpackScalar<uint32_t>( m_itr, m_end);
 #ifdef STRUS_LOWLEVEL_DEBUG
@@ -734,6 +793,7 @@ void RpcDeserializer::unpackObject( unsigned char& classId_, unsigned int& objId
 
 std::string RpcDeserializer::unpackString()
 {
+	CHECK_TYPE( String)
 	std::string rt;
 	uint32_t size = unpackScalar<uint32_t>( m_itr, m_end);
 	if (m_itr+size > m_end)
@@ -750,6 +810,7 @@ std::string RpcDeserializer::unpackString()
 
 const char* RpcDeserializer::unpackConstCharp()
 {
+	CHECK_TYPE( Charp)
 	const char* start = m_itr;
 	while (m_itr < m_end && *m_itr) ++m_itr;
 	if (m_itr == m_end)
@@ -765,6 +826,7 @@ const char* RpcDeserializer::unpackConstCharp()
 
 const char** RpcDeserializer::unpackConstCharpp()
 {
+	CHECK_TYPE( Charpp)
 	std::size_t ii=0,size = unpackSize();
 	m_charpp_buf.clear();
 	m_charpp_buf.reserve( size+1);
@@ -789,6 +851,7 @@ const char** RpcDeserializer::unpackConstCharpp()
 
 void RpcDeserializer::unpackBuffer( const char*& buf, std::size_t& size)
 {
+	CHECK_TYPE( Buffer)
 	size = unpackScalar<uint32_t>( m_itr, m_end);
 	buf = m_itr;
 	m_itr += size;
@@ -799,6 +862,7 @@ void RpcDeserializer::unpackBuffer( const char*& buf, std::size_t& size)
 
 std::vector<double> RpcDeserializer::unpackBufferFloat()
 {
+	CHECK_TYPE( BufferFloat)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::ostringstream msg;
 #endif
@@ -820,7 +884,8 @@ std::vector<double> RpcDeserializer::unpackBufferFloat()
 
 bool RpcDeserializer::unpackBool()
 {
-	bool rt = (*m_itr++ != 0)?true:false;
+	CHECK_TYPE( Bool)
+	bool rt = (unpackScalar<uint8_t>( m_itr, m_end) != 0)?true:false;
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackBool(" << (rt?"true":"false") << ")" << std::endl;
 #endif
@@ -829,14 +894,16 @@ bool RpcDeserializer::unpackBool()
 
 unsigned char RpcDeserializer::unpackByte()
 {
+	CHECK_TYPE( Byte)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackByte(" << (unsigned int)(unsigned char)(*m_itr) << ")" << std::endl;
 #endif
-	return *m_itr++;
+	return unpackScalar<uint8_t>( m_itr, m_end);
 }
 
 Index RpcDeserializer::unpackIndex()
 {
+	CHECK_TYPE( Index)
 	Index rt = unpackScalar<Index>( m_itr, m_end);
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackIndex(" << rt << ")" << std::endl;
@@ -846,6 +913,7 @@ Index RpcDeserializer::unpackIndex()
 
 GlobalCounter RpcDeserializer::unpackGlobalCounter()
 {
+	CHECK_TYPE( GlobalCounter)
 	GlobalCounter rt = unpackScalar<GlobalCounter>( m_itr, m_end);
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackGlobalCounter(" << rt << ")" << std::endl;
@@ -855,6 +923,7 @@ GlobalCounter RpcDeserializer::unpackGlobalCounter()
 
 unsigned int RpcDeserializer::unpackUint()
 {
+	CHECK_TYPE( Uint)
 	unsigned int rt = unpackScalar<uint32_t>( m_itr, m_end);
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackUint(" << rt << ")" << std::endl;
@@ -864,6 +933,7 @@ unsigned int RpcDeserializer::unpackUint()
 
 int RpcDeserializer::unpackInt()
 {
+	CHECK_TYPE( Int)
 	int rt = unpackScalar<int32_t>( m_itr, m_end);
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackInt(" << rt << ")" << std::endl;
@@ -873,6 +943,7 @@ int RpcDeserializer::unpackInt()
 
 uint64_t RpcDeserializer::unpackUint64()
 {
+	CHECK_TYPE( Uint64)
 	uint64_t rt = unpackScalar<uint64_t>( m_itr, m_end);
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackUint64(" << rt << ")" << std::endl;
@@ -882,6 +953,7 @@ uint64_t RpcDeserializer::unpackUint64()
 
 int64_t RpcDeserializer::unpackInt64()
 {
+	CHECK_TYPE( Int64)
 	int64_t rt = unpackScalar<int64_t>( m_itr, m_end);
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackInt64(" << rt << ")" << std::endl;
@@ -891,7 +963,7 @@ int64_t RpcDeserializer::unpackInt64()
 
 float RpcDeserializer::unpackFloat()
 {
-	return unpackScalar<float>( m_itr, m_end);
+	CHECK_TYPE( Float)
 	float rt = unpackScalar<float>( m_itr, m_end);
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackFloat(" << rt << ")" << std::endl;
@@ -901,7 +973,7 @@ float RpcDeserializer::unpackFloat()
 
 double RpcDeserializer::unpackDouble()
 {
-	return unpackScalar<double>( m_itr, m_end);
+	CHECK_TYPE( Double)
 	float rt = unpackScalar<double>( m_itr, m_end);
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackDouble(" << rt << ")" << std::endl;
@@ -911,6 +983,7 @@ double RpcDeserializer::unpackDouble()
 
 std::size_t RpcDeserializer::unpackSize()
 {
+	CHECK_TYPE( Size)
 	unsigned int rt = unpackScalar<uint32_t>( m_itr, m_end);
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackSize(" << rt << ")" << std::endl;
@@ -920,6 +993,7 @@ std::size_t RpcDeserializer::unpackSize()
 
 NumericVariant RpcDeserializer::unpackNumericVariant()
 {
+	CHECK_TYPE( NumericVariant)
 	NumericVariant::Type type = (NumericVariant::Type)unpackByte();
 	switch (type)
 	{

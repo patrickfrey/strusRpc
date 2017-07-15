@@ -1381,6 +1381,14 @@ try
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
+	done_3->release();
+	delete p3;
+	for (std::size_t ai_4=0; ai_4 < p4.size(); ++ai_4) {
+		RpcInterfaceStub* done_4 = dynamic_cast<RpcInterfaceStub*>(p4[ai_4]);
+		done_4->release();
+		delete p4[ai_4];
+	}
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addPatternLexem");
 	return void();
@@ -1406,6 +1414,12 @@ try
 	msg.packObject( impl_3->classId(), impl_3->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
+	done_2->release();
+	delete p2;
+	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
+	done_3->release();
+	delete p3;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::definePatternMatcherPostProc");
 	return void();
@@ -1435,6 +1449,12 @@ try
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
+	done_2->release();
+	delete p2;
+	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
+	done_3->release();
+	delete p3;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::definePatternMatcherPreProc");
 	return void();
@@ -1462,6 +1482,11 @@ try
 	msg.packFeatureOptions( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	for (std::size_t ai_3=0; ai_3 < p3.size(); ++ai_3) {
+		RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3[ai_3]);
+		done_3->release();
+		delete p3[ai_3];
+	}
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addSearchIndexFeatureFromPatternMatch");
 	return void();
@@ -1489,6 +1514,11 @@ try
 	msg.packFeatureOptions( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	for (std::size_t ai_3=0; ai_3 < p3.size(); ++ai_3) {
+		RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3[ai_3]);
+		done_3->release();
+		delete p3[ai_3];
+	}
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addForwardIndexFeatureFromPatternMatch");
 	return void();
@@ -1515,6 +1545,11 @@ try
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	for (std::size_t ai_3=0; ai_3 < p3.size(); ++ai_3) {
+		RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3[ai_3]);
+		done_3->release();
+		delete p3[ai_3];
+	}
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineMetaDataFromPatternMatch");
 	return void();
@@ -1541,6 +1576,11 @@ try
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	for (std::size_t ai_3=0; ai_3 < p3.size(); ++ai_3) {
+		RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3[ai_3]);
+		done_3->release();
+		delete p3[ai_3];
+	}
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineAttributeFromPatternMatch");
 	return void();
@@ -3385,6 +3425,14 @@ try
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
+	done_3->release();
+	delete p3;
+	for (std::size_t ai_4=0; ai_4 < p4.size(); ++ai_4) {
+		RpcInterfaceStub* done_4 = dynamic_cast<RpcInterfaceStub*>(p4[ai_4]);
+		done_4->release();
+		delete p4[ai_4];
+	}
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addElement");
 	return void();
@@ -3414,6 +3462,14 @@ try
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
+	done_3->release();
+	delete p3;
+	for (std::size_t ai_4=0; ai_4 < p4.size(); ++ai_4) {
+		RpcInterfaceStub* done_4 = dynamic_cast<RpcInterfaceStub*>(p4[ai_4]);
+		done_4->release();
+		delete p4[ai_4];
+	}
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addPatternLexem");
 	return void();
@@ -3439,6 +3495,12 @@ try
 	msg.packObject( impl_3->classId(), impl_3->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
+	done_2->release();
+	delete p2;
+	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
+	done_3->release();
+	delete p3;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::definePatternMatcherPostProc");
 	return void();
@@ -3468,6 +3530,12 @@ try
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
+	done_2->release();
+	delete p2;
+	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
+	done_3->release();
+	delete p3;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::definePatternMatcherPreProc");
 	return void();
@@ -3494,6 +3562,11 @@ try
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	for (std::size_t ai_3=0; ai_3 < p3.size(); ++ai_3) {
+		RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3[ai_3]);
+		done_3->release();
+		delete p3[ai_3];
+	}
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addElementFromPatternMatch");
 	return void();

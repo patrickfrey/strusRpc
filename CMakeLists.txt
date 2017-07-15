@@ -6,6 +6,7 @@ include(cmake/install_prefix.cmake)
 # Project globals:
 project( StrusRpc )
 set( STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM 1 )
+set( STRUS_RPC_PROTOCOL_WITH_TYPED_ATOMS 1 )
 set( STRUS_MAJOR_VERSION 0 )
 set( STRUS_MINOR_VERSION 14 )
 set( STRUS_PATCH_VERSION 0 )

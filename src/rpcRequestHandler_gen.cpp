@@ -1243,6 +1243,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<TokenizerFunctionInstanceInterface>( classId_3, objId_3);
+			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				unsigned char classId_; unsigned int objId_;
@@ -1250,15 +1251,18 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p4.push_back( ee);
+				markObjectToRelease( classId_, objId_);
 			}
 			obj->addPatternLexem(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -1273,18 +1277,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PatternMatcherInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PatternMatcherInstanceInterface>( classId_2, objId_2);
+			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_PatternTermFeederInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<PatternTermFeederInstanceInterface>( classId_3, objId_3);
+			markObjectToRelease( classId_3, objId_3);
 			obj->definePatternMatcherPostProc(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -1300,10 +1308,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PatternMatcherInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PatternMatcherInstanceInterface>( classId_2, objId_2);
+			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_PatternLexerInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<PatternLexerInstanceInterface>( classId_3, objId_3);
+			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				std::string ee = serializedMsg.unpackString();
@@ -1313,10 +1323,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -1336,16 +1348,19 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p3.push_back( ee);
+				markObjectToRelease( classId_, objId_);
 			}
 			p4 = serializedMsg.unpackFeatureOptions();
 			obj->addSearchIndexFeatureFromPatternMatch(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -1365,16 +1380,19 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p3.push_back( ee);
+				markObjectToRelease( classId_, objId_);
 			}
 			p4 = serializedMsg.unpackFeatureOptions();
 			obj->addForwardIndexFeatureFromPatternMatch(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -1393,15 +1411,18 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p3.push_back( ee);
+				markObjectToRelease( classId_, objId_);
 			}
 			obj->defineMetaDataFromPatternMatch(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -1420,15 +1441,18 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p3.push_back( ee);
+				markObjectToRelease( classId_, objId_);
 			}
 			obj->defineAttributeFromPatternMatch(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -3061,6 +3085,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<TokenizerFunctionInstanceInterface>( classId_3, objId_3);
+			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				unsigned char classId_; unsigned int objId_;
@@ -3068,15 +3093,18 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p4.push_back( ee);
+				markObjectToRelease( classId_, objId_);
 			}
 			obj->addElement(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -3093,6 +3121,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<TokenizerFunctionInstanceInterface>( classId_3, objId_3);
+			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				unsigned char classId_; unsigned int objId_;
@@ -3100,15 +3129,18 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p4.push_back( ee);
+				markObjectToRelease( classId_, objId_);
 			}
 			obj->addPatternLexem(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -3123,18 +3155,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PatternMatcherInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PatternMatcherInstanceInterface>( classId_2, objId_2);
+			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_PatternTermFeederInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<PatternTermFeederInstanceInterface>( classId_3, objId_3);
+			markObjectToRelease( classId_3, objId_3);
 			obj->definePatternMatcherPostProc(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -3150,10 +3186,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PatternMatcherInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PatternMatcherInstanceInterface>( classId_2, objId_2);
+			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_PatternLexerInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<PatternLexerInstanceInterface>( classId_3, objId_3);
+			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				std::string ee = serializedMsg.unpackString();
@@ -3163,10 +3201,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -3185,15 +3225,18 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error(_TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
 				p3.push_back( ee);
+				markObjectToRelease( classId_, objId_);
 			}
 			obj->addElementFromPatternMatch(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -4787,10 +4830,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
+				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
+			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}

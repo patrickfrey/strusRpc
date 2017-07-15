@@ -162,6 +162,15 @@ $passOwnershipParams{"defineAggregator"} = 1;			# TextProcessor
 
 $passOwnershipParams{"addSearchIndexFeature"} = 1;		# DocumentAnalyzer
 $passOwnershipParams{"addForwardIndexFeature"} = 1;		# DocumentAnalyzer
+$passOwnershipParams{"addElement"} = 1;				# QueryAnalyzer
+$passOwnershipParams{"addPatternLexem"} = 1;			# DocumentAnalyzer,QueryAnalyzer
+$passOwnershipParams{"definePatternMatcherPostProc"} = 1;	# DocumentAnalyzer,QueryAnalyzer
+$passOwnershipParams{"definePatternMatcherPreProc"} = 1;	# DocumentAnalyzer,QueryAnalyzer
+$passOwnershipParams{"addSearchIndexFeatureFromPatternMatch"}=1;# DocumentAnalyzer
+$passOwnershipParams{"addForwardIndexFeatureFromPatternMatch"}=1;# DocumentAnalyzer
+$passOwnershipParams{"defineMetaDataFromPatternMatch"} = 1;	# DocumentAnalyzer
+$passOwnershipParams{"defineAttributeFromPatternMatch"} = 1;	# DocumentAnalyzer
+$passOwnershipParams{"addElementFromPatternMatch"} = 1;		# QueryAnalyzer
 $passOwnershipParams{"defineMetaData"} = 1;			# DocumentAnalyzer
 $passOwnershipParams{"defineAggregatedMetaData"} = 1;		# DocumentAnalyzer
 $passOwnershipParams{"defineAttribute"} = 1;			# DocumentAnalyzer
