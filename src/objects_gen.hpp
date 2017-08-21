@@ -467,9 +467,11 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_PatternLexerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void defineOption( const std::string& p1, double p2);
+	virtual void defineLexemName( unsigned int p1, const std::string& p2);
 	virtual void defineLexem( unsigned int p1, const std::string& p2, unsigned int p3, unsigned int p4, analyzer::PositionBind p5);
 	virtual void defineSymbol( unsigned int p1, unsigned int p2, const std::string& p3);
 	virtual unsigned int getSymbol( unsigned int p1, const std::string& p2) const;
+	virtual const char* getLexemName( unsigned int p1) const;
 	virtual bool compile( );
 	virtual PatternLexerContextInterface* createContext( ) const;
 };

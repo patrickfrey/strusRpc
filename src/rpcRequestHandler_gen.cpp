@@ -2138,6 +2138,24 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case PatternLexerInstanceConst::Method_defineLexemName:
+		{
+			RpcSerializer msg;
+			unsigned int p1;
+			std::string p2;
+			p1 = serializedMsg.unpackUint();
+			p2 = serializedMsg.unpackString();
+			obj->defineLexemName(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case PatternLexerInstanceConst::Method_defineLexem:
 		{
 			RpcSerializer msg;
@@ -2200,6 +2218,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packUint( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PatternLexerInstanceConst::Method_getLexemName:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			unsigned int p1;
+			p1 = serializedMsg.unpackUint();
+			p0 = obj->getLexemName(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

@@ -376,9 +376,11 @@ public:
 	{
 		Method_Destructor,
 		Method_defineOption,
+		Method_defineLexemName,
 		Method_defineLexem,
 		Method_defineSymbol,
 		Method_getSymbol,
+		Method_getLexemName,
 		Method_compile,
 		Method_createContext
 	};

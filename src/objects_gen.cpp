@@ -2343,6 +2343,26 @@ try
 }
 }
 
+void PatternLexerInstanceImpl::defineLexemName( unsigned int p1, const std::string& p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineLexemName);
+	msg.packUint( p1);
+	msg.packString( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::defineLexemName");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::defineLexemName", err.what());
+	return void();
+}
+}
+
 void PatternLexerInstanceImpl::defineLexem( unsigned int p1, const std::string& p2, unsigned int p3, unsigned int p4, analyzer::PositionBind p5)
 {
 try
@@ -2407,6 +2427,29 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::getSymbol", err.what());
+	return 0;
+}
+}
+
+const char* PatternLexerInstanceImpl::getLexemName( unsigned int p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getLexemName);
+	msg.packUint( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::getLexemName");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::getLexemName", err.what());
 	return 0;
 }
 }
