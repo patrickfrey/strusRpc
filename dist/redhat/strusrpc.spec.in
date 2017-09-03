@@ -252,6 +252,13 @@ make test
 %{_includedir}/strus/lib/*.hpp
 
 %changelog
+* Sun Sep 3 2017 Patrick Frey <patrickpfrey@yahoo.com> 0.15.0-0.1
+- remove hardcoded setting of C++98 in CMake files
+- strenghten rules for printf style functions in the interface: issue warnings on wrong format string parameter lists for gcc
+- adapt interface changes in strus core,analyzer and base
+- many CMake build fixes
+- removed atomic typeids from protocol
+
 * Wed Feb 15 2017 Patrick Frey <patrickpfrey@yahoo.com> 0.14.0-0.1
 - adapt interface changes in strus core
 
