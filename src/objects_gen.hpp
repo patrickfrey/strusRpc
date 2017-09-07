@@ -855,7 +855,7 @@ public:
 	virtual void addDfChange( const char* p1, const char* p2, int p3);
 	virtual void start( );
 	virtual void rollback( );
-	virtual bool fetchMessage( const char*& p1, std::size_t& p2);
+	virtual bool fetchMessage( const void*& p1, std::size_t& p2);
 };
 
 class StatisticsIteratorImpl
@@ -869,7 +869,7 @@ public:
 	StatisticsIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsIterator, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual bool getNext( const char*& p1, std::size_t& p2);
+	virtual bool getNext( const void*& p1, std::size_t& p2);
 };
 
 class StatisticsProcessorImpl
@@ -883,7 +883,7 @@ public:
 	StatisticsProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsProcessor, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual StatisticsViewerInterface* createViewer( const char* p1, std::size_t p2) const;
+	virtual StatisticsViewerInterface* createViewer( const void* p1, std::size_t p2) const;
 	virtual StatisticsBuilderInterface* createBuilder( ) const;
 };
 

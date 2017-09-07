@@ -5165,7 +5165,7 @@ try
 }
 }
 
-bool StatisticsBuilderImpl::fetchMessage( const char*& p1, std::size_t& p2)
+bool StatisticsBuilderImpl::fetchMessage( const void*& p1, std::size_t& p2)
 {
 try
 {
@@ -5179,7 +5179,7 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	const char* bp1;
 	serializedMsg.unpackBuffer( bp1, p2);
-	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
+	p1 = (const void*) ctx()->constConstructor()->get( bp1, p2);
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::fetchMessage");
@@ -5200,7 +5200,7 @@ StatisticsIteratorImpl::~StatisticsIteratorImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-bool StatisticsIteratorImpl::getNext( const char*& p1, std::size_t& p2)
+bool StatisticsIteratorImpl::getNext( const void*& p1, std::size_t& p2)
 {
 try
 {
@@ -5214,7 +5214,7 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	const char* bp1;
 	serializedMsg.unpackBuffer( bp1, p2);
-	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
+	p1 = (const void*) ctx()->constConstructor()->get( bp1, p2);
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsIteratorImpl::getNext");
@@ -5235,14 +5235,14 @@ StatisticsProcessorImpl::~StatisticsProcessorImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-StatisticsViewerInterface* StatisticsProcessorImpl::createViewer( const char* p1, std::size_t p2) const
+StatisticsViewerInterface* StatisticsProcessorImpl::createViewer( const void* p1, std::size_t p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createViewer);
-	msg.packBuffer( p1, p2);
+	msg.packBuffer( (const char*)p1, p2);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StatisticsViewer;
 	msg.packObject( classId_0, objId_0);

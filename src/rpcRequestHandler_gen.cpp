@@ -4691,7 +4691,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			bool p0;
-			const char* p1;
+			const void* p1;
 			std::size_t p2;
 			p0 = obj->fetchMessage(p1,p2);
 			const char* err = m_errorhnd->fetchError();
@@ -4703,7 +4703,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
-			msg.packBuffer( p1, p2);
+			msg.packBuffer( (const char*)p1, p2);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -4724,7 +4724,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			bool p0;
-			const char* p1;
+			const void* p1;
 			std::size_t p2;
 			p0 = obj->getNext(p1,p2);
 			const char* err = m_errorhnd->fetchError();
@@ -4736,7 +4736,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
-			msg.packBuffer( p1, p2);
+			msg.packBuffer( (const char*)p1, p2);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -4757,7 +4757,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			StatisticsViewerInterface* p0;
-			const char* p1;
+			const void* p1;
 			std::size_t p2;
 			serializedMsg.unpackBuffer( p1, p2);
 			unsigned char classId_0; unsigned int objId_0;

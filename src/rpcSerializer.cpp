@@ -860,6 +860,18 @@ void RpcDeserializer::unpackBuffer( const char*& buf, std::size_t& size)
 #endif
 }
 
+void RpcDeserializer::unpackBuffer( const void*& buf, std::size_t& size)
+{
+	CHECK_TYPE( Buffer)
+	size = unpackScalar<uint32_t>( m_itr, m_end);
+	buf = m_itr;
+	m_itr += size;
+#ifdef STRUS_LOWLEVEL_DEBUG
+	strus_hexdump( stderr, (const char*)buf, size);
+	fprintf( stderr, "\n");
+#endif
+}
+
 std::vector<double> RpcDeserializer::unpackBufferFloat()
 {
 	CHECK_TYPE( BufferFloat)

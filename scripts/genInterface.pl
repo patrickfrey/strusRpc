@@ -1435,6 +1435,13 @@ sub getMethodDeclarationSource
 				$receiver_code .= "\tserializedMsg.unpackBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				++$pi;
 			}
+			elsif ($pi+1 <= $#param && $param[$pi] eq "const^ void" && $param[$pi+1] eq "std::size_t")
+			{
+				# ... exception for buffer( ptr, len):
+				$sender_code .= "\tmsg.packBuffer( (const char*)p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				$receiver_code .= "\tserializedMsg.unpackBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				++$pi;
+			}
 			elsif ($pi+1 <= $#param && $param[$pi] eq "const^ double" && $param[$pi+1] eq "unsigned_int")
 			{
 				# ... exception for double buffer( ptr, len):
@@ -1554,6 +1561,17 @@ sub getMethodDeclarationSource
 				$sender_output .= "\tp" . ($pi+1) . " = (const char*) ctx()->constConstructor()->get( $bpvar, p" . ($pi+2) .");\n";
 
 				$receiver_output .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				++$pi;
+			}
+			elsif ($pi+1 <= $#param && $param[$pi] eq "const^& void" && $param[$pi+1] eq "& std::size_t")
+			{
+				# ... exception for buffer( size, len):
+				my $bpvar = "bp" . ($pi+1);
+				$sender_output .= "\tconst char* $bpvar;\n";
+				$sender_output .= "\tserializedMsg.unpackBuffer( $bpvar, p" . ($pi+2) . ");\n";
+				$sender_output .= "\tp" . ($pi+1) . " = (const void*) ctx()->constConstructor()->get( $bpvar, p" . ($pi+2) .");\n";
+
+				$receiver_output .= "\tmsg.packBuffer( (const char*)p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				++$pi;
 			}
 			elsif ($pi+1 <= $#param && $param[$pi] eq "const^& double" && $param[$pi+1] eq "& unsigned_int")

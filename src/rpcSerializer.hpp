@@ -145,6 +145,7 @@ public:
 	const char* unpackConstCharp();
 	const char** unpackConstCharpp();
 	void unpackBuffer( const char*& buf, std::size_t& size);
+	void unpackBuffer( const void*& buf, std::size_t& size);
 	std::vector<double> unpackBufferFloat();
 	bool unpackBool();
 	unsigned char unpackByte();
