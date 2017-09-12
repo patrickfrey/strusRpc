@@ -47,8 +47,8 @@ include_directories(
 )
 
 link_directories(
-	"${PROJECT_SOURCE_DIR}/src"
-	"${PROJECT_SOURCE_DIR}/3rdParty/libuv"
+	"${CMAKE_CURRENT_BINARY_DIR}/../src"
+	"${CMAKE_CURRENT_BINARY_DIR}/../3rdParty/libuv"
 	"${strusbase_LIBRARY_DIRS}"
 	"${strus_LIBRARY_DIRS}"
 	"${strusanalyzer_LIBRARY_DIRS}"
