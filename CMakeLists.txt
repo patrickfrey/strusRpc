@@ -42,6 +42,14 @@ configure_file( "${PROJECT_SOURCE_DIR}/src/internationalization.cpp.in"  "${PROJ
 
 enable_testing()
 
+# Path declarations:
+set( RPC_INCLUDE_DIRS                   "${CMAKE_CURRENT_BINARY_DIR}/include"  "${PROJECT_SOURCE_DIR}/include" )
+set( RPC_LIBRARY_DIRS                    "${CMAKE_CURRENT_BINARY_DIR}/src" )
+set( LIBUV_INCLUDE_DIRS                 "${PROJECT_SOURCE_DIR}/3rdParty/libuv/libuv-1.x/include" )
+set( LIBUV_LIBRARY_DIRS                 "${CMAKE_CURRENT_BINARY_DIR}/3rdParty/libuv" )
+set( MAIN_SOURCE_DIR                     "${PROJECT_SOURCE_DIR}/src" )
+set( MAIN_TESTS_DIR                        "${PROJECT_SOURCE_DIR}/tests" )
+
 # Subdirectories:
 add_subdirectory( 3rdParty )
 add_subdirectory( src )

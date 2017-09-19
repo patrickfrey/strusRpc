@@ -37,8 +37,8 @@ set( client_socket_source_files
 
 include_directories(
         "${Boost_INCLUDE_DIRS}"
-	"${PROJECT_SOURCE_DIR}/include"
-	"${PROJECT_SOURCE_DIR}/3rdParty/libuv/libuv-1.x/include"
+	"${RPC_INCLUDE_DIRS}"
+	"${LIBUV_INCLUDE_DIRS}"
 	"${strusbase_INCLUDE_DIRS}"
 	"${strus_INCLUDE_DIRS}"
 	"${strusanalyzer_INCLUDE_DIRS}"
@@ -47,8 +47,9 @@ include_directories(
 )
 
 link_directories(
-	"${CMAKE_CURRENT_BINARY_DIR}/../src"
-	"${CMAKE_CURRENT_BINARY_DIR}/../3rdParty/libuv"
+	"${RPC_LIBRARY_DIRS}"
+	"${LIBUV_LIBRARY_DIRS}"
+        "${Boost_LIBRARY_DIRS}"
 	"${strusbase_LIBRARY_DIRS}"
 	"${strus_LIBRARY_DIRS}"
 	"${strusanalyzer_LIBRARY_DIRS}"
