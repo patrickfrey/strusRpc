@@ -58,5 +58,3 @@ build
 
 # Compiled Programs
 src/strusRpcServer
-
-.travis.yml
