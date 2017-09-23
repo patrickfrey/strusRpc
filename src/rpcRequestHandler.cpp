@@ -88,7 +88,7 @@ void* RpcRequestHandler::getObjectPtr( unsigned char classId_, unsigned int objI
 #endif
 		if (!oi->second.ptr)
 		{
-			throw strus::runtime_error( _TXT("accessing object NULL pointer"));
+			throw strus::runtime_error( "%s",  _TXT("accessing object NULL pointer"));
 		}
 		return oi->second.ptr;
 	}
@@ -97,7 +97,7 @@ void* RpcRequestHandler::getObjectPtr( unsigned char classId_, unsigned int objI
 #ifdef STRUS_LOWLEVEL_DEBUG
 		std::cerr << "object not found classid=" << (unsigned int)classId_ << " objid=" << objId_ << " ptr=" << std::endl;
 #endif
-		throw strus::runtime_error( _TXT("accessing non existing object (invalid reference)"));
+		throw strus::runtime_error( "%s",  _TXT("accessing non existing object (invalid reference)"));
 	}
 }
 

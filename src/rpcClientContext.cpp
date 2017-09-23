@@ -40,7 +40,7 @@ void RpcClientContext::handleError( const std::string& msgstr) const
 {
 	if (msgstr.empty())
 	{
-		throw strus::runtime_error( _TXT("got no answer from server"));
+		throw strus::runtime_error( "%s", _TXT("got no answer from server"));
 	}
 	RpcDeserializer msg( msgstr.c_str(), msgstr.size());
 	RpcReturnType returntype = (RpcReturnType)msg.unpackByte();
@@ -56,7 +56,7 @@ void RpcClientContext::handleError( const std::string& msgstr) const
 		case MsgTypeAnswer:
 			if (!msg.unpackCrc32())
 			{
-				throw strus::runtime_error( _TXT("answer CRC32 check failed"));
+				throw strus::runtime_error( "%s",  _TXT("answer CRC32 check failed"));
 			}
 			break;
 	}
@@ -81,7 +81,7 @@ void RpcClientContext::rpc_synchronize() const
 	handleError( answer);
 	if (answer.size() > EMPTY_ANSWER_SIZE)
 	{
-		throw strus::runtime_error( _TXT("got unexpected (non empty) answer from server calling rpc_synchronize"));
+		throw strus::runtime_error( "%s", _TXT("got unexpected (non empty) answer from server calling rpc_synchronize"));
 	}
 }
 

@@ -919,7 +919,7 @@ sub unpackParameter
 		{
 			$rt .= "unsigned char classId_$idx; unsigned int objId_$idx;\n";
 			$rt .= "serializedMsg.unpackObject( classId_$idx, objId_$idx);\n";
-			$rt .= "if (classId_$idx != " . getInterfaceEnumName( $type) .") throw strus::runtime_error(_TXT(\"error in RPC serialzed message: output parameter object type mismatch\"));\n";
+			$rt .= "if (classId_$idx != " . getInterfaceEnumName( $type) .") throw strus::runtime_error( \"%s\", _TXT(\"error in RPC serialzed message: output parameter object type mismatch\"));\n";
 			if ($isconst)
 			{
 				$rt .= "$id = getConstObject<$type>( classId_$idx, objId_$idx);";
@@ -1739,7 +1739,7 @@ sub getClassImplementationSource
 	my $ii = 0;
 
 	$receiver_code .= "\tRpcDeserializer serializedMsg( src, srcsize);\n";
-	$receiver_code .= "\tif (!serializedMsg.unpackCrc32()) throw strus::runtime_error(_TXT(\"message CRC32 check failed\"));\n";
+	$receiver_code .= "\tif (!serializedMsg.unpackCrc32()) throw strus::runtime_error( \"%s\", _TXT(\"message CRC32 check failed\"));\n";
 	$receiver_code .= "\tunsigned char classId; unsigned int objId; unsigned char methodId;\n";
 	$receiver_code .= "\tserializedMsg.unpackObject( classId, objId);\n";
 	$receiver_code .= "\tmethodId = serializedMsg.unpackByte();\n";
@@ -1809,7 +1809,7 @@ sub getClassImplementationSource
 		$receiver_code .= "\t}\n";
 	}
 	$receiver_code .= "\t}\n";
-	$receiver_code .= "\tthrow strus::runtime_error(_TXT(\"calling undefined request handler\"));\n";
+	$receiver_code .= "\tthrow strus::runtime_error( \"%s\", _TXT(\"calling undefined request handler\"));\n";
 	return ($sender_code,$receiver_code);
 }
 
