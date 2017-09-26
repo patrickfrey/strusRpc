@@ -69,6 +69,7 @@ static void printUsage()
 	std::cout << "    " << _TXT("Write logs to file <FILE>") << std::endl;
 	std::cout << "-T|--trace <CONFIG>" << std::endl;
 	std::cout << "    " << _TXT("Print method call traces configured with <CONFIG>") << std::endl;
+	std::cout << "    " << _TXT("Example: -T \"log=dump;file=stdout\"") << std::endl;
 }
 
 static strus::ErrorBufferInterface* g_errorBuffer = 0;
@@ -90,7 +91,7 @@ int g_static_assert_sizeof_handlerdata[ (sizeof(handler_context_t) > sizeof(stru
 
 static uint32_t unpackMessageLen( unsigned char const*& itr, const unsigned char* end)
 {
-	if (itr+4 > end) throw strus::runtime_error( _TXT("message to small to encode message length"));
+	if (itr+4 > end) throw strus::runtime_error( "%s",  _TXT("message to small to encode message length"));
 	uint32_t val;
 	std::memcpy( &val, itr, 4);
 	itr += 4;
@@ -231,6 +232,12 @@ static void done_global_context()
 		fclose( g_glbctx.logf);
 		g_glbctx.logf = stderr;
 	}
+	if (g_vectorStorageClient) {delete g_vectorStorageClient; g_vectorStorageClient = 0;}
+	if (g_storageClient) {delete g_storageClient; g_storageClient = 0;}
+	if (g_analyzerObjectBuilder) {delete g_analyzerObjectBuilder; g_analyzerObjectBuilder = 0;}
+	if (g_storageObjectBuilder) {delete g_storageObjectBuilder; g_storageObjectBuilder = 0;}
+	if (g_moduleLoader) {delete g_moduleLoader; g_moduleLoader = 0;}
+	if (g_errorBuffer) {delete g_errorBuffer; g_errorBuffer = 0;}
 }
 
 enum
@@ -245,7 +252,7 @@ static void createStorageIfNotExist( const std::string& config)
 	std::string configstr( config);
 	std::string dbname;
 	(void)strus::extractStringFromConfigString( dbname, configstr, "database", g_errorBuffer);
-	if (g_errorBuffer->hasError()) throw strus::runtime_error(_TXT("cannot evaluate database"));
+	if (g_errorBuffer->hasError()) throw strus::runtime_error( "%s", _TXT("cannot evaluate database"));
 
 	const strus::DatabaseInterface* dbi = g_storageObjectBuilder->getDatabase( dbname);
 	if (dbi->exists( config)) return;
@@ -255,21 +262,19 @@ static void createStorageIfNotExist( const std::string& config)
 	sti->createStorage( config, dbi);
 	if (g_errorBuffer->hasError())
 	{
-		throw strus::runtime_error(_TXT("error creating storage"));
+		throw strus::runtime_error( "%s", _TXT("error creating storage"));
 	}
 }
 
 
 int main( int argc, const char* argv[])
 {
-	std::auto_ptr<strus::ErrorBufferInterface> errorBuffer( strus::createErrorBuffer_standard( 0, 2));
-	if (!errorBuffer.get())
+	g_errorBuffer = strus::createErrorBuffer_standard( 0, 2);
+	if (!g_errorBuffer)
 	{
 		std::cerr << _TXT("failed to create error buffer") << std::endl;
 		return -1;
 	}
-	g_errorBuffer = errorBuffer.get();
-
 	bool doExit = false;
 	int argi = 1;
 	std::string logfile;
@@ -324,7 +329,7 @@ int main( int argc, const char* argv[])
 					port = strus::utils::touint( argv[argi]);
 					if (port == 0 || port > 65535)
 					{
-						throw strus::runtime_error( _TXT("value out of range"));
+						throw strus::runtime_error( "%s",  _TXT("value out of range"));
 					}
 				}
 				catch (const std::runtime_error& err)
@@ -402,7 +407,7 @@ int main( int argc, const char* argv[])
 			}
 			else
 			{
-				throw strus::runtime_error( _TXT("no arguments expected (only options)"));
+				throw strus::runtime_error( "%s",  _TXT("no arguments expected (only options)"));
 			}
 		}
 		if (doExit) return 0;
@@ -411,10 +416,8 @@ int main( int argc, const char* argv[])
 		g_errorBuffer->setMaxNofThreads( strus_threadpool_size()+2);
 
 		// Create the global context:
-		std::auto_ptr<strus::ModuleLoaderInterface>
-			moduleLoader( strus::createModuleLoader( g_errorBuffer));
-		g_moduleLoader = moduleLoader.get();
-		if (!g_moduleLoader) throw strus::runtime_error( _TXT("failed to create module loader"));
+		g_moduleLoader = strus::createModuleLoader( g_errorBuffer);
+		if (!g_moduleLoader) throw strus::runtime_error( "%s",  _TXT("failed to create module loader"));
 
 		std::vector<std::string>::const_iterator
 			di = moduledirs.begin(), de = moduledirs.end();
@@ -422,7 +425,7 @@ int main( int argc, const char* argv[])
 		{
 			g_moduleLoader->addModulePath( *di);
 		}
-		moduleLoader->addSystemModulePath();
+		g_moduleLoader->addSystemModulePath();
 		std::vector<std::string>::const_iterator
 			mi = modules.begin(), me = modules.end();
 		for (; mi != me; ++mi)
@@ -453,36 +456,28 @@ int main( int argc, const char* argv[])
 		}
 
 		// Create objects:
-		std::auto_ptr<strus::StorageObjectBuilderInterface>
-			storageBuilder( g_moduleLoader->createStorageObjectBuilder());
-		if (!storageBuilder.get())
+		g_storageObjectBuilder = g_moduleLoader->createStorageObjectBuilder();
+		if (!g_storageObjectBuilder)
 		{
-			throw strus::runtime_error( _TXT("failed to create storage builder"));
+			throw strus::runtime_error( "%s",  _TXT("failed to create storage builder"));
 		}
-		std::auto_ptr<strus::AnalyzerObjectBuilderInterface>
-			analyzerBuilder( g_moduleLoader->createAnalyzerObjectBuilder());
-		if (!analyzerBuilder.get())
+		g_analyzerObjectBuilder = g_moduleLoader->createAnalyzerObjectBuilder();
+		if (!g_analyzerObjectBuilder)
 		{
-			throw strus::runtime_error( _TXT("failed to create analyzer builder"));
+			throw strus::runtime_error( "%s",  _TXT("failed to create analyzer builder"));
 		}
 
 		// Create proxy objects if tracing enabled:
 		std::vector<TraceReference>::const_iterator ti = trace.begin(), te = trace.end();
 		for (; ti != te; ++ti)
 		{
-			strus::AnalyzerObjectBuilderInterface* aproxy = (*ti)->createProxy( analyzerBuilder.get());
-			analyzerBuilder.release();
-			analyzerBuilder.reset( aproxy);
-			strus::StorageObjectBuilderInterface* sproxy = (*ti)->createProxy( storageBuilder.get());
-			storageBuilder.release();
-			storageBuilder.reset( sproxy);
+			strus::AnalyzerObjectBuilderInterface* aproxy = (*ti)->createProxy( g_analyzerObjectBuilder);
+			if (!aproxy) throw strus::runtime_error( "%s",  _TXT("failed to create analyzer object builder proxy for trace"));
+			g_analyzerObjectBuilder = aproxy;
+			strus::StorageObjectBuilderInterface* sproxy = (*ti)->createProxy( g_storageObjectBuilder);
+			if (!sproxy) throw strus::runtime_error( "%s",  _TXT("failed to create storage object builder proxy for trace"));
+			g_storageObjectBuilder = sproxy;
 		}
-
-		std::auto_ptr<strus::StorageClientInterface> storageClient;
-		std::auto_ptr<strus::VectorStorageClientInterface> vectorStorageClient;
-
-		g_storageObjectBuilder = storageBuilder.get();
-		g_analyzerObjectBuilder = analyzerBuilder.get();
 
 		if (!storageconfig.empty())
 		{
@@ -490,30 +485,28 @@ int main( int argc, const char* argv[])
 			{
 				createStorageIfNotExist( storageconfig);
 			}
-			storageClient.reset( strus::createStorageClient( g_storageObjectBuilder, g_errorBuffer, storageconfig));
-			if (!storageClient.get())
+			g_storageClient = strus::createStorageClient( g_storageObjectBuilder, g_errorBuffer, storageconfig);
+			if (!g_storageClient)
 			{
 				throw strus::runtime_error( _TXT("failed to create storage client %s"), storageconfig.c_str());
 			}
 			std::cerr << _TXT("strus RPC server is hosting storage ") << "'" << storageconfig << "'" << std::endl;
-			g_storageClient = storageClient.get();
 		}
 		if (!vecstorageconfig.empty())
 		{
-			vectorStorageClient.reset( strus::createVectorStorageClient( g_storageObjectBuilder, g_errorBuffer, vecstorageconfig));
-			if (!vectorStorageClient.get())
+			g_vectorStorageClient = strus::createVectorStorageClient( g_storageObjectBuilder, g_errorBuffer, vecstorageconfig);
+			if (!g_vectorStorageClient)
 			{
 				throw strus::runtime_error( _TXT("failed to create vector storage client %s"), vecstorageconfig.c_str());
 			}
 			std::cerr << _TXT("strus RPC server is hosting vector storage ") << "'" << vecstorageconfig << "'" << std::endl;
-			g_vectorStorageClient = vectorStorageClient.get();
 		}
 		// Start server:
 		std::cerr << "strus RPC server listening on port " << port << std::endl;
 		int err = strus_run_server( (unsigned short)(unsigned int)port, nofThreads, &g_glbctx);
 		if (err)
 		{
-			throw strus::runtime_error( _TXT("server terminated with error (see logs)"));
+			throw strus::runtime_error( "%s",  _TXT("server terminated with error (see logs)"));
 		}
 		std::cerr << _TXT("strus RPC server terminated") << std::endl;
 

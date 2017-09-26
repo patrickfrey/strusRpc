@@ -15,17 +15,23 @@ git push
 LINUX
 =====
 
-3rdParty
---------
-git clone git://levent.git.sourceforge.net/gitroot/levent/libevent
-cd libevent; cmake CMakeLists.txt; make; sudo make install
-
 strus & strusAnalyzer
 ---------------------
 For strusRpc to work you have to install strus, strusAnalyzer and strusModule first. 
 
 strusRpc
 --------
-cmake CMakeLists.txt; make; sudo make install
+git clone --recursive git@github.com:PatrickFrey/strusRpc.git
+cd strusRpc
+git submodule update --init --recursive
+git submodule foreach --recursive git checkout master
+git submodule foreach --recursive git pull
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make -j<N>
+make test ARGS=-j<N>
+sudo make install
+
 
 

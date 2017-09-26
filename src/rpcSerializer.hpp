@@ -43,9 +43,9 @@
 #include "strus/analyzer/positionBind.hpp"
 #include "strus/analyzer/patternMatcherStatistics.hpp"
 #include "strus/analyzer/patternMatcherResult.hpp"
-#include "strus/analyzer/term.hpp"
-#include "strus/analyzer/metaData.hpp"
-#include "strus/analyzer/attribute.hpp"
+#include "strus/analyzer/documentTerm.hpp"
+#include "strus/analyzer/documentMetaData.hpp"
+#include "strus/analyzer/documentAttribute.hpp"
 #include "strus/analyzer/document.hpp"
 
 namespace strus {
@@ -71,6 +71,8 @@ public:
 	void packGlobalCounter( const GlobalCounter& index);
 	void packUint( unsigned int val);
 	void packInt( int val);
+	void packUint64( uint64_t val);
+	void packInt64( int64_t val);
 	void packFloat( float val);
 	void packDouble( double val);
 	void packSize( std::size_t size);
@@ -88,12 +90,12 @@ public:
 	void packSummarizationVariable( const SummarizationVariable& val);
 	void packDocumentTermIteratorTerm( const DocumentTermIteratorInterface::Term& term);
 	void packSlice( DatabaseCursorInterface::Slice& val);
+	void packAnalyzerQueryTerm( const analyzer::QueryTerm& val);
+	void packAnalyzerQueryTermExpression( const analyzer::QueryTermExpression& val);
+	void packAnalyzerDocumentAttribute( const analyzer::DocumentAttribute& val);
+	void packAnalyzerDocumentMetaData( const analyzer::DocumentMetaData& val);
+	void packAnalyzerDocumentTerm( const analyzer::DocumentTerm& val);
 	void packAnalyzerDocument( const analyzer::Document& val);
-	void packAnalyzerQuery( const analyzer::Query& val);
-	void packAnalyzerAttribute( const analyzer::Attribute& val);
-	void packAnalyzerMetaData( const analyzer::MetaData& val);
-	void packAnalyzerTerm( const analyzer::Term& val);
-	void packAnalyzerTermArray( const analyzer::TermArray& val);
 	void packAnalyzerToken( const analyzer::Token& val);
 	void packAnalyzerGroupBy( const QueryAnalyzerContextInterface::GroupBy& groupBy);
 	void packAnalyzerPatternLexem( const analyzer::PatternLexem& val);
@@ -106,7 +108,6 @@ public:
 	void packQueryResult( const QueryResult& val);
 	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
-	void packStatisticsProcessorBuilderOptions( const StatisticsProcessorInterface::BuilderOptions& val);
 	void packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val);
 	void packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val);
 	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
@@ -144,6 +145,7 @@ public:
 	const char* unpackConstCharp();
 	const char** unpackConstCharpp();
 	void unpackBuffer( const char*& buf, std::size_t& size);
+	void unpackBuffer( const void*& buf, std::size_t& size);
 	std::vector<double> unpackBufferFloat();
 	bool unpackBool();
 	unsigned char unpackByte();
@@ -151,6 +153,8 @@ public:
 	GlobalCounter unpackGlobalCounter();
 	unsigned int unpackUint();
 	int unpackInt();
+	uint64_t unpackUint64();
+	int64_t unpackInt64();
 	float unpackFloat();
 	double unpackDouble();
 	std::size_t unpackSize();
@@ -167,12 +171,12 @@ public:
 	SummaryElement unpackSummaryElement();
 	DocumentTermIteratorInterface::Term unpackDocumentTermIteratorTerm();
 	DatabaseCursorInterface::Slice unpackSlice();
+	analyzer::QueryTerm unpackAnalyzerQueryTerm();
+	analyzer::QueryTermExpression unpackAnalyzerQueryTermExpression();
+	analyzer::DocumentAttribute unpackAnalyzerDocumentAttribute();
+	analyzer::DocumentMetaData unpackAnalyzerDocumentMetaData();
+	analyzer::DocumentTerm unpackAnalyzerDocumentTerm();
 	analyzer::Document unpackAnalyzerDocument();
-	analyzer::Query unpackAnalyzerQuery();
-	analyzer::Attribute unpackAnalyzerAttribute();
-	analyzer::MetaData unpackAnalyzerMetaData();
-	analyzer::Term unpackAnalyzerTerm();
-	analyzer::TermArray unpackAnalyzerTermArray();
 	analyzer::Token unpackAnalyzerToken();
 	QueryAnalyzerContextInterface::GroupBy unpackAnalyzerGroupBy();
 	analyzer::PatternLexem unpackAnalyzerPatternLexem();
@@ -185,7 +189,6 @@ public:
 	QueryResult unpackQueryResult();
 	QueryEvalInterface::FeatureParameter unpackFeatureParameter();
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();
-	StatisticsProcessorInterface::BuilderOptions unpackStatisticsProcessorBuilderOptions();
 	StatisticsViewerInterface::DocumentFrequencyChange unpackStatisticsViewerDocumentFrequencyChange();
 	QueryProcessorInterface::FunctionType unpackQueryProcessorFunctionType();
 	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();

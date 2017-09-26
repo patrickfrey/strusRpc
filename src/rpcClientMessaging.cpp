@@ -141,7 +141,7 @@ std::string RpcClientMessaging::synchronize()
 					&result, &resultsize);
 	
 			m_messageBuffer.clear();
-			if (ec) throw strus::runtime_error( _TXT("send synchronize failed: "), strus_lasterror( m_conn));
+			if (ec) throw strus::runtime_error( _TXT("send synchronize failed: %s"), strus_lasterror( m_conn));
 			return resultString( result, resultsize);
 		}
 		return std::string();

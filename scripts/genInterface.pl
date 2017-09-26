@@ -162,6 +162,15 @@ $passOwnershipParams{"defineAggregator"} = 1;			# TextProcessor
 
 $passOwnershipParams{"addSearchIndexFeature"} = 1;		# DocumentAnalyzer
 $passOwnershipParams{"addForwardIndexFeature"} = 1;		# DocumentAnalyzer
+$passOwnershipParams{"addElement"} = 1;				# QueryAnalyzer
+$passOwnershipParams{"addPatternLexem"} = 1;			# DocumentAnalyzer,QueryAnalyzer
+$passOwnershipParams{"definePatternMatcherPostProc"} = 1;	# DocumentAnalyzer,QueryAnalyzer
+$passOwnershipParams{"definePatternMatcherPreProc"} = 1;	# DocumentAnalyzer,QueryAnalyzer
+$passOwnershipParams{"addSearchIndexFeatureFromPatternMatch"}=1;# DocumentAnalyzer
+$passOwnershipParams{"addForwardIndexFeatureFromPatternMatch"}=1;# DocumentAnalyzer
+$passOwnershipParams{"defineMetaDataFromPatternMatch"} = 1;	# DocumentAnalyzer
+$passOwnershipParams{"defineAttributeFromPatternMatch"} = 1;	# DocumentAnalyzer
+$passOwnershipParams{"addElementFromPatternMatch"} = 1;		# QueryAnalyzer
 $passOwnershipParams{"defineMetaData"} = 1;			# DocumentAnalyzer
 $passOwnershipParams{"defineAggregatedMetaData"} = 1;		# DocumentAnalyzer
 $passOwnershipParams{"defineAttribute"} = 1;			# DocumentAnalyzer
@@ -184,6 +193,9 @@ $constResetMethodMap{"nextChunk"} = 1;
 my %alternativeClientImpl = ();
 $alternativeClientImpl{"StorageImpl::createClient"} = "if (p1.empty()) return new StorageClientImpl( 0, ctx(), false, errorhnd());\n";
 $alternativeClientImpl{"VectorStorageImpl::createClient"} = "if (p1.empty()) return new VectorStorageClientImpl( 0, ctx(), false, errorhnd());\n";
+$alternativeClientImpl{"StorageClientImpl::close"} = "if (objId() == 0) return;\n";
+$alternativeClientImpl{"VectorStorageClientImpl::close"} = "if (objId() == 0) return;\n";
+$alternativeClientImpl{"DatabaseClientImpl::close"} = "if (objId() == 0) return;\n";
 
 # Set debug code generation ON/OFF:
 my $doGenerateDebugCode = 0;
@@ -779,29 +791,29 @@ sub packParameter
 	{
 		$rt .= "msg.packSlice( " . $id . ");";
 	}
+	elsif ($type eq "analyzer::QueryTerm")
+	{
+		$rt .= "msg.packAnalyzerQueryTerm( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::QueryTermExpression")
+	{
+		$rt .= "msg.packAnalyzerQueryTermExpression( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::DocumentAttribute")
+	{
+		$rt .= "msg.packAnalyzerDocumentAttribute( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::DocumentMetaData")
+	{
+		$rt .= "msg.packAnalyzerDocumentMetaData( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::DocumentTerm")
+	{
+		$rt .= "msg.packAnalyzerDocumentTerm( " . $id . ");";
+	}
 	elsif ($type eq "analyzer::Document")
 	{
 		$rt .= "msg.packAnalyzerDocument( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::Query")
-	{
-		$rt .= "msg.packAnalyzerQuery( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::Attribute")
-	{
-		$rt .= "msg.packAnalyzerAttribute( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::MetaData")
-	{
-		$rt .= "msg.packAnalyzerMetaData( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::Term")
-	{
-		$rt .= "msg.packAnalyzerTerm( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::TermArray")
-	{
-		$rt .= "msg.packAnalyzerTermArray( " . $id . ");";
 	}
 	elsif ($type eq "analyzer::Token")
 	{
@@ -907,7 +919,7 @@ sub unpackParameter
 		{
 			$rt .= "unsigned char classId_$idx; unsigned int objId_$idx;\n";
 			$rt .= "serializedMsg.unpackObject( classId_$idx, objId_$idx);\n";
-			$rt .= "if (classId_$idx != " . getInterfaceEnumName( $type) .") throw strus::runtime_error(_TXT(\"error in RPC serialzed message: output parameter object type mismatch\"));\n";
+			$rt .= "if (classId_$idx != " . getInterfaceEnumName( $type) .") throw strus::runtime_error( \"%s\", _TXT(\"error in RPC serialzed message: output parameter object type mismatch\"));\n";
 			if ($isconst)
 			{
 				$rt .= "$id = getConstObject<$type>( classId_$idx, objId_$idx);";
@@ -1086,21 +1098,29 @@ sub unpackParameter
 			$rt .= "$id = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice$idx" . ".ptr(), slice$idx" . ".size()), slice$idx" . ".size());";
 		}
 	}
-	elsif ($type eq "analyzer::Document")
+	elsif ($type eq "analyzer::QueryTerm")
 	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerDocument();";
+		$rt .= "$id = serializedMsg.unpackAnalyzerQueryTerm();";
 	}
-	elsif ($type eq "analyzer::Query")
+	elsif ($type eq "analyzer::QueryTermExpression")
 	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerQuery();";
+		$rt .= "$id = serializedMsg.unpackAnalyzerQueryTermExpression();";
 	}
-	elsif ($type eq "analyzer::Attribute")
+	elsif ($type eq "analyzer::DocumentAttribute")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerAttribute();";
 	}
-	elsif ($type eq "analyzer::MetaData")
+	elsif ($type eq "analyzer::DocumentMetaData")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerMetaData();";
+	}
+	elsif ($type eq "analyzer::DocumentTerm")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerDocumentTerm();";
+	}
+	elsif ($type eq "analyzer::Document")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerDocument();";
 	}
 	elsif ($type eq "analyzer::Token")
 	{
@@ -1133,14 +1153,6 @@ sub unpackParameter
 	elsif ($type eq "PatternMatcherInstanceInterface::JoinOperation")
 	{
 		$rt .= "$id = (PatternMatcherInstanceInterface::JoinOperation)serializedMsg.unpackByte();";
-	}
-	elsif ($type eq "analyzer::Term")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerTerm();";
-	}
-	elsif ($type eq "analyzer::TermArray")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerTermArray();";
 	}
 	elsif ($type eq "WeightedDocument")
 	{
@@ -1423,6 +1435,13 @@ sub getMethodDeclarationSource
 				$receiver_code .= "\tserializedMsg.unpackBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				++$pi;
 			}
+			elsif ($pi+1 <= $#param && $param[$pi] eq "const^ void" && $param[$pi+1] eq "std::size_t")
+			{
+				# ... exception for buffer( ptr, len):
+				$sender_code .= "\tmsg.packBuffer( (const char*)p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				$receiver_code .= "\tserializedMsg.unpackBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				++$pi;
+			}
 			elsif ($pi+1 <= $#param && $param[$pi] eq "const^ double" && $param[$pi+1] eq "unsigned_int")
 			{
 				# ... exception for double buffer( ptr, len):
@@ -1542,6 +1561,17 @@ sub getMethodDeclarationSource
 				$sender_output .= "\tp" . ($pi+1) . " = (const char*) ctx()->constConstructor()->get( $bpvar, p" . ($pi+2) .");\n";
 
 				$receiver_output .= "\tmsg.packBuffer( p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
+				++$pi;
+			}
+			elsif ($pi+1 <= $#param && $param[$pi] eq "const^& void" && $param[$pi+1] eq "& std::size_t")
+			{
+				# ... exception for buffer( size, len):
+				my $bpvar = "bp" . ($pi+1);
+				$sender_output .= "\tconst char* $bpvar;\n";
+				$sender_output .= "\tserializedMsg.unpackBuffer( $bpvar, p" . ($pi+2) . ");\n";
+				$sender_output .= "\tp" . ($pi+1) . " = (const void*) ctx()->constConstructor()->get( $bpvar, p" . ($pi+2) .");\n";
+
+				$receiver_output .= "\tmsg.packBuffer( (const char*)p" . ($pi+1) . ", p" . ($pi+2) . ");\n";
 				++$pi;
 			}
 			elsif ($pi+1 <= $#param && $param[$pi] eq "const^& double" && $param[$pi+1] eq "& unsigned_int")
@@ -1709,7 +1739,7 @@ sub getClassImplementationSource
 	my $ii = 0;
 
 	$receiver_code .= "\tRpcDeserializer serializedMsg( src, srcsize);\n";
-	$receiver_code .= "\tif (!serializedMsg.unpackCrc32()) throw strus::runtime_error(_TXT(\"message CRC32 check failed\"));\n";
+	$receiver_code .= "\tif (!serializedMsg.unpackCrc32()) throw strus::runtime_error( \"%s\", _TXT(\"message CRC32 check failed\"));\n";
 	$receiver_code .= "\tunsigned char classId; unsigned int objId; unsigned char methodId;\n";
 	$receiver_code .= "\tserializedMsg.unpackObject( classId, objId);\n";
 	$receiver_code .= "\tmethodId = serializedMsg.unpackByte();\n";
@@ -1779,7 +1809,7 @@ sub getClassImplementationSource
 		$receiver_code .= "\t}\n";
 	}
 	$receiver_code .= "\t}\n";
-	$receiver_code .= "\tthrow strus::runtime_error(_TXT(\"calling undefined request handler\"));\n";
+	$receiver_code .= "\tthrow strus::runtime_error( \"%s\", _TXT(\"calling undefined request handler\"));\n";
 	return ($sender_code,$receiver_code);
 }
 

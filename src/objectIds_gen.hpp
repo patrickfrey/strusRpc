@@ -12,6 +12,7 @@ namespace strus {
 
 enum ClassId
 {
+	ClassId_AclReader,
 	ClassId_AggregatorFunctionInstance,
 	ClassId_AggregatorFunction,
 	ClassId_AnalyzerObjectBuilder,
@@ -85,6 +86,17 @@ enum ClassId
 	ClassId_WeightingFunction
 };
 
+class AclReaderConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_skipDoc,
+		Method_getReadAccessList
+	};
+};
+
 class AggregatorFunctionInstanceConst
 {
 public:
@@ -113,8 +125,6 @@ public:
 	{
 		Method_Destructor,
 		Method_getTextProcessor,
-		Method_getSegmenter,
-		Method_findMimeTypeSegmenter,
 		Method_createDocumentAnalyzer,
 		Method_createQueryAnalyzer
 	};
@@ -129,7 +139,7 @@ public:
 		Method_elementHandle,
 		Method_skipDoc,
 		Method_getValue,
-		Method_getAttributeNames
+		Method_getNames
 	};
 };
 
@@ -155,6 +165,7 @@ public:
 		Method_writeImm,
 		Method_removeImm,
 		Method_readValue,
+		Method_close,
 		Method_config
 	};
 };
@@ -230,6 +241,7 @@ public:
 		Method_defineAggregatedMetaData,
 		Method_defineAttribute,
 		Method_defineSubDocument,
+		Method_defineSubContent,
 		Method_addPatternLexem,
 		Method_definePatternMatcherPostProc,
 		Method_definePatternMatcherPreProc,
@@ -293,13 +305,13 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_hasElement,
 		Method_elementHandle,
 		Method_nofElements,
 		Method_skipDoc,
 		Method_getValue,
 		Method_getType,
-		Method_getName
+		Method_getName,
+		Method_getNames
 	};
 };
 
@@ -364,9 +376,11 @@ public:
 	{
 		Method_Destructor,
 		Method_defineOption,
+		Method_defineLexemName,
 		Method_defineLexem,
 		Method_defineSymbol,
 		Method_getSymbol,
+		Method_getLexemName,
 		Method_compile,
 		Method_createContext
 	};
@@ -498,13 +512,11 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_addSearchIndexElement,
-		Method_addMetaDataElement,
+		Method_addElement,
 		Method_addPatternLexem,
 		Method_definePatternMatcherPostProc,
 		Method_definePatternMatcherPreProc,
-		Method_addSearchIndexElementFromPatternMatch,
-		Method_addMetaDataElementFromPatternMatch,
+		Method_addElementFromPatternMatch,
 		Method_createContext
 	};
 };
@@ -541,10 +553,11 @@ public:
 		Method_defineGlobalStatistics,
 		Method_addMetaDataRestrictionCondition,
 		Method_addDocumentEvaluationSet,
+		Method_addAccess,
 		Method_setMaxNofRanks,
 		Method_setMinRank,
-		Method_addUserName,
 		Method_setWeightingVariableValue,
+		Method_setDebugMode,
 		Method_evaluate,
 		Method_tostring
 	};
@@ -635,7 +648,8 @@ public:
 	{
 		Method_Destructor,
 		Method_mimeType,
-		Method_createInstance
+		Method_createInstance,
+		Method_getDescription
 	};
 };
 
@@ -731,10 +745,13 @@ public:
 		Method_createForwardIterator,
 		Method_createDocumentTermIterator,
 		Method_createInvAclIterator,
+		Method_createAclReader,
 		Method_nofDocumentsInserted,
 		Method_documentFrequency,
 		Method_maxDocumentNumber,
 		Method_documentNumber,
+		Method_termTypeNumber,
+		Method_isForwardIndexTerm,
 		Method_createTermTypeIterator,
 		Method_createTermValueIterator,
 		Method_createDocIdIterator,
@@ -744,11 +761,12 @@ public:
 		Method_createMetaDataRestriction,
 		Method_createAttributeReader,
 		Method_createTransaction,
-		Method_createInitStatisticsIterator,
-		Method_createUpdateStatisticsIterator,
+		Method_createAllStatisticsIterator,
+		Method_createChangeStatisticsIterator,
 		Method_getStatisticsProcessor,
 		Method_createDocumentChecker,
-		Method_checkStorage
+		Method_checkStorage,
+		Method_close
 	};
 };
 
@@ -852,7 +870,9 @@ public:
 	{
 		Method_Destructor,
 		Method_addSummarizationFeature,
-		Method_getSummary
+		Method_setVariableValue,
+		Method_getSummary,
+		Method_debugCall
 	};
 };
 
@@ -865,6 +885,7 @@ public:
 		Method_addStringParameter,
 		Method_addNumericParameter,
 		Method_defineResultName,
+		Method_getVariables,
 		Method_createFunctionContext,
 		Method_tostring
 	};
@@ -889,6 +910,9 @@ public:
 		Method_Destructor,
 		Method_addResourcePath,
 		Method_getResourcePath,
+		Method_getSegmenterByName,
+		Method_getSegmenterByMimeType,
+		Method_getSegmenterOptions,
 		Method_getTokenizer,
 		Method_getNormalizer,
 		Method_getAggregator,
@@ -897,6 +921,8 @@ public:
 		Method_getPatternTermFeeder,
 		Method_detectDocumentClass,
 		Method_defineDocumentClassDetector,
+		Method_defineSegmenter,
+		Method_defineSegmenterOptions,
 		Method_defineTokenizer,
 		Method_defineNormalizer,
 		Method_defineAggregator,
@@ -975,8 +1001,10 @@ public:
 		Method_featureVector,
 		Method_featureName,
 		Method_featureIndex,
+		Method_vectorSimilarity,
 		Method_nofFeatures,
-		Method_config
+		Method_config,
+		Method_close
 	};
 };
 
@@ -1035,7 +1063,9 @@ public:
 	{
 		Method_Destructor,
 		Method_addWeightingFeature,
-		Method_call
+		Method_setVariableValue,
+		Method_call,
+		Method_debugCall
 	};
 };
 
@@ -1048,6 +1078,7 @@ public:
 		Method_addStringParameter,
 		Method_addNumericParameter,
 		Method_createFunctionContext,
+		Method_getVariables,
 		Method_tostring
 	};
 };

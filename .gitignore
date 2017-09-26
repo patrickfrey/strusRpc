@@ -36,6 +36,7 @@ CTestTestfile.cmake
 CMakeLists.txt.user
 CTestTestfile.cmake.user
 cmake/uninstall.cmake
+cmake_install.cmake.user
 DartConfiguration.tcl
 Testing/
 CPackConfig.cmake
@@ -52,7 +53,8 @@ dist/obs/strusrpc-xUbuntu_12.04.dsc
 dist/obs/strusrpc.dsc
 dist/redhat/strusrpc.spec
 
+# Suggested build directory
+build
+
 # Compiled Programs
 src/strusRpcServer
-
-.travis.yml
