@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR )
 
 # Patch for server.c/client.c to compile (not C99 because of non POSIX extensions)
-set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -fPIC -O${STRUS_OPTIMIZATION_LEVEL}" )
+string( TOLOWER "${CMAKE_BUILD_TYPE}" BUILD_TYPE )
+if ( BUILD_TYPE  STREQUAL  "release" )
+set( OPTIMIZATION_LEVEL "3" )
+else ( BUILD_TYPE  STREQUAL  "release" )
+set( OPTIMIZATION_LEVEL "0" )
+endif ( BUILD_TYPE  STREQUAL  "release" )
+set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -fPIC -O${OPTIMIZATION_LEVEL}" )
 
 # --------------------------------------
 # SOURCES AND INCLUDES
