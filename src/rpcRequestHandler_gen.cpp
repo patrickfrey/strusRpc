@@ -4828,7 +4828,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			bool p0;
-			StatisticsViewerInterface::DocumentFrequencyChange p1;
+			TermStatisticsChange p1;
 			p0 = obj->nextDfChange(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4839,7 +4839,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
-			msg.packStatisticsViewerDocumentFrequencyChange( p1);
+			msg.packTermStatisticsChange( p1);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -7827,7 +7827,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case VectorStorageSearchConst::Method_findSimilar:
 		{
 			RpcSerializer msg;
-			std::vector<VectorStorageSearchInterface::Result> p0;
+			std::vector<VectorQueryResult> p0;
 			std::vector<double> p1;
 			unsigned int p2;
 			std::size_t n1 = serializedMsg.unpackSize();
@@ -7847,7 +7847,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packVectorStorageSearchResult( p0[ii]);
+				msg.packVectorQueryResult( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();
@@ -7855,7 +7855,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case VectorStorageSearchConst::Method_findSimilarFromSelection:
 		{
 			RpcSerializer msg;
-			std::vector<VectorStorageSearchInterface::Result> p0;
+			std::vector<VectorQueryResult> p0;
 			std::vector<Index> p1;
 			std::vector<double> p2;
 			unsigned int p3;
@@ -7881,7 +7881,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packVectorStorageSearchResult( p0[ii]);
+				msg.packVectorQueryResult( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();

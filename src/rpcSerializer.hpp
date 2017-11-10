@@ -108,12 +108,12 @@ public:
 	void packQueryResult( const QueryResult& val);
 	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
-	void packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val);
+	void packTermStatisticsChange( const TermStatisticsChange& val);
 	void packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val);
 	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
 	void packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val);
 	void packFunctionDescription( const FunctionDescription& val);
-	void packVectorStorageSearchResult( const VectorStorageSearchInterface::Result& val);
+	void packVectorQueryResult( const VectorQueryResult& val);
 
 	void packCrc32();
 	const std::string& content() const
@@ -189,12 +189,12 @@ public:
 	QueryResult unpackQueryResult();
 	QueryEvalInterface::FeatureParameter unpackFeatureParameter();
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();
-	StatisticsViewerInterface::DocumentFrequencyChange unpackStatisticsViewerDocumentFrequencyChange();
+	TermStatisticsChange unpackTermStatisticsChange();
 	QueryProcessorInterface::FunctionType unpackQueryProcessorFunctionType();
 	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();
 	PostingJoinOperatorInterface::Description unpackPostingJoinOperatorDescription();
 	FunctionDescription unpackFunctionDescription();
-	VectorStorageSearchInterface::Result unpackVectorStorageSearchResult();
+	VectorQueryResult unpackVectorQueryResult();
 
 	bool unpackCrc32();
 

@@ -712,13 +712,12 @@ void RpcSerializer::packDocumentStatisticsType( const StorageClientInterface::Do
 	packByte( val);
 }
 
-void RpcSerializer::packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val)
+void RpcSerializer::packTermStatisticsChange( const TermStatisticsChange& val)
 {
 	packCharp( val.type());
 	packCharp( val.value());
 	packInt( val.increment());
 }
-
 
 void RpcSerializer::packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val)
 {
@@ -750,7 +749,7 @@ void RpcSerializer::packFunctionDescription( const FunctionDescription& val)
 	}
 }
 
-void RpcSerializer::packVectorStorageSearchResult( const VectorStorageSearchInterface::Result& val)
+void RpcSerializer::packVectorQueryResult( const VectorQueryResult& val)
 {
 	packIndex( val.featidx());
 	packDouble( val.weight());
@@ -1340,13 +1339,12 @@ StorageClientInterface::DocumentStatisticsType RpcDeserializer::unpackDocumentSt
 	return (StorageClientInterface::DocumentStatisticsType)unpackByte();
 }
 
-StatisticsViewerInterface::DocumentFrequencyChange RpcDeserializer::unpackStatisticsViewerDocumentFrequencyChange()
+TermStatisticsChange RpcDeserializer::unpackTermStatisticsChange()
 {
-	typedef StatisticsViewerInterface::DocumentFrequencyChange DocumentFrequencyChange;
 	const char* type = unpackConstCharp();
 	const char* value = unpackConstCharp();
 	int increment = unpackInt();
-	return DocumentFrequencyChange( type, value, increment);
+	return TermStatisticsChange( type, value, increment);
 }
 
 QueryProcessorInterface::FunctionType RpcDeserializer::unpackQueryProcessorFunctionType()
@@ -1381,11 +1379,11 @@ FunctionDescription RpcDeserializer::unpackFunctionDescription()
 	return rt;
 }
 
-VectorStorageSearchInterface::Result RpcDeserializer::unpackVectorStorageSearchResult()
+VectorQueryResult RpcDeserializer::unpackVectorQueryResult()
 {
 	Index featidx = unpackIndex();
 	double weight = unpackDouble();
-	return VectorStorageSearchInterface::Result( featidx, weight);
+	return VectorQueryResult( featidx, weight);
 }
 
 

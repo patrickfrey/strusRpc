@@ -871,9 +871,9 @@ sub packParameter
 	{
 		$rt .= "msg.packStatisticsProcessorBuilderOptions( " . $id . ");";
 	}
-	elsif ($type eq "StatisticsViewerInterface::DocumentFrequencyChange")
+	elsif ($type eq "TermStatisticsChange")
 	{
-		$rt .= "msg.packStatisticsViewerDocumentFrequencyChange( " . $id . ");";
+		$rt .= "msg.packTermStatisticsChange( " . $id . ");";
 	}
 	elsif ($type eq "QueryProcessorInterface::FunctionType")
 	{
@@ -891,9 +891,9 @@ sub packParameter
 	{
 		$rt .= "msg.packFunctionDescription( " . $id . ");";
 	}
-	elsif ($type eq "VectorStorageSearchInterface::Result")
+	elsif ($type eq "VectorQueryResult")
 	{
-		$rt .= "msg.packVectorStorageSearchResult( " . $id . ");";
+		$rt .= "msg.packVectorQueryResult( " . $id . ");";
 	}
 	else
 	{
@@ -1178,9 +1178,9 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackStatisticsProcessorBuilderOptions();";
 	}
-	elsif ($type eq "StatisticsViewerInterface::DocumentFrequencyChange")
+	elsif ($type eq "TermStatisticsChange")
 	{
-		$rt .= "$id = serializedMsg.unpackStatisticsViewerDocumentFrequencyChange();";
+		$rt .= "$id = serializedMsg.unpackTermStatisticsChange();";
 	}
 	elsif ($type eq "QueryProcessorInterface::FunctionType")
 	{
@@ -1198,9 +1198,9 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackFunctionDescription();";
 	}
-	elsif ($type eq "VectorStorageSearchInterface::Result")
+	elsif ($type eq "VectorQueryResult")
 	{
-		$rt .= "$id = serializedMsg.unpackVectorStorageSearchResult();";
+		$rt .= "$id = serializedMsg.unpackVectorQueryResult();";
 	}
 	else
 	{

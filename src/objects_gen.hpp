@@ -899,7 +899,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsViewer, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual int nofDocumentsInsertedChange( );
-	virtual bool nextDfChange( StatisticsViewerInterface::DocumentFrequencyChange& p1);
+	virtual bool nextDfChange( TermStatisticsChange& p1);
 };
 
 class StorageAlterMetaDataTableImpl
@@ -1308,8 +1308,8 @@ public:
 	VectorStorageSearchImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageSearch, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual std::vector<VectorStorageSearchInterface::Result> findSimilar( const std::vector<double>& p1, unsigned int p2) const;
-	virtual std::vector<VectorStorageSearchInterface::Result> findSimilarFromSelection( const std::vector<Index>& p1, const std::vector<double>& p2, unsigned int p3) const;
+	virtual std::vector<VectorQueryResult> findSimilar( const std::vector<double>& p1, unsigned int p2) const;
+	virtual std::vector<VectorQueryResult> findSimilarFromSelection( const std::vector<Index>& p1, const std::vector<double>& p2, unsigned int p3) const;
 	virtual void close( );
 };
 
