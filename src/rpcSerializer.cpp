@@ -794,13 +794,13 @@ std::string RpcDeserializer::unpackString()
 {
 	CHECK_TYPE( String)
 	std::string rt;
-	uint32_t size = unpackScalar<uint32_t>( m_itr, m_end);
-	if (m_itr+size > m_end)
+	uint32_t strsize = unpackScalar<uint32_t>( m_itr, m_end);
+	if (m_itr+strsize > m_end)
 	{
 		throw strus::runtime_error( "%s",  _TXT("message to small to encode next string"));
 	}
-	rt.append( m_itr, size);
-	m_itr += size;
+	rt.append( m_itr, strsize);
+	m_itr += strsize;
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackString ('" << rt << "')" << std::endl;
 #endif
@@ -826,10 +826,10 @@ const char* RpcDeserializer::unpackConstCharp()
 const char** RpcDeserializer::unpackConstCharpp()
 {
 	CHECK_TYPE( Charpp)
-	std::size_t ii=0,size = unpackSize();
+	std::size_t ii=0,strsize = unpackSize();
 	m_charpp_buf.clear();
-	m_charpp_buf.reserve( size+1);
-	for (; ii<size; ++ii)
+	m_charpp_buf.reserve( strsize+1);
+	for (; ii<strsize; ++ii)
 	{
 		m_charpp_buf.push_back( unpackConstCharp());
 	}
@@ -848,25 +848,25 @@ const char** RpcDeserializer::unpackConstCharpp()
 	return (const char**)m_charpp_buf.data();
 }
 
-void RpcDeserializer::unpackBuffer( const char*& buf, std::size_t& size)
+void RpcDeserializer::unpackBuffer( const char*& buf, std::size_t& strsize)
 {
 	CHECK_TYPE( Buffer)
-	size = unpackScalar<uint32_t>( m_itr, m_end);
+	strsize = unpackScalar<uint32_t>( m_itr, m_end);
 	buf = m_itr;
-	m_itr += size;
+	m_itr += strsize;
 #ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "unpackBuffer('" << std::string(buf,size) << "')" << std::endl;
+	std::cerr << "unpackBuffer('" << std::string(buf,strsize) << "')" << std::endl;
 #endif
 }
 
-void RpcDeserializer::unpackBuffer( const void*& buf, std::size_t& size)
+void RpcDeserializer::unpackBuffer( const void*& buf, std::size_t& strsize)
 {
 	CHECK_TYPE( Buffer)
-	size = unpackScalar<uint32_t>( m_itr, m_end);
+	strsize = unpackScalar<uint32_t>( m_itr, m_end);
 	buf = m_itr;
-	m_itr += size;
+	m_itr += strsize;
 #ifdef STRUS_LOWLEVEL_DEBUG
-	strus_hexdump( stderr, (const char*)buf, size);
+	strus_hexdump( stderr, (const char*)buf, strsize);
 	fprintf( stderr, "\n");
 #endif
 }
@@ -878,8 +878,8 @@ std::vector<double> RpcDeserializer::unpackBufferFloat()
 	std::ostringstream msg;
 #endif
 	std::vector<double> rt;
-	std::size_t ii=0, size = unpackScalar<uint32_t>( m_itr, m_end);
-	for (ii=0; ii<size; ++ii)
+	std::size_t ii=0, strsize = unpackScalar<uint32_t>( m_itr, m_end);
+	for (ii=0; ii<strsize; ++ii)
 	{
 		rt.push_back( unpackDouble());
 #ifdef STRUS_LOWLEVEL_DEBUG
@@ -1046,15 +1046,15 @@ MetaDataRestrictionInterface::CompareOperator RpcDeserializer::unpackMetaDataRes
 bool RpcDeserializer::unpackCrc32()
 {
 #if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM	
-	uint32_t size = (m_end - m_start) - 4;
+	uint32_t strsize = (m_end - m_start) - 4;
 #ifdef STRUS_ALTERNATIVE_CHECK_SUM
-	uint32_t crc = calcAlternativeCheckSum( m_start, size);
+	uint32_t crc = calcAlternativeCheckSum( m_start, strsize);
 #else
-	uint32_t crc = utils::Crc32::calc( m_start, size);
+	uint32_t crc = utils::Crc32::calc( m_start, strsize);
 #endif
 	char const* ee = m_end-4;
 #ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "unpackCrc32(" << crc << ") size=" << size << std::endl;
+	std::cerr << "unpackCrc32(" << crc << ") size=" << strsize << std::endl;
 #endif
 #ifdef STRUS_ALTERNATIVE_CHECK_SUM
 	if (checkAlternativeCheckSum( crc, unpackScalar<uint32_t>( ee, m_end)))
@@ -1064,7 +1064,7 @@ bool RpcDeserializer::unpackCrc32()
 	else
 	{
 #ifdef STRUS_LOWLEVEL_DEBUG
-		strus_hexdump( stderr, "CRC32 checksum failed", (const unsigned char*)m_start, (size_t)size);
+		strus_hexdump( stderr, "CRC32 checksum failed", (const unsigned char*)m_start, (size_t)strsize);
 #endif
 		return false;
 	}
@@ -1116,9 +1116,9 @@ DocumentTermIteratorInterface::Term RpcDeserializer::unpackDocumentTermIteratorT
 DatabaseCursorInterface::Slice RpcDeserializer::unpackSlice()
 {
 	const char* buf;
-	std::size_t size;
-	unpackBuffer( buf, size);
-	DatabaseCursorInterface::Slice rt( buf, size);
+	std::size_t strsize;
+	unpackBuffer( buf, strsize);
+	DatabaseCursorInterface::Slice rt( buf, strsize);
 	return rt;
 }
 
@@ -1126,23 +1126,23 @@ analyzer::Document RpcDeserializer::unpackAnalyzerDocument()
 {
 	analyzer::Document rt;
 	rt.setSubDocumentTypeName( unpackString());
-	std::size_t ii=0,size=unpackSize();
-	for (; ii<size; ++ii)
+	std::size_t ii=0,strsize=unpackSize();
+	for (; ii<strsize; ++ii)
 	{
 		analyzer::DocumentAttribute attr = unpackAnalyzerDocumentAttribute();
 		rt.setAttribute( attr.name(), attr.value());
 	}
-	for (ii=0,size=unpackSize(); ii<size; ++ii)
+	for (ii=0,strsize=unpackSize(); ii<strsize; ++ii)
 	{
 		analyzer::DocumentMetaData md = unpackAnalyzerDocumentMetaData();
 		rt.setMetaData( md.name(), md.value());
 	}
-	for (ii=0,size=unpackSize(); ii<size; ++ii)
+	for (ii=0,strsize=unpackSize(); ii<strsize; ++ii)
 	{
 		analyzer::DocumentTerm term = unpackAnalyzerDocumentTerm();
 		rt.addSearchIndexTerm( term.type(), term.value(), term.pos());
 	}
-	for (ii=0,size=unpackSize(); ii<size; ++ii)
+	for (ii=0,strsize=unpackSize(); ii<strsize; ++ii)
 	{
 		analyzer::DocumentTerm term = unpackAnalyzerDocumentTerm();
 		rt.addForwardIndexTerm( term.type(), term.value(), term.pos());
@@ -1161,8 +1161,8 @@ analyzer::QueryTerm RpcDeserializer::unpackAnalyzerQueryTerm()
 analyzer::QueryTermExpression RpcDeserializer::unpackAnalyzerQueryTermExpression()
 {
 	analyzer::QueryTermExpression rt;
-	std::size_t ii=0,size=unpackSize();
-	for (; ii<size; ++ii)
+	std::size_t ii=0,strsize=unpackSize();
+	for (; ii<strsize; ++ii)
 	{
 		analyzer::QueryTermExpression::Instruction::OpCode
 			opCode = (analyzer::QueryTermExpression::Instruction::OpCode)unpackByte();
@@ -1232,8 +1232,8 @@ analyzer::PatternLexem RpcDeserializer::unpackAnalyzerPatternLexem()
 analyzer::TokenMarkup RpcDeserializer::unpackAnalyzerTokenMarkup()
 {
 	analyzer::TokenMarkup rt( unpackString());
-	std::size_t ii = 0, size = unpackSize();
-	for (; ii < size; ++ii)
+	std::size_t ii = 0, strsize = unpackSize();
+	for (; ii < strsize; ++ii)
 	{
 		rt( unpackString(), unpackString());
 	}
@@ -1251,8 +1251,8 @@ analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResu
 	unsigned int end_origpos = unpackUint();
 
 	std::vector<analyzer::PatternMatcherResult::Item> itemlist;
-	std::size_t ii = 0, size = unpackSize();
-	for (; ii < size; ++ii)
+	std::size_t ii = 0, strsize = unpackSize();
+	for (; ii < strsize; ++ii)
 	{
 		const char* i_name( unpackConstCharp());
 		unsigned int i_start_ordpos = unpackUint();
@@ -1275,8 +1275,8 @@ analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResu
 analyzer::PatternMatcherStatistics RpcDeserializer::unpackAnalyzerPatternMatcherStatistics()
 {
 	analyzer::PatternMatcherStatistics rt;
-	std::size_t ii = 0, size = unpackSize();
-	for (; ii < size; ++ii)
+	std::size_t ii = 0, strsize = unpackSize();
+	for (; ii < strsize; ++ii)
 	{
 		rt.define( unpackConstCharp(), unpackDouble());
 	}
@@ -1286,8 +1286,8 @@ analyzer::PatternMatcherStatistics RpcDeserializer::unpackAnalyzerPatternMatcher
 analyzer::SegmenterOptions RpcDeserializer::unpackSegmenterOptions()
 {
 	analyzer::SegmenterOptions rt;
-	std::size_t ii = 0, size = unpackSize();
-	for (; ii < size; ++ii)
+	std::size_t ii = 0, strsize = unpackSize();
+	for (; ii < strsize; ++ii)
 	{
 		rt( unpackString(), unpackString());
 	}
@@ -1305,8 +1305,8 @@ ResultDocument RpcDeserializer::unpackResultDocument()
 {
 	WeightedDocument weightedDocument( unpackWeightedDocument());
 	std::vector<SummaryElement> summaryElements;
-	std::size_t ii=0,size=unpackSize();
-	for (; ii<size; ++ii)
+	std::size_t ii=0,strsize=unpackSize();
+	for (; ii<strsize; ++ii)
 	{
 		summaryElements.push_back( unpackSummaryElement());
 	}
@@ -1318,9 +1318,9 @@ QueryResult RpcDeserializer::unpackQueryResult()
 	unsigned int pass = unpackByte();
 	unsigned int nofRanked = unpackIndex();
 	unsigned int nofVisited = unpackIndex();
-	std::size_t ii=0,size=unpackSize();
+	std::size_t ii=0,strsize=unpackSize();
 	std::vector<ResultDocument> ranks;
-	for (; ii<size; ++ii)
+	for (; ii<strsize; ++ii)
 	{
 		ranks.push_back( unpackResultDocument());
 	}
