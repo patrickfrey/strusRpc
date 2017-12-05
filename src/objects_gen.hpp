@@ -311,7 +311,7 @@ public:
 	DocumentClassDetectorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentClassDetector, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual bool detect( analyzer::DocumentClass& p1, const char* p2, std::size_t p3) const;
+	virtual bool detect( analyzer::DocumentClass& p1, const char* p2, std::size_t p3, bool p4) const;
 };
 
 class DocumentTermIteratorImpl
@@ -1154,7 +1154,7 @@ public:
 	virtual const PatternLexerInterface* getPatternLexer( const std::string& p1) const;
 	virtual const PatternMatcherInterface* getPatternMatcher( const std::string& p1) const;
 	virtual const PatternTermFeederInterface* getPatternTermFeeder( ) const;
-	virtual bool detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3) const;
+	virtual bool detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3, bool p4) const;
 	virtual void defineDocumentClassDetector( DocumentClassDetectorInterface* p1);
 	virtual void defineSegmenter( const std::string& p1, SegmenterInterface* p2);
 	virtual void defineSegmenterOptions( const std::string& p1, const analyzer::SegmenterOptions& p2);

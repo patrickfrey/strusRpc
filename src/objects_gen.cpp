@@ -1648,7 +1648,7 @@ DocumentClassDetectorImpl::~DocumentClassDetectorImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-bool DocumentClassDetectorImpl::detect( analyzer::DocumentClass& p1, const char* p2, std::size_t p3) const
+bool DocumentClassDetectorImpl::detect( analyzer::DocumentClass& p1, const char* p2, std::size_t p3, bool p4) const
 {
 try
 {
@@ -1656,6 +1656,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_detect);
 	msg.packBuffer( p2, p3);
+	msg.packBool( p4);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -7662,7 +7663,7 @@ try
 }
 }
 
-bool TextProcessorImpl::detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3) const
+bool TextProcessorImpl::detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3, bool p4) const
 {
 try
 {
@@ -7670,6 +7671,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_detectDocumentClass);
 	msg.packBuffer( p2, p3);
+	msg.packBool( p4);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());

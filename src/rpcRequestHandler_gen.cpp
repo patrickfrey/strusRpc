@@ -1518,8 +1518,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			analyzer::DocumentClass p1;
 			const char* p2;
 			std::size_t p3;
+			bool p4;
 			serializedMsg.unpackBuffer( p2, p3);
-			p0 = obj->detect(p1,p2,p3);
+			p4 = serializedMsg.unpackBool();
+			p0 = obj->detect(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6908,8 +6910,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			analyzer::DocumentClass p1;
 			const char* p2;
 			std::size_t p3;
+			bool p4;
 			serializedMsg.unpackBuffer( p2, p3);
-			p0 = obj->detectDocumentClass(p1,p2,p3);
+			p4 = serializedMsg.unpackBool();
+			p0 = obj->detectDocumentClass(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
