@@ -1,13 +1,8 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR )
 
-# Patch for server.c/client.c to compile (not C99 because of non POSIX extensions)
-string( TOLOWER "${CMAKE_BUILD_TYPE}" BUILD_TYPE )
-if ( BUILD_TYPE  STREQUAL  "release" )
-set( OPTIMIZATION_LEVEL "3" )
-else ( BUILD_TYPE  STREQUAL  "release" )
-set( OPTIMIZATION_LEVEL "0" )
-endif ( BUILD_TYPE  STREQUAL  "release" )
-set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -fPIC -O${OPTIMIZATION_LEVEL}" )
+string(REGEX REPLACE "-std=c[89]9" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+MESSAGE( STATUS "C compilation flags for libuv (remove C99): '${CMAKE_C_FLAGS}'" )
+# ... patch for libuv to compile (not C99 because of non POSIX extensions and no-strict-aliasing)
 
 # --------------------------------------
 # SOURCES AND INCLUDES
