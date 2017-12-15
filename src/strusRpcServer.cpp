@@ -327,7 +327,7 @@ int main( int argc, const char* argv[])
 				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--port");
 				try
 				{
-					port = numstring_conv::touint( argv[argi], 0xFFff);
+					port = strus::numstring_conv::touint( argv[argi], 0xFFff);
 				}
 				catch (const std::runtime_error& err)
 				{
@@ -383,7 +383,7 @@ int main( int argc, const char* argv[])
 				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects number as argument"), "--threads");
 				try
 				{
-					nofThreads = numstring_conv::touint( argv[argi], std::numeric_limits<int>::max());
+					nofThreads = strus::numstring_conv::touint( argv[argi], std::numeric_limits<int>::max());
 				}
 				catch (const std::runtime_error& err)
 				{
