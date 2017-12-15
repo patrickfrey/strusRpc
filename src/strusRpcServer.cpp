@@ -19,9 +19,9 @@
 #include "strus/versionRpc.hpp"
 #include "strus/base/configParser.hpp"
 #include "strus/base/fileio.hpp"
+#include "strus/base/numstring.hpp"
 #include "private/errorUtils.hpp"
 #include "private/internationalization.hpp"
-#include "private/utils.hpp"
 #include "private/traceUtils.hpp"
 #include "rpcSerializer.hpp"
 extern "C" {
@@ -37,6 +37,7 @@ extern "C" {
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <limits>
 #include <netinet/in.h>
 
 #undef STRUS_LOWLEVEL_DEBUG
@@ -326,11 +327,7 @@ int main( int argc, const char* argv[])
 				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--port");
 				try
 				{
-					port = strus::utils::touint( argv[argi]);
-					if (port == 0 || port > 65535)
-					{
-						throw strus::runtime_error( "%s",  _TXT("value out of range"));
-					}
+					port = numstring_conv::touint( argv[argi], 0xFFff);
 				}
 				catch (const std::runtime_error& err)
 				{
@@ -386,7 +383,7 @@ int main( int argc, const char* argv[])
 				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects number as argument"), "--threads");
 				try
 				{
-					nofThreads = strus::utils::touint( argv[argi]);
+					nofThreads = numstring_conv::touint( argv[argi], std::numeric_limits<int>::max());
 				}
 				catch (const std::runtime_error& err)
 				{

@@ -7,7 +7,6 @@
  */
 #include "rpcSerializer.hpp"
 #include "hexdump.h"
-#include "private/utils.hpp"
 #include "private/internationalization.hpp"
 #include "strus/base/crc32.hpp"
 #include "rpcProtocolDefines.hpp"
