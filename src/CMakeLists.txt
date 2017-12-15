@@ -36,7 +36,7 @@ set( client_socket_source_files
 )
 
 include_directories(
-        "${Boost_INCLUDE_DIRS}"
+        ${Boost_INCLUDE_DIRS}
 	"${RPC_INCLUDE_DIRS}"
 	"${LIBUV_INCLUDE_DIRS}"
 	"${strusbase_INCLUDE_DIRS}"
@@ -49,7 +49,7 @@ include_directories(
 link_directories(
 	"${RPC_LIBRARY_DIRS}"
 	"${LIBUV_LIBRARY_DIRS}"
-        "${Boost_LIBRARY_DIRS}"
+        ${Boost_LIBRARY_DIRS}
 	"${strusbase_LIBRARY_DIRS}"
 	"${strus_LIBRARY_DIRS}"
 	"${strusanalyzer_LIBRARY_DIRS}"
