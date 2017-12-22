@@ -30,8 +30,8 @@ find_strus_package( trace )
 find_strus_package( module )
 
 set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
-configure_file( "${PROJECT_SOURCE_DIR}/include/strus/versionRpc.hpp.in"  "${PROJECT_SOURCE_DIR}/include/strus/versionRpc.hpp"  @ONLY )
-configure_file( "${PROJECT_SOURCE_DIR}/src/rpcProtocolDefines.hpp.in"  "${PROJECT_SOURCE_DIR}/src/rpcProtocolDefines.hpp"  @ONLY )
+configure_file( "${PROJECT_SOURCE_DIR}/include/strus/versionRpc.hpp.in"  "${CMAKE_CURRENT_BINARY_DIR}/include/strus/versionRpc.hpp"  @ONLY )
+configure_file( "${PROJECT_SOURCE_DIR}/src/rpcProtocolDefines.hpp.in"  "${CMAKE_CURRENT_BINARY_DIR}/src/rpcProtocolDefines.hpp"  @ONLY )
 configure_file( "${PROJECT_SOURCE_DIR}/dist/obs/deploy_to_obs.sh.in"  "${PROJECT_SOURCE_DIR}/dist/obs/deploy_to_obs.sh"  @ONLY )
 configure_file( "${PROJECT_SOURCE_DIR}/dist/archlinux/PKGBUILD.in"  "${PROJECT_SOURCE_DIR}/dist/archlinux/PKGBUILD"  @ONLY )
 configure_file( "${PROJECT_SOURCE_DIR}/dist/obs/strusrpc.dsc.in"  "${PROJECT_SOURCE_DIR}/dist/obs/strusrpc.dsc"  @ONLY )
@@ -63,7 +63,9 @@ endif()
 install(DIRECTORY include/strus
           DESTINATION include
           FILES_MATCHING PATTERN "*.hpp")
-
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/strus"
+          DESTINATION include
+          FILES_MATCHING PATTERN "*.hpp")
 if(NOT STRUS_ALL)
 include( cmake/standard_targets.cmake )
 endif()
