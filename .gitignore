@@ -53,8 +53,9 @@ dist/obs/strusrpc-xUbuntu_12.04.dsc
 dist/obs/strusrpc.dsc
 dist/redhat/strusrpc.spec
 
-# Suggested build directory
+# Suggested build directories
 build
+build_clang
 
 # Compiled Programs
 src/strusRpcServer
