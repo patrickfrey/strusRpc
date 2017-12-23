@@ -45,6 +45,7 @@ include_directories(
 	"${strustrace_INCLUDE_DIRS}"
 	"${strusmodule_INCLUDE_DIRS}"
 	"${CMAKE_CURRENT_BINARY_DIR}"
+	"${MAIN_SOURCE_DIR}"
 )
 
 link_directories(
