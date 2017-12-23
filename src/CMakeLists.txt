@@ -9,7 +9,7 @@ MESSAGE( STATUS "C compilation flags for libuv (remove C99): '${CMAKE_C_FLAGS}'"
 # --------------------------------------
 set( private_utils_source_files
 	traceUtils.cpp
-	internationalization.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/internationalization.cpp
 )
 
 set( server_source_files
