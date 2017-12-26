@@ -37,6 +37,7 @@ set( client_socket_source_files
 
 include_directories(
         ${Boost_INCLUDE_DIRS}
+        "${Intl_INCLUDE_DIRS}"
 	"${RPC_INCLUDE_DIRS}"
 	"${LIBUV_INCLUDE_DIRS}"
 	"${strusbase_INCLUDE_DIRS}"
