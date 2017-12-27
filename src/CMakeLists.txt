@@ -57,6 +57,7 @@ link_directories(
 	"${strus_LIBRARY_DIRS}"
 	"${strusanalyzer_LIBRARY_DIRS}"
 	"${strusmodule_LIBRARY_DIRS}"
+	${Intl_LIBRARIES}
 )
 
 
