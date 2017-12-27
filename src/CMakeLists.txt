@@ -57,7 +57,6 @@ link_directories(
 	"${strus_LIBRARY_DIRS}"
 	"${strusanalyzer_LIBRARY_DIRS}"
 	"${strusmodule_LIBRARY_DIRS}"
-	${Intl_LIBRARIES}
 )
 
 
@@ -65,7 +64,7 @@ link_directories(
 # LIBRARY
 # -------------------------------------------
 add_library( strusrpc_private_utils STATIC ${private_utils_source_files} )
-target_link_libraries( strusrpc_private_utils  "${Boost_LIBRARIES}" )
+target_link_libraries( strusrpc_private_utils  "${Boost_LIBRARIES}" ${Intl_LIBRARIES} )
 set_property( TARGET strusrpc_private_utils PROPERTY POSITION_INDEPENDENT_CODE TRUE )
 
 add_library( strus_rpc_client_socket SHARED ${client_socket_source_files} libstrus_rpc_client_socket.cpp )
