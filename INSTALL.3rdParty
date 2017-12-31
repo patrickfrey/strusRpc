@@ -1,8 +1,0 @@
-Library dependencies of strusRpc:
-	- boost (headers and -lboost_system)
-	- libuv (included in strusRpc)
-
-Ubuntu:
-	sudo apt-get install liboost-all-dev
-
-
