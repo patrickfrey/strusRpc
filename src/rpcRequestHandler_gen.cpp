@@ -3038,10 +3038,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryAnalyzerContextConst::Method_putField:
 		{
 			RpcSerializer msg;
-			unsigned int p1;
+			int p1;
 			std::string p2;
 			std::string p3;
-			p1 = serializedMsg.unpackUint();
+			p1 = serializedMsg.unpackInt();
 			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackString();
 			obj->putField(p1,p2,p3);
@@ -3058,14 +3058,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryAnalyzerContextConst::Method_groupElements:
 		{
 			RpcSerializer msg;
-			unsigned int p1;
-			std::vector<unsigned int> p2;
+			int p1;
+			std::vector<int> p2;
 			QueryAnalyzerContextInterface::GroupBy p3;
 			bool p4;
-			p1 = serializedMsg.unpackUint();
+			p1 = serializedMsg.unpackInt();
 			std::size_t n2 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n2; ++ii) {
-				unsigned int ee = serializedMsg.unpackUint();
+				int ee = serializedMsg.unpackInt();
 				p2.push_back( ee);
 			}
 			p3 = serializedMsg.unpackAnalyzerGroupBy();

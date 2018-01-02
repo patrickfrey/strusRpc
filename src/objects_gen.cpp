@@ -3371,14 +3371,14 @@ QueryAnalyzerContextImpl::~QueryAnalyzerContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void QueryAnalyzerContextImpl::putField( unsigned int p1, const std::string& p2, const std::string& p3)
+void QueryAnalyzerContextImpl::putField( int p1, const std::string& p2, const std::string& p3)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_putField);
-	msg.packUint( p1);
+	msg.packInt( p1);
 	msg.packString( p2);
 	msg.packString( p3);
 	msg.packCrc32();
@@ -3392,17 +3392,17 @@ try
 }
 }
 
-void QueryAnalyzerContextImpl::groupElements( unsigned int p1, const std::vector<unsigned int>& p2, const QueryAnalyzerContextInterface::GroupBy& p3, bool p4)
+void QueryAnalyzerContextImpl::groupElements( int p1, const std::vector<int>& p2, const QueryAnalyzerContextInterface::GroupBy& p3, bool p4)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_groupElements);
-	msg.packUint( p1);
+	msg.packInt( p1);
 	msg.packSize( p2.size());
 	for (unsigned int ii=0; ii < p2.size(); ++ii) {
-		msg.packUint( p2[ii]);
+		msg.packInt( p2[ii]);
 	}
 	msg.packAnalyzerGroupBy( p3);
 	msg.packBool( p4);

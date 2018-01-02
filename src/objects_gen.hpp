@@ -627,8 +627,8 @@ public:
 	QueryAnalyzerContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzerContext, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void putField( unsigned int p1, const std::string& p2, const std::string& p3);
-	virtual void groupElements( unsigned int p1, const std::vector<unsigned int>& p2, const QueryAnalyzerContextInterface::GroupBy& p3, bool p4);
+	virtual void putField( int p1, const std::string& p2, const std::string& p3);
+	virtual void groupElements( int p1, const std::vector<int>& p2, const QueryAnalyzerContextInterface::GroupBy& p3, bool p4);
 	virtual analyzer::QueryTermExpression analyze( );
 };
 
