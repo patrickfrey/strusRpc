@@ -34,10 +34,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AclReaderImpl::skipDoc");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "AclReaderImpl::skipDoc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AclReaderImpl::skipDoc", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "AclReaderImpl::skipDoc", err.what());
 	return void();
 }
 }
@@ -61,10 +61,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AclReaderImpl::getReadAccessList");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "AclReaderImpl::getReadAccessList");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AclReaderImpl::getReadAccessList", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "AclReaderImpl::getReadAccessList", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -94,10 +94,10 @@ try
 	NumericVariant p0 = serializedMsg.unpackNumericVariant();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AggregatorFunctionInstanceImpl::evaluate");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "AggregatorFunctionInstanceImpl::evaluate");
 	return NumericVariant();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AggregatorFunctionInstanceImpl::evaluate", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "AggregatorFunctionInstanceImpl::evaluate", err.what());
 	return NumericVariant();
 }
 }
@@ -131,10 +131,10 @@ try
 	AggregatorFunctionInstanceInterface* p0 = new AggregatorFunctionInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AggregatorFunctionImpl::createInstance");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "AggregatorFunctionImpl::createInstance");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AggregatorFunctionImpl::createInstance", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "AggregatorFunctionImpl::createInstance", err.what());
 	return 0;
 }
 }
@@ -153,10 +153,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AggregatorFunctionImpl::getDescription");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "AggregatorFunctionImpl::getDescription");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AggregatorFunctionImpl::getDescription", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "AggregatorFunctionImpl::getDescription", err.what());
 	return 0;
 }
 }
@@ -187,10 +187,10 @@ try
 	const TextProcessorInterface* p0 = (const TextProcessorImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::getTextProcessor");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::getTextProcessor");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AnalyzerObjectBuilderImpl::getTextProcessor", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "AnalyzerObjectBuilderImpl::getTextProcessor", err.what());
 	return 0;
 }
 }
@@ -214,10 +214,10 @@ try
 	DocumentAnalyzerInterface* p0 = new DocumentAnalyzerImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::createDocumentAnalyzer");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::createDocumentAnalyzer");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AnalyzerObjectBuilderImpl::createDocumentAnalyzer", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "AnalyzerObjectBuilderImpl::createDocumentAnalyzer", err.what());
 	return 0;
 }
 }
@@ -237,10 +237,10 @@ try
 	QueryAnalyzerInterface* p0 = new QueryAnalyzerImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::createQueryAnalyzer");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::createQueryAnalyzer");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AnalyzerObjectBuilderImpl::createQueryAnalyzer", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "AnalyzerObjectBuilderImpl::createQueryAnalyzer", err.what());
 	return 0;
 }
 }
@@ -270,10 +270,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AttributeReaderImpl::elementHandle");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "AttributeReaderImpl::elementHandle");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AttributeReaderImpl::elementHandle", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "AttributeReaderImpl::elementHandle", err.what());
 	return 0;
 }
 }
@@ -289,10 +289,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AttributeReaderImpl::skipDoc");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "AttributeReaderImpl::skipDoc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AttributeReaderImpl::skipDoc", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "AttributeReaderImpl::skipDoc", err.what());
 	return void();
 }
 }
@@ -312,10 +312,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AttributeReaderImpl::getValue");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "AttributeReaderImpl::getValue");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AttributeReaderImpl::getValue", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "AttributeReaderImpl::getValue", err.what());
 	return std::string();
 }
 }
@@ -339,10 +339,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "AttributeReaderImpl::getNames");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "AttributeReaderImpl::getNames");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "AttributeReaderImpl::getNames", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "AttributeReaderImpl::getNames", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -378,10 +378,10 @@ try
 	p3 = (const char*) ctx()->constConstructor()->get( bp3, p4);
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseBackupCursorImpl::fetch");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseBackupCursorImpl::fetch");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseBackupCursorImpl::fetch", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseBackupCursorImpl::fetch", err.what());
 	return false;
 }
 }
@@ -411,10 +411,10 @@ try
 	DatabaseTransactionInterface* p0 = new DatabaseTransactionImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseClientImpl::createTransaction");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseClientImpl::createTransaction");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseClientImpl::createTransaction", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseClientImpl::createTransaction", err.what());
 	return 0;
 }
 }
@@ -435,10 +435,10 @@ try
 	DatabaseCursorInterface* p0 = new DatabaseCursorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseClientImpl::createCursor");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseClientImpl::createCursor");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseClientImpl::createCursor", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseClientImpl::createCursor", err.what());
 	return 0;
 }
 }
@@ -458,10 +458,10 @@ try
 	DatabaseBackupCursorInterface* p0 = new DatabaseBackupCursorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseClientImpl::createBackupCursor");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseClientImpl::createBackupCursor");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseClientImpl::createBackupCursor", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseClientImpl::createBackupCursor", err.what());
 	return 0;
 }
 }
@@ -478,10 +478,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseClientImpl::writeImm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseClientImpl::writeImm");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseClientImpl::writeImm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseClientImpl::writeImm", err.what());
 	return void();
 }
 }
@@ -497,10 +497,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseClientImpl::removeImm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseClientImpl::removeImm");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseClientImpl::removeImm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseClientImpl::removeImm", err.what());
 	return void();
 }
 }
@@ -522,10 +522,10 @@ try
 	p3 = serializedMsg.unpackString();
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseClientImpl::readValue");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseClientImpl::readValue");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseClientImpl::readValue", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseClientImpl::readValue", err.what());
 	return false;
 }
 }
@@ -541,10 +541,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseClientImpl::close");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseClientImpl::close");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseClientImpl::close", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseClientImpl::close", err.what());
 	return void();
 }
 }
@@ -563,10 +563,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseClientImpl::config");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseClientImpl::config");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseClientImpl::config", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseClientImpl::config", err.what());
 	return std::string();
 }
 }
@@ -599,10 +599,10 @@ try
 	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekUpperBound");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekUpperBound");
 	return DatabaseCursorInterface::Slice();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekUpperBound", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekUpperBound", err.what());
 	return DatabaseCursorInterface::Slice();
 }
 }
@@ -624,10 +624,10 @@ try
 	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekUpperBoundRestricted");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekUpperBoundRestricted");
 	return DatabaseCursorInterface::Slice();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekUpperBoundRestricted", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekUpperBoundRestricted", err.what());
 	return DatabaseCursorInterface::Slice();
 }
 }
@@ -649,10 +649,10 @@ try
 	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekFirst");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekFirst");
 	return DatabaseCursorInterface::Slice();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekFirst", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekFirst", err.what());
 	return DatabaseCursorInterface::Slice();
 }
 }
@@ -674,10 +674,10 @@ try
 	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekLast");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekLast");
 	return DatabaseCursorInterface::Slice();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekLast", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekLast", err.what());
 	return DatabaseCursorInterface::Slice();
 }
 }
@@ -698,10 +698,10 @@ try
 	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekNext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekNext");
 	return DatabaseCursorInterface::Slice();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekNext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekNext", err.what());
 	return DatabaseCursorInterface::Slice();
 }
 }
@@ -722,10 +722,10 @@ try
 	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekPrev");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::seekPrev");
 	return DatabaseCursorInterface::Slice();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekPrev", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseCursorImpl::seekPrev", err.what());
 	return DatabaseCursorInterface::Slice();
 }
 }
@@ -745,10 +745,10 @@ try
 	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::key");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::key");
 	return DatabaseCursorInterface::Slice();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseCursorImpl::key", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseCursorImpl::key", err.what());
 	return DatabaseCursorInterface::Slice();
 }
 }
@@ -768,10 +768,10 @@ try
 	DatabaseCursorInterface::Slice p0 = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice0.ptr(), slice0.size()), slice0.size());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::value");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseCursorImpl::value");
 	return DatabaseCursorInterface::Slice();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseCursorImpl::value", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseCursorImpl::value", err.what());
 	return DatabaseCursorInterface::Slice();
 }
 }
@@ -801,10 +801,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseImpl::exists");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseImpl::exists");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseImpl::exists", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseImpl::exists", err.what());
 	return false;
 }
 }
@@ -825,10 +825,10 @@ try
 	DatabaseClientInterface* p0 = new DatabaseClientImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseImpl::createClient");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseImpl::createClient");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseImpl::createClient", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseImpl::createClient", err.what());
 	return 0;
 }
 }
@@ -848,10 +848,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseImpl::createDatabase");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseImpl::createDatabase");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseImpl::createDatabase", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseImpl::createDatabase", err.what());
 	return false;
 }
 }
@@ -874,10 +874,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseImpl::restoreDatabase");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseImpl::restoreDatabase");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseImpl::restoreDatabase", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseImpl::restoreDatabase", err.what());
 	return false;
 }
 }
@@ -897,10 +897,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseImpl::destroyDatabase");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseImpl::destroyDatabase");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseImpl::destroyDatabase", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseImpl::destroyDatabase", err.what());
 	return false;
 }
 }
@@ -920,10 +920,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseImpl::getConfigDescription");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseImpl::getConfigDescription");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseImpl::getConfigDescription", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseImpl::getConfigDescription", err.what());
 	return 0;
 }
 }
@@ -943,10 +943,10 @@ try
 	const char** p0 =  ctx()->constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseImpl::getConfigParameters");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseImpl::getConfigParameters");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseImpl::getConfigParameters", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseImpl::getConfigParameters", err.what());
 	return 0;
 }
 }
@@ -977,10 +977,10 @@ try
 	DatabaseCursorInterface* p0 = new DatabaseCursorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseTransactionImpl::createCursor");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseTransactionImpl::createCursor");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::createCursor", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::createCursor", err.what());
 	return 0;
 }
 }
@@ -997,10 +997,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseTransactionImpl::write");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseTransactionImpl::write");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::write", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::write", err.what());
 	return void();
 }
 }
@@ -1016,10 +1016,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseTransactionImpl::remove");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseTransactionImpl::remove");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::remove", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::remove", err.what());
 	return void();
 }
 }
@@ -1035,10 +1035,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseTransactionImpl::removeSubTree");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseTransactionImpl::removeSubTree");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::removeSubTree", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::removeSubTree", err.what());
 	return void();
 }
 }
@@ -1057,10 +1057,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseTransactionImpl::commit");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseTransactionImpl::commit");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::commit", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::commit", err.what());
 	return false;
 }
 }
@@ -1075,10 +1075,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DatabaseTransactionImpl::rollback");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DatabaseTransactionImpl::rollback");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::rollback", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DatabaseTransactionImpl::rollback", err.what());
 	return void();
 }
 }
@@ -1105,10 +1105,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerContextImpl::putInput");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerContextImpl::putInput");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerContextImpl::putInput", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerContextImpl::putInput", err.what());
 	return void();
 }
 }
@@ -1128,10 +1128,10 @@ try
 	p1 = serializedMsg.unpackAnalyzerDocument();
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerContextImpl::analyzeNext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerContextImpl::analyzeNext");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerContextImpl::analyzeNext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerContextImpl::analyzeNext", err.what());
 	return false;
 }
 }
@@ -1176,10 +1176,10 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addSearchIndexFeature");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addSearchIndexFeature");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addSearchIndexFeature", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addSearchIndexFeature", err.what());
 	return void();
 }
 }
@@ -1214,10 +1214,10 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addForwardIndexFeature");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addForwardIndexFeature");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addForwardIndexFeature", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addForwardIndexFeature", err.what());
 	return void();
 }
 }
@@ -1251,10 +1251,10 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineMetaData");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineMetaData");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineMetaData", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineMetaData", err.what());
 	return void();
 }
 }
@@ -1276,10 +1276,10 @@ try
 	done_2->release();
 	delete p2;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineAggregatedMetaData");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineAggregatedMetaData");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineAggregatedMetaData", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineAggregatedMetaData", err.what());
 	return void();
 }
 }
@@ -1313,10 +1313,10 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineAttribute");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineAttribute");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineAttribute", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineAttribute", err.what());
 	return void();
 }
 }
@@ -1333,10 +1333,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineSubDocument");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineSubDocument");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineSubDocument", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineSubDocument", err.what());
 	return void();
 }
 }
@@ -1353,10 +1353,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineSubContent");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineSubContent");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineSubContent", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineSubContent", err.what());
 	return void();
 }
 }
@@ -1390,10 +1390,10 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addPatternLexem");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addPatternLexem");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addPatternLexem", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addPatternLexem", err.what());
 	return void();
 }
 }
@@ -1421,10 +1421,10 @@ try
 	done_3->release();
 	delete p3;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::definePatternMatcherPostProc");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::definePatternMatcherPostProc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::definePatternMatcherPostProc", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::definePatternMatcherPostProc", err.what());
 	return void();
 }
 }
@@ -1456,10 +1456,10 @@ try
 	done_3->release();
 	delete p3;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::definePatternMatcherPreProc");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::definePatternMatcherPreProc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::definePatternMatcherPreProc", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::definePatternMatcherPreProc", err.what());
 	return void();
 }
 }
@@ -1488,10 +1488,10 @@ try
 		delete p3[ai_3];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addSearchIndexFeatureFromPatternMatch");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addSearchIndexFeatureFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addSearchIndexFeatureFromPatternMatch", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addSearchIndexFeatureFromPatternMatch", err.what());
 	return void();
 }
 }
@@ -1520,10 +1520,10 @@ try
 		delete p3[ai_3];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addForwardIndexFeatureFromPatternMatch");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addForwardIndexFeatureFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addForwardIndexFeatureFromPatternMatch", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addForwardIndexFeatureFromPatternMatch", err.what());
 	return void();
 }
 }
@@ -1551,10 +1551,10 @@ try
 		delete p3[ai_3];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineMetaDataFromPatternMatch");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineMetaDataFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineMetaDataFromPatternMatch", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineMetaDataFromPatternMatch", err.what());
 	return void();
 }
 }
@@ -1582,10 +1582,10 @@ try
 		delete p3[ai_3];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineAttributeFromPatternMatch");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineAttributeFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineAttributeFromPatternMatch", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineAttributeFromPatternMatch", err.what());
 	return void();
 }
 }
@@ -1606,10 +1606,10 @@ try
 	analyzer::Document p0 = serializedMsg.unpackAnalyzerDocument();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::analyze");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::analyze");
 	return analyzer::Document();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::analyze", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::analyze", err.what());
 	return analyzer::Document();
 }
 }
@@ -1630,10 +1630,10 @@ try
 	DocumentAnalyzerContextInterface* p0 = new DocumentAnalyzerContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::createContext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::createContext");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::createContext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::createContext", err.what());
 	return 0;
 }
 }
@@ -1665,10 +1665,10 @@ try
 	p1 = serializedMsg.unpackDocumentClass();
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentClassDetectorImpl::detect");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentClassDetectorImpl::detect");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentClassDetectorImpl::detect", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentClassDetectorImpl::detect", err.what());
 	return false;
 }
 }
@@ -1698,10 +1698,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentTermIteratorImpl::skipDoc");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentTermIteratorImpl::skipDoc");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentTermIteratorImpl::skipDoc", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentTermIteratorImpl::skipDoc", err.what());
 	return 0;
 }
 }
@@ -1721,10 +1721,10 @@ try
 	p1 = serializedMsg.unpackDocumentTermIteratorTerm();
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentTermIteratorImpl::nextTerm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentTermIteratorImpl::nextTerm");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentTermIteratorImpl::nextTerm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentTermIteratorImpl::nextTerm", err.what());
 	return false;
 }
 }
@@ -1744,10 +1744,10 @@ try
 	unsigned int p0 = serializedMsg.unpackUint();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentTermIteratorImpl::termDocumentFrequency");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentTermIteratorImpl::termDocumentFrequency");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentTermIteratorImpl::termDocumentFrequency", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentTermIteratorImpl::termDocumentFrequency", err.what());
 	return 0;
 }
 }
@@ -1767,10 +1767,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "DocumentTermIteratorImpl::termValue");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "DocumentTermIteratorImpl::termValue");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "DocumentTermIteratorImpl::termValue", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "DocumentTermIteratorImpl::termValue", err.what());
 	return std::string();
 }
 }
@@ -1796,10 +1796,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ForwardIteratorImpl::skipDoc");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ForwardIteratorImpl::skipDoc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ForwardIteratorImpl::skipDoc", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ForwardIteratorImpl::skipDoc", err.what());
 	return void();
 }
 }
@@ -1819,10 +1819,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ForwardIteratorImpl::skipPos");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ForwardIteratorImpl::skipPos");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ForwardIteratorImpl::skipPos", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ForwardIteratorImpl::skipPos", err.what());
 	return 0;
 }
 }
@@ -1842,10 +1842,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ForwardIteratorImpl::fetch");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ForwardIteratorImpl::fetch");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ForwardIteratorImpl::fetch", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ForwardIteratorImpl::fetch", err.what());
 	return std::string();
 }
 }
@@ -1875,10 +1875,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "InvAclIteratorImpl::skipDoc");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "InvAclIteratorImpl::skipDoc");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "InvAclIteratorImpl::skipDoc", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "InvAclIteratorImpl::skipDoc", err.what());
 	return 0;
 }
 }
@@ -1908,10 +1908,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::elementHandle");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::elementHandle");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataReaderImpl::elementHandle", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "MetaDataReaderImpl::elementHandle", err.what());
 	return 0;
 }
 }
@@ -1930,10 +1930,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::nofElements");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::nofElements");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataReaderImpl::nofElements", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "MetaDataReaderImpl::nofElements", err.what());
 	return 0;
 }
 }
@@ -1949,10 +1949,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::skipDoc");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::skipDoc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataReaderImpl::skipDoc", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "MetaDataReaderImpl::skipDoc", err.what());
 	return void();
 }
 }
@@ -1972,10 +1972,10 @@ try
 	NumericVariant p0 = serializedMsg.unpackNumericVariant();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::getValue");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::getValue");
 	return NumericVariant();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataReaderImpl::getValue", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "MetaDataReaderImpl::getValue", err.what());
 	return NumericVariant();
 }
 }
@@ -1995,10 +1995,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::getType");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::getType");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataReaderImpl::getType", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "MetaDataReaderImpl::getType", err.what());
 	return 0;
 }
 }
@@ -2018,10 +2018,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::getName");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::getName");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataReaderImpl::getName", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "MetaDataReaderImpl::getName", err.what());
 	return 0;
 }
 }
@@ -2045,10 +2045,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::getNames");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "MetaDataReaderImpl::getNames");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataReaderImpl::getNames", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "MetaDataReaderImpl::getNames", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -2078,10 +2078,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataRestrictionInstanceImpl::match");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "MetaDataRestrictionInstanceImpl::match");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataRestrictionInstanceImpl::match", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "MetaDataRestrictionInstanceImpl::match", err.what());
 	return false;
 }
 }
@@ -2110,10 +2110,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataRestrictionImpl::addCondition");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "MetaDataRestrictionImpl::addCondition");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataRestrictionImpl::addCondition", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "MetaDataRestrictionImpl::addCondition", err.what());
 	return void();
 }
 }
@@ -2133,10 +2133,10 @@ try
 	MetaDataRestrictionInstanceInterface* p0 = new MetaDataRestrictionInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataRestrictionImpl::createInstance");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "MetaDataRestrictionImpl::createInstance");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataRestrictionImpl::createInstance", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "MetaDataRestrictionImpl::createInstance", err.what());
 	return 0;
 }
 }
@@ -2155,10 +2155,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "MetaDataRestrictionImpl::tostring");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "MetaDataRestrictionImpl::tostring");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "MetaDataRestrictionImpl::tostring", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "MetaDataRestrictionImpl::tostring", err.what());
 	return std::string();
 }
 }
@@ -2188,10 +2188,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "NormalizerFunctionInstanceImpl::normalize");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "NormalizerFunctionInstanceImpl::normalize");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "NormalizerFunctionInstanceImpl::normalize", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "NormalizerFunctionInstanceImpl::normalize", err.what());
 	return std::string();
 }
 }
@@ -2228,10 +2228,10 @@ try
 	NormalizerFunctionInstanceInterface* p0 = new NormalizerFunctionInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "NormalizerFunctionImpl::createInstance");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "NormalizerFunctionImpl::createInstance");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "NormalizerFunctionImpl::createInstance", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "NormalizerFunctionImpl::createInstance", err.what());
 	return 0;
 }
 }
@@ -2250,10 +2250,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "NormalizerFunctionImpl::getDescription");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "NormalizerFunctionImpl::getDescription");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "NormalizerFunctionImpl::getDescription", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "NormalizerFunctionImpl::getDescription", err.what());
 	return 0;
 }
 }
@@ -2288,10 +2288,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerContextImpl::match");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerContextImpl::match");
 	return std::vector<analyzer::PatternLexem>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerContextImpl::match", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerContextImpl::match", err.what());
 	return std::vector<analyzer::PatternLexem>();
 }
 }
@@ -2306,10 +2306,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerContextImpl::reset");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerContextImpl::reset");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerContextImpl::reset", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerContextImpl::reset", err.what());
 	return void();
 }
 }
@@ -2336,10 +2336,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::defineOption");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::defineOption");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::defineOption", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::defineOption", err.what());
 	return void();
 }
 }
@@ -2356,10 +2356,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::defineLexemName");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::defineLexemName");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::defineLexemName", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::defineLexemName", err.what());
 	return void();
 }
 }
@@ -2379,10 +2379,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::defineLexem");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::defineLexem");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::defineLexem", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::defineLexem", err.what());
 	return void();
 }
 }
@@ -2400,10 +2400,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::defineSymbol");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::defineSymbol");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::defineSymbol", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::defineSymbol", err.what());
 	return void();
 }
 }
@@ -2424,10 +2424,10 @@ try
 	unsigned int p0 = serializedMsg.unpackUint();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::getSymbol");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::getSymbol");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::getSymbol", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::getSymbol", err.what());
 	return 0;
 }
 }
@@ -2447,10 +2447,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::getLexemName");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::getLexemName");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::getLexemName", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::getLexemName", err.what());
 	return 0;
 }
 }
@@ -2469,10 +2469,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::compile");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::compile");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::compile", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::compile", err.what());
 	return false;
 }
 }
@@ -2492,10 +2492,10 @@ try
 	PatternLexerContextInterface* p0 = new PatternLexerContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::createContext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::createContext");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::createContext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::createContext", err.what());
 	return 0;
 }
 }
@@ -2529,10 +2529,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerImpl::getCompileOptionNames");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerImpl::getCompileOptionNames");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerImpl::getCompileOptionNames", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerImpl::getCompileOptionNames", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -2552,10 +2552,10 @@ try
 	PatternLexerInstanceInterface* p0 = new PatternLexerInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerImpl::createInstance");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerImpl::createInstance");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerImpl::createInstance", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerImpl::createInstance", err.what());
 	return 0;
 }
 }
@@ -2574,10 +2574,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternLexerImpl::getDescription");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternLexerImpl::getDescription");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternLexerImpl::getDescription", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternLexerImpl::getDescription", err.what());
 	return 0;
 }
 }
@@ -2603,10 +2603,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherContextImpl::putInput");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherContextImpl::putInput");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherContextImpl::putInput", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherContextImpl::putInput", err.what());
 	return void();
 }
 }
@@ -2630,10 +2630,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherContextImpl::fetchResults");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherContextImpl::fetchResults");
 	return std::vector<analyzer::PatternMatcherResult>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherContextImpl::fetchResults", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherContextImpl::fetchResults", err.what());
 	return std::vector<analyzer::PatternMatcherResult>();
 }
 }
@@ -2652,10 +2652,10 @@ try
 	analyzer::PatternMatcherStatistics p0 = serializedMsg.unpackAnalyzerPatternMatcherStatistics();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherContextImpl::getStatistics");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherContextImpl::getStatistics");
 	return analyzer::PatternMatcherStatistics();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherContextImpl::getStatistics", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherContextImpl::getStatistics", err.what());
 	return analyzer::PatternMatcherStatistics();
 }
 }
@@ -2670,10 +2670,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherContextImpl::reset");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherContextImpl::reset");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherContextImpl::reset", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherContextImpl::reset", err.what());
 	return void();
 }
 }
@@ -2700,10 +2700,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::defineOption");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::defineOption");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::defineOption", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::defineOption", err.what());
 	return void();
 }
 }
@@ -2720,10 +2720,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::defineTermFrequency");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::defineTermFrequency");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::defineTermFrequency", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::defineTermFrequency", err.what());
 	return void();
 }
 }
@@ -2739,10 +2739,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::pushTerm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::pushTerm");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::pushTerm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::pushTerm", err.what());
 	return void();
 }
 }
@@ -2761,10 +2761,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::pushExpression");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::pushExpression");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::pushExpression", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::pushExpression", err.what());
 	return void();
 }
 }
@@ -2780,10 +2780,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::pushPattern");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::pushPattern");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::pushPattern", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::pushPattern", err.what());
 	return void();
 }
 }
@@ -2799,10 +2799,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::attachVariable");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::attachVariable");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::attachVariable", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::attachVariable", err.what());
 	return void();
 }
 }
@@ -2819,10 +2819,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::definePattern");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::definePattern");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::definePattern", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::definePattern", err.what());
 	return void();
 }
 }
@@ -2841,10 +2841,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::compile");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::compile");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::compile", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::compile", err.what());
 	return false;
 }
 }
@@ -2864,10 +2864,10 @@ try
 	PatternMatcherContextInterface* p0 = new PatternMatcherContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::createContext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::createContext");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::createContext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::createContext", err.what());
 	return 0;
 }
 }
@@ -2901,10 +2901,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherImpl::getCompileOptionNames");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherImpl::getCompileOptionNames");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherImpl::getCompileOptionNames", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherImpl::getCompileOptionNames", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -2924,10 +2924,10 @@ try
 	PatternMatcherInstanceInterface* p0 = new PatternMatcherInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherImpl::createInstance");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherImpl::createInstance");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherImpl::createInstance", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherImpl::createInstance", err.what());
 	return 0;
 }
 }
@@ -2946,10 +2946,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternMatcherImpl::getDescription");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternMatcherImpl::getDescription");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternMatcherImpl::getDescription", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternMatcherImpl::getDescription", err.what());
 	return 0;
 }
 }
@@ -2976,10 +2976,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::defineLexem");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::defineLexem");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::defineLexem", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::defineLexem", err.what());
 	return void();
 }
 }
@@ -2997,10 +2997,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::defineSymbol");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::defineSymbol");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::defineSymbol", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::defineSymbol", err.what());
 	return void();
 }
 }
@@ -3020,10 +3020,10 @@ try
 	unsigned int p0 = serializedMsg.unpackUint();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::getLexem");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::getLexem");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::getLexem", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::getLexem", err.what());
 	return 0;
 }
 }
@@ -3047,10 +3047,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::lexemTypes");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::lexemTypes");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::lexemTypes", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::lexemTypes", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -3071,10 +3071,10 @@ try
 	unsigned int p0 = serializedMsg.unpackUint();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::getSymbol");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::getSymbol");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::getSymbol", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::getSymbol", err.what());
 	return 0;
 }
 }
@@ -3104,10 +3104,10 @@ try
 	PatternTermFeederInstanceInterface* p0 = new PatternTermFeederInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PatternTermFeederImpl::createInstance");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PatternTermFeederImpl::createInstance");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PatternTermFeederImpl::createInstance", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PatternTermFeederImpl::createInstance", err.what());
 	return 0;
 }
 }
@@ -3137,10 +3137,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingIteratorImpl::skipDoc");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PostingIteratorImpl::skipDoc");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::skipDoc", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PostingIteratorImpl::skipDoc", err.what());
 	return 0;
 }
 }
@@ -3160,10 +3160,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingIteratorImpl::skipDocCandidate");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PostingIteratorImpl::skipDocCandidate");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::skipDocCandidate", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PostingIteratorImpl::skipDocCandidate", err.what());
 	return 0;
 }
 }
@@ -3183,10 +3183,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingIteratorImpl::skipPos");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PostingIteratorImpl::skipPos");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::skipPos", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PostingIteratorImpl::skipPos", err.what());
 	return 0;
 }
 }
@@ -3205,10 +3205,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingIteratorImpl::featureid");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PostingIteratorImpl::featureid");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::featureid", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PostingIteratorImpl::featureid", err.what());
 	return 0;
 }
 }
@@ -3227,10 +3227,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingIteratorImpl::documentFrequency");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PostingIteratorImpl::documentFrequency");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::documentFrequency", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PostingIteratorImpl::documentFrequency", err.what());
 	return 0;
 }
 }
@@ -3249,10 +3249,10 @@ try
 	unsigned int p0 = serializedMsg.unpackUint();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingIteratorImpl::frequency");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PostingIteratorImpl::frequency");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::frequency", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PostingIteratorImpl::frequency", err.what());
 	return 0;
 }
 }
@@ -3271,10 +3271,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingIteratorImpl::docno");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PostingIteratorImpl::docno");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::docno", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PostingIteratorImpl::docno", err.what());
 	return 0;
 }
 }
@@ -3293,10 +3293,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingIteratorImpl::posno");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PostingIteratorImpl::posno");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::posno", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PostingIteratorImpl::posno", err.what());
 	return 0;
 }
 }
@@ -3315,10 +3315,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingIteratorImpl::length");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PostingIteratorImpl::length");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingIteratorImpl::length", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PostingIteratorImpl::length", err.what());
 	return 0;
 }
 }
@@ -3335,7 +3335,7 @@ PostingJoinOperatorImpl::~PostingJoinOperatorImpl()
 
 PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2, unsigned int p3) const
 {
-	errorhnd()->report(_TXT("the method '%s' is not implemented for RPC"),"createResultIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseNotImplemented), _TXT("the method '%s' is not implemented for RPC"),"createResultIterator");
 	return 0;
 }
 
@@ -3353,10 +3353,10 @@ try
 	PostingJoinOperatorInterface::Description p0 = serializedMsg.unpackPostingJoinOperatorDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "PostingJoinOperatorImpl::getDescription");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "PostingJoinOperatorImpl::getDescription");
 	return PostingJoinOperatorInterface::Description();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "PostingJoinOperatorImpl::getDescription", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "PostingJoinOperatorImpl::getDescription", err.what());
 	return PostingJoinOperatorInterface::Description();
 }
 }
@@ -3384,10 +3384,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerContextImpl::putField");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryAnalyzerContextImpl::putField");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerContextImpl::putField", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryAnalyzerContextImpl::putField", err.what());
 	return void();
 }
 }
@@ -3409,10 +3409,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerContextImpl::groupElements");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryAnalyzerContextImpl::groupElements");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerContextImpl::groupElements", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryAnalyzerContextImpl::groupElements", err.what());
 	return void();
 }
 }
@@ -3431,10 +3431,10 @@ try
 	analyzer::QueryTermExpression p0 = serializedMsg.unpackAnalyzerQueryTermExpression();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerContextImpl::analyze");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryAnalyzerContextImpl::analyze");
 	return analyzer::QueryTermExpression();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerContextImpl::analyze", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryAnalyzerContextImpl::analyze", err.what());
 	return analyzer::QueryTermExpression();
 }
 }
@@ -3478,10 +3478,10 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addElement");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addElement", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addElement", err.what());
 	return void();
 }
 }
@@ -3515,10 +3515,10 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addPatternLexem");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addPatternLexem");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addPatternLexem", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addPatternLexem", err.what());
 	return void();
 }
 }
@@ -3546,10 +3546,10 @@ try
 	done_3->release();
 	delete p3;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::definePatternMatcherPostProc");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::definePatternMatcherPostProc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::definePatternMatcherPostProc", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::definePatternMatcherPostProc", err.what());
 	return void();
 }
 }
@@ -3581,10 +3581,10 @@ try
 	done_3->release();
 	delete p3;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::definePatternMatcherPreProc");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::definePatternMatcherPreProc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::definePatternMatcherPreProc", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::definePatternMatcherPreProc", err.what());
 	return void();
 }
 }
@@ -3612,10 +3612,10 @@ try
 		delete p3[ai_3];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addElementFromPatternMatch");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addElementFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addElementFromPatternMatch", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addElementFromPatternMatch", err.what());
 	return void();
 }
 }
@@ -3635,10 +3635,10 @@ try
 	QueryAnalyzerContextInterface* p0 = new QueryAnalyzerContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::createContext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::createContext");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::createContext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::createContext", err.what());
 	return 0;
 }
 }
@@ -3666,10 +3666,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryEvalImpl::addTerm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryEvalImpl::addTerm");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryEvalImpl::addTerm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryEvalImpl::addTerm", err.what());
 	return void();
 }
 }
@@ -3685,10 +3685,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryEvalImpl::addSelectionFeature");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryEvalImpl::addSelectionFeature");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryEvalImpl::addSelectionFeature", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryEvalImpl::addSelectionFeature", err.what());
 	return void();
 }
 }
@@ -3704,10 +3704,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryEvalImpl::addRestrictionFeature");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryEvalImpl::addRestrictionFeature");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryEvalImpl::addRestrictionFeature", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryEvalImpl::addRestrictionFeature", err.what());
 	return void();
 }
 }
@@ -3723,10 +3723,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryEvalImpl::addExclusionFeature");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryEvalImpl::addExclusionFeature");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryEvalImpl::addExclusionFeature", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryEvalImpl::addExclusionFeature", err.what());
 	return void();
 }
 }
@@ -3753,10 +3753,10 @@ try
 	done_2->release();
 	delete p2;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryEvalImpl::addSummarizerFunction");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryEvalImpl::addSummarizerFunction");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryEvalImpl::addSummarizerFunction", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryEvalImpl::addSummarizerFunction", err.what());
 	return void();
 }
 }
@@ -3783,10 +3783,10 @@ try
 	done_2->release();
 	delete p2;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryEvalImpl::addWeightingFunction");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryEvalImpl::addWeightingFunction");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryEvalImpl::addWeightingFunction", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryEvalImpl::addWeightingFunction", err.what());
 	return void();
 }
 }
@@ -3807,10 +3807,10 @@ try
 	done_1->release();
 	delete p1;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryEvalImpl::defineWeightingFormula");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryEvalImpl::defineWeightingFormula");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryEvalImpl::defineWeightingFormula", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryEvalImpl::defineWeightingFormula", err.what());
 	return void();
 }
 }
@@ -3833,10 +3833,10 @@ try
 	QueryInterface* p0 = new QueryImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryEvalImpl::createQuery");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryEvalImpl::createQuery");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryEvalImpl::createQuery", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryEvalImpl::createQuery", err.what());
 	return 0;
 }
 }
@@ -3864,10 +3864,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::pushTerm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::pushTerm");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::pushTerm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::pushTerm", err.what());
 	return void();
 }
 }
@@ -3884,10 +3884,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::pushDocField");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::pushDocField");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::pushDocField", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::pushDocField", err.what());
 	return void();
 }
 }
@@ -3908,10 +3908,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::pushExpression");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::pushExpression");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::pushExpression", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::pushExpression", err.what());
 	return void();
 }
 }
@@ -3927,10 +3927,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::attachVariable");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::attachVariable");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::attachVariable", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::attachVariable", err.what());
 	return void();
 }
 }
@@ -3947,10 +3947,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::defineFeature");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::defineFeature");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::defineFeature", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::defineFeature", err.what());
 	return void();
 }
 }
@@ -3968,10 +3968,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::defineTermStatistics");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::defineTermStatistics");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::defineTermStatistics", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::defineTermStatistics", err.what());
 	return void();
 }
 }
@@ -3987,10 +3987,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::defineGlobalStatistics");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::defineGlobalStatistics");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::defineGlobalStatistics", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::defineGlobalStatistics", err.what());
 	return void();
 }
 }
@@ -4009,10 +4009,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::addMetaDataRestrictionCondition");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::addMetaDataRestrictionCondition");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::addMetaDataRestrictionCondition", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::addMetaDataRestrictionCondition", err.what());
 	return void();
 }
 }
@@ -4031,10 +4031,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::addDocumentEvaluationSet");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::addDocumentEvaluationSet");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::addDocumentEvaluationSet", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::addDocumentEvaluationSet", err.what());
 	return void();
 }
 }
@@ -4050,10 +4050,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::addAccess");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::addAccess");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::addAccess", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::addAccess", err.what());
 	return void();
 }
 }
@@ -4069,10 +4069,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::setMaxNofRanks");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::setMaxNofRanks");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::setMaxNofRanks", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::setMaxNofRanks", err.what());
 	return void();
 }
 }
@@ -4088,10 +4088,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::setMinRank");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::setMinRank");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::setMinRank", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::setMinRank", err.what());
 	return void();
 }
 }
@@ -4108,10 +4108,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::setWeightingVariableValue");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::setWeightingVariableValue");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::setWeightingVariableValue", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::setWeightingVariableValue", err.what());
 	return void();
 }
 }
@@ -4127,10 +4127,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::setDebugMode");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::setDebugMode");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::setDebugMode", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::setDebugMode", err.what());
 	return void();
 }
 }
@@ -4149,10 +4149,10 @@ try
 	QueryResult p0 = serializedMsg.unpackQueryResult();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::evaluate");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::evaluate");
 	return QueryResult();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::evaluate", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::evaluate", err.what());
 	return QueryResult();
 }
 }
@@ -4171,10 +4171,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryImpl::tostring");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryImpl::tostring");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryImpl::tostring", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryImpl::tostring", err.what());
 	return std::string();
 }
 }
@@ -4206,10 +4206,10 @@ try
 	done_2->release();
 	delete p2;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::definePostingJoinOperator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryProcessorImpl::definePostingJoinOperator");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::definePostingJoinOperator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryProcessorImpl::definePostingJoinOperator", err.what());
 	return void();
 }
 }
@@ -4231,10 +4231,10 @@ try
 	const PostingJoinOperatorInterface* p0 = (const PostingJoinOperatorImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getPostingJoinOperator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getPostingJoinOperator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::getPostingJoinOperator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryProcessorImpl::getPostingJoinOperator", err.what());
 	return 0;
 }
 }
@@ -4256,10 +4256,10 @@ try
 	done_2->release();
 	delete p2;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::defineWeightingFunction");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryProcessorImpl::defineWeightingFunction");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::defineWeightingFunction", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryProcessorImpl::defineWeightingFunction", err.what());
 	return void();
 }
 }
@@ -4281,10 +4281,10 @@ try
 	const WeightingFunctionInterface* p0 = (const WeightingFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getWeightingFunction");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getWeightingFunction");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::getWeightingFunction", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryProcessorImpl::getWeightingFunction", err.what());
 	return 0;
 }
 }
@@ -4306,10 +4306,10 @@ try
 	done_2->release();
 	delete p2;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::defineSummarizerFunction");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryProcessorImpl::defineSummarizerFunction");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::defineSummarizerFunction", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryProcessorImpl::defineSummarizerFunction", err.what());
 	return void();
 }
 }
@@ -4331,10 +4331,10 @@ try
 	const SummarizerFunctionInterface* p0 = (const SummarizerFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getSummarizerFunction");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getSummarizerFunction");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::getSummarizerFunction", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryProcessorImpl::getSummarizerFunction", err.what());
 	return 0;
 }
 }
@@ -4359,10 +4359,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getFunctionList");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getFunctionList");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::getFunctionList", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryProcessorImpl::getFunctionList", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -4384,10 +4384,10 @@ try
 	done_2->release();
 	delete p2;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::defineScalarFunctionParser");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryProcessorImpl::defineScalarFunctionParser");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::defineScalarFunctionParser", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryProcessorImpl::defineScalarFunctionParser", err.what());
 	return void();
 }
 }
@@ -4409,10 +4409,10 @@ try
 	const ScalarFunctionParserInterface* p0 = (const ScalarFunctionParserImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getScalarFunctionParser");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getScalarFunctionParser");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "QueryProcessorImpl::getScalarFunctionParser", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "QueryProcessorImpl::getScalarFunctionParser", err.what());
 	return 0;
 }
 }
@@ -4439,10 +4439,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::setVariableValue");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::setVariableValue");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::setVariableValue", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::setVariableValue", err.what());
 	return void();
 }
 }
@@ -4462,10 +4462,10 @@ try
 	double p0 = serializedMsg.unpackDouble();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::call");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::call");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::call", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::call", err.what());
 	return 0;
 }
 }
@@ -4484,10 +4484,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::tostring");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::tostring");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::tostring", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::tostring", err.what());
 	return std::string();
 }
 }
@@ -4521,10 +4521,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::getVariables");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::getVariables");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::getVariables", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ScalarFunctionImpl::getVariables", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -4543,10 +4543,10 @@ try
 	unsigned int p0 = serializedMsg.unpackUint();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::getNofArguments");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::getNofArguments");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::getNofArguments", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ScalarFunctionImpl::getNofArguments", err.what());
 	return 0;
 }
 }
@@ -4563,10 +4563,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::setDefaultVariableValue");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::setDefaultVariableValue");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::setDefaultVariableValue", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ScalarFunctionImpl::setDefaultVariableValue", err.what());
 	return void();
 }
 }
@@ -4586,10 +4586,10 @@ try
 	ScalarFunctionInstanceInterface* p0 = new ScalarFunctionInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::createInstance");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::createInstance");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::createInstance", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ScalarFunctionImpl::createInstance", err.what());
 	return 0;
 }
 }
@@ -4608,10 +4608,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::tostring");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::tostring");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionImpl::tostring", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ScalarFunctionImpl::tostring", err.what());
 	return std::string();
 }
 }
@@ -4646,10 +4646,10 @@ try
 	ScalarFunctionInterface* p0 = new ScalarFunctionImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ScalarFunctionParserImpl::createFunction");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ScalarFunctionParserImpl::createFunction");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ScalarFunctionParserImpl::createFunction", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ScalarFunctionParserImpl::createFunction", err.what());
 	return 0;
 }
 }
@@ -4676,10 +4676,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterContextImpl::putInput");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterContextImpl::putInput");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterContextImpl::putInput", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterContextImpl::putInput", err.what());
 	return void();
 }
 }
@@ -4703,10 +4703,10 @@ try
 	p3 = (const char*) ctx()->constConstructor()->get( bp3, p4);
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterContextImpl::getNext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterContextImpl::getNext");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterContextImpl::getNext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterContextImpl::getNext", err.what());
 	return false;
 }
 }
@@ -4733,10 +4733,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterInstanceImpl::defineSelectorExpression");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterInstanceImpl::defineSelectorExpression");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterInstanceImpl::defineSelectorExpression", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterInstanceImpl::defineSelectorExpression", err.what());
 	return void();
 }
 }
@@ -4754,10 +4754,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterInstanceImpl::defineSubSection");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterInstanceImpl::defineSubSection");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterInstanceImpl::defineSubSection", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterInstanceImpl::defineSubSection", err.what());
 	return void();
 }
 }
@@ -4778,10 +4778,10 @@ try
 	SegmenterContextInterface* p0 = new SegmenterContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterInstanceImpl::createContext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterInstanceImpl::createContext");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterInstanceImpl::createContext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterInstanceImpl::createContext", err.what());
 	return 0;
 }
 }
@@ -4803,10 +4803,10 @@ try
 	SegmenterMarkupContextInterface* p0 = new SegmenterMarkupContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterInstanceImpl::createMarkupContext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterInstanceImpl::createMarkupContext");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterInstanceImpl::createMarkupContext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterInstanceImpl::createMarkupContext", err.what());
 	return 0;
 }
 }
@@ -4835,10 +4835,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterImpl::mimeType");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterImpl::mimeType");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterImpl::mimeType", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterImpl::mimeType", err.what());
 	return 0;
 }
 }
@@ -4859,10 +4859,10 @@ try
 	SegmenterInstanceInterface* p0 = new SegmenterInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterImpl::createInstance");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterImpl::createInstance");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterImpl::createInstance", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterImpl::createInstance", err.what());
 	return 0;
 }
 }
@@ -4881,10 +4881,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterImpl::getDescription");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterImpl::getDescription");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterImpl::getDescription", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterImpl::getDescription", err.what());
 	return 0;
 }
 }
@@ -4917,10 +4917,10 @@ try
 	p2 = (const char*) ctx()->constConstructor()->get( bp2, p3);
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::getNext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::getNext");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::getNext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::getNext", err.what());
 	return false;
 }
 }
@@ -4940,10 +4940,10 @@ try
 	unsigned int p0 = serializedMsg.unpackUint();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::segmentSize");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::segmentSize");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::segmentSize", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::segmentSize", err.what());
 	return 0;
 }
 }
@@ -4963,10 +4963,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::tagName");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::tagName");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::tagName", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::tagName", err.what());
 	return std::string();
 }
 }
@@ -4986,10 +4986,10 @@ try
 	int p0 = serializedMsg.unpackInt();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::tagLevel");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::tagLevel");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::tagLevel", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::tagLevel", err.what());
 	return 0;
 }
 }
@@ -5007,10 +5007,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::putOpenTag");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::putOpenTag");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::putOpenTag", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::putOpenTag", err.what());
 	return void();
 }
 }
@@ -5029,10 +5029,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::putAttribute");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::putAttribute");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::putAttribute", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::putAttribute", err.what());
 	return void();
 }
 }
@@ -5050,10 +5050,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::putCloseTag");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::putCloseTag");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::putCloseTag", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::putCloseTag", err.what());
 	return void();
 }
 }
@@ -5072,10 +5072,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::getContent");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SegmenterMarkupContextImpl::getContent");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::getContent", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SegmenterMarkupContextImpl::getContent", err.what());
 	return std::string();
 }
 }
@@ -5101,10 +5101,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::setNofDocumentsInsertedChange");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::setNofDocumentsInsertedChange");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::setNofDocumentsInsertedChange", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::setNofDocumentsInsertedChange", err.what());
 	return void();
 }
 }
@@ -5122,10 +5122,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::addDfChange");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::addDfChange");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::addDfChange", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::addDfChange", err.what());
 	return void();
 }
 }
@@ -5140,10 +5140,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::start");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::start");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::start", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::start", err.what());
 	return void();
 }
 }
@@ -5158,10 +5158,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::rollback");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::rollback");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::rollback", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::rollback", err.what());
 	return void();
 }
 }
@@ -5183,10 +5183,10 @@ try
 	p1 = (const void*) ctx()->constConstructor()->get( bp1, p2);
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::fetchMessage");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::fetchMessage");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::fetchMessage", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::fetchMessage", err.what());
 	return false;
 }
 }
@@ -5218,10 +5218,10 @@ try
 	p1 = (const void*) ctx()->constConstructor()->get( bp1, p2);
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsIteratorImpl::getNext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StatisticsIteratorImpl::getNext");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsIteratorImpl::getNext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StatisticsIteratorImpl::getNext", err.what());
 	return false;
 }
 }
@@ -5252,10 +5252,10 @@ try
 	StatisticsViewerInterface* p0 = new StatisticsViewerImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsProcessorImpl::createViewer");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StatisticsProcessorImpl::createViewer");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsProcessorImpl::createViewer", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StatisticsProcessorImpl::createViewer", err.what());
 	return 0;
 }
 }
@@ -5275,10 +5275,10 @@ try
 	StatisticsBuilderInterface* p0 = new StatisticsBuilderImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsProcessorImpl::createBuilder");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StatisticsProcessorImpl::createBuilder");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsProcessorImpl::createBuilder", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StatisticsProcessorImpl::createBuilder", err.what());
 	return 0;
 }
 }
@@ -5307,10 +5307,10 @@ try
 	int p0 = serializedMsg.unpackInt();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsViewerImpl::nofDocumentsInsertedChange");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StatisticsViewerImpl::nofDocumentsInsertedChange");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsViewerImpl::nofDocumentsInsertedChange", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StatisticsViewerImpl::nofDocumentsInsertedChange", err.what());
 	return 0;
 }
 }
@@ -5330,10 +5330,10 @@ try
 	p1 = serializedMsg.unpackTermStatisticsChange();
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StatisticsViewerImpl::nextDfChange");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StatisticsViewerImpl::nextDfChange");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StatisticsViewerImpl::nextDfChange", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StatisticsViewerImpl::nextDfChange", err.what());
 	return false;
 }
 }
@@ -5360,10 +5360,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::addElement");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::addElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::addElement", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::addElement", err.what());
 	return void();
 }
 }
@@ -5381,10 +5381,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::alterElement");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::alterElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::alterElement", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::alterElement", err.what());
 	return void();
 }
 }
@@ -5401,10 +5401,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::renameElement");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::renameElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::renameElement", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::renameElement", err.what());
 	return void();
 }
 }
@@ -5420,10 +5420,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::deleteElement");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::deleteElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::deleteElement", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::deleteElement", err.what());
 	return void();
 }
 }
@@ -5439,10 +5439,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::clearElement");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::clearElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::clearElement", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::clearElement", err.what());
 	return void();
 }
 }
@@ -5461,10 +5461,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::commit");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::commit");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::commit", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::commit", err.what());
 	return false;
 }
 }
@@ -5479,10 +5479,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::rollback");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageAlterMetaDataTableImpl::rollback");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::rollback", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageAlterMetaDataTableImpl::rollback", err.what());
 	return void();
 }
 }
@@ -5511,10 +5511,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::config");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::config");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::config", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::config", err.what());
 	return std::string();
 }
 }
@@ -5537,10 +5537,10 @@ try
 	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createTermPostingIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createTermPostingIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createTermPostingIterator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createTermPostingIterator", err.what());
 	return 0;
 }
 }
@@ -5564,10 +5564,10 @@ try
 	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createBrowsePostingIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createBrowsePostingIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createBrowsePostingIterator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createBrowsePostingIterator", err.what());
 	return 0;
 }
 }
@@ -5589,10 +5589,10 @@ try
 	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createFieldPostingIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createFieldPostingIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createFieldPostingIterator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createFieldPostingIterator", err.what());
 	return 0;
 }
 }
@@ -5613,10 +5613,10 @@ try
 	ForwardIteratorInterface* p0 = new ForwardIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createForwardIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createForwardIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createForwardIterator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createForwardIterator", err.what());
 	return 0;
 }
 }
@@ -5637,10 +5637,10 @@ try
 	DocumentTermIteratorInterface* p0 = new DocumentTermIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createDocumentTermIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createDocumentTermIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createDocumentTermIterator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createDocumentTermIterator", err.what());
 	return 0;
 }
 }
@@ -5661,10 +5661,10 @@ try
 	InvAclIteratorInterface* p0 = new InvAclIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createInvAclIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createInvAclIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createInvAclIterator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createInvAclIterator", err.what());
 	return 0;
 }
 }
@@ -5684,10 +5684,10 @@ try
 	AclReaderInterface* p0 = new AclReaderImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createAclReader");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createAclReader");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createAclReader", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createAclReader", err.what());
 	return 0;
 }
 }
@@ -5706,10 +5706,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::nofDocumentsInserted");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::nofDocumentsInserted");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::nofDocumentsInserted", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::nofDocumentsInserted", err.what());
 	return 0;
 }
 }
@@ -5730,10 +5730,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::documentFrequency");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::documentFrequency");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::documentFrequency", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::documentFrequency", err.what());
 	return 0;
 }
 }
@@ -5752,10 +5752,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::maxDocumentNumber");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::maxDocumentNumber");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::maxDocumentNumber", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::maxDocumentNumber", err.what());
 	return 0;
 }
 }
@@ -5775,10 +5775,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::documentNumber");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::documentNumber");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::documentNumber", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::documentNumber", err.what());
 	return 0;
 }
 }
@@ -5798,10 +5798,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::termTypeNumber");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::termTypeNumber");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::termTypeNumber", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::termTypeNumber", err.what());
 	return 0;
 }
 }
@@ -5821,10 +5821,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::isForwardIndexTerm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::isForwardIndexTerm");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::isForwardIndexTerm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::isForwardIndexTerm", err.what());
 	return false;
 }
 }
@@ -5844,10 +5844,10 @@ try
 	ValueIteratorInterface* p0 = new ValueIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createTermTypeIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createTermTypeIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createTermTypeIterator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createTermTypeIterator", err.what());
 	return 0;
 }
 }
@@ -5867,10 +5867,10 @@ try
 	ValueIteratorInterface* p0 = new ValueIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createTermValueIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createTermValueIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createTermValueIterator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createTermValueIterator", err.what());
 	return 0;
 }
 }
@@ -5890,10 +5890,10 @@ try
 	ValueIteratorInterface* p0 = new ValueIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createDocIdIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createDocIdIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createDocIdIterator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createDocIdIterator", err.what());
 	return 0;
 }
 }
@@ -5913,10 +5913,10 @@ try
 	ValueIteratorInterface* p0 = new ValueIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createUserNameIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createUserNameIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createUserNameIterator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createUserNameIterator", err.what());
 	return 0;
 }
 }
@@ -5938,10 +5938,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::documentStatistics");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::documentStatistics");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::documentStatistics", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::documentStatistics", err.what());
 	return 0;
 }
 }
@@ -5961,10 +5961,10 @@ try
 	MetaDataReaderInterface* p0 = new MetaDataReaderImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createMetaDataReader");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createMetaDataReader");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createMetaDataReader", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createMetaDataReader", err.what());
 	return 0;
 }
 }
@@ -5984,10 +5984,10 @@ try
 	MetaDataRestrictionInterface* p0 = new MetaDataRestrictionImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createMetaDataRestriction");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createMetaDataRestriction");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createMetaDataRestriction", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createMetaDataRestriction", err.what());
 	return 0;
 }
 }
@@ -6007,10 +6007,10 @@ try
 	AttributeReaderInterface* p0 = new AttributeReaderImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createAttributeReader");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createAttributeReader");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createAttributeReader", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createAttributeReader", err.what());
 	return 0;
 }
 }
@@ -6030,10 +6030,10 @@ try
 	StorageTransactionInterface* p0 = new StorageTransactionImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createTransaction");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createTransaction");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createTransaction", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createTransaction", err.what());
 	return 0;
 }
 }
@@ -6054,10 +6054,10 @@ try
 	StatisticsIteratorInterface* p0 = new StatisticsIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createAllStatisticsIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createAllStatisticsIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createAllStatisticsIterator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createAllStatisticsIterator", err.what());
 	return 0;
 }
 }
@@ -6077,10 +6077,10 @@ try
 	StatisticsIteratorInterface* p0 = new StatisticsIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createChangeStatisticsIterator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createChangeStatisticsIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createChangeStatisticsIterator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createChangeStatisticsIterator", err.what());
 	return 0;
 }
 }
@@ -6101,10 +6101,10 @@ try
 	const StatisticsProcessorInterface* p0 = (const StatisticsProcessorImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::getStatisticsProcessor");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::getStatisticsProcessor");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::getStatisticsProcessor", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::getStatisticsProcessor", err.what());
 	return 0;
 }
 }
@@ -6126,17 +6126,17 @@ try
 	StorageDocumentInterface* p0 = new StorageDocumentImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::createDocumentChecker");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::createDocumentChecker");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::createDocumentChecker", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::createDocumentChecker", err.what());
 	return 0;
 }
 }
 
 bool StorageClientImpl::checkStorage( std::ostream& p1) const
 {
-	errorhnd()->report(_TXT("the method '%s' is not implemented for RPC"),"checkStorage");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseNotImplemented), _TXT("the method '%s' is not implemented for RPC"),"checkStorage");
 	return false;
 }
 
@@ -6151,10 +6151,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageClientImpl::close");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageClientImpl::close");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageClientImpl::close", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageClientImpl::close", err.what());
 	return void();
 }
 }
@@ -6182,10 +6182,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentImpl::addSearchIndexTerm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentImpl::addSearchIndexTerm");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentImpl::addSearchIndexTerm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentImpl::addSearchIndexTerm", err.what());
 	return void();
 }
 }
@@ -6203,10 +6203,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentImpl::addForwardIndexTerm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentImpl::addForwardIndexTerm");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentImpl::addForwardIndexTerm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentImpl::addForwardIndexTerm", err.what());
 	return void();
 }
 }
@@ -6223,10 +6223,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentImpl::setMetaData");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentImpl::setMetaData");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentImpl::setMetaData", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentImpl::setMetaData", err.what());
 	return void();
 }
 }
@@ -6243,10 +6243,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentImpl::setAttribute");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentImpl::setAttribute");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentImpl::setAttribute", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentImpl::setAttribute", err.what());
 	return void();
 }
 }
@@ -6262,10 +6262,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentImpl::setUserAccessRight");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentImpl::setUserAccessRight");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentImpl::setUserAccessRight", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentImpl::setUserAccessRight", err.what());
 	return void();
 }
 }
@@ -6281,10 +6281,10 @@ try
 	ctx()->rpc_sendMessage( msg.content());
 	ctx()->rpc_synchronize();
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentImpl::done");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentImpl::done");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentImpl::done", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentImpl::done", err.what());
 	return void();
 }
 }
@@ -6312,10 +6312,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::addSearchIndexTerm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::addSearchIndexTerm");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::addSearchIndexTerm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::addSearchIndexTerm", err.what());
 	return void();
 }
 }
@@ -6333,10 +6333,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::addForwardIndexTerm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::addForwardIndexTerm");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::addForwardIndexTerm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::addForwardIndexTerm", err.what());
 	return void();
 }
 }
@@ -6352,10 +6352,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearSearchIndexTerm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearSearchIndexTerm");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearSearchIndexTerm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearSearchIndexTerm", err.what());
 	return void();
 }
 }
@@ -6371,10 +6371,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearForwardIndexTerm");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearForwardIndexTerm");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearForwardIndexTerm", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearForwardIndexTerm", err.what());
 	return void();
 }
 }
@@ -6391,10 +6391,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::setMetaData");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::setMetaData");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::setMetaData", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::setMetaData", err.what());
 	return void();
 }
 }
@@ -6411,10 +6411,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::setAttribute");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::setAttribute");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::setAttribute", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::setAttribute", err.what());
 	return void();
 }
 }
@@ -6430,10 +6430,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearAttribute");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearAttribute");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearAttribute", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearAttribute", err.what());
 	return void();
 }
 }
@@ -6449,10 +6449,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::setUserAccessRight");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::setUserAccessRight");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::setUserAccessRight", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::setUserAccessRight", err.what());
 	return void();
 }
 }
@@ -6468,10 +6468,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearUserAccessRight");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearUserAccessRight");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearUserAccessRight", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearUserAccessRight", err.what());
 	return void();
 }
 }
@@ -6486,10 +6486,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearUserAccessRights");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearUserAccessRights");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearUserAccessRights", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearUserAccessRights", err.what());
 	return void();
 }
 }
@@ -6505,10 +6505,10 @@ try
 	ctx()->rpc_sendMessage( msg.content());
 	ctx()->rpc_synchronize();
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::done");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::done");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::done", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::done", err.what());
 	return void();
 }
 }
@@ -6541,10 +6541,10 @@ try
 	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageDumpImpl::nextChunk");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageDumpImpl::nextChunk");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageDumpImpl::nextChunk", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageDumpImpl::nextChunk", err.what());
 	return false;
 }
 }
@@ -6582,10 +6582,10 @@ try
 	StorageClientInterface* p0 = new StorageClientImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageImpl::createClient");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageImpl::createClient");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageImpl::createClient", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageImpl::createClient", err.what());
 	return 0;
 }
 }
@@ -6608,10 +6608,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageImpl::createStorage");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageImpl::createStorage");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageImpl::createStorage", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageImpl::createStorage", err.what());
 	return false;
 }
 }
@@ -6635,10 +6635,10 @@ try
 	StorageAlterMetaDataTableInterface* p0 = new StorageAlterMetaDataTableImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageImpl::createAlterMetaDataTable");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageImpl::createAlterMetaDataTable");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageImpl::createAlterMetaDataTable", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageImpl::createAlterMetaDataTable", err.what());
 	return 0;
 }
 }
@@ -6658,10 +6658,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageImpl::getConfigDescription");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageImpl::getConfigDescription");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageImpl::getConfigDescription", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageImpl::getConfigDescription", err.what());
 	return 0;
 }
 }
@@ -6681,10 +6681,10 @@ try
 	const char** p0 =  ctx()->constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageImpl::getConfigParameters");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageImpl::getConfigParameters");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageImpl::getConfigParameters", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageImpl::getConfigParameters", err.what());
 	return 0;
 }
 }
@@ -6709,10 +6709,10 @@ try
 	StorageDumpInterface* p0 = new StorageDumpImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageImpl::createDump");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageImpl::createDump");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageImpl::createDump", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageImpl::createDump", err.what());
 	return 0;
 }
 }
@@ -6743,10 +6743,10 @@ try
 	const StorageInterface* p0 = (const StorageImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getStorage");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getStorage");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getStorage", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getStorage", err.what());
 	return 0;
 }
 }
@@ -6768,10 +6768,10 @@ try
 	const DatabaseInterface* p0 = (const DatabaseImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getDatabase");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getDatabase");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getDatabase", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getDatabase", err.what());
 	return 0;
 }
 }
@@ -6792,10 +6792,10 @@ try
 	const QueryProcessorInterface* p0 = (const QueryProcessorImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getQueryProcessor");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getQueryProcessor");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getQueryProcessor", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getQueryProcessor", err.what());
 	return 0;
 }
 }
@@ -6817,10 +6817,10 @@ try
 	const StatisticsProcessorInterface* p0 = (const StatisticsProcessorImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getStatisticsProcessor");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getStatisticsProcessor");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getStatisticsProcessor", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getStatisticsProcessor", err.what());
 	return 0;
 }
 }
@@ -6842,10 +6842,10 @@ try
 	const VectorStorageInterface* p0 = (const VectorStorageImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getVectorStorage");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getVectorStorage");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getVectorStorage", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getVectorStorage", err.what());
 	return 0;
 }
 }
@@ -6865,10 +6865,10 @@ try
 	QueryEvalInterface* p0 = new QueryEvalImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::createQueryEval");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::createQueryEval");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::createQueryEval", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::createQueryEval", err.what());
 	return 0;
 }
 }
@@ -6899,10 +6899,10 @@ try
 	StorageDocumentInterface* p0 = new StorageDocumentImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageTransactionImpl::createDocument");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageTransactionImpl::createDocument");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::createDocument", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageTransactionImpl::createDocument", err.what());
 	return 0;
 }
 }
@@ -6923,10 +6923,10 @@ try
 	StorageDocumentUpdateInterface* p0 = new StorageDocumentUpdateImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageTransactionImpl::createDocumentUpdate");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageTransactionImpl::createDocumentUpdate");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::createDocumentUpdate", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageTransactionImpl::createDocumentUpdate", err.what());
 	return 0;
 }
 }
@@ -6942,10 +6942,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageTransactionImpl::deleteDocument");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageTransactionImpl::deleteDocument");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::deleteDocument", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageTransactionImpl::deleteDocument", err.what());
 	return void();
 }
 }
@@ -6961,10 +6961,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageTransactionImpl::deleteUserAccessRights");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageTransactionImpl::deleteUserAccessRights");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::deleteUserAccessRights", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageTransactionImpl::deleteUserAccessRights", err.what());
 	return void();
 }
 }
@@ -6982,10 +6982,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageTransactionImpl::updateMetaData");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageTransactionImpl::updateMetaData");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::updateMetaData", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageTransactionImpl::updateMetaData", err.what());
 	return void();
 }
 }
@@ -7003,10 +7003,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageTransactionImpl::updateDocumentFrequency");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageTransactionImpl::updateDocumentFrequency");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::updateDocumentFrequency", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageTransactionImpl::updateDocumentFrequency", err.what());
 	return void();
 }
 }
@@ -7025,10 +7025,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageTransactionImpl::commit");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageTransactionImpl::commit");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::commit", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageTransactionImpl::commit", err.what());
 	return false;
 }
 }
@@ -7043,10 +7043,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageTransactionImpl::rollback");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageTransactionImpl::rollback");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::rollback", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageTransactionImpl::rollback", err.what());
 	return void();
 }
 }
@@ -7065,10 +7065,10 @@ try
 	unsigned int p0 = serializedMsg.unpackUint();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "StorageTransactionImpl::nofDocumentsAffected");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "StorageTransactionImpl::nofDocumentsAffected");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "StorageTransactionImpl::nofDocumentsAffected", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "StorageTransactionImpl::nofDocumentsAffected", err.what());
 	return 0;
 }
 }
@@ -7103,10 +7103,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::addSummarizationFeature");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::addSummarizationFeature");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::addSummarizationFeature", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::addSummarizationFeature", err.what());
 	return void();
 }
 }
@@ -7123,10 +7123,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::setVariableValue");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::setVariableValue");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::setVariableValue", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::setVariableValue", err.what());
 	return void();
 }
 }
@@ -7151,10 +7151,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::getSummary");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::getSummary");
 	return std::vector<SummaryElement>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::getSummary", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::getSummary", err.what());
 	return std::vector<SummaryElement>();
 }
 }
@@ -7174,10 +7174,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::debugCall");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::debugCall");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::debugCall", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::debugCall", err.what());
 	return std::string();
 }
 }
@@ -7204,10 +7204,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::addStringParameter");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::addStringParameter");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::addStringParameter", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::addStringParameter", err.what());
 	return void();
 }
 }
@@ -7224,10 +7224,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::addNumericParameter");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::addNumericParameter");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::addNumericParameter", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::addNumericParameter", err.what());
 	return void();
 }
 }
@@ -7244,10 +7244,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::defineResultName");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::defineResultName");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::defineResultName", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::defineResultName", err.what());
 	return void();
 }
 }
@@ -7271,10 +7271,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::getVariables");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::getVariables");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::getVariables", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::getVariables", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -7301,10 +7301,10 @@ try
 	SummarizerFunctionContextInterface* p0 = new SummarizerFunctionContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::createFunctionContext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::createFunctionContext");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::createFunctionContext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::createFunctionContext", err.what());
 	return 0;
 }
 }
@@ -7323,10 +7323,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::tostring");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::tostring");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::tostring", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::tostring", err.what());
 	return std::string();
 }
 }
@@ -7359,10 +7359,10 @@ try
 	SummarizerFunctionInstanceInterface* p0 = new SummarizerFunctionInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionImpl::createInstance");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SummarizerFunctionImpl::createInstance");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionImpl::createInstance", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SummarizerFunctionImpl::createInstance", err.what());
 	return 0;
 }
 }
@@ -7381,10 +7381,10 @@ try
 	FunctionDescription p0 = serializedMsg.unpackFunctionDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "SummarizerFunctionImpl::getDescription");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "SummarizerFunctionImpl::getDescription");
 	return FunctionDescription();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "SummarizerFunctionImpl::getDescription", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "SummarizerFunctionImpl::getDescription", err.what());
 	return FunctionDescription();
 }
 }
@@ -7410,10 +7410,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::addResourcePath");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::addResourcePath");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::addResourcePath", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::addResourcePath", err.what());
 	return void();
 }
 }
@@ -7433,10 +7433,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getResourcePath");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::getResourcePath");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getResourcePath", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::getResourcePath", err.what());
 	return std::string();
 }
 }
@@ -7458,10 +7458,10 @@ try
 	const SegmenterInterface* p0 = (const SegmenterImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getSegmenterByName");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::getSegmenterByName");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getSegmenterByName", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::getSegmenterByName", err.what());
 	return 0;
 }
 }
@@ -7483,10 +7483,10 @@ try
 	const SegmenterInterface* p0 = (const SegmenterImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getSegmenterByMimeType");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::getSegmenterByMimeType");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getSegmenterByMimeType", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::getSegmenterByMimeType", err.what());
 	return 0;
 }
 }
@@ -7506,10 +7506,10 @@ try
 	analyzer::SegmenterOptions p0 = serializedMsg.unpackSegmenterOptions();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getSegmenterOptions");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::getSegmenterOptions");
 	return analyzer::SegmenterOptions();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getSegmenterOptions", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::getSegmenterOptions", err.what());
 	return analyzer::SegmenterOptions();
 }
 }
@@ -7531,10 +7531,10 @@ try
 	const TokenizerFunctionInterface* p0 = (const TokenizerFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getTokenizer");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::getTokenizer");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getTokenizer", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::getTokenizer", err.what());
 	return 0;
 }
 }
@@ -7556,10 +7556,10 @@ try
 	const NormalizerFunctionInterface* p0 = (const NormalizerFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getNormalizer");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::getNormalizer");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getNormalizer", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::getNormalizer", err.what());
 	return 0;
 }
 }
@@ -7581,10 +7581,10 @@ try
 	const AggregatorFunctionInterface* p0 = (const AggregatorFunctionImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getAggregator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::getAggregator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getAggregator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::getAggregator", err.what());
 	return 0;
 }
 }
@@ -7606,10 +7606,10 @@ try
 	const PatternLexerInterface* p0 = (const PatternLexerImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getPatternLexer");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::getPatternLexer");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getPatternLexer", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::getPatternLexer", err.what());
 	return 0;
 }
 }
@@ -7631,10 +7631,10 @@ try
 	const PatternMatcherInterface* p0 = (const PatternMatcherImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getPatternMatcher");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::getPatternMatcher");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getPatternMatcher", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::getPatternMatcher", err.what());
 	return 0;
 }
 }
@@ -7655,10 +7655,10 @@ try
 	const PatternTermFeederInterface* p0 = (const PatternTermFeederImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getPatternTermFeeder");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::getPatternTermFeeder");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getPatternTermFeeder", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::getPatternTermFeeder", err.what());
 	return 0;
 }
 }
@@ -7680,10 +7680,10 @@ try
 	p1 = serializedMsg.unpackDocumentClass();
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::detectDocumentClass");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::detectDocumentClass");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::detectDocumentClass", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::detectDocumentClass", err.what());
 	return false;
 }
 }
@@ -7704,10 +7704,10 @@ try
 	done_1->release();
 	delete p1;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineDocumentClassDetector");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineDocumentClassDetector");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::defineDocumentClassDetector", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::defineDocumentClassDetector", err.what());
 	return void();
 }
 }
@@ -7726,10 +7726,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineSegmenter");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineSegmenter");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::defineSegmenter", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::defineSegmenter", err.what());
 	return void();
 }
 }
@@ -7746,10 +7746,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineSegmenterOptions");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineSegmenterOptions");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::defineSegmenterOptions", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::defineSegmenterOptions", err.what());
 	return void();
 }
 }
@@ -7771,10 +7771,10 @@ try
 	done_2->release();
 	delete p2;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineTokenizer");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineTokenizer");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::defineTokenizer", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::defineTokenizer", err.what());
 	return void();
 }
 }
@@ -7796,10 +7796,10 @@ try
 	done_2->release();
 	delete p2;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineNormalizer");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineNormalizer");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::defineNormalizer", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::defineNormalizer", err.what());
 	return void();
 }
 }
@@ -7821,10 +7821,10 @@ try
 	done_2->release();
 	delete p2;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineAggregator");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::defineAggregator");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::defineAggregator", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::defineAggregator", err.what());
 	return void();
 }
 }
@@ -7843,10 +7843,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::definePatternLexer");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::definePatternLexer");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::definePatternLexer", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::definePatternLexer", err.what());
 	return void();
 }
 }
@@ -7865,10 +7865,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::definePatternMatcher");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::definePatternMatcher");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::definePatternMatcher", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::definePatternMatcher", err.what());
 	return void();
 }
 }
@@ -7893,10 +7893,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TextProcessorImpl::getFunctionList");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TextProcessorImpl::getFunctionList");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TextProcessorImpl::getFunctionList", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TextProcessorImpl::getFunctionList", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -7927,10 +7927,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TokenMarkupContextImpl::putMarkup");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TokenMarkupContextImpl::putMarkup");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TokenMarkupContextImpl::putMarkup", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TokenMarkupContextImpl::putMarkup", err.what());
 	return void();
 }
 }
@@ -7954,10 +7954,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TokenMarkupContextImpl::markupDocument");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TokenMarkupContextImpl::markupDocument");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TokenMarkupContextImpl::markupDocument", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TokenMarkupContextImpl::markupDocument", err.what());
 	return std::string();
 }
 }
@@ -7987,10 +7987,10 @@ try
 	TokenMarkupContextInterface* p0 = new TokenMarkupContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TokenMarkupInstanceImpl::createContext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TokenMarkupInstanceImpl::createContext");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TokenMarkupInstanceImpl::createContext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TokenMarkupInstanceImpl::createContext", err.what());
 	return 0;
 }
 }
@@ -8019,10 +8019,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TokenizerFunctionInstanceImpl::concatBeforeTokenize");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TokenizerFunctionInstanceImpl::concatBeforeTokenize");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TokenizerFunctionInstanceImpl::concatBeforeTokenize", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TokenizerFunctionInstanceImpl::concatBeforeTokenize", err.what());
 	return false;
 }
 }
@@ -8047,10 +8047,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TokenizerFunctionInstanceImpl::tokenize");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TokenizerFunctionInstanceImpl::tokenize");
 	return std::vector<analyzer::Token>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TokenizerFunctionInstanceImpl::tokenize", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TokenizerFunctionInstanceImpl::tokenize", err.what());
 	return std::vector<analyzer::Token>();
 }
 }
@@ -8087,10 +8087,10 @@ try
 	TokenizerFunctionInstanceInterface* p0 = new TokenizerFunctionInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TokenizerFunctionImpl::createInstance");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TokenizerFunctionImpl::createInstance");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TokenizerFunctionImpl::createInstance", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TokenizerFunctionImpl::createInstance", err.what());
 	return 0;
 }
 }
@@ -8109,10 +8109,10 @@ try
 	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "TokenizerFunctionImpl::getDescription");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "TokenizerFunctionImpl::getDescription");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "TokenizerFunctionImpl::getDescription", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "TokenizerFunctionImpl::getDescription", err.what());
 	return 0;
 }
 }
@@ -8138,10 +8138,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ValueIteratorImpl::skip");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ValueIteratorImpl::skip");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ValueIteratorImpl::skip", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ValueIteratorImpl::skip", err.what());
 	return void();
 }
 }
@@ -8166,10 +8166,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "ValueIteratorImpl::fetchValues");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ValueIteratorImpl::fetchValues");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "ValueIteratorImpl::fetchValues", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ValueIteratorImpl::fetchValues", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -8201,10 +8201,10 @@ try
 	VectorStorageSearchInterface* p0 = new VectorStorageSearchImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::createSearcher");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::createSearcher");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::createSearcher", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::createSearcher", err.what());
 	return 0;
 }
 }
@@ -8224,10 +8224,10 @@ try
 	VectorStorageTransactionInterface* p0 = new VectorStorageTransactionImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::createTransaction");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::createTransaction");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::createTransaction", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::createTransaction", err.what());
 	return 0;
 }
 }
@@ -8251,10 +8251,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::conceptClassNames");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::conceptClassNames");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::conceptClassNames", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::conceptClassNames", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -8280,10 +8280,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::conceptFeatures");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::conceptFeatures");
 	return std::vector<Index>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::conceptFeatures", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::conceptFeatures", err.what());
 	return std::vector<Index>();
 }
 }
@@ -8303,10 +8303,10 @@ try
 	unsigned int p0 = serializedMsg.unpackUint();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::nofConcepts");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::nofConcepts");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::nofConcepts", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::nofConcepts", err.what());
 	return 0;
 }
 }
@@ -8332,10 +8332,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::featureConcepts");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::featureConcepts");
 	return std::vector<Index>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::featureConcepts", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::featureConcepts", err.what());
 	return std::vector<Index>();
 }
 }
@@ -8360,10 +8360,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::featureVector");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::featureVector");
 	return std::vector<double>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::featureVector", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::featureVector", err.what());
 	return std::vector<double>();
 }
 }
@@ -8383,10 +8383,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::featureName");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::featureName");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::featureName", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::featureName", err.what());
 	return std::string();
 }
 }
@@ -8406,10 +8406,10 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::featureIndex");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::featureIndex");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::featureIndex", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::featureIndex", err.what());
 	return 0;
 }
 }
@@ -8436,10 +8436,10 @@ try
 	double p0 = serializedMsg.unpackDouble();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::vectorSimilarity");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::vectorSimilarity");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::vectorSimilarity", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::vectorSimilarity", err.what());
 	return 0;
 }
 }
@@ -8458,10 +8458,10 @@ try
 	unsigned int p0 = serializedMsg.unpackUint();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::nofFeatures");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::nofFeatures");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::nofFeatures", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::nofFeatures", err.what());
 	return 0;
 }
 }
@@ -8480,10 +8480,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::config");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::config");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::config", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::config", err.what());
 	return std::string();
 }
 }
@@ -8499,10 +8499,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::close");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::close");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageClientImpl::close", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::close", err.what());
 	return void();
 }
 }
@@ -8535,10 +8535,10 @@ try
 	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageDumpImpl::nextChunk");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageDumpImpl::nextChunk");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageDumpImpl::nextChunk", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageDumpImpl::nextChunk", err.what());
 	return false;
 }
 }
@@ -8571,10 +8571,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageImpl::createStorage");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageImpl::createStorage");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageImpl::createStorage", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageImpl::createStorage", err.what());
 	return false;
 }
 }
@@ -8599,10 +8599,10 @@ try
 	VectorStorageClientInterface* p0 = new VectorStorageClientImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageImpl::createClient");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageImpl::createClient");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageImpl::createClient", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageImpl::createClient", err.what());
 	return 0;
 }
 }
@@ -8627,10 +8627,10 @@ try
 	VectorStorageDumpInterface* p0 = new VectorStorageDumpImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageImpl::createDump");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageImpl::createDump");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageImpl::createDump", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageImpl::createDump", err.what());
 	return 0;
 }
 }
@@ -8654,10 +8654,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageImpl::runBuild");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageImpl::runBuild");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageImpl::runBuild", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageImpl::runBuild", err.what());
 	return false;
 }
 }
@@ -8696,10 +8696,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageSearchImpl::findSimilar");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageSearchImpl::findSimilar");
 	return std::vector<VectorQueryResult>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageSearchImpl::findSimilar", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageSearchImpl::findSimilar", err.what());
 	return std::vector<VectorQueryResult>();
 }
 }
@@ -8732,10 +8732,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageSearchImpl::findSimilarFromSelection");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageSearchImpl::findSimilarFromSelection");
 	return std::vector<VectorQueryResult>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageSearchImpl::findSimilarFromSelection", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageSearchImpl::findSimilarFromSelection", err.what());
 	return std::vector<VectorQueryResult>();
 }
 }
@@ -8750,10 +8750,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageSearchImpl::close");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageSearchImpl::close");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageSearchImpl::close", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageSearchImpl::close", err.what());
 	return void();
 }
 }
@@ -8783,10 +8783,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageTransactionImpl::addFeature");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageTransactionImpl::addFeature");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageTransactionImpl::addFeature", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageTransactionImpl::addFeature", err.what());
 	return void();
 }
 }
@@ -8804,10 +8804,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageTransactionImpl::defineFeatureConceptRelation");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageTransactionImpl::defineFeatureConceptRelation");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageTransactionImpl::defineFeatureConceptRelation", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageTransactionImpl::defineFeatureConceptRelation", err.what());
 	return void();
 }
 }
@@ -8826,10 +8826,10 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageTransactionImpl::commit");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageTransactionImpl::commit");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageTransactionImpl::commit", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageTransactionImpl::commit", err.what());
 	return false;
 }
 }
@@ -8844,10 +8844,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "VectorStorageTransactionImpl::rollback");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "VectorStorageTransactionImpl::rollback");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "VectorStorageTransactionImpl::rollback", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "VectorStorageTransactionImpl::rollback", err.what());
 	return void();
 }
 }
@@ -8878,10 +8878,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionContextImpl::addWeightingFeature");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "WeightingFunctionContextImpl::addWeightingFeature");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::addWeightingFeature", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::addWeightingFeature", err.what());
 	return void();
 }
 }
@@ -8898,10 +8898,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionContextImpl::setVariableValue");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "WeightingFunctionContextImpl::setVariableValue");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::setVariableValue", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::setVariableValue", err.what());
 	return void();
 }
 }
@@ -8921,10 +8921,10 @@ try
 	double p0 = serializedMsg.unpackDouble();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionContextImpl::call");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "WeightingFunctionContextImpl::call");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::call", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::call", err.what());
 	return 0;
 }
 }
@@ -8944,10 +8944,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionContextImpl::debugCall");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "WeightingFunctionContextImpl::debugCall");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::debugCall", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::debugCall", err.what());
 	return std::string();
 }
 }
@@ -8974,10 +8974,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::addStringParameter");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::addStringParameter");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::addStringParameter", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::addStringParameter", err.what());
 	return void();
 }
 }
@@ -8994,10 +8994,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::addNumericParameter");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::addNumericParameter");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::addNumericParameter", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::addNumericParameter", err.what());
 	return void();
 }
 }
@@ -9024,10 +9024,10 @@ try
 	WeightingFunctionContextInterface* p0 = new WeightingFunctionContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::createFunctionContext");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::createFunctionContext");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::createFunctionContext", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::createFunctionContext", err.what());
 	return 0;
 }
 }
@@ -9051,10 +9051,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::getVariables");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::getVariables");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::getVariables", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::getVariables", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -9073,10 +9073,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::tostring");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::tostring");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::tostring", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::tostring", err.what());
 	return std::string();
 }
 }
@@ -9109,10 +9109,10 @@ try
 	WeightingFunctionInstanceInterface* p0 = new WeightingFunctionInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionImpl::createInstance");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "WeightingFunctionImpl::createInstance");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionImpl::createInstance", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "WeightingFunctionImpl::createInstance", err.what());
 	return 0;
 }
 }
@@ -9131,10 +9131,10 @@ try
 	FunctionDescription p0 = serializedMsg.unpackFunctionDescription();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report(_TXT("out of memory calling method '%s'"), "WeightingFunctionImpl::getDescription");
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "WeightingFunctionImpl::getDescription");
 	return FunctionDescription();
 } catch (const std::exception& err) {
-	errorhnd()->report(_TXT("error calling method '%s': %s"), "WeightingFunctionImpl::getDescription", err.what());
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "WeightingFunctionImpl::getDescription", err.what());
 	return FunctionDescription();
 }
 }
