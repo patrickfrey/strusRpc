@@ -44,6 +44,11 @@ public:
 	/// \brief Explicit close of the connection
 	void rpc_close();
 
+	std::string config() const
+	{
+		return m_messaging->config();
+	}
+	
 private:
 	void handleError( const std::string& msgstr) const;
 

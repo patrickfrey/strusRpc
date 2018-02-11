@@ -55,3 +55,11 @@ void RpcClient::close()
 	CATCH_ERROR_MAP( _TXT("error closing RPC client connection: %s"), *m_errorhnd);
 }
 
+std::string RpcClient::config() const
+{
+	try
+	{
+		return m_ctx->config();
+	}
+	CATCH_ERROR_MAP_RETURN( _TXT("error getting RPC client connection configuration: %s"), *m_errorhnd, std::string());
+}

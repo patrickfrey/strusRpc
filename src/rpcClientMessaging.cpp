@@ -28,11 +28,11 @@ using namespace strus;
 
 #undef STRUS_LOWLEVEL_DEBUG
 
-RpcClientMessaging::RpcClientMessaging( const char* config, ErrorBufferInterface* errorhnd_)
-	:m_conn(0),m_starttime(0.0),m_conn_open(false),m_errorhnd(errorhnd_)
+RpcClientMessaging::RpcClientMessaging( const std::string& config_, ErrorBufferInterface* errorhnd_)
+	:m_config(config_),m_conn(0),m_starttime(0.0),m_conn_open(false),m_errorhnd(errorhnd_)
 {
 	int syserr = 0;
-	m_conn = strus_create_connection( config, stderr, &syserr);
+	m_conn = strus_create_connection( m_config.c_str(), stderr, &syserr);
 	if (!m_conn) throw strus::runtime_error( _TXT("could not connect to server: %s"), strerror(syserr));
 	m_conn_open = true;
 }
@@ -156,5 +156,14 @@ void RpcClientMessaging::close()
 		strus_close_connection( m_conn);
 		m_conn_open = false;
 	}
+}
+
+std::string RpcClientMessaging::config() const
+{
+	try
+	{
+		return m_config;
+	}
+	CATCH_ERROR_MAP_RETURN( _TXT("error getting RPC client messaging connection configuration: %s"), *m_errorhnd, std::string());
 }
 

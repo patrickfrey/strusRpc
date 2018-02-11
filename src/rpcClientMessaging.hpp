@@ -22,13 +22,14 @@ class RpcClientMessaging
 	:public RpcClientMessagingInterface
 {
 public:
-	RpcClientMessaging( const char* config, ErrorBufferInterface* errorhnd_);
+	RpcClientMessaging( const std::string& config_, ErrorBufferInterface* errorhnd_);
 	virtual ~RpcClientMessaging();
 
 	virtual std::string sendRequest( const std::string& content);
 	virtual void sendMessage( const std::string& content);
 	virtual std::string synchronize();
 	virtual void close();
+	virtual std::string config() const;
 
 private:
 	static std::string errorstr( const char* msg, struct strus_connection_t* conn);
@@ -36,6 +37,7 @@ private:
 	std::string recv_rep();
 
 private:
+	std::string m_config;
 	struct strus_connection_t* m_conn;
 	double m_starttime;
 	std::string m_messageBuffer;
