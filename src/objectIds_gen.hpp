@@ -613,7 +613,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createFunction
+		Method_createFunction,
+		Method_getDescription
 	};
 };
 

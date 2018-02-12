@@ -4654,6 +4654,28 @@ try
 }
 }
 
+const char* ScalarFunctionParserImpl::getDescription( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getDescription);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ScalarFunctionParserImpl::getDescription");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ScalarFunctionParserImpl::getDescription", err.what());
+	return 0;
+}
+}
+
 SegmenterContextImpl::~SegmenterContextImpl()
 {
 	if (isConst()) return;
