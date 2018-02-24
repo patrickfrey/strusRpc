@@ -63,6 +63,11 @@ link_directories(
 # -------------------------------------------
 # LIBRARY
 # -------------------------------------------
+add_cppcheck( strusrpc_private_utils ${private_utils_source_files} )
+add_cppcheck( strus_rpc_client_socket ${client_socket_source_files} libstrus_rpc_client_socket.cpp )
+add_cppcheck( strus_rpc_client ${client_source_files} libstrus_rpc_client.cpp )
+add_cppcheck( strusRpcServer strusRpcServer.cpp ${server_source_files} )
+
 add_library( strusrpc_private_utils STATIC ${private_utils_source_files} )
 target_link_libraries( strusrpc_private_utils  "${Boost_LIBRARIES}" ${Intl_LIBRARIES} )
 set_property( TARGET strusrpc_private_utils PROPERTY POSITION_INDEPENDENT_CODE TRUE )
