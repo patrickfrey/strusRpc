@@ -983,6 +983,7 @@ public:
 	{
 		Method_Destructor,
 		Method_skip,
+		Method_skipPrefix,
 		Method_fetchValues
 	};
 };

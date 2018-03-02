@@ -8168,6 +8168,25 @@ try
 }
 }
 
+void ValueIteratorImpl::skipPrefix( const char* p1, std::size_t p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_skipPrefix);
+	msg.packBuffer( p1, p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT("out of memory calling method '%s'"), "ValueIteratorImpl::skipPrefix");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT("error calling method '%s': %s"), "ValueIteratorImpl::skipPrefix", err.what());
+	return void();
+}
+}
+
 std::vector<std::string> ValueIteratorImpl::fetchValues( std::size_t p1)
 {
 try

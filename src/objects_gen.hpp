@@ -1238,6 +1238,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_ValueIterator, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void skip( const char* p1, std::size_t p2);
+	virtual void skipPrefix( const char* p1, std::size_t p2);
 	virtual std::vector<std::string> fetchValues( std::size_t p1);
 };
 

@@ -7381,6 +7381,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case ValueIteratorConst::Method_skipPrefix:
+		{
+			RpcSerializer msg;
+			const char* p1;
+			std::size_t p2;
+			serializedMsg.unpackBuffer( p1, p2);
+			obj->skipPrefix(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case ValueIteratorConst::Method_fetchValues:
 		{
 			RpcSerializer msg;
