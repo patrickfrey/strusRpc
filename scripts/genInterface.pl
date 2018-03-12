@@ -1377,7 +1377,7 @@ sub getMethodDeclarationSource
 
 	if ($notImplMethods{$methodname})
 	{
-		$sender_code .= "\terrorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseNotImplemented), _TXT(\"the method '%s' is not implemented for RPC\"),\"$methodname\");\n";
+		$sender_code .= "\terrorhnd()->report( ErrorCodeNotImplemented, _TXT(\"the method '%s' is not implemented for RPC\"),\"$methodname\");\n";
 		$sender_code .= "\t$retvalnull_return\n";
 
 		$receiver_code .= "\t(void)(obj);\n";
@@ -1667,10 +1667,10 @@ sub getMethodDeclarationSource
 			$sender_code .= "\treturn p0;\n";
 		}
 		$sender_code .= "} catch (const std::bad_alloc&) {\n";
-		$sender_code .= "\terrorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseOutOfMem), _TXT(\"out of memory calling method '%s'\"), \"$classname" . "::$methodname\");\n";
+		$sender_code .= "\terrorhnd()->report( ErrorCodeOutOfMem, _TXT(\"out of memory calling method '%s'\"), \"$classname" . "::$methodname\");\n";
 		$sender_code .= "\t$retvalnull_return\n";
 		$sender_code .= "} catch (const std::exception& err) {\n";
-		$sender_code .= "\terrorhnd()->report( *ErrorCode(StrusComponentRpc,ErrorOperationCallIndirection,ErrorCauseRuntimeError), _TXT(\"error calling method '%s': %s\"), \"$classname" . "::$methodname\", err.what());\n";
+		$sender_code .= "\terrorhnd()->report( ErrorCodeRuntimeError, _TXT(\"error calling method '%s': %s\"), \"$classname" . "::$methodname\", err.what());\n";
 		$sender_code .= "\t$retvalnull_return\n";
 		$sender_code .= "}\n";
 	}
