@@ -13,6 +13,7 @@
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/moduleLoaderInterface.hpp"
+#include "strus/debugTraceInterface.hpp"
 #include "strus/errorBufferInterface.hpp"
 #include "strus/vectorStorageInterface.hpp"
 #include "strus/vectorStorageClientInterface.hpp"
@@ -73,6 +74,7 @@ static void printUsage()
 	std::cout << "    " << _TXT("Example: -T \"log=dump;file=stdout\"") << std::endl;
 }
 
+static strus::DebugTraceInterface* g_debugTrace = 0;
 static strus::ErrorBufferInterface* g_errorBuffer = 0;
 static strus::ModuleLoaderInterface* g_moduleLoader = 0;
 static strus::StorageObjectBuilderInterface* g_storageObjectBuilder = 0;
@@ -239,6 +241,7 @@ static void done_global_context()
 	if (g_storageObjectBuilder) {delete g_storageObjectBuilder; g_storageObjectBuilder = 0;}
 	if (g_moduleLoader) {delete g_moduleLoader; g_moduleLoader = 0;}
 	if (g_errorBuffer) {delete g_errorBuffer; g_errorBuffer = 0;}
+	//... no delete of g_debugTrace because it has been passed with ownership to g_errorBuffer
 }
 
 enum
@@ -270,9 +273,11 @@ static void createStorageIfNotExist( const std::string& config)
 
 int main( int argc, const char* argv[])
 {
-	g_errorBuffer = strus::createErrorBuffer_standard( 0, 2);
+	g_debugTrace = strus::createDebugTrace_standard( 2/*initial number of threads*/);
+	g_errorBuffer = strus::createErrorBuffer_standard( 0/*initial log file handle*/, 2/*initial number of threads*/, g_debugTrace);
 	if (!g_errorBuffer)
 	{
+		delete g_debugTrace;
 		std::cerr << _TXT("failed to create error buffer") << std::endl;
 		return -1;
 	}
@@ -410,6 +415,7 @@ int main( int argc, const char* argv[])
 		if (doExit) return 0;
 		init_global_context( logfile.empty()?0:logfile.c_str());
 		g_errorBuffer->setLogFile( g_glbctx.logf);
+		g_debugTrace->setMaxNofThreads( strus_threadpool_size()+2);
 		g_errorBuffer->setMaxNofThreads( strus_threadpool_size()+2);
 
 		// Create the global context:
