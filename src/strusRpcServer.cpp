@@ -256,7 +256,7 @@ static void createStorageIfNotExist( const std::string& config)
 	std::string configstr( config);
 	std::string dbname;
 	(void)strus::extractStringFromConfigString( dbname, configstr, "database", g_errorBuffer);
-	if (g_errorBuffer->hasError()) throw strus::runtime_error( "%s", _TXT("cannot evaluate database"));
+	if (g_errorBuffer->hasError()) throw std::runtime_error( _TXT("cannot evaluate database"));
 
 	const strus::DatabaseInterface* dbi = g_storageObjectBuilder->getDatabase( dbname);
 	if (dbi->exists( config)) return;
@@ -266,7 +266,7 @@ static void createStorageIfNotExist( const std::string& config)
 	sti->createStorage( config, dbi);
 	if (g_errorBuffer->hasError())
 	{
-		throw strus::runtime_error( "%s", _TXT("error creating storage"));
+		throw std::runtime_error( _TXT("error creating storage"));
 	}
 }
 
