@@ -1,4 +1,4 @@
 #!/bin/sh
 
-scripts/genInterface.pl `find ../strus{,Analyzer}/include/strus -name "*Interface.hpp" | sort`
+scripts/genInterface.pl `find ../strus{,Analyzer,Base}/include/strus -name "*Interface.hpp"  | grep -v ebugTraceInterface | grep -v rrorBufferInterface | sort`
 

@@ -102,6 +102,29 @@ try
 }
 }
 
+IntrospectionInterface* AggregatorFunctionInstanceImpl::createIntrospection( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createIntrospection);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Introspection;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	IntrospectionInterface* p0 = new IntrospectionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "AggregatorFunctionInstanceImpl::createIntrospection");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "AggregatorFunctionInstanceImpl::createIntrospection", err.what());
+	return 0;
+}
+}
+
 AggregatorFunctionImpl::~AggregatorFunctionImpl()
 {
 	if (isConst()) return;
@@ -1850,6 +1873,89 @@ try
 }
 }
 
+IntrospectionImpl::~IntrospectionImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+IntrospectionInterface* IntrospectionImpl::open( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_open);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Introspection;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	IntrospectionInterface* p0 = new IntrospectionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "IntrospectionImpl::open");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "IntrospectionImpl::open", err.what());
+	return 0;
+}
+}
+
+std::string IntrospectionImpl::value( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_value);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "IntrospectionImpl::value");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "IntrospectionImpl::value", err.what());
+	return std::string();
+}
+}
+
+std::vector<std::string> IntrospectionImpl::list( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_list);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "IntrospectionImpl::list");
+	return std::vector<std::string>();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "IntrospectionImpl::list", err.what());
+	return std::vector<std::string>();
+}
+}
+
 InvAclIteratorImpl::~InvAclIteratorImpl()
 {
 	if (isConst()) return;
@@ -2196,6 +2302,29 @@ try
 }
 }
 
+IntrospectionInterface* NormalizerFunctionInstanceImpl::createIntrospection( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createIntrospection);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Introspection;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	IntrospectionInterface* p0 = new IntrospectionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "NormalizerFunctionInstanceImpl::createIntrospection");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "NormalizerFunctionInstanceImpl::createIntrospection", err.what());
+	return 0;
+}
+}
+
 NormalizerFunctionImpl::~NormalizerFunctionImpl()
 {
 	if (isConst()) return;
@@ -2496,6 +2625,29 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::createContext", err.what());
+	return 0;
+}
+}
+
+IntrospectionInterface* PatternLexerInstanceImpl::createIntrospection( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createIntrospection);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Introspection;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	IntrospectionInterface* p0 = new IntrospectionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::createIntrospection");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::createIntrospection", err.what());
 	return 0;
 }
 }
@@ -2872,6 +3024,29 @@ try
 }
 }
 
+IntrospectionInterface* PatternMatcherInstanceImpl::createIntrospection( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createIntrospection);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Introspection;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	IntrospectionInterface* p0 = new IntrospectionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::createIntrospection");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::createIntrospection", err.what());
+	return 0;
+}
+}
+
 PatternMatcherImpl::~PatternMatcherImpl()
 {
 	if (isConst()) return;
@@ -3075,6 +3250,29 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::getSymbol", err.what());
+	return 0;
+}
+}
+
+IntrospectionInterface* PatternTermFeederInstanceImpl::createIntrospection( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createIntrospection);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Introspection;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	IntrospectionInterface* p0 = new IntrospectionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::createIntrospection");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::createIntrospection", err.what());
 	return 0;
 }
 }
@@ -4829,6 +5027,29 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SegmenterInstanceImpl::createMarkupContext", err.what());
+	return 0;
+}
+}
+
+IntrospectionInterface* SegmenterInstanceImpl::createIntrospection( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createIntrospection);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Introspection;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	IntrospectionInterface* p0 = new IntrospectionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SegmenterInstanceImpl::createIntrospection");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SegmenterInstanceImpl::createIntrospection", err.what());
 	return 0;
 }
 }
@@ -8017,6 +8238,29 @@ try
 }
 }
 
+IntrospectionInterface* TokenMarkupInstanceImpl::createIntrospection( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createIntrospection);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Introspection;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	IntrospectionInterface* p0 = new IntrospectionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "TokenMarkupInstanceImpl::createIntrospection");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "TokenMarkupInstanceImpl::createIntrospection", err.what());
+	return 0;
+}
+}
+
 TokenizerFunctionInstanceImpl::~TokenizerFunctionInstanceImpl()
 {
 	if (isConst()) return;
@@ -8074,6 +8318,29 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "TokenizerFunctionInstanceImpl::tokenize", err.what());
 	return std::vector<analyzer::Token>();
+}
+}
+
+IntrospectionInterface* TokenizerFunctionInstanceImpl::createIntrospection( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createIntrospection);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Introspection;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	IntrospectionInterface* p0 = new IntrospectionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "TokenizerFunctionInstanceImpl::createIntrospection");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "TokenizerFunctionInstanceImpl::createIntrospection", err.what());
+	return 0;
 }
 }
 

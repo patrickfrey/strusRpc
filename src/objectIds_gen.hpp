@@ -27,6 +27,7 @@ enum ClassId
 	ClassId_DocumentClassDetector,
 	ClassId_DocumentTermIterator,
 	ClassId_ForwardIterator,
+	ClassId_Introspection,
 	ClassId_InvAclIterator,
 	ClassId_MetaDataReader,
 	ClassId_MetaDataRestrictionInstance,
@@ -103,7 +104,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_evaluate
+		Method_evaluate,
+		Method_createIntrospection
 	};
 };
 
@@ -289,6 +291,18 @@ public:
 	};
 };
 
+class IntrospectionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_open,
+		Method_value,
+		Method_list
+	};
+};
+
 class InvAclIteratorConst
 {
 public:
@@ -343,7 +357,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_normalize
+		Method_normalize,
+		Method_createIntrospection
 	};
 };
 
@@ -382,7 +397,8 @@ public:
 		Method_getSymbol,
 		Method_getLexemName,
 		Method_compile,
-		Method_createContext
+		Method_createContext,
+		Method_createIntrospection
 	};
 };
 
@@ -425,7 +441,8 @@ public:
 		Method_attachVariable,
 		Method_definePattern,
 		Method_compile,
-		Method_createContext
+		Method_createContext,
+		Method_createIntrospection
 	};
 };
 
@@ -451,7 +468,8 @@ public:
 		Method_defineSymbol,
 		Method_getLexem,
 		Method_lexemTypes,
-		Method_getSymbol
+		Method_getSymbol,
+		Method_createIntrospection
 	};
 };
 
@@ -638,7 +656,8 @@ public:
 		Method_defineSelectorExpression,
 		Method_defineSubSection,
 		Method_createContext,
-		Method_createMarkupContext
+		Method_createMarkupContext,
+		Method_createIntrospection
 	};
 };
 
@@ -950,7 +969,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createContext
+		Method_createContext,
+		Method_createIntrospection
 	};
 };
 
@@ -961,7 +981,8 @@ public:
 	{
 		Method_Destructor,
 		Method_concatBeforeTokenize,
-		Method_tokenize
+		Method_tokenize,
+		Method_createIntrospection
 	};
 };
 
