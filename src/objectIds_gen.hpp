@@ -252,7 +252,8 @@ public:
 		Method_defineMetaDataFromPatternMatch,
 		Method_defineAttributeFromPatternMatch,
 		Method_analyze,
-		Method_createContext
+		Method_createContext,
+		Method_createIntrospection
 	};
 };
 

@@ -1661,6 +1661,29 @@ try
 }
 }
 
+IntrospectionInterface* DocumentAnalyzerImpl::createIntrospection( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createIntrospection);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_Introspection;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	IntrospectionInterface* p0 = new IntrospectionImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::createIntrospection");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::createIntrospection", err.what());
+	return 0;
+}
+}
+
 DocumentClassDetectorImpl::~DocumentClassDetectorImpl()
 {
 	if (isConst()) return;
