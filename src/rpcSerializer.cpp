@@ -754,6 +754,111 @@ void RpcSerializer::packVectorQueryResult( const VectorQueryResult& val)
 	packDouble( val.weight());
 }
 
+void RpcSerializer::packAnalyzerDocumentAnalyzerView( const analyzer::DocumentAnalyzerView& val)
+{
+	packAnalyzerFunctionView( val.segmenter());
+	{
+		packSize( val.subcontents().size());
+		std::vector<analyzer::SubContentDefinitionView>::const_iterator si = val.subcontents().begin(), se = val.subcontents().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerSubContentDefinitionView( *si);
+		}
+	}
+	{
+		packSize( val.subdocuments().size());
+		std::vector<analyzer::SubDocumentDefinitionView>::const_iterator si = val.subdocuments().begin(), se = val.subdocuments().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerSubDocumentDefinitionView( *si);
+		}
+	}
+	{
+		packSize( val.attributes().size());
+		std::vector<analyzer::FeatureView>::const_iterator si = val.attributes().begin(), se = val.attributes().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerFeatureView( *si);
+		}
+	}
+	{
+		packSize( val.metadata().size());
+		std::vector<analyzer::FeatureView>::const_iterator si = val.metadata().begin(), se = val.metadata().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerFeatureView( *si);
+		}
+	}
+	{
+		packSize( val.searchindex().size());
+		std::vector<analyzer::FeatureView>::const_iterator si = val.searchindex().begin(), se = val.searchindex().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerFeatureView( *si);
+		}
+	}
+	{
+		packSize( val.forwardindex().size());
+		std::vector<analyzer::FeatureView>::const_iterator si = val.forwardindex().begin(), se = val.forwardindex().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerFeatureView( *si);
+		}
+	}
+	{
+		packSize( val.aggreators().size());
+		std::vector<analyzer::AggregatorView>::const_iterator si = val.aggreators().begin(), se = val.aggreators().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerAggregatorView( *si);
+		}
+	}
+}
+
+void RpcSerializer::packAnalyzerFunctionView( const analyzer::FunctionView& val)
+{
+	packString( val.name());
+	packSize( val.params().size());
+	std::vector<analyzer::FunctionView::NamedParameter>::const_iterator si = val.params().begin(), se = val.params().end();
+	for (; si != se; ++si)
+	{
+		packString( si->first);
+		packString( si->second);
+	}
+}
+
+void RpcSerializer::packAnalyzerFeatureView( const analyzer::FeatureView& val)
+{
+	packString( val.type());
+	packString( val.selectexpr());
+	packAnalyzerFunctionView( val.tokenizer());
+	packSize( val.normalizer().size());
+	std::vector<analyzer::FunctionView>::const_iterator fi = val.normalizer().begin(), fe = val.normalizer().end();
+	for (; fi != fe; ++fi)
+	{
+		packAnalyzerFunctionView( *fi);
+	}
+	packFeatureOptions( val.options());
+}
+
+void RpcSerializer::packAnalyzerAggregatorView( const analyzer::AggregatorView& val)
+{
+	packString( val.type());
+	packAnalyzerFunctionView( val.function());
+}
+
+void RpcSerializer::packAnalyzerSubDocumentDefinitionView( const analyzer::SubDocumentDefinitionView& val)
+{
+	packString( val.subDocumentTypeName());
+	packString( val.selection());
+}
+
+void RpcSerializer::packAnalyzerSubContentDefinitionView( const analyzer::SubContentDefinitionView& val)
+{
+	packDocumentClass( val.documentClass());
+	packString( val.selection());
+}
+
 void RpcSerializer::packCrc32()
 {
 #if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM
@@ -1383,6 +1488,115 @@ VectorQueryResult RpcDeserializer::unpackVectorQueryResult()
 	Index featidx = unpackIndex();
 	double weight = unpackDouble();
 	return VectorQueryResult( featidx, weight);
+}
+
+analyzer::DocumentAnalyzerView RpcDeserializer::unpackAnalyzerDocumentAnalyzerView()
+{
+	analyzer::FunctionView segmenter( unpackAnalyzerFunctionView());
+	std::vector<analyzer::SubContentDefinitionView> subContentDefinitionView;
+	std::vector<analyzer::SubDocumentDefinitionView> subDocumentDefinitionView;
+	std::vector<analyzer::FeatureView> attributes;
+	std::vector<analyzer::FeatureView> metadata;
+	std::vector<analyzer::FeatureView> searchindex;
+	std::vector<analyzer::FeatureView> forwardindex;
+	std::vector<analyzer::AggregatorView> aggreators;
+	{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			subContentDefinitionView.push_back( unpackAnalyzerSubContentDefinitionView());
+		}
+	}{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			subDocumentDefinitionView.push_back( unpackAnalyzerSubDocumentDefinitionView());
+		}
+	}{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			attributes.push_back( unpackAnalyzerFeatureView());
+		}
+	}{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			metadata.push_back( unpackAnalyzerFeatureView());
+		}
+	}{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			searchindex.push_back( unpackAnalyzerFeatureView());
+		}
+	}{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			forwardindex.push_back( unpackAnalyzerFeatureView());
+		}
+	}{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			aggreators.push_back( unpackAnalyzerAggregatorView());
+		}
+	}
+	return analyzer::DocumentAnalyzerView(
+				segmenter, subContentDefinitionView, subDocumentDefinitionView,
+				attributes, metadata, searchindex, forwardindex, aggreators);
+}
+
+analyzer::FunctionView RpcDeserializer::unpackAnalyzerFunctionView()
+{
+	std::string name( unpackString());
+	std::vector<analyzer::FunctionView::NamedParameter> params;
+
+	unsigned int ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		std::string pname = unpackString();
+		std::string pval = unpackString();
+		params.push_back( analyzer::FunctionView::NamedParameter( pname, pval));
+	}
+	return analyzer::FunctionView( name, params);
+}
+
+analyzer::FeatureView RpcDeserializer::unpackAnalyzerFeatureView()
+{
+	std::string type = unpackString();
+	std::string selectexpr = unpackString();
+	analyzer::FunctionView tokenizer = unpackAnalyzerFunctionView();
+	std::vector<analyzer::FunctionView> normalizer;
+	unsigned int ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		normalizer.push_back( unpackAnalyzerFunctionView());
+	}
+	analyzer::FeatureOptions options = unpackFeatureOptions();
+	return analyzer::FeatureView( type, selectexpr, tokenizer, normalizer, options);
+}
+
+analyzer::AggregatorView RpcDeserializer::unpackAnalyzerAggregatorView()
+{
+	std::string type = unpackString();
+	analyzer::FunctionView func = unpackAnalyzerFunctionView();
+	return analyzer::AggregatorView( type, func);
+}
+
+analyzer::SubDocumentDefinitionView RpcDeserializer::unpackAnalyzerSubDocumentDefinitionView()
+{
+	std::string name = unpackString();
+	std::string select = unpackString();
+	return analyzer::SubDocumentDefinitionView( name, select);
+}
+
+analyzer::SubContentDefinitionView RpcDeserializer::unpackAnalyzerSubContentDefinitionView()
+{
+	analyzer::DocumentClass dclass = unpackDocumentClass();
+	std::string select = unpackString();
+	return analyzer::SubContentDefinitionView( select, dclass);
 }
 
 

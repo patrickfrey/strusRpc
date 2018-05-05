@@ -105,6 +105,7 @@ public:
 	{
 		Method_Destructor,
 		Method_evaluate,
+		Method_view,
 		Method_createIntrospection
 	};
 };
@@ -253,6 +254,7 @@ public:
 		Method_defineAttributeFromPatternMatch,
 		Method_analyze,
 		Method_createContext,
+		Method_view,
 		Method_createIntrospection
 	};
 };
@@ -359,6 +361,7 @@ public:
 	{
 		Method_Destructor,
 		Method_normalize,
+		Method_view,
 		Method_createIntrospection
 	};
 };
@@ -399,6 +402,7 @@ public:
 		Method_getLexemName,
 		Method_compile,
 		Method_createContext,
+		Method_view,
 		Method_createIntrospection
 	};
 };
@@ -443,6 +447,7 @@ public:
 		Method_definePattern,
 		Method_compile,
 		Method_createContext,
+		Method_view,
 		Method_createIntrospection
 	};
 };
@@ -470,6 +475,7 @@ public:
 		Method_getLexem,
 		Method_lexemTypes,
 		Method_getSymbol,
+		Method_view,
 		Method_createIntrospection
 	};
 };
@@ -658,6 +664,7 @@ public:
 		Method_defineSubSection,
 		Method_createContext,
 		Method_createMarkupContext,
+		Method_view,
 		Method_createIntrospection
 	};
 };
@@ -971,6 +978,7 @@ public:
 	{
 		Method_Destructor,
 		Method_createContext,
+		Method_view,
 		Method_createIntrospection
 	};
 };
@@ -983,6 +991,7 @@ public:
 		Method_Destructor,
 		Method_concatBeforeTokenize,
 		Method_tokenize,
+		Method_view,
 		Method_createIntrospection
 	};
 };

@@ -112,6 +112,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual NumericVariant evaluate( const analyzer::Document& p1) const;
+	virtual analyzer::FunctionView view( ) const;
 	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
@@ -300,6 +301,7 @@ public:
 	virtual void defineAttributeFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3);
 	virtual analyzer::Document analyze( const std::string& p1, const analyzer::DocumentClass& p2) const;
 	virtual DocumentAnalyzerContextInterface* createContext( const analyzer::DocumentClass& p1) const;
+	virtual analyzer::DocumentAnalyzerView view( ) const;
 	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
@@ -442,6 +444,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual std::string normalize( const char* p1, std::size_t p2) const;
+	virtual analyzer::FunctionView view( ) const;
 	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
@@ -494,6 +497,7 @@ public:
 	virtual const char* getLexemName( unsigned int p1) const;
 	virtual bool compile( );
 	virtual PatternLexerContextInterface* createContext( ) const;
+	virtual analyzer::FunctionView view( ) const;
 	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
@@ -550,6 +554,7 @@ public:
 	virtual void definePattern( const std::string& p1, bool p2);
 	virtual bool compile( );
 	virtual PatternMatcherContextInterface* createContext( ) const;
+	virtual analyzer::FunctionView view( ) const;
 	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
@@ -585,6 +590,7 @@ public:
 	virtual unsigned int getLexem( const std::string& p1) const;
 	virtual std::vector<std::string> lexemTypes( ) const;
 	virtual unsigned int getSymbol( unsigned int p1, const std::string& p2) const;
+	virtual analyzer::FunctionView view( ) const;
 	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
@@ -825,6 +831,7 @@ public:
 	virtual void defineSubSection( int p1, int p2, const std::string& p3);
 	virtual SegmenterContextInterface* createContext( const analyzer::DocumentClass& p1) const;
 	virtual SegmenterMarkupContextInterface* createMarkupContext( const analyzer::DocumentClass& p1, const std::string& p2) const;
+	virtual analyzer::FunctionView view( ) const;
 	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
@@ -1218,6 +1225,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenMarkupInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual TokenMarkupContextInterface* createContext( ) const;
+	virtual analyzer::FunctionView view( ) const;
 	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
@@ -1234,6 +1242,7 @@ public:
 
 	virtual bool concatBeforeTokenize( ) const;
 	virtual std::vector<analyzer::Token> tokenize( const char* p1, std::size_t p2) const;
+	virtual analyzer::FunctionView view( ) const;
 	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 

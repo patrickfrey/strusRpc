@@ -102,6 +102,28 @@ try
 }
 }
 
+analyzer::FunctionView AggregatorFunctionInstanceImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::FunctionView p0 = serializedMsg.unpackAnalyzerFunctionView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "AggregatorFunctionInstanceImpl::view");
+	return analyzer::FunctionView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "AggregatorFunctionInstanceImpl::view", err.what());
+	return analyzer::FunctionView();
+}
+}
+
 IntrospectionInterface* AggregatorFunctionInstanceImpl::createIntrospection( ) const
 {
 try
@@ -1661,6 +1683,28 @@ try
 }
 }
 
+analyzer::DocumentAnalyzerView DocumentAnalyzerImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::DocumentAnalyzerView p0 = serializedMsg.unpackAnalyzerDocumentAnalyzerView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::view");
+	return analyzer::DocumentAnalyzerView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::view", err.what());
+	return analyzer::DocumentAnalyzerView();
+}
+}
+
 IntrospectionInterface* DocumentAnalyzerImpl::createIntrospection( ) const
 {
 try
@@ -2325,6 +2369,28 @@ try
 }
 }
 
+analyzer::FunctionView NormalizerFunctionInstanceImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::FunctionView p0 = serializedMsg.unpackAnalyzerFunctionView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "NormalizerFunctionInstanceImpl::view");
+	return analyzer::FunctionView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "NormalizerFunctionInstanceImpl::view", err.what());
+	return analyzer::FunctionView();
+}
+}
+
 IntrospectionInterface* NormalizerFunctionInstanceImpl::createIntrospection( ) const
 {
 try
@@ -2649,6 +2715,28 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::createContext", err.what());
 	return 0;
+}
+}
+
+analyzer::FunctionView PatternLexerInstanceImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::FunctionView p0 = serializedMsg.unpackAnalyzerFunctionView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PatternLexerInstanceImpl::view");
+	return analyzer::FunctionView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PatternLexerInstanceImpl::view", err.what());
+	return analyzer::FunctionView();
 }
 }
 
@@ -3047,6 +3135,28 @@ try
 }
 }
 
+analyzer::FunctionView PatternMatcherInstanceImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::FunctionView p0 = serializedMsg.unpackAnalyzerFunctionView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PatternMatcherInstanceImpl::view");
+	return analyzer::FunctionView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PatternMatcherInstanceImpl::view", err.what());
+	return analyzer::FunctionView();
+}
+}
+
 IntrospectionInterface* PatternMatcherInstanceImpl::createIntrospection( ) const
 {
 try
@@ -3274,6 +3384,28 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::getSymbol", err.what());
 	return 0;
+}
+}
+
+analyzer::FunctionView PatternTermFeederInstanceImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::FunctionView p0 = serializedMsg.unpackAnalyzerFunctionView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PatternTermFeederInstanceImpl::view");
+	return analyzer::FunctionView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PatternTermFeederInstanceImpl::view", err.what());
+	return analyzer::FunctionView();
 }
 }
 
@@ -5051,6 +5183,28 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SegmenterInstanceImpl::createMarkupContext", err.what());
 	return 0;
+}
+}
+
+analyzer::FunctionView SegmenterInstanceImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::FunctionView p0 = serializedMsg.unpackAnalyzerFunctionView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SegmenterInstanceImpl::view");
+	return analyzer::FunctionView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SegmenterInstanceImpl::view", err.what());
+	return analyzer::FunctionView();
 }
 }
 
@@ -8261,6 +8415,28 @@ try
 }
 }
 
+analyzer::FunctionView TokenMarkupInstanceImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::FunctionView p0 = serializedMsg.unpackAnalyzerFunctionView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "TokenMarkupInstanceImpl::view");
+	return analyzer::FunctionView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "TokenMarkupInstanceImpl::view", err.what());
+	return analyzer::FunctionView();
+}
+}
+
 IntrospectionInterface* TokenMarkupInstanceImpl::createIntrospection( ) const
 {
 try
@@ -8341,6 +8517,28 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "TokenizerFunctionInstanceImpl::tokenize", err.what());
 	return std::vector<analyzer::Token>();
+}
+}
+
+analyzer::FunctionView TokenizerFunctionInstanceImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::FunctionView p0 = serializedMsg.unpackAnalyzerFunctionView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "TokenizerFunctionInstanceImpl::view");
+	return analyzer::FunctionView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "TokenizerFunctionInstanceImpl::view", err.what());
+	return analyzer::FunctionView();
 }
 }
 

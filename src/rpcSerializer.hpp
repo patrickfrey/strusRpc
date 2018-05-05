@@ -13,6 +13,12 @@
 #include "strus/textProcessorInterface.hpp"
 #include "strus/analyzer/segmenterOptions.hpp"
 #include "strus/analyzer/documentClass.hpp"
+#include "strus/analyzer/documentAnalyzerView.hpp"
+#include "strus/analyzer/functionView.hpp"
+#include "strus/analyzer/featureView.hpp"
+#include "strus/analyzer/aggregatorView.hpp"
+#include "strus/analyzer/subDocumentDefinitionView.hpp"
+#include "strus/analyzer/subContentDefinitionView.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/queryAnalyzerInterface.hpp"
 #include "strus/queryAnalyzerContextInterface.hpp"
@@ -114,7 +120,12 @@ public:
 	void packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val);
 	void packFunctionDescription( const FunctionDescription& val);
 	void packVectorQueryResult( const VectorQueryResult& val);
-
+	void packAnalyzerDocumentAnalyzerView( const analyzer::DocumentAnalyzerView& val);
+	void packAnalyzerFunctionView( const analyzer::FunctionView& val);
+	void packAnalyzerFeatureView( const analyzer::FeatureView& val);
+	void packAnalyzerAggregatorView( const analyzer::AggregatorView& val);
+	void packAnalyzerSubDocumentDefinitionView( const analyzer::SubDocumentDefinitionView& val);
+	void packAnalyzerSubContentDefinitionView( const analyzer::SubContentDefinitionView& val);
 	void packCrc32();
 	const std::string& content() const
 	{
@@ -195,7 +206,12 @@ public:
 	PostingJoinOperatorInterface::Description unpackPostingJoinOperatorDescription();
 	FunctionDescription unpackFunctionDescription();
 	VectorQueryResult unpackVectorQueryResult();
-
+	analyzer::DocumentAnalyzerView unpackAnalyzerDocumentAnalyzerView();
+	analyzer::FunctionView unpackAnalyzerFunctionView();
+	analyzer::FeatureView unpackAnalyzerFeatureView();
+	analyzer::AggregatorView unpackAnalyzerAggregatorView();
+	analyzer::SubDocumentDefinitionView unpackAnalyzerSubDocumentDefinitionView();
+	analyzer::SubContentDefinitionView unpackAnalyzerSubContentDefinitionView();
 	bool unpackCrc32();
 
 	std::size_t position() const

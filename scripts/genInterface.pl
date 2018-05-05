@@ -895,6 +895,30 @@ sub packParameter
 	{
 		$rt .= "msg.packVectorQueryResult( " . $id . ");";
 	}
+	elsif ($type eq "analyzer::FunctionView")
+	{
+		$rt .= "msg.packAnalyzerFunctionView( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::FeatureView")
+	{
+		$rt .= "msg.packAnalyzerFeatureView( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::DocumentAnalyzerView")
+	{
+		$rt .= "msg.packAnalyzerDocumentAnalyzerView( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::AggregatorView")
+	{
+		$rt .= "msg.packAnalyzerAggregatorView( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::SubDocumentDefinitionView")
+	{
+		$rt .= "msg.packSubDocumentDefinitionView( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::SubContentDefinitionView")
+	{
+		$rt .= "msg.packSubContentDefinitionView( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -1201,6 +1225,30 @@ sub unpackParameter
 	elsif ($type eq "VectorQueryResult")
 	{
 		$rt .= "$id = serializedMsg.unpackVectorQueryResult();";
+	}
+	elsif ($type eq "analyzer::FunctionView")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerFunctionView();";
+	}
+	elsif ($type eq "analyzer::FeatureView")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerFeatureView();";
+	}
+	elsif ($type eq "analyzer::DocumentAnalyzerView")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerDocumentAnalyzerView();";
+	}
+	elsif ($type eq "analyzer::AggregatorView")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerAggregatorView();";
+	}
+	elsif ($type eq "analyzer::SubDocumentDefinitionView")
+	{
+		$rt .= "$id = serializedMsg.unpackSubDocumentDefinitionView();";
+	}
+	elsif ($type eq "analyzer::SubContentDefinitionView")
+	{
+		$rt .= "$id = serializedMsg.unpackSubContentDefinitionView();";
 	}
 	else
 	{

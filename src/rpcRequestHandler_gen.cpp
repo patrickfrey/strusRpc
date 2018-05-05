@@ -101,6 +101,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case AggregatorFunctionInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case AggregatorFunctionInstanceConst::Method_createIntrospection:
 		{
 			RpcSerializer msg;
@@ -1517,6 +1534,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case DocumentAnalyzerConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::DocumentAnalyzerView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerDocumentAnalyzerView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case DocumentAnalyzerConst::Method_createIntrospection:
 		{
 			RpcSerializer msg;
@@ -2108,6 +2142,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case NormalizerFunctionInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case NormalizerFunctionInstanceConst::Method_createIntrospection:
 		{
 			RpcSerializer msg;
@@ -2405,6 +2456,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case PatternLexerInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 		case PatternLexerInstanceConst::Method_createIntrospection:
 		{
@@ -2747,6 +2815,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case PatternMatcherInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case PatternMatcherInstanceConst::Method_createIntrospection:
 		{
 			RpcSerializer msg;
@@ -2943,6 +3028,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packUint( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PatternTermFeederInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -4574,6 +4676,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case SegmenterInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 		case SegmenterInstanceConst::Method_createIntrospection:
 		{
@@ -7442,6 +7561,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case TokenMarkupInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case TokenMarkupInstanceConst::Method_createIntrospection:
 		{
 			RpcSerializer msg;
@@ -7511,6 +7647,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
 				msg.packAnalyzerToken( p0[ii]);
 			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case TokenizerFunctionInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
