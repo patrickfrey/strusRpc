@@ -806,8 +806,8 @@ void RpcSerializer::packAnalyzerDocumentAnalyzerView( const analyzer::DocumentAn
 		}
 	}
 	{
-		packSize( val.aggreators().size());
-		std::vector<analyzer::AggregatorView>::const_iterator si = val.aggreators().begin(), se = val.aggreators().end();
+		packSize( val.aggregators().size());
+		std::vector<analyzer::AggregatorView>::const_iterator si = val.aggregators().begin(), se = val.aggregators().end();
 		for (; si != se; ++si)
 		{
 			packAnalyzerAggregatorView( *si);
@@ -818,8 +818,8 @@ void RpcSerializer::packAnalyzerDocumentAnalyzerView( const analyzer::DocumentAn
 void RpcSerializer::packAnalyzerFunctionView( const analyzer::FunctionView& val)
 {
 	packString( val.name());
-	packSize( val.params().size());
-	std::vector<analyzer::FunctionView::NamedParameter>::const_iterator si = val.params().begin(), se = val.params().end();
+	packSize( val.parameter().size());
+	std::vector<analyzer::FunctionView::NamedParameter>::const_iterator si = val.parameter().begin(), se = val.parameter().end();
 	for (; si != se; ++si)
 	{
 		packString( si->first);
@@ -1499,7 +1499,7 @@ analyzer::DocumentAnalyzerView RpcDeserializer::unpackAnalyzerDocumentAnalyzerVi
 	std::vector<analyzer::FeatureView> metadata;
 	std::vector<analyzer::FeatureView> searchindex;
 	std::vector<analyzer::FeatureView> forwardindex;
-	std::vector<analyzer::AggregatorView> aggreators;
+	std::vector<analyzer::AggregatorView> aggregators;
 	{
 		unsigned int ii=0, nn=unpackSize();
 		for (; ii<nn; ++ii)
@@ -1540,27 +1540,27 @@ analyzer::DocumentAnalyzerView RpcDeserializer::unpackAnalyzerDocumentAnalyzerVi
 		unsigned int ii=0, nn=unpackSize();
 		for (; ii<nn; ++ii)
 		{
-			aggreators.push_back( unpackAnalyzerAggregatorView());
+			aggregators.push_back( unpackAnalyzerAggregatorView());
 		}
 	}
 	return analyzer::DocumentAnalyzerView(
 				segmenter, subContentDefinitionView, subDocumentDefinitionView,
-				attributes, metadata, searchindex, forwardindex, aggreators);
+				attributes, metadata, searchindex, forwardindex, aggregators);
 }
 
 analyzer::FunctionView RpcDeserializer::unpackAnalyzerFunctionView()
 {
 	std::string name( unpackString());
-	std::vector<analyzer::FunctionView::NamedParameter> params;
+	std::vector<analyzer::FunctionView::NamedParameter> parameter;
 
 	unsigned int ii=0, nn=unpackSize();
 	for (; ii<nn; ++ii)
 	{
 		std::string pname = unpackString();
 		std::string pval = unpackString();
-		params.push_back( analyzer::FunctionView::NamedParameter( pname, pval));
+		parameter.push_back( analyzer::FunctionView::NamedParameter( pname, pval));
 	}
-	return analyzer::FunctionView( name, params);
+	return analyzer::FunctionView( name, parameter);
 }
 
 analyzer::FeatureView RpcDeserializer::unpackAnalyzerFeatureView()
