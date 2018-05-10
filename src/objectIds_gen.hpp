@@ -542,7 +542,7 @@ public:
 		Method_definePatternMatcherPostProc,
 		Method_definePatternMatcherPreProc,
 		Method_addElementFromPatternMatch,
-		Method_declareFeaturePriority,
+		Method_declareElementPriority,
 		Method_createContext
 	};
 };

@@ -3973,22 +3973,22 @@ try
 }
 }
 
-void QueryAnalyzerImpl::declareFeaturePriority( const std::string& p1, int p2)
+void QueryAnalyzerImpl::declareElementPriority( const std::string& p1, int p2)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_declareFeaturePriority);
+	msg.packByte( Method_declareElementPriority);
 	msg.packString( p1);
 	msg.packInt( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::declareFeaturePriority");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::declareElementPriority");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::declareFeaturePriority", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::declareElementPriority", err.what());
 	return void();
 }
 }

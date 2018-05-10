@@ -3566,14 +3566,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_declareFeaturePriority:
+		case QueryAnalyzerConst::Method_declareElementPriority:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			int p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackInt();
-			obj->declareFeaturePriority(p1,p2);
+			obj->declareElementPriority(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
