@@ -36,7 +36,6 @@
 #include "strus/tokenizerFunctionInterface.hpp"
 #include "strus/tokenMarkupContextInterface.hpp"
 #include "strus/tokenMarkupInstanceInterface.hpp"
-#include "strus/introspectionInterface.hpp"
 #include "strus/aclReaderInterface.hpp"
 #include "strus/attributeReaderInterface.hpp"
 #include "strus/databaseBackupCursorInterface.hpp"
@@ -113,7 +112,6 @@ public:
 
 	virtual NumericVariant evaluate( const analyzer::Document& p1) const;
 	virtual analyzer::FunctionView view( ) const;
-	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
 class AggregatorFunctionImpl
@@ -302,7 +300,6 @@ public:
 	virtual analyzer::Document analyze( const std::string& p1, const analyzer::DocumentClass& p2) const;
 	virtual DocumentAnalyzerContextInterface* createContext( const analyzer::DocumentClass& p1) const;
 	virtual analyzer::DocumentAnalyzerView view( ) const;
-	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
 class DocumentClassDetectorImpl
@@ -350,22 +347,6 @@ public:
 	virtual void skipDoc( const Index& p1);
 	virtual Index skipPos( const Index& p1);
 	virtual std::string fetch( );
-};
-
-class IntrospectionImpl
-		:public RpcInterfaceStub
-		,public strus::IntrospectionInterface
-		,public strus::IntrospectionConst
-{
-public:
-	virtual ~IntrospectionImpl();
-
-	IntrospectionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_Introspection, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual IntrospectionInterface* open( const std::string& p1) const;
-	virtual std::string value( ) const;
-	virtual std::vector<std::string> list( ) const;
 };
 
 class InvAclIteratorImpl
@@ -445,7 +426,6 @@ public:
 
 	virtual std::string normalize( const char* p1, std::size_t p2) const;
 	virtual analyzer::FunctionView view( ) const;
-	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
 class NormalizerFunctionImpl
@@ -498,7 +478,6 @@ public:
 	virtual bool compile( );
 	virtual PatternLexerContextInterface* createContext( ) const;
 	virtual analyzer::FunctionView view( ) const;
-	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
 class PatternLexerImpl
@@ -555,7 +534,6 @@ public:
 	virtual bool compile( );
 	virtual PatternMatcherContextInterface* createContext( ) const;
 	virtual analyzer::FunctionView view( ) const;
-	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
 class PatternMatcherImpl
@@ -591,7 +569,6 @@ public:
 	virtual std::vector<std::string> lexemTypes( ) const;
 	virtual unsigned int getSymbol( unsigned int p1, const std::string& p2) const;
 	virtual analyzer::FunctionView view( ) const;
-	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
 class PatternTermFeederImpl
@@ -833,7 +810,6 @@ public:
 	virtual SegmenterContextInterface* createContext( const analyzer::DocumentClass& p1) const;
 	virtual SegmenterMarkupContextInterface* createMarkupContext( const analyzer::DocumentClass& p1, const std::string& p2) const;
 	virtual analyzer::FunctionView view( ) const;
-	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
 class SegmenterImpl
@@ -1227,7 +1203,6 @@ public:
 
 	virtual TokenMarkupContextInterface* createContext( ) const;
 	virtual analyzer::FunctionView view( ) const;
-	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
 class TokenizerFunctionInstanceImpl
@@ -1244,7 +1219,6 @@ public:
 	virtual bool concatBeforeTokenize( ) const;
 	virtual std::vector<analyzer::Token> tokenize( const char* p1, std::size_t p2) const;
 	virtual analyzer::FunctionView view( ) const;
-	virtual IntrospectionInterface* createIntrospection( ) const;
 };
 
 class TokenizerFunctionImpl

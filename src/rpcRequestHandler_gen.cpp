@@ -118,25 +118,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case AggregatorFunctionInstanceConst::Method_createIntrospection:
-		{
-			RpcSerializer msg;
-			IntrospectionInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createIntrospection();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
 	}
 	break;
 	}
@@ -1551,25 +1532,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case DocumentAnalyzerConst::Method_createIntrospection:
-		{
-			RpcSerializer msg;
-			IntrospectionInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createIntrospection();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
 	}
 	break;
 	}
@@ -1758,77 +1720,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packString( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-	}
-	break;
-	}
-	case ClassId_Introspection:
-	{
-	IntrospectionInterface* obj = getObject<IntrospectionInterface>( classId, objId);
-	switch( (IntrospectionConst::MethodId)methodId)
-	{
-		case IntrospectionConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case IntrospectionConst::Method_open:
-		{
-			RpcSerializer msg;
-			IntrospectionInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->open(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-		case IntrospectionConst::Method_value:
-		{
-			RpcSerializer msg;
-			std::string p0;
-			p0 = obj->value();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packString( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case IntrospectionConst::Method_list:
-		{
-			RpcSerializer msg;
-			std::vector<std::string> p0;
-			p0 = obj->list();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packString( p0[ii]);
-			}
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -2159,25 +2050,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case NormalizerFunctionInstanceConst::Method_createIntrospection:
-		{
-			RpcSerializer msg;
-			IntrospectionInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createIntrospection();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
 	}
 	break;
 	}
@@ -2473,25 +2345,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packAnalyzerFunctionView( p0);
 			msg.packCrc32();
 			return msg.content();
-		}
-		case PatternLexerInstanceConst::Method_createIntrospection:
-		{
-			RpcSerializer msg;
-			IntrospectionInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createIntrospection();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
 		}
 	}
 	break;
@@ -2832,25 +2685,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case PatternMatcherInstanceConst::Method_createIntrospection:
-		{
-			RpcSerializer msg;
-			IntrospectionInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createIntrospection();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
 	}
 	break;
 	}
@@ -3047,25 +2881,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packAnalyzerFunctionView( p0);
 			msg.packCrc32();
 			return msg.content();
-		}
-		case PatternTermFeederInstanceConst::Method_createIntrospection:
-		{
-			RpcSerializer msg;
-			IntrospectionInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createIntrospection();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
 		}
 	}
 	break;
@@ -4711,25 +4526,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packAnalyzerFunctionView( p0);
 			msg.packCrc32();
 			return msg.content();
-		}
-		case SegmenterInstanceConst::Method_createIntrospection:
-		{
-			RpcSerializer msg;
-			IntrospectionInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createIntrospection();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
 		}
 	}
 	break;
@@ -7596,25 +7392,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case TokenMarkupInstanceConst::Method_createIntrospection:
-		{
-			RpcSerializer msg;
-			IntrospectionInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createIntrospection();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
 	}
 	break;
 	}
@@ -7684,25 +7461,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packAnalyzerFunctionView( p0);
 			msg.packCrc32();
 			return msg.content();
-		}
-		case TokenizerFunctionInstanceConst::Method_createIntrospection:
-		{
-			RpcSerializer msg;
-			IntrospectionInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createIntrospection();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
 		}
 	}
 	break;
