@@ -903,10 +903,6 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerFeatureView( " . $id . ");";
 	}
-	elsif ($type eq "analyzer::DocumentAnalyzerView")
-	{
-		$rt .= "msg.packAnalyzerDocumentAnalyzerView( " . $id . ");";
-	}
 	elsif ($type eq "analyzer::AggregatorView")
 	{
 		$rt .= "msg.packAnalyzerAggregatorView( " . $id . ");";
@@ -918,6 +914,14 @@ sub packParameter
 	elsif ($type eq "analyzer::SubContentDefinitionView")
 	{
 		$rt .= "msg.packSubContentDefinitionView( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::DocumentAnalyzerView")
+	{
+		$rt .= "msg.packAnalyzerDocumentAnalyzerView( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::QueryAnalyzerView")
+	{
+		$rt .= "msg.packAnalyzerQueryAnalyzerView( " . $id . ");";
 	}
 	else
 	{
@@ -1234,10 +1238,6 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerFeatureView();";
 	}
-	elsif ($type eq "analyzer::DocumentAnalyzerView")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerDocumentAnalyzerView();";
-	}
 	elsif ($type eq "analyzer::AggregatorView")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerAggregatorView();";
@@ -1249,6 +1249,14 @@ sub unpackParameter
 	elsif ($type eq "analyzer::SubContentDefinitionView")
 	{
 		$rt .= "$id = serializedMsg.unpackSubContentDefinitionView();";
+	}
+	elsif ($type eq "analyzer::DocumentAnalyzerView")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerDocumentAnalyzerView();";
+	}
+	elsif ($type eq "analyzer::QueryAnalyzerView")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerQueryAnalyzerView();";
 	}
 	else
 	{

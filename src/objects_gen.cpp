@@ -3795,6 +3795,28 @@ try
 }
 }
 
+analyzer::QueryAnalyzerView QueryAnalyzerImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::QueryAnalyzerView p0 = serializedMsg.unpackAnalyzerQueryAnalyzerView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::view");
+	return analyzer::QueryAnalyzerView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::view", err.what());
+	return analyzer::QueryAnalyzerView();
+}
+}
+
 QueryEvalImpl::~QueryEvalImpl()
 {
 	if (isConst()) return;

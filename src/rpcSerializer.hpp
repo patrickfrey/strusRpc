@@ -120,12 +120,14 @@ public:
 	void packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val);
 	void packFunctionDescription( const FunctionDescription& val);
 	void packVectorQueryResult( const VectorQueryResult& val);
-	void packAnalyzerDocumentAnalyzerView( const analyzer::DocumentAnalyzerView& val);
 	void packAnalyzerFunctionView( const analyzer::FunctionView& val);
 	void packAnalyzerFeatureView( const analyzer::FeatureView& val);
 	void packAnalyzerAggregatorView( const analyzer::AggregatorView& val);
 	void packAnalyzerSubDocumentDefinitionView( const analyzer::SubDocumentDefinitionView& val);
 	void packAnalyzerSubContentDefinitionView( const analyzer::SubContentDefinitionView& val);
+	void packAnalyzerDocumentAnalyzerView( const analyzer::DocumentAnalyzerView& val);
+	void packAnalyzerQueryElementView( const analyzer::QueryElementView& val);
+	void packAnalyzerQueryAnalyzerView( const analyzer::QueryAnalyzerView& val);
 	void packCrc32();
 	const std::string& content() const
 	{
@@ -206,12 +208,15 @@ public:
 	PostingJoinOperatorInterface::Description unpackPostingJoinOperatorDescription();
 	FunctionDescription unpackFunctionDescription();
 	VectorQueryResult unpackVectorQueryResult();
-	analyzer::DocumentAnalyzerView unpackAnalyzerDocumentAnalyzerView();
 	analyzer::FunctionView unpackAnalyzerFunctionView();
 	analyzer::FeatureView unpackAnalyzerFeatureView();
 	analyzer::AggregatorView unpackAnalyzerAggregatorView();
 	analyzer::SubDocumentDefinitionView unpackAnalyzerSubDocumentDefinitionView();
 	analyzer::SubContentDefinitionView unpackAnalyzerSubContentDefinitionView();
+	analyzer::DocumentAnalyzerView unpackAnalyzerDocumentAnalyzerView();
+	analyzer::QueryElementView unpackAnalyzerQueryElementView();
+	analyzer::QueryAnalyzerView unpackAnalyzerQueryAnalyzerView();
+
 	bool unpackCrc32();
 
 	std::size_t position() const
