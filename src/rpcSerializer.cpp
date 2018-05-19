@@ -634,6 +634,7 @@ void RpcSerializer::packAnalyzerPatternMatcherResult( const analyzer::PatternMat
 	for (; ri != re; ++ri)
 	{
 		packCharp( ri->name());
+		packCharp( ri->value());
 		packUint( ri->start_ordpos());
 		packUint( ri->end_ordpos());
 		packUint( ri->start_origseg());
@@ -1401,6 +1402,7 @@ analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResu
 	for (; ii < strsize; ++ii)
 	{
 		const char* i_name( unpackConstCharp());
+		const char* i_value( unpackConstCharp());
 		unsigned int i_start_ordpos = unpackUint();
 		unsigned int i_end_ordpos = unpackUint();
 		unsigned int i_start_origseg = unpackUint();
@@ -1409,7 +1411,7 @@ analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResu
 		unsigned int i_end_origpos = unpackUint();
 
 		analyzer::PatternMatcherResult::Item
-			item( i_name, i_start_ordpos, i_end_ordpos,
+			item( i_name, i_value, i_start_ordpos, i_end_ordpos,
 			i_start_origseg, i_start_origpos,
 			i_end_origseg, i_end_origpos);
 		itemlist.push_back( item);
