@@ -2876,7 +2876,7 @@ try
 }
 }
 
-void PatternMatcherInstanceImpl::attachVariable( const std::string& p1, const std::string& p2)
+void PatternMatcherInstanceImpl::attachVariable( const std::string& p1)
 {
 try
 {
@@ -2884,7 +2884,6 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_attachVariable);
 	msg.packString( p1);
-	msg.packString( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -2896,7 +2895,7 @@ try
 }
 }
 
-void PatternMatcherInstanceImpl::definePattern( const std::string& p1, bool p2)
+void PatternMatcherInstanceImpl::definePattern( const std::string& p1, const std::string& p2, bool p3)
 {
 try
 {
@@ -2904,7 +2903,8 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_definePattern);
 	msg.packString( p1);
-	msg.packBool( p2);
+	msg.packString( p2);
+	msg.packBool( p3);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {

@@ -2602,10 +2602,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			std::string p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackString();
-			obj->attachVariable(p1,p2);
+			obj->attachVariable(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -2620,10 +2618,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			bool p2;
+			std::string p2;
+			bool p3;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackBool();
-			obj->definePattern(p1,p2);
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackBool();
+			obj->definePattern(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
