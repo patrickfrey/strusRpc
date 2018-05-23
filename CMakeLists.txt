@@ -24,6 +24,7 @@ find_package( Threads )
 include( cmake/find_strus_package.cmake )
 include( cmake/link_rules.cmake )
 include( cmake/intl.cmake )
+include( cmake/libdl.cmake )
 include( cmake/cppcheck.cmake )
 endif()
 
