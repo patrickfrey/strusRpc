@@ -2699,7 +2699,7 @@ try
 }
 }
 
-std::vector<analyzer::PatternMatcherResult> PatternMatcherContextImpl::fetchResults( ) const
+std::vector<analyzer::PatternMatcherResult> PatternMatcherContextImpl::fetchResults( )
 {
 try
 {

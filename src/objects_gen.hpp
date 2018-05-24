@@ -508,7 +508,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_PatternMatcherContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void putInput( const analyzer::PatternLexem& p1);
-	virtual std::vector<analyzer::PatternMatcherResult> fetchResults( ) const;
+	virtual std::vector<analyzer::PatternMatcherResult> fetchResults( );
 	virtual analyzer::PatternMatcherStatistics getStatistics( ) const;
 	virtual void reset( );
 };
