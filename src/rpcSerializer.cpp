@@ -622,6 +622,7 @@ void RpcSerializer::packAnalyzerTokenMarkup( const analyzer::TokenMarkup& val)
 void RpcSerializer::packAnalyzerPatternMatcherResult( const analyzer::PatternMatcherResult& val)
 {
 	packCharp( val.name());
+	packCharp( val.value());
 	packUint( val.start_ordpos());
 	packUint( val.end_ordpos());
 	packUint( val.start_origseg());
@@ -1390,6 +1391,7 @@ analyzer::TokenMarkup RpcDeserializer::unpackAnalyzerTokenMarkup()
 analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResult()
 {
 	const char* name( unpackConstCharp());
+	const char* value( unpackConstCharp());
 	unsigned int start_ordpos = unpackUint();
 	unsigned int end_ordpos = unpackUint();
 	unsigned int start_origseg = unpackUint();
@@ -1416,7 +1418,7 @@ analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResu
 			i_end_origseg, i_end_origpos);
 		itemlist.push_back( item);
 	}
-	analyzer::PatternMatcherResult rt( name, start_ordpos, end_ordpos, start_origseg, start_origpos, end_origseg, end_origpos, itemlist);
+	analyzer::PatternMatcherResult rt( name, value, start_ordpos, end_ordpos, start_origseg, start_origpos, end_origseg, end_origpos, itemlist);
 	return rt;
 }
 
