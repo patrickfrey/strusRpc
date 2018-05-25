@@ -262,6 +262,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_defineDocumentSchemeDetector,
 		Method_detect
 	};
 };

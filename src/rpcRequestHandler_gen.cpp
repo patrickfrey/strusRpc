@@ -1545,6 +1545,36 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case DocumentClassDetectorConst::Method_defineDocumentSchemeDetector:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			std::vector<std::string> p3;
+			std::vector<std::string> p4;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			std::size_t n3 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n3; ++ii) {
+				std::string ee = serializedMsg.unpackString();
+				p3.push_back( ee);
+			}
+			std::size_t n4 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n4; ++ii) {
+				std::string ee = serializedMsg.unpackString();
+				p4.push_back( ee);
+			}
+			obj->defineDocumentSchemeDetector(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case DocumentClassDetectorConst::Method_detect:
 		{
 			RpcSerializer msg;

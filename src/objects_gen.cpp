@@ -1692,6 +1692,34 @@ DocumentClassDetectorImpl::~DocumentClassDetectorImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+void DocumentClassDetectorImpl::defineDocumentSchemeDetector( const std::string& p1, const std::string& p2, const std::vector<std::string>& p3, const std::vector<std::string>& p4)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineDocumentSchemeDetector);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packSize( p3.size());
+	for (unsigned int ii=0; ii < p3.size(); ++ii) {
+		msg.packString( p3[ii]);
+	}
+	msg.packSize( p4.size());
+	for (unsigned int ii=0; ii < p4.size(); ++ii) {
+		msg.packString( p4[ii]);
+	}
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentClassDetectorImpl::defineDocumentSchemeDetector");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentClassDetectorImpl::defineDocumentSchemeDetector", err.what());
+	return void();
+}
+}
+
 bool DocumentClassDetectorImpl::detect( analyzer::DocumentClass& p1, const char* p2, std::size_t p3, bool p4) const
 {
 try
