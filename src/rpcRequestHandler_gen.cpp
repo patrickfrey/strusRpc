@@ -340,6 +340,161 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_ContentStatisticsContext:
+	{
+	ContentStatisticsContextInterface* obj = getObject<ContentStatisticsContextInterface>( classId, objId);
+	switch( (ContentStatisticsContextConst::MethodId)methodId)
+	{
+		case ContentStatisticsContextConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ContentStatisticsContextConst::Method_putContent:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			analyzer::DocumentClass p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackDocumentClass();
+			obj->putContent(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case ContentStatisticsContextConst::Method_statistics:
+		{
+			RpcSerializer msg;
+			std::vector<analyzer::ContentStatisticsItem> p0;
+			p0 = obj->statistics();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packAnalyzerContentStatisticsItem( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case ContentStatisticsContextConst::Method_nofDocuments:
+		{
+			RpcSerializer msg;
+			int p0;
+			p0 = obj->nofDocuments();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packInt( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_ContentStatistics:
+	{
+	ContentStatisticsInterface* obj = getObject<ContentStatisticsInterface>( classId, objId);
+	switch( (ContentStatisticsConst::MethodId)methodId)
+	{
+		case ContentStatisticsConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ContentStatisticsConst::Method_addLibraryElement:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			int p3;
+			int p4;
+			TokenizerFunctionInstanceInterface* p5;
+			std::vector<NormalizerFunctionInstanceInterface*> p6;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackInt();
+			p4 = serializedMsg.unpackInt();
+			unsigned char classId_5; unsigned int objId_5;
+			serializedMsg.unpackObject( classId_5, objId_5);
+			if (classId_5 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p5 = getObject<TokenizerFunctionInstanceInterface>( classId_5, objId_5);
+			std::size_t n6 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n6; ++ii) {
+				unsigned char classId_; unsigned int objId_;
+				serializedMsg.unpackObject( classId_, objId_);
+				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
+				p6.push_back( ee);
+			}
+			obj->addLibraryElement(p1,p2,p3,p4,p5,p6);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case ContentStatisticsConst::Method_createContext:
+		{
+			RpcSerializer msg;
+			ContentStatisticsContextInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createContext();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case ContentStatisticsConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::ContentStatisticsView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerContentStatisticsView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_DatabaseBackupCursor:
 	{
 	DatabaseBackupCursorInterface* obj = getObject<DatabaseBackupCursorInterface>( classId, objId);

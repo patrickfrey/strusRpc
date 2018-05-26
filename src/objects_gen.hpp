@@ -12,6 +12,8 @@
 #include "strus/aggregatorFunctionInstanceInterface.hpp"
 #include "strus/aggregatorFunctionInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
+#include "strus/contentStatisticsContextInterface.hpp"
+#include "strus/contentStatisticsInterface.hpp"
 #include "strus/documentAnalyzerContextInterface.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
 #include "strus/documentClassDetectorInterface.hpp"
@@ -160,6 +162,38 @@ public:
 	virtual void skipDoc( const Index& p1);
 	virtual std::string getValue( const Index& p1) const;
 	virtual std::vector<std::string> getNames( ) const;
+};
+
+class ContentStatisticsContextImpl
+		:public RpcInterfaceStub
+		,public strus::ContentStatisticsContextInterface
+		,public strus::ContentStatisticsContextConst
+{
+public:
+	virtual ~ContentStatisticsContextImpl();
+
+	ContentStatisticsContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_ContentStatisticsContext, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void putContent( const std::string& p1, const std::string& p2, const analyzer::DocumentClass& p3);
+	virtual std::vector<analyzer::ContentStatisticsItem> statistics( );
+	virtual int nofDocuments( ) const;
+};
+
+class ContentStatisticsImpl
+		:public RpcInterfaceStub
+		,public strus::ContentStatisticsInterface
+		,public strus::ContentStatisticsConst
+{
+public:
+	virtual ~ContentStatisticsImpl();
+
+	ContentStatisticsImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_ContentStatistics, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void addLibraryElement( const std::string& p1, const std::string& p2, int p3, int p4, TokenizerFunctionInstanceInterface* p5, const std::vector<NormalizerFunctionInstanceInterface*>& p6);
+	virtual ContentStatisticsContextInterface* createContext( ) const;
+	virtual analyzer::ContentStatisticsView view( ) const;
 };
 
 class DatabaseBackupCursorImpl

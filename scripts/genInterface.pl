@@ -923,6 +923,14 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerQueryAnalyzerView( " . $id . ");";
 	}
+	elsif ($type eq "analyzer::ContentStatisticsView")
+	{
+		$rt .= "msg.packAnalyzerContentStatisticsView( " . $id . ");";
+	}
+	elsif ($type eq "analyzer::ContentStatisticsItem")
+	{
+		$rt .= "msg.packAnalyzerContentStatisticsItem( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -1257,6 +1265,14 @@ sub unpackParameter
 	elsif ($type eq "analyzer::QueryAnalyzerView")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerQueryAnalyzerView();";
+	}
+	elsif ($type eq "analyzer::ContentStatisticsItem")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerContentStatisticsItem();";
+	}
+	elsif ($type eq "analyzer::ContentStatisticsView")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerContentStatisticsView();";
 	}
 	else
 	{

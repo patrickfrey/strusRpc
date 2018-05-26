@@ -903,6 +903,34 @@ void RpcSerializer::packAnalyzerQueryAnalyzerView( const analyzer::QueryAnalyzer
 	}
 }
 
+void RpcSerializer::packAnalyzerContentStatisticsItem( const analyzer::ContentStatisticsItem& val)
+{
+	packString( val.select());
+	packString( val.type());
+	packString( val.example());
+	packInt( val.df());
+	packInt( val.tf());
+}
+
+void RpcSerializer::packAnalyzerContentStatisticsView( const analyzer::ContentStatisticsView& val)
+{
+	packSize( val.elements().size());
+	std::vector<analyzer::ContentStatisticsElementView>::const_iterator ei = val.elements().begin(), ee = val.elements().end();
+	for (; ei != ee; ++ei)
+	{
+		packString( ei->type());
+		packString( ei->regex());
+		packAnalyzerFunctionView( ei->tokenizer());
+		packSize( ei->normalizer().size());
+		std::vector<analyzer::FunctionView>::const_iterator
+			fi = ei->normalizer().begin(), fe = ei->normalizer().end();
+		for (; fi != fe; ++fi)
+		{
+			packAnalyzerFunctionView( *fi);
+		}
+	}
+}
+
 void RpcSerializer::packCrc32()
 {
 #if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM
@@ -1684,4 +1712,35 @@ analyzer::QueryAnalyzerView RpcDeserializer::unpackAnalyzerQueryAnalyzerView()
 	return analyzer::QueryAnalyzerView( elements, patternLexems, priorities);
 }
 
+
+analyzer::ContentStatisticsItem RpcDeserializer::unpackAnalyzerContentStatisticsItem()
+{
+	std::string select = unpackString();
+	std::string type = unpackString();
+	std::string example = unpackString();
+	int df = unpackInt();
+	int tf = unpackInt();
+	return analyzer::ContentStatisticsItem( select, type, example, df, tf);
+}
+
+analyzer::ContentStatisticsView RpcDeserializer::unpackAnalyzerContentStatisticsView()
+{
+	std::vector<analyzer::ContentStatisticsElementView> elements;
+	unsigned int ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		std::string type = unpackString();
+		std::string regex = unpackString();
+		analyzer::FunctionView tokenizer( unpackAnalyzerFunctionView());
+		std::vector<analyzer::FunctionView> normalizers;
+		unsigned int ni=0, ne=unpackSize();
+		for (; ni != ne; ++ni)
+		{
+			analyzer::FunctionView normalizer = unpackAnalyzerFunctionView();
+			normalizers.push_back( normalizer);
+		}
+		elements.push_back( analyzer::ContentStatisticsElementView( type, regex, tokenizer, normalizers));
+	}
+	return analyzer::ContentStatisticsView( elements);
+}
 

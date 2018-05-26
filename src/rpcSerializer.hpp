@@ -53,6 +53,8 @@
 #include "strus/analyzer/documentMetaData.hpp"
 #include "strus/analyzer/documentAttribute.hpp"
 #include "strus/analyzer/document.hpp"
+#include "strus/analyzer/contentStatisticsView.hpp"
+#include "strus/analyzer/contentStatisticsItem.hpp"
 
 namespace strus {
 
@@ -128,6 +130,8 @@ public:
 	void packAnalyzerDocumentAnalyzerView( const analyzer::DocumentAnalyzerView& val);
 	void packAnalyzerQueryElementView( const analyzer::QueryElementView& val);
 	void packAnalyzerQueryAnalyzerView( const analyzer::QueryAnalyzerView& val);
+	void packAnalyzerContentStatisticsItem( const analyzer::ContentStatisticsItem& val);
+	void packAnalyzerContentStatisticsView( const analyzer::ContentStatisticsView& val);
 	void packCrc32();
 	const std::string& content() const
 	{
@@ -216,6 +220,8 @@ public:
 	analyzer::DocumentAnalyzerView unpackAnalyzerDocumentAnalyzerView();
 	analyzer::QueryElementView unpackAnalyzerQueryElementView();
 	analyzer::QueryAnalyzerView unpackAnalyzerQueryAnalyzerView();
+	analyzer::ContentStatisticsView unpackAnalyzerContentStatisticsView();
+	analyzer::ContentStatisticsItem unpackAnalyzerContentStatisticsItem();
 
 	bool unpackCrc32();
 

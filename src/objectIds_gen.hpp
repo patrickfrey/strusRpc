@@ -17,6 +17,8 @@ enum ClassId
 	ClassId_AggregatorFunction,
 	ClassId_AnalyzerObjectBuilder,
 	ClassId_AttributeReader,
+	ClassId_ContentStatisticsContext,
+	ClassId_ContentStatistics,
 	ClassId_DatabaseBackupCursor,
 	ClassId_DatabaseClient,
 	ClassId_DatabaseCursor,
@@ -141,6 +143,30 @@ public:
 		Method_skipDoc,
 		Method_getValue,
 		Method_getNames
+	};
+};
+
+class ContentStatisticsContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_putContent,
+		Method_statistics,
+		Method_nofDocuments
+	};
+};
+
+class ContentStatisticsConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addLibraryElement,
+		Method_createContext,
+		Method_view
 	};
 };
 

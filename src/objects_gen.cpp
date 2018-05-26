@@ -369,6 +369,172 @@ try
 }
 }
 
+ContentStatisticsContextImpl::~ContentStatisticsContextImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void ContentStatisticsContextImpl::putContent( const std::string& p1, const std::string& p2, const analyzer::DocumentClass& p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_putContent);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packDocumentClass( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ContentStatisticsContextImpl::putContent");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ContentStatisticsContextImpl::putContent", err.what());
+	return void();
+}
+}
+
+std::vector<analyzer::ContentStatisticsItem> ContentStatisticsContextImpl::statistics( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_statistics);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<analyzer::ContentStatisticsItem> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		analyzer::ContentStatisticsItem elem_p0 = serializedMsg.unpackAnalyzerContentStatisticsItem();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ContentStatisticsContextImpl::statistics");
+	return std::vector<analyzer::ContentStatisticsItem>();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ContentStatisticsContextImpl::statistics", err.what());
+	return std::vector<analyzer::ContentStatisticsItem>();
+}
+}
+
+int ContentStatisticsContextImpl::nofDocuments( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_nofDocuments);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	int p0 = serializedMsg.unpackInt();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ContentStatisticsContextImpl::nofDocuments");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ContentStatisticsContextImpl::nofDocuments", err.what());
+	return 0;
+}
+}
+
+ContentStatisticsImpl::~ContentStatisticsImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void ContentStatisticsImpl::addLibraryElement( const std::string& p1, const std::string& p2, int p3, int p4, TokenizerFunctionInstanceInterface* p5, const std::vector<NormalizerFunctionInstanceInterface*>& p6)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addLibraryElement);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packInt( p3);
+	msg.packInt( p4);
+	const RpcInterfaceStub* impl_5 = dynamic_cast<const RpcInterfaceStub*>(p5);
+	if (!impl_5) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "TokenizerFunctionInstance");
+	msg.packObject( impl_5->classId(), impl_5->objId());
+	msg.packSize( p6.size());
+	for (unsigned int ii=0; ii < p6.size(); ++ii) {
+		const RpcInterfaceStub* impl_6 = dynamic_cast<const RpcInterfaceStub*>(p6[ii]);
+		if (!impl_6) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
+		msg.packObject( impl_6->classId(), impl_6->objId());
+	}
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ContentStatisticsImpl::addLibraryElement");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ContentStatisticsImpl::addLibraryElement", err.what());
+	return void();
+}
+}
+
+ContentStatisticsContextInterface* ContentStatisticsImpl::createContext( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createContext);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ContentStatisticsContext;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ContentStatisticsContextInterface* p0 = new ContentStatisticsContextImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ContentStatisticsImpl::createContext");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ContentStatisticsImpl::createContext", err.what());
+	return 0;
+}
+}
+
+analyzer::ContentStatisticsView ContentStatisticsImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::ContentStatisticsView p0 = serializedMsg.unpackAnalyzerContentStatisticsView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ContentStatisticsImpl::view");
+	return analyzer::ContentStatisticsView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ContentStatisticsImpl::view", err.what());
+	return analyzer::ContentStatisticsView();
+}
+}
+
 DatabaseBackupCursorImpl::~DatabaseBackupCursorImpl()
 {
 	if (isConst()) return;
