@@ -12,6 +12,7 @@
 #include "strus/aggregatorFunctionInstanceInterface.hpp"
 #include "strus/aggregatorFunctionInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
+#include "strus/contentIteratorInterface.hpp"
 #include "strus/contentStatisticsContextInterface.hpp"
 #include "strus/contentStatisticsInterface.hpp"
 #include "strus/documentAnalyzerContextInterface.hpp"
@@ -162,6 +163,20 @@ public:
 	virtual void skipDoc( const Index& p1);
 	virtual std::string getValue( const Index& p1) const;
 	virtual std::vector<std::string> getNames( ) const;
+};
+
+class ContentIteratorImpl
+		:public RpcInterfaceStub
+		,public strus::ContentIteratorInterface
+		,public strus::ContentIteratorConst
+{
+public:
+	virtual ~ContentIteratorImpl();
+
+	ContentIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_ContentIterator, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual bool getNext( const char*& p1, std::size_t& p2, const char*& p3, std::size_t& p4);
 };
 
 class ContentStatisticsContextImpl
@@ -861,6 +876,7 @@ public:
 
 	virtual const char* mimeType( ) const;
 	virtual SegmenterInstanceInterface* createInstance( const analyzer::SegmenterOptions& p1) const;
+	virtual ContentIteratorInterface* createContentIterator( const char* p1, std::size_t p2, const analyzer::DocumentClass& p3, const analyzer::SegmenterOptions& p4) const;
 	virtual const char* getDescription( ) const;
 };
 

@@ -17,6 +17,7 @@ enum ClassId
 	ClassId_AggregatorFunction,
 	ClassId_AnalyzerObjectBuilder,
 	ClassId_AttributeReader,
+	ClassId_ContentIterator,
 	ClassId_ContentStatisticsContext,
 	ClassId_ContentStatistics,
 	ClassId_DatabaseBackupCursor,
@@ -143,6 +144,16 @@ public:
 		Method_skipDoc,
 		Method_getValue,
 		Method_getNames
+	};
+};
+
+class ContentIteratorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getNext
 	};
 };
 
@@ -686,6 +697,7 @@ public:
 		Method_Destructor,
 		Method_mimeType,
 		Method_createInstance,
+		Method_createContentIterator,
 		Method_getDescription
 	};
 };

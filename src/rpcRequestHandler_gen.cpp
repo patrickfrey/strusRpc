@@ -340,6 +340,42 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_ContentIterator:
+	{
+	ContentIteratorInterface* obj = getObject<ContentIteratorInterface>( classId, objId);
+	switch( (ContentIteratorConst::MethodId)methodId)
+	{
+		case ContentIteratorConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ContentIteratorConst::Method_getNext:
+		{
+			RpcSerializer msg;
+			bool p0;
+			const char* p1;
+			std::size_t p2;
+			const char* p3;
+			std::size_t p4;
+			p0 = obj->getNext(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packBuffer( p1, p2);
+			msg.packBuffer( p3, p4);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_ContentStatisticsContext:
 	{
 	ContentStatisticsContextInterface* obj = getObject<ContentStatisticsContextInterface>( classId, objId);
@@ -4770,6 +4806,32 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createInstance(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case SegmenterConst::Method_createContentIterator:
+		{
+			RpcSerializer msg;
+			ContentIteratorInterface* p0;
+			const char* p1;
+			std::size_t p2;
+			analyzer::DocumentClass p3;
+			analyzer::SegmenterOptions p4;
+			serializedMsg.unpackBuffer( p1, p2);
+			p3 = serializedMsg.unpackDocumentClass();
+			p4 = serializedMsg.unpackSegmenterOptions();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createContentIterator(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

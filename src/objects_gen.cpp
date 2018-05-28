@@ -369,6 +369,44 @@ try
 }
 }
 
+ContentIteratorImpl::~ContentIteratorImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+bool ContentIteratorImpl::getNext( const char*& p1, std::size_t& p2, const char*& p3, std::size_t& p4)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getNext);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	const char* bp1;
+	serializedMsg.unpackBuffer( bp1, p2);
+	p1 = (const char*) ctx()->constConstructor()->get( bp1, p2);
+	const char* bp3;
+	serializedMsg.unpackBuffer( bp3, p4);
+	p3 = (const char*) ctx()->constConstructor()->get( bp3, p4);
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ContentIteratorImpl::getNext");
+	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ContentIteratorImpl::getNext", err.what());
+	return false;
+}
+}
+
 ContentStatisticsContextImpl::~ContentStatisticsContextImpl()
 {
 	if (isConst()) return;
@@ -5276,6 +5314,32 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SegmenterImpl::createInstance", err.what());
+	return 0;
+}
+}
+
+ContentIteratorInterface* SegmenterImpl::createContentIterator( const char* p1, std::size_t p2, const analyzer::DocumentClass& p3, const analyzer::SegmenterOptions& p4) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createContentIterator);
+	msg.packBuffer( p1, p2);
+	msg.packDocumentClass( p3);
+	msg.packSegmenterOptions( p4);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ContentIterator;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ContentIteratorInterface* p0 = new ContentIteratorImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SegmenterImpl::createContentIterator");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SegmenterImpl::createContentIterator", err.what());
 	return 0;
 }
 }
