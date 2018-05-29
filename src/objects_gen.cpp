@@ -497,7 +497,7 @@ ContentStatisticsImpl::~ContentStatisticsImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void ContentStatisticsImpl::addLibraryElement( const std::string& p1, const std::string& p2, int p3, int p4, TokenizerFunctionInstanceInterface* p5, const std::vector<NormalizerFunctionInstanceInterface*>& p6)
+void ContentStatisticsImpl::addLibraryElement( const std::string& p1, const std::string& p2, int p3, int p4, int p5, TokenizerFunctionInstanceInterface* p6, const std::vector<NormalizerFunctionInstanceInterface*>& p7)
 {
 try
 {
@@ -508,14 +508,15 @@ try
 	msg.packString( p2);
 	msg.packInt( p3);
 	msg.packInt( p4);
-	const RpcInterfaceStub* impl_5 = dynamic_cast<const RpcInterfaceStub*>(p5);
-	if (!impl_5) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "TokenizerFunctionInstance");
-	msg.packObject( impl_5->classId(), impl_5->objId());
-	msg.packSize( p6.size());
-	for (unsigned int ii=0; ii < p6.size(); ++ii) {
-		const RpcInterfaceStub* impl_6 = dynamic_cast<const RpcInterfaceStub*>(p6[ii]);
-		if (!impl_6) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
-		msg.packObject( impl_6->classId(), impl_6->objId());
+	msg.packInt( p5);
+	const RpcInterfaceStub* impl_6 = dynamic_cast<const RpcInterfaceStub*>(p6);
+	if (!impl_6) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "TokenizerFunctionInstance");
+	msg.packObject( impl_6->classId(), impl_6->objId());
+	msg.packSize( p7.size());
+	for (unsigned int ii=0; ii < p7.size(); ++ii) {
+		const RpcInterfaceStub* impl_7 = dynamic_cast<const RpcInterfaceStub*>(p7[ii]);
+		if (!impl_7) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
+		msg.packObject( impl_7->classId(), impl_7->objId());
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());

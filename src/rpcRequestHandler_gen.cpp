@@ -463,25 +463,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			int p3;
 			int p4;
-			TokenizerFunctionInstanceInterface* p5;
-			std::vector<NormalizerFunctionInstanceInterface*> p6;
+			int p5;
+			TokenizerFunctionInstanceInterface* p6;
+			std::vector<NormalizerFunctionInstanceInterface*> p7;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackInt();
 			p4 = serializedMsg.unpackInt();
-			unsigned char classId_5; unsigned int objId_5;
-			serializedMsg.unpackObject( classId_5, objId_5);
-			if (classId_5 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p5 = getObject<TokenizerFunctionInstanceInterface>( classId_5, objId_5);
-			std::size_t n6 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n6; ++ii) {
+			p5 = serializedMsg.unpackInt();
+			unsigned char classId_6; unsigned int objId_6;
+			serializedMsg.unpackObject( classId_6, objId_6);
+			if (classId_6 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p6 = getObject<TokenizerFunctionInstanceInterface>( classId_6, objId_6);
+			std::size_t n7 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n7; ++ii) {
 				unsigned char classId_; unsigned int objId_;
 				serializedMsg.unpackObject( classId_, objId_);
 				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
-				p6.push_back( ee);
+				p7.push_back( ee);
 			}
-			obj->addLibraryElement(p1,p2,p3,p4,p5,p6);
+			obj->addLibraryElement(p1,p2,p3,p4,p5,p6,p7);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
