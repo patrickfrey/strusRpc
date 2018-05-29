@@ -409,7 +409,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case ContentStatisticsContextConst::Method_statistics:
 		{
 			RpcSerializer msg;
-			std::vector<analyzer::ContentStatisticsItem> p0;
+			analyzer::ContentStatisticsResult p0;
 			p0 = obj->statistics();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -419,10 +419,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packAnalyzerContentStatisticsItem( p0[ii]);
-			}
+			msg.packAnalyzerContentStatisticsResult( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

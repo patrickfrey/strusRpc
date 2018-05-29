@@ -931,6 +931,10 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerContentStatisticsItem( " . $id . ");";
 	}
+	elsif ($type eq "analyzer::ContentStatisticsResult")
+	{
+		$rt .= "msg.packAnalyzerContentStatisticsResult( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -1269,6 +1273,10 @@ sub unpackParameter
 	elsif ($type eq "analyzer::ContentStatisticsItem")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerContentStatisticsItem();";
+	}
+	elsif ($type eq "analyzer::ContentStatisticsResult")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerContentStatisticsResult();";
 	}
 	elsif ($type eq "analyzer::ContentStatisticsView")
 	{

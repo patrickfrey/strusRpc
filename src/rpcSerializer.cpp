@@ -912,6 +912,17 @@ void RpcSerializer::packAnalyzerContentStatisticsItem( const analyzer::ContentSt
 	packInt( val.tf());
 }
 
+void RpcSerializer::packAnalyzerContentStatisticsResult( const analyzer::ContentStatisticsResult& val)
+{
+	packInt( val.nofDocuments());
+	packSize( val.items().size());
+	std::vector<analyzer::ContentStatisticsItem>::const_iterator ii = val.items().begin(), ie = val.items().end();
+	for (; ii != ie; ++ii)
+	{
+		packAnalyzerContentStatisticsItem( *ii);
+	}
+}
+
 void RpcSerializer::packAnalyzerContentStatisticsView( const analyzer::ContentStatisticsView& val)
 {
 	packSize( val.elements().size());
@@ -920,6 +931,9 @@ void RpcSerializer::packAnalyzerContentStatisticsView( const analyzer::ContentSt
 	{
 		packString( ei->type());
 		packString( ei->regex());
+		packInt( ei->priority());
+		packInt( ei->minLen());
+		packInt( ei->maxLen());
 		packAnalyzerFunctionView( ei->tokenizer());
 		packSize( ei->normalizer().size());
 		std::vector<analyzer::FunctionView>::const_iterator
@@ -1723,6 +1737,18 @@ analyzer::ContentStatisticsItem RpcDeserializer::unpackAnalyzerContentStatistics
 	return analyzer::ContentStatisticsItem( select, type, example, df, tf);
 }
 
+analyzer::ContentStatisticsResult RpcDeserializer::unpackAnalyzerContentStatisticsResult()
+{
+	int nofDocuments = unpackInt();
+	std::vector<analyzer::ContentStatisticsItem> items;
+	int ii=0, ie = unpackSize();
+	for (; ii != ie; ++ii)
+	{
+		items.push_back( unpackAnalyzerContentStatisticsItem());
+	}
+	return analyzer::ContentStatisticsResult( nofDocuments, items);
+}
+
 analyzer::ContentStatisticsView RpcDeserializer::unpackAnalyzerContentStatisticsView()
 {
 	std::vector<analyzer::ContentStatisticsElementView> elements;
@@ -1731,6 +1757,9 @@ analyzer::ContentStatisticsView RpcDeserializer::unpackAnalyzerContentStatistics
 	{
 		std::string type = unpackString();
 		std::string regex = unpackString();
+		int priority = unpackInt();
+		int minlen = unpackInt();
+		int maxlen = unpackInt();
 		analyzer::FunctionView tokenizer( unpackAnalyzerFunctionView());
 		std::vector<analyzer::FunctionView> normalizers;
 		unsigned int ni=0, ne=unpackSize();
@@ -1739,7 +1768,7 @@ analyzer::ContentStatisticsView RpcDeserializer::unpackAnalyzerContentStatistics
 			analyzer::FunctionView normalizer = unpackAnalyzerFunctionView();
 			normalizers.push_back( normalizer);
 		}
-		elements.push_back( analyzer::ContentStatisticsElementView( type, regex, tokenizer, normalizers));
+		elements.push_back( analyzer::ContentStatisticsElementView( type, regex, priority, minlen, maxlen, tokenizer, normalizers));
 	}
 	return analyzer::ContentStatisticsView( elements);
 }

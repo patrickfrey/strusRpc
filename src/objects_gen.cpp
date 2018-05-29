@@ -438,7 +438,7 @@ try
 }
 }
 
-std::vector<analyzer::ContentStatisticsItem> ContentStatisticsContextImpl::statistics( )
+analyzer::ContentStatisticsResult ContentStatisticsContextImpl::statistics( )
 {
 try
 {
@@ -449,19 +449,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::vector<analyzer::ContentStatisticsItem> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		analyzer::ContentStatisticsItem elem_p0 = serializedMsg.unpackAnalyzerContentStatisticsItem();
-		p0.push_back( elem_p0);
-	}
+	analyzer::ContentStatisticsResult p0 = serializedMsg.unpackAnalyzerContentStatisticsResult();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ContentStatisticsContextImpl::statistics");
-	return std::vector<analyzer::ContentStatisticsItem>();
+	return analyzer::ContentStatisticsResult();
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ContentStatisticsContextImpl::statistics", err.what());
-	return std::vector<analyzer::ContentStatisticsItem>();
+	return analyzer::ContentStatisticsResult();
 }
 }
 
