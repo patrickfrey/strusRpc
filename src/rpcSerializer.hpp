@@ -14,6 +14,7 @@
 #include "strus/analyzer/segmenterOptions.hpp"
 #include "strus/analyzer/documentClass.hpp"
 #include "strus/analyzer/documentAnalyzerView.hpp"
+#include "strus/analyzer/documentAnalyzerMapView.hpp"
 #include "strus/analyzer/functionView.hpp"
 #include "strus/analyzer/featureView.hpp"
 #include "strus/analyzer/aggregatorView.hpp"
@@ -129,6 +130,7 @@ public:
 	void packAnalyzerSubDocumentDefinitionView( const analyzer::SubDocumentDefinitionView& val);
 	void packAnalyzerSubContentDefinitionView( const analyzer::SubContentDefinitionView& val);
 	void packAnalyzerDocumentAnalyzerView( const analyzer::DocumentAnalyzerView& val);
+	void packAnalyzerDocumentAnalyzerMapView( const analyzer::DocumentAnalyzerMapView& val);
 	void packAnalyzerQueryElementView( const analyzer::QueryElementView& val);
 	void packAnalyzerQueryAnalyzerView( const analyzer::QueryAnalyzerView& val);
 	void packAnalyzerContentStatisticsItem( const analyzer::ContentStatisticsItem& val);
@@ -220,6 +222,7 @@ public:
 	analyzer::SubDocumentDefinitionView unpackAnalyzerSubDocumentDefinitionView();
 	analyzer::SubContentDefinitionView unpackAnalyzerSubContentDefinitionView();
 	analyzer::DocumentAnalyzerView unpackAnalyzerDocumentAnalyzerView();
+	analyzer::DocumentAnalyzerMapView unpackAnalyzerDocumentAnalyzerMapView();
 	analyzer::QueryElementView unpackAnalyzerQueryElementView();
 	analyzer::QueryAnalyzerView unpackAnalyzerQueryAnalyzerView();
 	analyzer::ContentStatisticsView unpackAnalyzerContentStatisticsView();

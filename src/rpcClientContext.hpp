@@ -48,7 +48,7 @@ public:
 	{
 		return m_messaging->config();
 	}
-	
+
 private:
 	void handleError( const std::string& msgstr) const;
 

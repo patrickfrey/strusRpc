@@ -27,6 +27,7 @@ enum ClassId
 	ClassId_DatabaseTransaction,
 	ClassId_DocumentAnalyzerContext,
 	ClassId_DocumentAnalyzer,
+	ClassId_DocumentAnalyzerMap,
 	ClassId_DocumentClassDetector,
 	ClassId_DocumentTermIterator,
 	ClassId_ForwardIterator,
@@ -130,7 +131,10 @@ public:
 		Method_Destructor,
 		Method_getTextProcessor,
 		Method_createDocumentAnalyzer,
-		Method_createQueryAnalyzer
+		Method_createQueryAnalyzer,
+		Method_createDocumentAnalyzerMap,
+		Method_createDocumentClassDetector,
+		Method_createContentStatistics
 	};
 };
 
@@ -287,6 +291,19 @@ public:
 		Method_addForwardIndexFeatureFromPatternMatch,
 		Method_defineMetaDataFromPatternMatch,
 		Method_defineAttributeFromPatternMatch,
+		Method_analyze,
+		Method_createContext,
+		Method_view
+	};
+};
+
+class DocumentAnalyzerMapConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addAnalyzer,
 		Method_analyze,
 		Method_createContext,
 		Method_view

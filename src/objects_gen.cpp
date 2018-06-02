@@ -267,6 +267,75 @@ try
 }
 }
 
+DocumentAnalyzerMapInterface* AnalyzerObjectBuilderImpl::createDocumentAnalyzerMap( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createDocumentAnalyzerMap);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzerMap;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	DocumentAnalyzerMapInterface* p0 = new DocumentAnalyzerMapImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::createDocumentAnalyzerMap");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "AnalyzerObjectBuilderImpl::createDocumentAnalyzerMap", err.what());
+	return 0;
+}
+}
+
+DocumentClassDetectorInterface* AnalyzerObjectBuilderImpl::createDocumentClassDetector( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createDocumentClassDetector);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_DocumentClassDetector;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	DocumentClassDetectorInterface* p0 = new DocumentClassDetectorImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::createDocumentClassDetector");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "AnalyzerObjectBuilderImpl::createDocumentClassDetector", err.what());
+	return 0;
+}
+}
+
+ContentStatisticsInterface* AnalyzerObjectBuilderImpl::createContentStatistics( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createContentStatistics);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ContentStatistics;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ContentStatisticsInterface* p0 = new ContentStatisticsImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::createContentStatistics");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "AnalyzerObjectBuilderImpl::createContentStatistics", err.what());
+	return 0;
+}
+}
+
 AttributeReaderImpl::~AttributeReaderImpl()
 {
 	if (isConst()) return;
@@ -1879,6 +1948,109 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::view", err.what());
 	return analyzer::DocumentAnalyzerView();
+}
+}
+
+DocumentAnalyzerMapImpl::~DocumentAnalyzerMapImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void DocumentAnalyzerMapImpl::addAnalyzer( const std::string& p1, const std::string& p2, DocumentAnalyzerInterface* p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addAnalyzer);
+	msg.packString( p1);
+	msg.packString( p2);
+	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
+	if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "DocumentAnalyzer");
+	msg.packObject( impl_3->classId(), impl_3->objId());
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerMapImpl::addAnalyzer");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerMapImpl::addAnalyzer", err.what());
+	return void();
+}
+}
+
+analyzer::Document DocumentAnalyzerMapImpl::analyze( const std::string& p1, const analyzer::DocumentClass& p2) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_analyze);
+	msg.packString( p1);
+	msg.packDocumentClass( p2);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::Document p0 = serializedMsg.unpackAnalyzerDocument();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerMapImpl::analyze");
+	return analyzer::Document();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerMapImpl::analyze", err.what());
+	return analyzer::Document();
+}
+}
+
+DocumentAnalyzerContextInterface* DocumentAnalyzerMapImpl::createContext( const analyzer::DocumentClass& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createContext);
+	msg.packDocumentClass( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzerContext;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	DocumentAnalyzerContextInterface* p0 = new DocumentAnalyzerContextImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerMapImpl::createContext");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerMapImpl::createContext", err.what());
+	return 0;
+}
+}
+
+analyzer::DocumentAnalyzerMapView DocumentAnalyzerMapImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	analyzer::DocumentAnalyzerMapView p0 = serializedMsg.unpackAnalyzerDocumentAnalyzerMapView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerMapImpl::view");
+	return analyzer::DocumentAnalyzerMapView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerMapImpl::view", err.what());
+	return analyzer::DocumentAnalyzerMapView();
 }
 }
 

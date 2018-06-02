@@ -17,6 +17,7 @@
 #include "strus/contentStatisticsInterface.hpp"
 #include "strus/documentAnalyzerContextInterface.hpp"
 #include "strus/documentAnalyzerInterface.hpp"
+#include "strus/documentAnalyzerMapInterface.hpp"
 #include "strus/documentClassDetectorInterface.hpp"
 #include "strus/normalizerFunctionInstanceInterface.hpp"
 #include "strus/normalizerFunctionInterface.hpp"
@@ -146,6 +147,9 @@ public:
 	virtual const TextProcessorInterface* getTextProcessor( ) const;
 	virtual DocumentAnalyzerInterface* createDocumentAnalyzer( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const;
 	virtual QueryAnalyzerInterface* createQueryAnalyzer( ) const;
+	virtual DocumentAnalyzerMapInterface* createDocumentAnalyzerMap( ) const;
+	virtual DocumentClassDetectorInterface* createDocumentClassDetector( ) const;
+	virtual ContentStatisticsInterface* createContentStatistics( ) const;
 };
 
 class AttributeReaderImpl
@@ -349,6 +353,23 @@ public:
 	virtual analyzer::Document analyze( const std::string& p1, const analyzer::DocumentClass& p2) const;
 	virtual DocumentAnalyzerContextInterface* createContext( const analyzer::DocumentClass& p1) const;
 	virtual analyzer::DocumentAnalyzerView view( ) const;
+};
+
+class DocumentAnalyzerMapImpl
+		:public RpcInterfaceStub
+		,public strus::DocumentAnalyzerMapInterface
+		,public strus::DocumentAnalyzerMapConst
+{
+public:
+	virtual ~DocumentAnalyzerMapImpl();
+
+	DocumentAnalyzerMapImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzerMap, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void addAnalyzer( const std::string& p1, const std::string& p2, DocumentAnalyzerInterface* p3);
+	virtual analyzer::Document analyze( const std::string& p1, const analyzer::DocumentClass& p2) const;
+	virtual DocumentAnalyzerContextInterface* createContext( const analyzer::DocumentClass& p1) const;
+	virtual analyzer::DocumentAnalyzerMapView view( ) const;
 };
 
 class DocumentClassDetectorImpl

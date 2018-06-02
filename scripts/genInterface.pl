@@ -919,6 +919,10 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerDocumentAnalyzerView( " . $id . ");";
 	}
+	elsif ($type eq "analyzer::DocumentAnalyzerMapView")
+	{
+		$rt .= "msg.packAnalyzerDocumentAnalyzerMapView( " . $id . ");";
+	}
 	elsif ($type eq "analyzer::QueryAnalyzerView")
 	{
 		$rt .= "msg.packAnalyzerQueryAnalyzerView( " . $id . ");";
@@ -1265,6 +1269,10 @@ sub unpackParameter
 	elsif ($type eq "analyzer::DocumentAnalyzerView")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerDocumentAnalyzerView();";
+	}
+	elsif ($type eq "analyzer::DocumentAnalyzerMapView")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerDocumentAnalyzerMapView();";
 	}
 	elsif ($type eq "analyzer::QueryAnalyzerView")
 	{

@@ -250,6 +250,63 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case AnalyzerObjectBuilderConst::Method_createDocumentAnalyzerMap:
+		{
+			RpcSerializer msg;
+			DocumentAnalyzerMapInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createDocumentAnalyzerMap();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case AnalyzerObjectBuilderConst::Method_createDocumentClassDetector:
+		{
+			RpcSerializer msg;
+			DocumentClassDetectorInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createDocumentClassDetector();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case AnalyzerObjectBuilderConst::Method_createContentStatistics:
+		{
+			RpcSerializer msg;
+			ContentStatisticsInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createContentStatistics();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 	}
 	break;
 	}
@@ -1719,6 +1776,101 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packAnalyzerDocumentAnalyzerView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_DocumentAnalyzerMap:
+	{
+	DocumentAnalyzerMapInterface* obj = getObject<DocumentAnalyzerMapInterface>( classId, objId);
+	switch( (DocumentAnalyzerMapConst::MethodId)methodId)
+	{
+		case DocumentAnalyzerMapConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case DocumentAnalyzerMapConst::Method_addAnalyzer:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			DocumentAnalyzerInterface* p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			unsigned char classId_3; unsigned int objId_3;
+			serializedMsg.unpackObject( classId_3, objId_3);
+			if (classId_3 != ClassId_DocumentAnalyzer) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p3 = getObject<DocumentAnalyzerInterface>( classId_3, objId_3);
+			obj->addAnalyzer(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case DocumentAnalyzerMapConst::Method_analyze:
+		{
+			RpcSerializer msg;
+			analyzer::Document p0;
+			std::string p1;
+			analyzer::DocumentClass p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDocumentClass();
+			p0 = obj->analyze(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerDocument( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case DocumentAnalyzerMapConst::Method_createContext:
+		{
+			RpcSerializer msg;
+			DocumentAnalyzerContextInterface* p0;
+			analyzer::DocumentClass p1;
+			p1 = serializedMsg.unpackDocumentClass();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createContext(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case DocumentAnalyzerMapConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::DocumentAnalyzerMapView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerDocumentAnalyzerMapView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

@@ -861,6 +861,18 @@ void RpcSerializer::packAnalyzerDocumentAnalyzerView( const analyzer::DocumentAn
 	}
 }
 
+void RpcSerializer::packAnalyzerDocumentAnalyzerMapView( const analyzer::DocumentAnalyzerMapView& val)
+{
+	packSize( val.definitions().size());
+	std::vector<analyzer::DocumentAnalyzerMapElementView>::const_iterator di = val.definitions().begin(), de = val.definitions().end();
+	for (; di != de; ++di)
+	{
+		packString( di->mimeType());
+		packString( di->scheme());
+		packAnalyzerDocumentAnalyzerView( di->analyzer());
+	}
+}
+
 void RpcSerializer::packAnalyzerQueryElementView( const analyzer::QueryElementView& val)
 {
 	packString( val.type());
@@ -1685,6 +1697,20 @@ analyzer::DocumentAnalyzerView RpcDeserializer::unpackAnalyzerDocumentAnalyzerVi
 	return analyzer::DocumentAnalyzerView(
 				segmenter, subContentDefinitionView, subDocumentDefinitionView,
 				attributes, metadata, searchindex, forwardindex, aggregators);
+}
+
+analyzer::DocumentAnalyzerMapView RpcDeserializer::unpackAnalyzerDocumentAnalyzerMapView()
+{
+	std::vector<analyzer::DocumentAnalyzerMapElementView> definitions;
+	unsigned int di=0, de=unpackSize();
+	for (; di != de; ++di)
+	{
+		std::string mimeType = unpackString();
+		std::string scheme = unpackString();
+		analyzer::DocumentAnalyzerView analyzer = unpackAnalyzerDocumentAnalyzerView();
+		definitions.push_back( analyzer::DocumentAnalyzerMapElementView( mimeType, scheme, analyzer));
+	}
+	return analyzer::DocumentAnalyzerMapView( definitions);
 }
 
 analyzer::QueryElementView RpcDeserializer::unpackAnalyzerQueryElementView()
