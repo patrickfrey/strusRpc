@@ -16,7 +16,7 @@
 #include "strus/contentStatisticsContextInterface.hpp"
 #include "strus/contentStatisticsInterface.hpp"
 #include "strus/documentAnalyzerContextInterface.hpp"
-#include "strus/documentAnalyzerInterface.hpp"
+#include "strus/documentAnalyzerInstanceInterface.hpp"
 #include "strus/documentAnalyzerMapInterface.hpp"
 #include "strus/documentClassDetectorInterface.hpp"
 #include "strus/normalizerFunctionInstanceInterface.hpp"
@@ -30,7 +30,7 @@
 #include "strus/patternTermFeederInstanceInterface.hpp"
 #include "strus/patternTermFeederInterface.hpp"
 #include "strus/queryAnalyzerContextInterface.hpp"
-#include "strus/queryAnalyzerInterface.hpp"
+#include "strus/queryAnalyzerInstanceInterface.hpp"
 #include "strus/segmenterContextInterface.hpp"
 #include "strus/segmenterInstanceInterface.hpp"
 #include "strus/segmenterInterface.hpp"
@@ -145,8 +145,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_AnalyzerObjectBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual const TextProcessorInterface* getTextProcessor( ) const;
-	virtual DocumentAnalyzerInterface* createDocumentAnalyzer( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const;
-	virtual QueryAnalyzerInterface* createQueryAnalyzer( ) const;
+	virtual DocumentAnalyzerInstanceInterface* createDocumentAnalyzer( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const;
+	virtual QueryAnalyzerInstanceInterface* createQueryAnalyzer( ) const;
 	virtual DocumentAnalyzerMapInterface* createDocumentAnalyzerMap( ) const;
 	virtual DocumentClassDetectorInterface* createDocumentClassDetector( ) const;
 	virtual ContentStatisticsInterface* createContentStatistics( ) const;
@@ -325,16 +325,16 @@ public:
 	virtual bool analyzeNext( analyzer::Document& p1);
 };
 
-class DocumentAnalyzerImpl
+class DocumentAnalyzerInstanceImpl
 		:public RpcInterfaceStub
-		,public strus::DocumentAnalyzerInterface
-		,public strus::DocumentAnalyzerConst
+		,public strus::DocumentAnalyzerInstanceInterface
+		,public strus::DocumentAnalyzerInstanceConst
 {
 public:
-	virtual ~DocumentAnalyzerImpl();
+	virtual ~DocumentAnalyzerInstanceImpl();
 
-	DocumentAnalyzerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzer, objId_, ctx_, isConst_, errorhnd_){}
+	DocumentAnalyzerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5);
 	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5);
@@ -366,8 +366,8 @@ public:
 	DocumentAnalyzerMapImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzerMap, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual DocumentAnalyzerInterface* createAnalyzer( const std::string& p1, const std::string& p2) const;
-	virtual void addAnalyzer( const std::string& p1, const std::string& p2, DocumentAnalyzerInterface* p3);
+	virtual DocumentAnalyzerInstanceInterface* createAnalyzer( const std::string& p1, const std::string& p2) const;
+	virtual void addAnalyzer( const std::string& p1, const std::string& p2, DocumentAnalyzerInstanceInterface* p3);
 	virtual analyzer::Document analyze( const std::string& p1, const analyzer::DocumentClass& p2) const;
 	virtual DocumentAnalyzerContextInterface* createContext( const analyzer::DocumentClass& p1) const;
 	virtual analyzer::DocumentAnalyzerMapView view( ) const;
@@ -710,16 +710,16 @@ public:
 	virtual analyzer::QueryTermExpression analyze( );
 };
 
-class QueryAnalyzerImpl
+class QueryAnalyzerInstanceImpl
 		:public RpcInterfaceStub
-		,public strus::QueryAnalyzerInterface
-		,public strus::QueryAnalyzerConst
+		,public strus::QueryAnalyzerInstanceInterface
+		,public strus::QueryAnalyzerInstanceConst
 {
 public:
-	virtual ~QueryAnalyzerImpl();
+	virtual ~QueryAnalyzerInstanceImpl();
 
-	QueryAnalyzerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzer, objId_, ctx_, isConst_, errorhnd_){}
+	QueryAnalyzerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);

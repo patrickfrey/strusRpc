@@ -26,7 +26,7 @@ enum ClassId
 	ClassId_Database,
 	ClassId_DatabaseTransaction,
 	ClassId_DocumentAnalyzerContext,
-	ClassId_DocumentAnalyzer,
+	ClassId_DocumentAnalyzerInstance,
 	ClassId_DocumentAnalyzerMap,
 	ClassId_DocumentClassDetector,
 	ClassId_DocumentTermIterator,
@@ -48,7 +48,7 @@ enum ClassId
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
 	ClassId_QueryAnalyzerContext,
-	ClassId_QueryAnalyzer,
+	ClassId_QueryAnalyzerInstance,
 	ClassId_QueryEval,
 	ClassId_Query,
 	ClassId_QueryProcessor,
@@ -271,7 +271,7 @@ public:
 	};
 };
 
-class DocumentAnalyzerConst
+class DocumentAnalyzerInstanceConst
 {
 public:
 	enum MethodId
@@ -568,7 +568,7 @@ public:
 	};
 };
 
-class QueryAnalyzerConst
+class QueryAnalyzerInstanceConst
 {
 public:
 	enum MethodId

@@ -217,7 +217,7 @@ try
 }
 }
 
-DocumentAnalyzerInterface* AnalyzerObjectBuilderImpl::createDocumentAnalyzer( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const
+DocumentAnalyzerInstanceInterface* AnalyzerObjectBuilderImpl::createDocumentAnalyzer( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const
 {
 try
 {
@@ -229,11 +229,11 @@ try
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	msg.packSegmenterOptions( p2);
 	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzer;
+	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzerInstance;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	DocumentAnalyzerInterface* p0 = new DocumentAnalyzerImpl( objId_0, ctx(), false, errorhnd());
+	DocumentAnalyzerInstanceInterface* p0 = new DocumentAnalyzerInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::createDocumentAnalyzer");
@@ -244,7 +244,7 @@ try
 }
 }
 
-QueryAnalyzerInterface* AnalyzerObjectBuilderImpl::createQueryAnalyzer( ) const
+QueryAnalyzerInstanceInterface* AnalyzerObjectBuilderImpl::createQueryAnalyzer( ) const
 {
 try
 {
@@ -252,11 +252,11 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createQueryAnalyzer);
 	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_QueryAnalyzer;
+	unsigned char classId_0 = (unsigned char)ClassId_QueryAnalyzerInstance;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	QueryAnalyzerInterface* p0 = new QueryAnalyzerImpl( objId_0, ctx(), false, errorhnd());
+	QueryAnalyzerInstanceInterface* p0 = new QueryAnalyzerInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::createQueryAnalyzer");
@@ -1427,7 +1427,7 @@ try
 }
 }
 
-DocumentAnalyzerImpl::~DocumentAnalyzerImpl()
+DocumentAnalyzerInstanceImpl::~DocumentAnalyzerInstanceImpl()
 {
 	if (isConst()) return;
 	RpcSerializer msg;
@@ -1437,7 +1437,7 @@ DocumentAnalyzerImpl::~DocumentAnalyzerImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void DocumentAnalyzerImpl::addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5)
+void DocumentAnalyzerInstanceImpl::addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5)
 {
 try
 {
@@ -1467,15 +1467,15 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addSearchIndexFeature");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::addSearchIndexFeature");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addSearchIndexFeature", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::addSearchIndexFeature", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5)
+void DocumentAnalyzerInstanceImpl::addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5)
 {
 try
 {
@@ -1505,15 +1505,15 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addForwardIndexFeature");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::addForwardIndexFeature");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addForwardIndexFeature", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::addForwardIndexFeature", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::defineMetaData( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
+void DocumentAnalyzerInstanceImpl::defineMetaData( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
 try
 {
@@ -1542,15 +1542,15 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineMetaData");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::defineMetaData");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineMetaData", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::defineMetaData", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::defineAggregatedMetaData( const std::string& p1, AggregatorFunctionInstanceInterface* p2)
+void DocumentAnalyzerInstanceImpl::defineAggregatedMetaData( const std::string& p1, AggregatorFunctionInstanceInterface* p2)
 {
 try
 {
@@ -1567,15 +1567,15 @@ try
 	done_2->release();
 	delete p2;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineAggregatedMetaData");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::defineAggregatedMetaData");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineAggregatedMetaData", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::defineAggregatedMetaData", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
+void DocumentAnalyzerInstanceImpl::defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
 try
 {
@@ -1604,15 +1604,15 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineAttribute");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::defineAttribute");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineAttribute", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::defineAttribute", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::defineSubDocument( const std::string& p1, const std::string& p2)
+void DocumentAnalyzerInstanceImpl::defineSubDocument( const std::string& p1, const std::string& p2)
 {
 try
 {
@@ -1624,15 +1624,15 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineSubDocument");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::defineSubDocument");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineSubDocument", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::defineSubDocument", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::defineSubContent( const std::string& p1, const analyzer::DocumentClass& p2)
+void DocumentAnalyzerInstanceImpl::defineSubContent( const std::string& p1, const analyzer::DocumentClass& p2)
 {
 try
 {
@@ -1644,15 +1644,15 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineSubContent");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::defineSubContent");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineSubContent", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::defineSubContent", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
+void DocumentAnalyzerInstanceImpl::addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
 try
 {
@@ -1681,15 +1681,15 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addPatternLexem");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::addPatternLexem");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addPatternLexem", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::addPatternLexem", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3)
+void DocumentAnalyzerInstanceImpl::definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3)
 {
 try
 {
@@ -1712,15 +1712,15 @@ try
 	done_3->release();
 	delete p3;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::definePatternMatcherPostProc");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::definePatternMatcherPostProc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::definePatternMatcherPostProc", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::definePatternMatcherPostProc", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4)
+void DocumentAnalyzerInstanceImpl::definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4)
 {
 try
 {
@@ -1747,15 +1747,15 @@ try
 	done_3->release();
 	delete p3;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::definePatternMatcherPreProc");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::definePatternMatcherPreProc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::definePatternMatcherPreProc", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::definePatternMatcherPreProc", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::addSearchIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, const analyzer::FeatureOptions& p4)
+void DocumentAnalyzerInstanceImpl::addSearchIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, const analyzer::FeatureOptions& p4)
 {
 try
 {
@@ -1779,15 +1779,15 @@ try
 		delete p3[ai_3];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addSearchIndexFeatureFromPatternMatch");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::addSearchIndexFeatureFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addSearchIndexFeatureFromPatternMatch", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::addSearchIndexFeatureFromPatternMatch", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::addForwardIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, const analyzer::FeatureOptions& p4)
+void DocumentAnalyzerInstanceImpl::addForwardIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, const analyzer::FeatureOptions& p4)
 {
 try
 {
@@ -1811,15 +1811,15 @@ try
 		delete p3[ai_3];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::addForwardIndexFeatureFromPatternMatch");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::addForwardIndexFeatureFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::addForwardIndexFeatureFromPatternMatch", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::addForwardIndexFeatureFromPatternMatch", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::defineMetaDataFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
+void DocumentAnalyzerInstanceImpl::defineMetaDataFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
 {
 try
 {
@@ -1842,15 +1842,15 @@ try
 		delete p3[ai_3];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineMetaDataFromPatternMatch");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::defineMetaDataFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineMetaDataFromPatternMatch", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::defineMetaDataFromPatternMatch", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerImpl::defineAttributeFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
+void DocumentAnalyzerInstanceImpl::defineAttributeFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
 {
 try
 {
@@ -1873,15 +1873,15 @@ try
 		delete p3[ai_3];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::defineAttributeFromPatternMatch");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::defineAttributeFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::defineAttributeFromPatternMatch", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::defineAttributeFromPatternMatch", err.what());
 	return void();
 }
 }
 
-analyzer::Document DocumentAnalyzerImpl::analyze( const std::string& p1, const analyzer::DocumentClass& p2) const
+analyzer::Document DocumentAnalyzerInstanceImpl::analyze( const std::string& p1, const analyzer::DocumentClass& p2) const
 {
 try
 {
@@ -1897,15 +1897,15 @@ try
 	analyzer::Document p0 = serializedMsg.unpackAnalyzerDocument();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::analyze");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::analyze");
 	return analyzer::Document();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::analyze", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::analyze", err.what());
 	return analyzer::Document();
 }
 }
 
-DocumentAnalyzerContextInterface* DocumentAnalyzerImpl::createContext( const analyzer::DocumentClass& p1) const
+DocumentAnalyzerContextInterface* DocumentAnalyzerInstanceImpl::createContext( const analyzer::DocumentClass& p1) const
 {
 try
 {
@@ -1921,15 +1921,15 @@ try
 	DocumentAnalyzerContextInterface* p0 = new DocumentAnalyzerContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::createContext");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::createContext");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::createContext", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::createContext", err.what());
 	return 0;
 }
 }
 
-analyzer::DocumentAnalyzerView DocumentAnalyzerImpl::view( ) const
+analyzer::DocumentAnalyzerView DocumentAnalyzerInstanceImpl::view( ) const
 {
 try
 {
@@ -1943,10 +1943,10 @@ try
 	analyzer::DocumentAnalyzerView p0 = serializedMsg.unpackAnalyzerDocumentAnalyzerView();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerImpl::view");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::view");
 	return analyzer::DocumentAnalyzerView();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerImpl::view", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::view", err.what());
 	return analyzer::DocumentAnalyzerView();
 }
 }
@@ -1961,7 +1961,7 @@ DocumentAnalyzerMapImpl::~DocumentAnalyzerMapImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-DocumentAnalyzerInterface* DocumentAnalyzerMapImpl::createAnalyzer( const std::string& p1, const std::string& p2) const
+DocumentAnalyzerInstanceInterface* DocumentAnalyzerMapImpl::createAnalyzer( const std::string& p1, const std::string& p2) const
 {
 try
 {
@@ -1971,11 +1971,11 @@ try
 	msg.packString( p1);
 	msg.packString( p2);
 	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzer;
+	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzerInstance;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	DocumentAnalyzerInterface* p0 = new DocumentAnalyzerImpl( objId_0, ctx(), false, errorhnd());
+	DocumentAnalyzerInstanceInterface* p0 = new DocumentAnalyzerInstanceImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerMapImpl::createAnalyzer");
@@ -1986,7 +1986,7 @@ try
 }
 }
 
-void DocumentAnalyzerMapImpl::addAnalyzer( const std::string& p1, const std::string& p2, DocumentAnalyzerInterface* p3)
+void DocumentAnalyzerMapImpl::addAnalyzer( const std::string& p1, const std::string& p2, DocumentAnalyzerInstanceInterface* p3)
 {
 try
 {
@@ -1996,7 +1996,7 @@ try
 	msg.packString( p1);
 	msg.packString( p2);
 	const RpcInterfaceStub* impl_3 = dynamic_cast<const RpcInterfaceStub*>(p3);
-	if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "DocumentAnalyzer");
+	if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "DocumentAnalyzerInstance");
 	msg.packObject( impl_3->classId(), impl_3->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
@@ -3997,7 +3997,7 @@ try
 }
 }
 
-QueryAnalyzerImpl::~QueryAnalyzerImpl()
+QueryAnalyzerInstanceImpl::~QueryAnalyzerInstanceImpl()
 {
 	if (isConst()) return;
 	RpcSerializer msg;
@@ -4007,7 +4007,7 @@ QueryAnalyzerImpl::~QueryAnalyzerImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void QueryAnalyzerImpl::addElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
+void QueryAnalyzerInstanceImpl::addElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
 try
 {
@@ -4036,15 +4036,15 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addElement");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::addElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addElement", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::addElement", err.what());
 	return void();
 }
 }
 
-void QueryAnalyzerImpl::addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
+void QueryAnalyzerInstanceImpl::addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
 try
 {
@@ -4073,15 +4073,15 @@ try
 		delete p4[ai_4];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addPatternLexem");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::addPatternLexem");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addPatternLexem", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::addPatternLexem", err.what());
 	return void();
 }
 }
 
-void QueryAnalyzerImpl::definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3)
+void QueryAnalyzerInstanceImpl::definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3)
 {
 try
 {
@@ -4104,15 +4104,15 @@ try
 	done_3->release();
 	delete p3;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::definePatternMatcherPostProc");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::definePatternMatcherPostProc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::definePatternMatcherPostProc", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::definePatternMatcherPostProc", err.what());
 	return void();
 }
 }
 
-void QueryAnalyzerImpl::definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4)
+void QueryAnalyzerInstanceImpl::definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4)
 {
 try
 {
@@ -4139,15 +4139,15 @@ try
 	done_3->release();
 	delete p3;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::definePatternMatcherPreProc");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::definePatternMatcherPreProc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::definePatternMatcherPreProc", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::definePatternMatcherPreProc", err.what());
 	return void();
 }
 }
 
-void QueryAnalyzerImpl::addElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
+void QueryAnalyzerInstanceImpl::addElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
 {
 try
 {
@@ -4170,15 +4170,15 @@ try
 		delete p3[ai_3];
 	}
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::addElementFromPatternMatch");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::addElementFromPatternMatch");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::addElementFromPatternMatch", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::addElementFromPatternMatch", err.what());
 	return void();
 }
 }
 
-void QueryAnalyzerImpl::declareElementPriority( const std::string& p1, int p2)
+void QueryAnalyzerInstanceImpl::declareElementPriority( const std::string& p1, int p2)
 {
 try
 {
@@ -4190,15 +4190,15 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::declareElementPriority");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::declareElementPriority");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::declareElementPriority", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::declareElementPriority", err.what());
 	return void();
 }
 }
 
-QueryAnalyzerContextInterface* QueryAnalyzerImpl::createContext( ) const
+QueryAnalyzerContextInterface* QueryAnalyzerInstanceImpl::createContext( ) const
 {
 try
 {
@@ -4213,15 +4213,15 @@ try
 	QueryAnalyzerContextInterface* p0 = new QueryAnalyzerContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::createContext");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::createContext");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::createContext", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::createContext", err.what());
 	return 0;
 }
 }
 
-analyzer::QueryAnalyzerView QueryAnalyzerImpl::view( ) const
+analyzer::QueryAnalyzerView QueryAnalyzerInstanceImpl::view( ) const
 {
 try
 {
@@ -4235,10 +4235,10 @@ try
 	analyzer::QueryAnalyzerView p0 = serializedMsg.unpackAnalyzerQueryAnalyzerView();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerImpl::view");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::view");
 	return analyzer::QueryAnalyzerView();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerImpl::view", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::view", err.what());
 	return analyzer::QueryAnalyzerView();
 }
 }

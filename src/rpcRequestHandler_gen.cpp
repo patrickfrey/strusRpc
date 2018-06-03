@@ -208,7 +208,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case AnalyzerObjectBuilderConst::Method_createDocumentAnalyzer:
 		{
 			RpcSerializer msg;
-			DocumentAnalyzerInterface* p0;
+			DocumentAnalyzerInstanceInterface* p0;
 			const SegmenterInterface* p1;
 			analyzer::SegmenterOptions p2;
 			unsigned char classId_1; unsigned int objId_1;
@@ -234,7 +234,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case AnalyzerObjectBuilderConst::Method_createQueryAnalyzer:
 		{
 			RpcSerializer msg;
-			QueryAnalyzerInterface* p0;
+			QueryAnalyzerInstanceInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createQueryAnalyzer();
@@ -1276,17 +1276,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_DocumentAnalyzer:
+	case ClassId_DocumentAnalyzerInstance:
 	{
-	DocumentAnalyzerInterface* obj = getObject<DocumentAnalyzerInterface>( classId, objId);
-	switch( (DocumentAnalyzerConst::MethodId)methodId)
+	DocumentAnalyzerInstanceInterface* obj = getObject<DocumentAnalyzerInstanceInterface>( classId, objId);
+	switch( (DocumentAnalyzerInstanceConst::MethodId)methodId)
 	{
-		case DocumentAnalyzerConst::Method_Destructor:
+		case DocumentAnalyzerInstanceConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_addSearchIndexFeature:
+		case DocumentAnalyzerInstanceConst::Method_addSearchIndexFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1324,7 +1324,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_addForwardIndexFeature:
+		case DocumentAnalyzerInstanceConst::Method_addForwardIndexFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1362,7 +1362,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineMetaData:
+		case DocumentAnalyzerInstanceConst::Method_defineMetaData:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1398,7 +1398,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineAggregatedMetaData:
+		case DocumentAnalyzerInstanceConst::Method_defineAggregatedMetaData:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1422,7 +1422,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineAttribute:
+		case DocumentAnalyzerInstanceConst::Method_defineAttribute:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1458,7 +1458,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineSubDocument:
+		case DocumentAnalyzerInstanceConst::Method_defineSubDocument:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1476,7 +1476,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineSubContent:
+		case DocumentAnalyzerInstanceConst::Method_defineSubContent:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1494,7 +1494,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_addPatternLexem:
+		case DocumentAnalyzerInstanceConst::Method_addPatternLexem:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1530,7 +1530,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_definePatternMatcherPostProc:
+		case DocumentAnalyzerInstanceConst::Method_definePatternMatcherPostProc:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1560,7 +1560,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_definePatternMatcherPreProc:
+		case DocumentAnalyzerInstanceConst::Method_definePatternMatcherPreProc:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1596,7 +1596,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_addSearchIndexFeatureFromPatternMatch:
+		case DocumentAnalyzerInstanceConst::Method_addSearchIndexFeatureFromPatternMatch:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1628,7 +1628,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_addForwardIndexFeatureFromPatternMatch:
+		case DocumentAnalyzerInstanceConst::Method_addForwardIndexFeatureFromPatternMatch:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1660,7 +1660,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineMetaDataFromPatternMatch:
+		case DocumentAnalyzerInstanceConst::Method_defineMetaDataFromPatternMatch:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1690,7 +1690,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineAttributeFromPatternMatch:
+		case DocumentAnalyzerInstanceConst::Method_defineAttributeFromPatternMatch:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1720,7 +1720,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_analyze:
+		case DocumentAnalyzerInstanceConst::Method_analyze:
 		{
 			RpcSerializer msg;
 			analyzer::Document p0;
@@ -1741,7 +1741,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case DocumentAnalyzerConst::Method_createContext:
+		case DocumentAnalyzerInstanceConst::Method_createContext:
 		{
 			RpcSerializer msg;
 			DocumentAnalyzerContextInterface* p0;
@@ -1762,7 +1762,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_view:
+		case DocumentAnalyzerInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
 			analyzer::DocumentAnalyzerView p0;
@@ -1795,7 +1795,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case DocumentAnalyzerMapConst::Method_createAnalyzer:
 		{
 			RpcSerializer msg;
-			DocumentAnalyzerInterface* p0;
+			DocumentAnalyzerInstanceInterface* p0;
 			std::string p1;
 			std::string p2;
 			p1 = serializedMsg.unpackString();
@@ -1820,13 +1820,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
-			DocumentAnalyzerInterface* p3;
+			DocumentAnalyzerInstanceInterface* p3;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
-			if (classId_3 != ClassId_DocumentAnalyzer) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p3 = getObject<DocumentAnalyzerInterface>( classId_3, objId_3);
+			if (classId_3 != ClassId_DocumentAnalyzerInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p3 = getObject<DocumentAnalyzerInstanceInterface>( classId_3, objId_3);
 			obj->addAnalyzer(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -3600,17 +3600,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_QueryAnalyzer:
+	case ClassId_QueryAnalyzerInstance:
 	{
-	QueryAnalyzerInterface* obj = getObject<QueryAnalyzerInterface>( classId, objId);
-	switch( (QueryAnalyzerConst::MethodId)methodId)
+	QueryAnalyzerInstanceInterface* obj = getObject<QueryAnalyzerInstanceInterface>( classId, objId);
+	switch( (QueryAnalyzerInstanceConst::MethodId)methodId)
 	{
-		case QueryAnalyzerConst::Method_Destructor:
+		case QueryAnalyzerInstanceConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_addElement:
+		case QueryAnalyzerInstanceConst::Method_addElement:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3646,7 +3646,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_addPatternLexem:
+		case QueryAnalyzerInstanceConst::Method_addPatternLexem:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3682,7 +3682,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_definePatternMatcherPostProc:
+		case QueryAnalyzerInstanceConst::Method_definePatternMatcherPostProc:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3712,7 +3712,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_definePatternMatcherPreProc:
+		case QueryAnalyzerInstanceConst::Method_definePatternMatcherPreProc:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3748,7 +3748,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_addElementFromPatternMatch:
+		case QueryAnalyzerInstanceConst::Method_addElementFromPatternMatch:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3778,7 +3778,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_declareElementPriority:
+		case QueryAnalyzerInstanceConst::Method_declareElementPriority:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3796,7 +3796,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_createContext:
+		case QueryAnalyzerInstanceConst::Method_createContext:
 		{
 			RpcSerializer msg;
 			QueryAnalyzerContextInterface* p0;
@@ -3815,7 +3815,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_view:
+		case QueryAnalyzerInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
 			analyzer::QueryAnalyzerView p0;
