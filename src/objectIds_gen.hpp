@@ -303,6 +303,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_createAnalyzer,
 		Method_addAnalyzer,
 		Method_analyze,
 		Method_createContext,

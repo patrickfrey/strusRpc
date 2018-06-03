@@ -366,6 +366,7 @@ public:
 	DocumentAnalyzerMapImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzerMap, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual DocumentAnalyzerInterface* createAnalyzer( const std::string& p1, const std::string& p2) const;
 	virtual void addAnalyzer( const std::string& p1, const std::string& p2, DocumentAnalyzerInterface* p3);
 	virtual analyzer::Document analyze( const std::string& p1, const analyzer::DocumentClass& p2) const;
 	virtual DocumentAnalyzerContextInterface* createContext( const analyzer::DocumentClass& p1) const;

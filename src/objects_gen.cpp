@@ -1961,6 +1961,31 @@ DocumentAnalyzerMapImpl::~DocumentAnalyzerMapImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+DocumentAnalyzerInterface* DocumentAnalyzerMapImpl::createAnalyzer( const std::string& p1, const std::string& p2) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createAnalyzer);
+	msg.packString( p1);
+	msg.packString( p2);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzer;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	DocumentAnalyzerInterface* p0 = new DocumentAnalyzerImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerMapImpl::createAnalyzer");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerMapImpl::createAnalyzer", err.what());
+	return 0;
+}
+}
+
 void DocumentAnalyzerMapImpl::addAnalyzer( const std::string& p1, const std::string& p2, DocumentAnalyzerInterface* p3)
 {
 try
