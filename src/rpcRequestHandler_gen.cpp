@@ -1842,11 +1842,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			const DocumentAnalyzerInstanceInterface* p0;
-			analyzer::DocumentClass p1;
-			p1 = serializedMsg.unpackDocumentClass();
+			std::string p1;
+			std::string p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->getAnalyzer(p1);
+			p0 = obj->getAnalyzer(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

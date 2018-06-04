@@ -2009,14 +2009,15 @@ try
 }
 }
 
-const DocumentAnalyzerInstanceInterface* DocumentAnalyzerMapImpl::getAnalyzer( const analyzer::DocumentClass& p1) const
+const DocumentAnalyzerInstanceInterface* DocumentAnalyzerMapImpl::getAnalyzer( const std::string& p1, const std::string& p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getAnalyzer);
-	msg.packDocumentClass( p1);
+	msg.packString( p1);
+	msg.packString( p2);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzerInstance;
 	msg.packObject( classId_0, objId_0);

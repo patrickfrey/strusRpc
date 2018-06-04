@@ -368,7 +368,7 @@ public:
 
 	virtual DocumentAnalyzerInstanceInterface* createAnalyzer( const std::string& p1, const std::string& p2) const;
 	virtual void addAnalyzer( const std::string& p1, const std::string& p2, DocumentAnalyzerInstanceInterface* p3);
-	virtual const DocumentAnalyzerInstanceInterface* getAnalyzer( const analyzer::DocumentClass& p1) const;
+	virtual const DocumentAnalyzerInstanceInterface* getAnalyzer( const std::string& p1, const std::string& p2) const;
 	virtual analyzer::Document analyze( const std::string& p1, const analyzer::DocumentClass& p2) const;
 	virtual DocumentAnalyzerContextInterface* createContext( const analyzer::DocumentClass& p1) const;
 	virtual analyzer::DocumentAnalyzerMapView view( ) const;
