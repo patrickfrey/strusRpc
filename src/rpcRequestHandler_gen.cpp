@@ -1838,6 +1838,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case DocumentAnalyzerMapConst::Method_getAnalyzer:
+		{
+			RpcSerializer msg;
+			const DocumentAnalyzerInstanceInterface* p0;
+			analyzer::DocumentClass p1;
+			p1 = serializedMsg.unpackDocumentClass();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->getAnalyzer(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case DocumentAnalyzerMapConst::Method_analyze:
 		{
 			RpcSerializer msg;

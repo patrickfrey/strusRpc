@@ -305,6 +305,7 @@ public:
 		Method_Destructor,
 		Method_createAnalyzer,
 		Method_addAnalyzer,
+		Method_getAnalyzer,
 		Method_analyze,
 		Method_createContext,
 		Method_view

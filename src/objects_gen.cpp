@@ -2009,6 +2009,31 @@ try
 }
 }
 
+const DocumentAnalyzerInstanceInterface* DocumentAnalyzerMapImpl::getAnalyzer( const analyzer::DocumentClass& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getAnalyzer);
+	msg.packDocumentClass( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_DocumentAnalyzerInstance;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	DocumentAnalyzerInstanceImpl const_0( objId_0, ctx(), true, errorhnd());
+	const DocumentAnalyzerInstanceInterface* p0 = (const DocumentAnalyzerInstanceImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerMapImpl::getAnalyzer");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerMapImpl::getAnalyzer", err.what());
+	return 0;
+}
+}
+
 analyzer::Document DocumentAnalyzerMapImpl::analyze( const std::string& p1, const analyzer::DocumentClass& p2) const
 {
 try
