@@ -4204,23 +4204,77 @@ try
 }
 }
 
-void QueryAnalyzerInstanceImpl::declareElementPriority( const std::string& p1, int p2)
+void QueryAnalyzerInstanceImpl::declareTermPriority( const std::string& p1, int p2)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_declareElementPriority);
+	msg.packByte( Method_declareTermPriority);
 	msg.packString( p1);
 	msg.packInt( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::declareElementPriority");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::declareTermPriority");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::declareElementPriority", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::declareTermPriority", err.what());
 	return void();
+}
+}
+
+std::vector<std::string> QueryAnalyzerInstanceImpl::queryTermTypes( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_queryTermTypes);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::queryTermTypes");
+	return std::vector<std::string>();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::queryTermTypes", err.what());
+	return std::vector<std::string>();
+}
+}
+
+std::vector<std::string> QueryAnalyzerInstanceImpl::queryFieldTypes( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_queryFieldTypes);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::queryFieldTypes");
+	return std::vector<std::string>();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::queryFieldTypes", err.what());
+	return std::vector<std::string>();
 }
 }
 

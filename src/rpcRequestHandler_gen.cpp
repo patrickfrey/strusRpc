@@ -3801,14 +3801,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerInstanceConst::Method_declareElementPriority:
+		case QueryAnalyzerInstanceConst::Method_declareTermPriority:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			int p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackInt();
-			obj->declareElementPriority(p1,p2);
+			obj->declareTermPriority(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3818,6 +3818,46 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
+		}
+		case QueryAnalyzerInstanceConst::Method_queryTermTypes:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->queryTermTypes();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case QueryAnalyzerInstanceConst::Method_queryFieldTypes:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->queryFieldTypes();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
 		}
 		case QueryAnalyzerInstanceConst::Method_createContext:
 		{

@@ -727,7 +727,9 @@ public:
 	virtual void definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3);
 	virtual void definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4);
 	virtual void addElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3);
-	virtual void declareElementPriority( const std::string& p1, int p2);
+	virtual void declareTermPriority( const std::string& p1, int p2);
+	virtual std::vector<std::string> queryTermTypes( ) const;
+	virtual std::vector<std::string> queryFieldTypes( ) const;
 	virtual QueryAnalyzerContextInterface* createContext( ) const;
 	virtual analyzer::QueryAnalyzerView view( ) const;
 };
