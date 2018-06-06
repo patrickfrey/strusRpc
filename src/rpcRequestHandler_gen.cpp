@@ -2079,6 +2079,107 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_FileLocator:
+	{
+	FileLocatorInterface* obj = getObject<FileLocatorInterface>( classId, objId);
+	switch( (FileLocatorConst::MethodId)methodId)
+	{
+		case FileLocatorConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case FileLocatorConst::Method_addResourcePath:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->addResourcePath(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case FileLocatorConst::Method_getResourceFilePath:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->getResourceFilePath(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case FileLocatorConst::Method_defineWorkDir:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->defineWorkDir(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case FileLocatorConst::Method_getWorkDir:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			p0 = obj->getWorkDir();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case FileLocatorConst::Method_getResourcePaths:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getResourcePaths();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_ForwardIterator:
 	{
 	ForwardIteratorInterface* obj = getObject<ForwardIteratorInterface>( classId, objId);
@@ -7340,29 +7441,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case TextProcessorConst::Method_addResourcePath:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			obj->addResourcePath(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case TextProcessorConst::Method_getResourcePath:
+		case TextProcessorConst::Method_getResourceFilePath:
 		{
 			RpcSerializer msg;
 			std::string p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			p0 = obj->getResourcePath(p1);
+			p0 = obj->getResourceFilePath(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

@@ -30,6 +30,7 @@ enum ClassId
 	ClassId_DocumentAnalyzerMap,
 	ClassId_DocumentClassDetector,
 	ClassId_DocumentTermIterator,
+	ClassId_FileLocator,
 	ClassId_ForwardIterator,
 	ClassId_InvAclIterator,
 	ClassId_MetaDataReader,
@@ -333,6 +334,20 @@ public:
 		Method_nextTerm,
 		Method_termDocumentFrequency,
 		Method_termValue
+	};
+};
+
+class FileLocatorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addResourcePath,
+		Method_getResourceFilePath,
+		Method_defineWorkDir,
+		Method_getWorkDir,
+		Method_getResourcePaths
 	};
 };
 
@@ -978,8 +993,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_addResourcePath,
-		Method_getResourcePath,
+		Method_getResourceFilePath,
 		Method_getSegmenterByName,
 		Method_getSegmenterByMimeType,
 		Method_getSegmenterOptions,

@@ -40,6 +40,7 @@
 #include "strus/tokenizerFunctionInterface.hpp"
 #include "strus/tokenMarkupContextInterface.hpp"
 #include "strus/tokenMarkupInstanceInterface.hpp"
+#include "strus/fileLocatorInterface.hpp"
 #include "strus/aclReaderInterface.hpp"
 #include "strus/attributeReaderInterface.hpp"
 #include "strus/databaseBackupCursorInterface.hpp"
@@ -404,6 +405,24 @@ public:
 	virtual bool nextTerm( DocumentTermIteratorInterface::Term& p1);
 	virtual unsigned int termDocumentFrequency( const Index& p1) const;
 	virtual std::string termValue( const Index& p1) const;
+};
+
+class FileLocatorImpl
+		:public RpcInterfaceStub
+		,public strus::FileLocatorInterface
+		,public strus::FileLocatorConst
+{
+public:
+	virtual ~FileLocatorImpl();
+
+	FileLocatorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_FileLocator, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void addResourcePath( const std::string& p1);
+	virtual std::string getResourceFilePath( const std::string& p1) const;
+	virtual void defineWorkDir( const std::string& p1);
+	virtual std::string getWorkDir( ) const;
+	virtual std::vector<std::string> getResourcePaths( ) const;
 };
 
 class ForwardIteratorImpl
@@ -1229,8 +1248,7 @@ public:
 	TextProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TextProcessor, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addResourcePath( const std::string& p1);
-	virtual std::string getResourcePath( const std::string& p1) const;
+	virtual std::string getResourceFilePath( const std::string& p1) const;
 	virtual const SegmenterInterface* getSegmenterByName( const std::string& p1) const;
 	virtual const SegmenterInterface* getSegmenterByMimeType( const std::string& p1) const;
 	virtual analyzer::SegmenterOptions getSegmenterOptions( const std::string& p1) const;
