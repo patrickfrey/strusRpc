@@ -613,6 +613,7 @@ public:
 		Method_addSelectionFeature,
 		Method_addRestrictionFeature,
 		Method_addExclusionFeature,
+		Method_getWeightingFeatureSets,
 		Method_getSelectionFeatureSets,
 		Method_getRestrictionFeatureSets,
 		Method_getExclusionFeatureSets,

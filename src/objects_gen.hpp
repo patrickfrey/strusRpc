@@ -768,6 +768,7 @@ public:
 	virtual void addSelectionFeature( const std::string& p1);
 	virtual void addRestrictionFeature( const std::string& p1);
 	virtual void addExclusionFeature( const std::string& p1);
+	virtual std::vector<std::string> getWeightingFeatureSets( ) const;
 	virtual std::vector<std::string> getSelectionFeatureSets( ) const;
 	virtual std::vector<std::string> getRestrictionFeatureSets( ) const;
 	virtual std::vector<std::string> getExclusionFeatureSets( ) const;
