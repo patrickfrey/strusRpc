@@ -2322,32 +2322,32 @@ try
 }
 }
 
-void FileLocatorImpl::defineWorkDir( const std::string& p1)
+void FileLocatorImpl::defineWorkingDirectory( const std::string& p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineWorkDir);
+	msg.packByte( Method_defineWorkingDirectory);
 	msg.packString( p1);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "FileLocatorImpl::defineWorkDir");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "FileLocatorImpl::defineWorkingDirectory");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "FileLocatorImpl::defineWorkDir", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "FileLocatorImpl::defineWorkingDirectory", err.what());
 	return void();
 }
 }
 
-std::string FileLocatorImpl::getWorkDir( ) const
+std::string FileLocatorImpl::getWorkingDirectory( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_getWorkDir);
+	msg.packByte( Method_getWorkingDirectory);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -2355,10 +2355,10 @@ try
 	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "FileLocatorImpl::getWorkDir");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "FileLocatorImpl::getWorkingDirectory");
 	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "FileLocatorImpl::getWorkDir", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "FileLocatorImpl::getWorkingDirectory", err.what());
 	return std::string();
 }
 }

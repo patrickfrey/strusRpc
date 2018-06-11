@@ -2124,12 +2124,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case FileLocatorConst::Method_defineWorkDir:
+		case FileLocatorConst::Method_defineWorkingDirectory:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			obj->defineWorkDir(p1);
+			obj->defineWorkingDirectory(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -2140,11 +2140,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case FileLocatorConst::Method_getWorkDir:
+		case FileLocatorConst::Method_getWorkingDirectory:
 		{
 			RpcSerializer msg;
 			std::string p0;
-			p0 = obj->getWorkDir();
+			p0 = obj->getWorkingDirectory();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

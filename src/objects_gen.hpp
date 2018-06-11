@@ -420,8 +420,8 @@ public:
 
 	virtual void addResourcePath( const std::string& p1);
 	virtual std::string getResourceFilePath( const std::string& p1) const;
-	virtual void defineWorkDir( const std::string& p1);
-	virtual std::string getWorkDir( ) const;
+	virtual void defineWorkingDirectory( const std::string& p1);
+	virtual std::string getWorkingDirectory( ) const;
 	virtual std::vector<std::string> getResourcePaths( ) const;
 };
 

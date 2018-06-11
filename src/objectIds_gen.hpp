@@ -345,8 +345,8 @@ public:
 		Method_Destructor,
 		Method_addResourcePath,
 		Method_getResourceFilePath,
-		Method_defineWorkDir,
-		Method_getWorkDir,
+		Method_defineWorkingDirectory,
+		Method_getWorkingDirectory,
 		Method_getResourcePaths
 	};
 };
