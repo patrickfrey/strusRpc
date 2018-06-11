@@ -4989,6 +4989,29 @@ QueryProcessorImpl::~QueryProcessorImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
+std::string QueryProcessorImpl::getResourceFilePath( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getResourceFilePath);
+	msg.packString( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryProcessorImpl::getResourceFilePath");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryProcessorImpl::getResourceFilePath", err.what());
+	return std::string();
+}
+}
+
 void QueryProcessorImpl::definePostingJoinOperator( const std::string& p1, PostingJoinOperatorInterface* p2)
 {
 try

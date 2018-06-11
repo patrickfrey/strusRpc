@@ -814,6 +814,7 @@ public:
 	QueryProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryProcessor, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual std::string getResourceFilePath( const std::string& p1) const;
 	virtual void definePostingJoinOperator( const std::string& p1, PostingJoinOperatorInterface* p2);
 	virtual const PostingJoinOperatorInterface* getPostingJoinOperator( const std::string& p1) const;
 	virtual void defineWeightingFunction( const std::string& p1, WeightingFunctionInterface* p2);

@@ -651,6 +651,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_getResourceFilePath,
 		Method_definePostingJoinOperator,
 		Method_getPostingJoinOperator,
 		Method_defineWeightingFunction,
