@@ -815,6 +815,10 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerDocument( " . $id . ");";
 	}
+	elsif ($type eq "analyzer::Position")
+	{
+		$rt .= "msg.packAnalyzerPosition( " . $id . ");";
+	}
 	elsif ($type eq "analyzer::Token")
 	{
 		$rt .= "msg.packAnalyzerToken( " . $id . ");";
@@ -1165,6 +1169,10 @@ sub unpackParameter
 	elsif ($type eq "analyzer::Document")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerDocument();";
+	}
+	elsif ($type eq "analyzer::Position")
+	{
+		$rt .= "$id = serializedMsg.unpackAnalyzerPosition();";
 	}
 	elsif ($type eq "analyzer::Token")
 	{

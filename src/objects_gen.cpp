@@ -8893,19 +8893,17 @@ TokenMarkupContextImpl::~TokenMarkupContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void TokenMarkupContextImpl::putMarkup( const SegmenterPosition& p1, std::size_t p2, const SegmenterPosition& p3, std::size_t p4, const analyzer::TokenMarkup& p5, unsigned int p6)
+void TokenMarkupContextImpl::putMarkup( const analyzer::Position& p1, const analyzer::Position& p2, const analyzer::TokenMarkup& p3, unsigned int p4)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_putMarkup);
-	msg.packGlobalCounter( p1);
-	msg.packSize( p2);
-	msg.packGlobalCounter( p3);
-	msg.packSize( p4);
-	msg.packAnalyzerTokenMarkup( p5);
-	msg.packUint( p6);
+	msg.packAnalyzerPosition( p1);
+	msg.packAnalyzerPosition( p2);
+	msg.packAnalyzerTokenMarkup( p3);
+	msg.packUint( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {

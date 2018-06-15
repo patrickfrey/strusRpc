@@ -106,6 +106,7 @@ public:
 	void packAnalyzerDocumentMetaData( const analyzer::DocumentMetaData& val);
 	void packAnalyzerDocumentTerm( const analyzer::DocumentTerm& val);
 	void packAnalyzerDocument( const analyzer::Document& val);
+	void packAnalyzerPosition( const analyzer::Position& val);
 	void packAnalyzerToken( const analyzer::Token& val);
 	void packAnalyzerGroupBy( const QueryAnalyzerContextInterface::GroupBy& groupBy);
 	void packAnalyzerPatternLexem( const analyzer::PatternLexem& val);
@@ -198,6 +199,7 @@ public:
 	analyzer::DocumentMetaData unpackAnalyzerDocumentMetaData();
 	analyzer::DocumentTerm unpackAnalyzerDocumentTerm();
 	analyzer::Document unpackAnalyzerDocument();
+	analyzer::Position unpackAnalyzerPosition();
 	analyzer::Token unpackAnalyzerToken();
 	QueryAnalyzerContextInterface::GroupBy unpackAnalyzerGroupBy();
 	analyzer::PatternLexem unpackAnalyzerPatternLexem();

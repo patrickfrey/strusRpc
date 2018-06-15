@@ -7981,19 +7981,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case TokenMarkupContextConst::Method_putMarkup:
 		{
 			RpcSerializer msg;
-			SegmenterPosition p1;
-			std::size_t p2;
-			SegmenterPosition p3;
-			std::size_t p4;
-			analyzer::TokenMarkup p5;
-			unsigned int p6;
-			p1 = serializedMsg.unpackGlobalCounter();
-			p2 = serializedMsg.unpackSize();
-			p3 = serializedMsg.unpackGlobalCounter();
-			p4 = serializedMsg.unpackSize();
-			p5 = serializedMsg.unpackAnalyzerTokenMarkup();
-			p6 = serializedMsg.unpackUint();
-			obj->putMarkup(p1,p2,p3,p4,p5,p6);
+			analyzer::Position p1;
+			analyzer::Position p2;
+			analyzer::TokenMarkup p3;
+			unsigned int p4;
+			p1 = serializedMsg.unpackAnalyzerPosition();
+			p2 = serializedMsg.unpackAnalyzerPosition();
+			p3 = serializedMsg.unpackAnalyzerTokenMarkup();
+			p4 = serializedMsg.unpackUint();
+			obj->putMarkup(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

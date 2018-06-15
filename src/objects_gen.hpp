@@ -1286,7 +1286,7 @@ public:
 	TokenMarkupContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenMarkupContext, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void putMarkup( const SegmenterPosition& p1, std::size_t p2, const SegmenterPosition& p3, std::size_t p4, const analyzer::TokenMarkup& p5, unsigned int p6);
+	virtual void putMarkup( const analyzer::Position& p1, const analyzer::Position& p2, const analyzer::TokenMarkup& p3, unsigned int p4);
 	virtual std::string markupDocument( const SegmenterInstanceInterface* p1, const analyzer::DocumentClass& p2, const std::string& p3) const;
 };
 

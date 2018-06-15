@@ -585,12 +585,17 @@ void RpcSerializer::packAnalyzerDocumentTerm( const analyzer::DocumentTerm& val)
 	packIndex( val.pos());
 }
 
+void RpcSerializer::packAnalyzerPosition( const analyzer::Position& val)
+{
+	packUint( val.seg());
+	packUint( val.ofs());
+}
+
 void RpcSerializer::packAnalyzerToken( const analyzer::Token& val)
 {
 	packUint( val.ordpos());
-	packUint( val.origseg());
-	packUint( val.origpos());
 	packUint( val.origsize());
+	packAnalyzerPosition( val.origpos());
 }
 
 void RpcSerializer::packAnalyzerGroupBy( const QueryAnalyzerContextInterface::GroupBy& val)
@@ -602,8 +607,8 @@ void RpcSerializer::packAnalyzerPatternLexem( const analyzer::PatternLexem& val)
 {
 	packUint( val.id());
 	packUint( val.ordpos());
-	packUint( val.origseg());
-	packUint( val.origpos());
+	packUint( val.origpos().seg());
+	packUint( val.origpos().ofs());
 	packUint( val.origsize());
 }
 
@@ -623,12 +628,12 @@ void RpcSerializer::packAnalyzerPatternMatcherResult( const analyzer::PatternMat
 {
 	packCharp( val.name());
 	packCharp( val.value());
-	packUint( val.start_ordpos());
-	packUint( val.end_ordpos());
-	packUint( val.start_origseg());
-	packUint( val.start_origpos());
-	packUint( val.end_origseg());
-	packUint( val.end_origpos());
+	packUint( val.ordpos());
+	packUint( val.ordend());
+	packUint( val.origpos().seg());
+	packUint( val.origpos().ofs());
+	packUint( val.origend().seg());
+	packUint( val.origend().ofs());
 
 	std::vector<analyzer::PatternMatcherResult::Item>::const_iterator ri = val.items().begin(), re = val.items().end();
 	packSize( re-ri);
@@ -636,12 +641,12 @@ void RpcSerializer::packAnalyzerPatternMatcherResult( const analyzer::PatternMat
 	{
 		packCharp( ri->name());
 		packCharp( ri->value());
-		packUint( ri->start_ordpos());
-		packUint( ri->end_ordpos());
-		packUint( ri->start_origseg());
-		packUint( ri->start_origpos());
-		packUint( ri->end_origseg());
-		packUint( ri->end_origpos());
+		packUint( ri->ordpos());
+		packUint( ri->ordend());
+		packUint( ri->origpos().seg());
+		packUint( ri->origpos().ofs());
+		packUint( ri->origend().seg());
+		packUint( ri->origend().ofs());
 	}
 }
 
@@ -1407,13 +1412,20 @@ analyzer::DocumentTerm RpcDeserializer::unpackAnalyzerDocumentTerm()
 	return analyzer::DocumentTerm( type, value, pos);
 }
 
+
+analyzer::Position RpcDeserializer::unpackAnalyzerPosition()
+{
+	int seg = unpackUint();
+	int ofs = unpackUint();
+	return analyzer::Position( seg, ofs);
+}
+
 analyzer::Token RpcDeserializer::unpackAnalyzerToken()
 {
-	unsigned int ordpos = unpackUint();
-	unsigned int origseg = unpackUint();
-	unsigned int origpos = unpackUint();
-	unsigned int origsize = unpackUint();
-	return analyzer::Token( ordpos, origseg, origpos, origsize);
+	int ordpos = unpackUint();
+	int origsize = unpackUint();
+	analyzer::Position origpos( unpackAnalyzerPosition());
+	return analyzer::Token( ordpos, origpos, origsize);
 }
 
 QueryAnalyzerContextInterface::GroupBy RpcDeserializer::unpackAnalyzerGroupBy()
@@ -1428,7 +1440,7 @@ analyzer::PatternLexem RpcDeserializer::unpackAnalyzerPatternLexem()
 	unsigned int origseg = unpackUint();
 	unsigned int origpos = unpackUint();
 	unsigned int origsize = unpackUint();
-	return analyzer::PatternLexem( id, ordpos, origseg, origpos, origsize);
+	return analyzer::PatternLexem( id, ordpos, analyzer::Position(origseg, origpos), origsize);
 }
 
 analyzer::TokenMarkup RpcDeserializer::unpackAnalyzerTokenMarkup()
@@ -1468,11 +1480,11 @@ analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResu
 
 		analyzer::PatternMatcherResult::Item
 			item( i_name, i_value, i_start_ordpos, i_end_ordpos,
-			i_start_origseg, i_start_origpos,
-			i_end_origseg, i_end_origpos);
+			analyzer::Position(i_start_origseg, i_start_origpos),
+			analyzer::Position(i_end_origseg, i_end_origpos));
 		itemlist.push_back( item);
 	}
-	analyzer::PatternMatcherResult rt( name, value, start_ordpos, end_ordpos, start_origseg, start_origpos, end_origseg, end_origpos, itemlist);
+	analyzer::PatternMatcherResult rt( name, value, start_ordpos, end_ordpos, analyzer::Position(start_origseg, start_origpos), analyzer::Position(end_origseg, end_origpos), itemlist);
 	return rt;
 }
 
