@@ -344,7 +344,7 @@ public:
 	virtual void defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void defineSubDocument( const std::string& p1, const std::string& p2);
 	virtual void defineSubContent( const std::string& p1, const analyzer::DocumentClass& p2);
-	virtual void addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
+	virtual void addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5);
 	virtual void definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3);
 	virtual void definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4);
 	virtual void addSearchIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, int p4, const analyzer::FeatureOptions& p5);
@@ -742,7 +742,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5);
-	virtual void addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
+	virtual void addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5);
 	virtual void definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3);
 	virtual void definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4);
 	virtual void addElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, int p4);

@@ -1505,6 +1505,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			TokenizerFunctionInstanceInterface* p3;
 			std::vector<NormalizerFunctionInstanceInterface*> p4;
+			int p5;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
@@ -1521,7 +1522,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			obj->addPatternLexem(p1,p2,p3,p4);
+			p5 = serializedMsg.unpackInt();
+			obj->addPatternLexem(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3787,6 +3789,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			TokenizerFunctionInstanceInterface* p3;
 			std::vector<NormalizerFunctionInstanceInterface*> p4;
+			int p5;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
@@ -3803,7 +3806,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			obj->addPatternLexem(p1,p2,p3,p4);
+			p5 = serializedMsg.unpackInt();
+			obj->addPatternLexem(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

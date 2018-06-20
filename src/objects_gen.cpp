@@ -1654,7 +1654,7 @@ try
 }
 }
 
-void DocumentAnalyzerInstanceImpl::addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
+void DocumentAnalyzerInstanceImpl::addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5)
 {
 try
 {
@@ -1672,6 +1672,7 @@ try
 		if (!impl_4) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
 		msg.packObject( impl_4->classId(), impl_4->objId());
 	}
+	msg.packInt( p5);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
@@ -4195,7 +4196,7 @@ try
 }
 }
 
-void QueryAnalyzerInstanceImpl::addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
+void QueryAnalyzerInstanceImpl::addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5)
 {
 try
 {
@@ -4213,6 +4214,7 @@ try
 		if (!impl_4) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
 		msg.packObject( impl_4->classId(), impl_4->objId());
 	}
+	msg.packInt( p5);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
