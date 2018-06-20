@@ -1536,7 +1536,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerInstanceConst::Method_definePatternMatcherPostProc:
+		case DocumentAnalyzerInstanceConst::Method_defineTokenPatternMatcher:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1547,26 +1547,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PatternMatcherInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PatternMatcherInstanceInterface>( classId_2, objId_2);
-			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_PatternTermFeederInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<PatternTermFeederInstanceInterface>( classId_3, objId_3);
-			markObjectToRelease( classId_3, objId_3);
-			obj->definePatternMatcherPostProc(p1,p2,p3);
+			obj->defineTokenPatternMatcher(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
-				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
-			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerInstanceConst::Method_definePatternMatcherPreProc:
+		case DocumentAnalyzerInstanceConst::Method_defineContentPatternMatcher:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1578,27 +1574,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PatternMatcherInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PatternMatcherInstanceInterface>( classId_2, objId_2);
-			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_PatternLexerInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<PatternLexerInstanceInterface>( classId_3, objId_3);
-			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				std::string ee = serializedMsg.unpackString();
 				p4.push_back( ee);
 			}
-			obj->definePatternMatcherPreProc(p1,p2,p3,p4);
+			obj->defineContentPatternMatcher(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
-				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
-			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -3820,7 +3812,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerInstanceConst::Method_definePatternMatcherPostProc:
+		case QueryAnalyzerInstanceConst::Method_defineTokenPatternMatcher:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3831,26 +3823,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PatternMatcherInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PatternMatcherInstanceInterface>( classId_2, objId_2);
-			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_PatternTermFeederInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<PatternTermFeederInstanceInterface>( classId_3, objId_3);
-			markObjectToRelease( classId_3, objId_3);
-			obj->definePatternMatcherPostProc(p1,p2,p3);
+			obj->defineTokenPatternMatcher(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
-				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
-			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerInstanceConst::Method_definePatternMatcherPreProc:
+		case QueryAnalyzerInstanceConst::Method_defineContentPatternMatcher:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3862,27 +3850,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PatternMatcherInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PatternMatcherInstanceInterface>( classId_2, objId_2);
-			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_PatternLexerInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<PatternLexerInstanceInterface>( classId_3, objId_3);
-			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				std::string ee = serializedMsg.unpackString();
 				p4.push_back( ee);
 			}
-			obj->definePatternMatcherPreProc(p1,p2,p3,p4);
+			obj->defineContentPatternMatcher(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
-				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
-			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}

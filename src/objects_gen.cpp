@@ -1692,13 +1692,13 @@ try
 }
 }
 
-void DocumentAnalyzerInstanceImpl::definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3)
+void DocumentAnalyzerInstanceImpl::defineTokenPatternMatcher( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_definePatternMatcherPostProc);
+	msg.packByte( Method_defineTokenPatternMatcher);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PatternMatcherInstance");
@@ -1708,28 +1708,22 @@ try
 	msg.packObject( impl_3->classId(), impl_3->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
-	done_2->release();
-	delete p2;
-	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
-	done_3->release();
-	delete p3;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::definePatternMatcherPostProc");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::defineTokenPatternMatcher");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::definePatternMatcherPostProc", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::defineTokenPatternMatcher", err.what());
 	return void();
 }
 }
 
-void DocumentAnalyzerInstanceImpl::definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4)
+void DocumentAnalyzerInstanceImpl::defineContentPatternMatcher( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_definePatternMatcherPreProc);
+	msg.packByte( Method_defineContentPatternMatcher);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PatternMatcherInstance");
@@ -1743,17 +1737,11 @@ try
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
-	done_2->release();
-	delete p2;
-	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
-	done_3->release();
-	delete p3;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::definePatternMatcherPreProc");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::defineContentPatternMatcher");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::definePatternMatcherPreProc", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::defineContentPatternMatcher", err.what());
 	return void();
 }
 }
@@ -4234,13 +4222,13 @@ try
 }
 }
 
-void QueryAnalyzerInstanceImpl::definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3)
+void QueryAnalyzerInstanceImpl::defineTokenPatternMatcher( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_definePatternMatcherPostProc);
+	msg.packByte( Method_defineTokenPatternMatcher);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PatternMatcherInstance");
@@ -4250,28 +4238,22 @@ try
 	msg.packObject( impl_3->classId(), impl_3->objId());
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
-	done_2->release();
-	delete p2;
-	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
-	done_3->release();
-	delete p3;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::definePatternMatcherPostProc");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::defineTokenPatternMatcher");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::definePatternMatcherPostProc", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::defineTokenPatternMatcher", err.what());
 	return void();
 }
 }
 
-void QueryAnalyzerInstanceImpl::definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4)
+void QueryAnalyzerInstanceImpl::defineContentPatternMatcher( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_definePatternMatcherPreProc);
+	msg.packByte( Method_defineContentPatternMatcher);
 	msg.packString( p1);
 	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PatternMatcherInstance");
@@ -4285,17 +4267,11 @@ try
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
-	done_2->release();
-	delete p2;
-	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
-	done_3->release();
-	delete p3;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::definePatternMatcherPreProc");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::defineContentPatternMatcher");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::definePatternMatcherPreProc", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::defineContentPatternMatcher", err.what());
 	return void();
 }
 }
