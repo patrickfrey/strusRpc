@@ -595,7 +595,6 @@ public:
 		Method_definePatternMatcherPostProc,
 		Method_definePatternMatcherPreProc,
 		Method_addElementFromPatternMatch,
-		Method_declareTermPriority,
 		Method_queryTermTypes,
 		Method_queryFieldTypes,
 		Method_createContext,

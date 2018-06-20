@@ -785,6 +785,7 @@ void RpcSerializer::packAnalyzerFeatureView( const analyzer::FeatureView& val)
 		packAnalyzerFunctionView( *fi);
 	}
 	packFeatureOptions( val.options());
+	packInt( val.priority());
 }
 
 void RpcSerializer::packAnalyzerAggregatorView( const analyzer::AggregatorView& val)
@@ -889,6 +890,7 @@ void RpcSerializer::packAnalyzerQueryElementView( const analyzer::QueryElementVi
 	{
 		packAnalyzerFunctionView( *fi);
 	}
+	packInt( val.priority());
 }
 
 void RpcSerializer::packAnalyzerQueryAnalyzerView( const analyzer::QueryAnalyzerView& val)
@@ -907,15 +909,6 @@ void RpcSerializer::packAnalyzerQueryAnalyzerView( const analyzer::QueryAnalyzer
 		for (; ei != ee; ++ei)
 		{
 			packAnalyzerQueryElementView( *ei);
-		}
-	}
-	{
-		packSize( val.priorities().size());
-		std::map<std::string,int>::const_iterator ei = val.priorities().begin(), ee = val.priorities().end();
-		for (; ei != ee; ++ei)
-		{
-			packString( ei->first);
-			packInt( ei->second);
 		}
 	}
 }
@@ -1629,7 +1622,8 @@ analyzer::FeatureView RpcDeserializer::unpackAnalyzerFeatureView()
 		normalizer.push_back( unpackAnalyzerFunctionView());
 	}
 	analyzer::FeatureOptions options = unpackFeatureOptions();
-	return analyzer::FeatureView( type, selectexpr, tokenizer, normalizer, options);
+	int priority = unpackInt();
+	return analyzer::FeatureView( type, selectexpr, tokenizer, normalizer, options, priority);
 }
 
 analyzer::AggregatorView RpcDeserializer::unpackAnalyzerAggregatorView()
@@ -1732,11 +1726,12 @@ analyzer::QueryElementView RpcDeserializer::unpackAnalyzerQueryElementView()
 	analyzer::FunctionView tokenizer = unpackAnalyzerFunctionView();
 	std::vector<analyzer::FunctionView> normalizer;
 	unsigned int ii=0, nn=unpackSize();
+	int priority = unpackInt();
 	for (; ii<nn; ++ii)
 	{
 		normalizer.push_back( unpackAnalyzerFunctionView());
 	}
-	return analyzer::QueryElementView( type, field, tokenizer, normalizer);
+	return analyzer::QueryElementView( type, field, tokenizer, normalizer, priority);
 }
 
 analyzer::QueryAnalyzerView RpcDeserializer::unpackAnalyzerQueryAnalyzerView()
@@ -1753,15 +1748,7 @@ analyzer::QueryAnalyzerView RpcDeserializer::unpackAnalyzerQueryAnalyzerView()
 	{
 		patternLexems.push_back( unpackAnalyzerQueryElementView());
 	}
-	std::map<std::string,int> priorities;
-	unsigned int pi=0, pe=unpackSize();
-	for (; pi != pe; ++pi)
-	{
-		std::string type = unpackString();
-		int priority = unpackInt();
-		priorities[ type] = priority;
-	}
-	return analyzer::QueryAnalyzerView( elements, patternLexems, priorities);
+	return analyzer::QueryAnalyzerView( elements, patternLexems);
 }
 
 

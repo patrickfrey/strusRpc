@@ -1293,7 +1293,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			TokenizerFunctionInstanceInterface* p3;
 			std::vector<NormalizerFunctionInstanceInterface*> p4;
-			analyzer::FeatureOptions p5;
+			int p5;
+			analyzer::FeatureOptions p6;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
@@ -1310,8 +1311,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			p5 = serializedMsg.unpackFeatureOptions();
-			obj->addSearchIndexFeature(p1,p2,p3,p4,p5);
+			p5 = serializedMsg.unpackInt();
+			p6 = serializedMsg.unpackFeatureOptions();
+			obj->addSearchIndexFeature(p1,p2,p3,p4,p5,p6);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1331,7 +1333,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			TokenizerFunctionInstanceInterface* p3;
 			std::vector<NormalizerFunctionInstanceInterface*> p4;
-			analyzer::FeatureOptions p5;
+			int p5;
+			analyzer::FeatureOptions p6;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
@@ -1348,8 +1351,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			p5 = serializedMsg.unpackFeatureOptions();
-			obj->addForwardIndexFeature(p1,p2,p3,p4,p5);
+			p5 = serializedMsg.unpackInt();
+			p6 = serializedMsg.unpackFeatureOptions();
+			obj->addForwardIndexFeature(p1,p2,p3,p4,p5,p6);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1602,7 +1606,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			std::string p2;
 			std::vector<NormalizerFunctionInstanceInterface*> p3;
-			analyzer::FeatureOptions p4;
+			int p4;
+			analyzer::FeatureOptions p5;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			std::size_t n3 = serializedMsg.unpackSize();
@@ -1614,8 +1619,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p3.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			p4 = serializedMsg.unpackFeatureOptions();
-			obj->addSearchIndexFeatureFromPatternMatch(p1,p2,p3,p4);
+			p4 = serializedMsg.unpackInt();
+			p5 = serializedMsg.unpackFeatureOptions();
+			obj->addSearchIndexFeatureFromPatternMatch(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1634,7 +1640,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			std::string p2;
 			std::vector<NormalizerFunctionInstanceInterface*> p3;
-			analyzer::FeatureOptions p4;
+			int p4;
+			analyzer::FeatureOptions p5;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			std::size_t n3 = serializedMsg.unpackSize();
@@ -1646,8 +1653,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p3.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			p4 = serializedMsg.unpackFeatureOptions();
-			obj->addForwardIndexFeatureFromPatternMatch(p1,p2,p3,p4);
+			p4 = serializedMsg.unpackInt();
+			p5 = serializedMsg.unpackFeatureOptions();
+			obj->addForwardIndexFeatureFromPatternMatch(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3741,6 +3749,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p2;
 			TokenizerFunctionInstanceInterface* p3;
 			std::vector<NormalizerFunctionInstanceInterface*> p4;
+			int p5;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
@@ -3757,7 +3766,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			obj->addElement(p1,p2,p3,p4);
+			p5 = serializedMsg.unpackInt();
+			obj->addElement(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3878,6 +3888,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			std::string p2;
 			std::vector<NormalizerFunctionInstanceInterface*> p3;
+			int p4;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			std::size_t n3 = serializedMsg.unpackSize();
@@ -3889,7 +3900,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p3.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			obj->addElementFromPatternMatch(p1,p2,p3);
+			p4 = serializedMsg.unpackInt();
+			obj->addElementFromPatternMatch(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3899,24 +3911,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			releaseObjectsMarked();
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case QueryAnalyzerInstanceConst::Method_declareTermPriority:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			int p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackInt();
-			obj->declareTermPriority(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}

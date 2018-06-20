@@ -1437,7 +1437,7 @@ DocumentAnalyzerInstanceImpl::~DocumentAnalyzerInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void DocumentAnalyzerInstanceImpl::addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5)
+void DocumentAnalyzerInstanceImpl::addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5, const analyzer::FeatureOptions& p6)
 {
 try
 {
@@ -1455,7 +1455,8 @@ try
 		if (!impl_4) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
 		msg.packObject( impl_4->classId(), impl_4->objId());
 	}
-	msg.packFeatureOptions( p5);
+	msg.packInt( p5);
+	msg.packFeatureOptions( p6);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
@@ -1475,7 +1476,7 @@ try
 }
 }
 
-void DocumentAnalyzerInstanceImpl::addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5)
+void DocumentAnalyzerInstanceImpl::addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5, const analyzer::FeatureOptions& p6)
 {
 try
 {
@@ -1493,7 +1494,8 @@ try
 		if (!impl_4) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
 		msg.packObject( impl_4->classId(), impl_4->objId());
 	}
-	msg.packFeatureOptions( p5);
+	msg.packInt( p5);
+	msg.packFeatureOptions( p6);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
@@ -1755,7 +1757,7 @@ try
 }
 }
 
-void DocumentAnalyzerInstanceImpl::addSearchIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, const analyzer::FeatureOptions& p4)
+void DocumentAnalyzerInstanceImpl::addSearchIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, int p4, const analyzer::FeatureOptions& p5)
 {
 try
 {
@@ -1770,7 +1772,8 @@ try
 		if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
 		msg.packObject( impl_3->classId(), impl_3->objId());
 	}
-	msg.packFeatureOptions( p4);
+	msg.packInt( p4);
+	msg.packFeatureOptions( p5);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	for (std::size_t ai_3=0; ai_3 < p3.size(); ++ai_3) {
@@ -1787,7 +1790,7 @@ try
 }
 }
 
-void DocumentAnalyzerInstanceImpl::addForwardIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, const analyzer::FeatureOptions& p4)
+void DocumentAnalyzerInstanceImpl::addForwardIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, int p4, const analyzer::FeatureOptions& p5)
 {
 try
 {
@@ -1802,7 +1805,8 @@ try
 		if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
 		msg.packObject( impl_3->classId(), impl_3->objId());
 	}
-	msg.packFeatureOptions( p4);
+	msg.packInt( p4);
+	msg.packFeatureOptions( p5);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	for (std::size_t ai_3=0; ai_3 < p3.size(); ++ai_3) {
@@ -4153,7 +4157,7 @@ QueryAnalyzerInstanceImpl::~QueryAnalyzerInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void QueryAnalyzerInstanceImpl::addElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
+void QueryAnalyzerInstanceImpl::addElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5)
 {
 try
 {
@@ -4171,6 +4175,7 @@ try
 		if (!impl_4) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
 		msg.packObject( impl_4->classId(), impl_4->objId());
 	}
+	msg.packInt( p5);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	RpcInterfaceStub* done_3 = dynamic_cast<RpcInterfaceStub*>(p3);
@@ -4293,7 +4298,7 @@ try
 }
 }
 
-void QueryAnalyzerInstanceImpl::addElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3)
+void QueryAnalyzerInstanceImpl::addElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, int p4)
 {
 try
 {
@@ -4308,6 +4313,7 @@ try
 		if (!impl_3) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "NormalizerFunctionInstance");
 		msg.packObject( impl_3->classId(), impl_3->objId());
 	}
+	msg.packInt( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	for (std::size_t ai_3=0; ai_3 < p3.size(); ++ai_3) {
@@ -4320,26 +4326,6 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::addElementFromPatternMatch", err.what());
-	return void();
-}
-}
-
-void QueryAnalyzerInstanceImpl::declareTermPriority( const std::string& p1, int p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_declareTermPriority);
-	msg.packString( p1);
-	msg.packInt( p2);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryAnalyzerInstanceImpl::declareTermPriority");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryAnalyzerInstanceImpl::declareTermPriority", err.what());
 	return void();
 }
 }
