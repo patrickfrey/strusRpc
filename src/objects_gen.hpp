@@ -1368,10 +1368,10 @@ public:
 	virtual std::vector<Index> conceptFeatures( const std::string& p1, const Index& p2) const;
 	virtual unsigned int nofConcepts( const std::string& p1) const;
 	virtual std::vector<Index> featureConcepts( const std::string& p1, const Index& p2) const;
-	virtual std::vector<double> featureVector( const Index& p1) const;
+	virtual std::vector<float> featureVector( const Index& p1) const;
 	virtual std::string featureName( const Index& p1) const;
 	virtual Index featureIndex( const std::string& p1) const;
-	virtual double vectorSimilarity( const std::vector<double>& p1, const std::vector<double>& p2) const;
+	virtual double vectorSimilarity( const std::vector<float>& p1, const std::vector<float>& p2) const;
 	virtual unsigned int nofFeatures( ) const;
 	virtual std::string config( ) const;
 	virtual void close( );
@@ -1419,8 +1419,8 @@ public:
 	VectorStorageSearchImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageSearch, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual std::vector<VectorQueryResult> findSimilar( const std::vector<double>& p1, unsigned int p2) const;
-	virtual std::vector<VectorQueryResult> findSimilarFromSelection( const std::vector<Index>& p1, const std::vector<double>& p2, unsigned int p3) const;
+	virtual std::vector<VectorQueryResult> findSimilar( const std::vector<float>& p1, unsigned int p2) const;
+	virtual std::vector<VectorQueryResult> findSimilarFromSelection( const std::vector<Index>& p1, const std::vector<float>& p2, unsigned int p3) const;
 	virtual void close( );
 };
 
@@ -1435,7 +1435,7 @@ public:
 	VectorStorageTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageTransaction, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addFeature( const std::string& p1, const std::vector<double>& p2);
+	virtual void addFeature( const std::string& p1, const std::vector<float>& p2);
 	virtual void defineFeatureConceptRelation( const std::string& p1, const Index& p2, const Index& p3);
 	virtual bool commit( );
 	virtual void rollback( );

@@ -8401,7 +8401,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case VectorStorageClientConst::Method_featureVector:
 		{
 			RpcSerializer msg;
-			std::vector<double> p0;
+			std::vector<float> p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
 			p0 = obj->featureVector(p1);
@@ -8415,7 +8415,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packDouble( p0[ii]);
+				msg.packFloat( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();
@@ -8462,16 +8462,16 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			double p0;
-			std::vector<double> p1;
-			std::vector<double> p2;
+			std::vector<float> p1;
+			std::vector<float> p2;
 			std::size_t n1 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n1; ++ii) {
-				double ee = serializedMsg.unpackDouble();
+				float ee = serializedMsg.unpackFloat();
 				p1.push_back( ee);
 			}
 			std::size_t n2 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n2; ++ii) {
-				double ee = serializedMsg.unpackDouble();
+				float ee = serializedMsg.unpackFloat();
 				p2.push_back( ee);
 			}
 			p0 = obj->vectorSimilarity(p1,p2);
@@ -8702,11 +8702,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::vector<VectorQueryResult> p0;
-			std::vector<double> p1;
+			std::vector<float> p1;
 			unsigned int p2;
 			std::size_t n1 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n1; ++ii) {
-				double ee = serializedMsg.unpackDouble();
+				float ee = serializedMsg.unpackFloat();
 				p1.push_back( ee);
 			}
 			p2 = serializedMsg.unpackUint();
@@ -8731,7 +8731,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::vector<VectorQueryResult> p0;
 			std::vector<Index> p1;
-			std::vector<double> p2;
+			std::vector<float> p2;
 			unsigned int p3;
 			std::size_t n1 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n1; ++ii) {
@@ -8740,7 +8740,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			std::size_t n2 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n2; ++ii) {
-				double ee = serializedMsg.unpackDouble();
+				float ee = serializedMsg.unpackFloat();
 				p2.push_back( ee);
 			}
 			p3 = serializedMsg.unpackUint();
@@ -8791,11 +8791,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			std::vector<double> p2;
+			std::vector<float> p2;
 			p1 = serializedMsg.unpackString();
 			std::size_t n2 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n2; ++ii) {
-				double ee = serializedMsg.unpackDouble();
+				float ee = serializedMsg.unpackFloat();
 				p2.push_back( ee);
 			}
 			obj->addFeature(p1,p2);

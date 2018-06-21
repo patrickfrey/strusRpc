@@ -9347,7 +9347,7 @@ try
 }
 }
 
-std::vector<double> VectorStorageClientImpl::featureVector( const Index& p1) const
+std::vector<float> VectorStorageClientImpl::featureVector( const Index& p1) const
 {
 try
 {
@@ -9359,19 +9359,19 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::vector<double> p0;
+	std::vector<float> p0;
 	std::size_t n0 = serializedMsg.unpackSize();
 	for (std::size_t ii=0; ii < n0; ++ii) {
-		double elem_p0 = serializedMsg.unpackDouble();
+		float elem_p0 = serializedMsg.unpackFloat();
 		p0.push_back( elem_p0);
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::featureVector");
-	return std::vector<double>();
+	return std::vector<float>();
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::featureVector", err.what());
-	return std::vector<double>();
+	return std::vector<float>();
 }
 }
 
@@ -9421,7 +9421,7 @@ try
 }
 }
 
-double VectorStorageClientImpl::vectorSimilarity( const std::vector<double>& p1, const std::vector<double>& p2) const
+double VectorStorageClientImpl::vectorSimilarity( const std::vector<float>& p1, const std::vector<float>& p2) const
 {
 try
 {
@@ -9430,11 +9430,11 @@ try
 	msg.packByte( Method_vectorSimilarity);
 	msg.packSize( p1.size());
 	for (unsigned int ii=0; ii < p1.size(); ++ii) {
-		msg.packDouble( p1[ii]);
+		msg.packFloat( p1[ii]);
 	}
 	msg.packSize( p2.size());
 	for (unsigned int ii=0; ii < p2.size(); ++ii) {
-		msg.packDouble( p2[ii]);
+		msg.packFloat( p2[ii]);
 	}
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
@@ -9679,7 +9679,7 @@ VectorStorageSearchImpl::~VectorStorageSearchImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::vector<VectorQueryResult> VectorStorageSearchImpl::findSimilar( const std::vector<double>& p1, unsigned int p2) const
+std::vector<VectorQueryResult> VectorStorageSearchImpl::findSimilar( const std::vector<float>& p1, unsigned int p2) const
 {
 try
 {
@@ -9688,7 +9688,7 @@ try
 	msg.packByte( Method_findSimilar);
 	msg.packSize( p1.size());
 	for (unsigned int ii=0; ii < p1.size(); ++ii) {
-		msg.packDouble( p1[ii]);
+		msg.packFloat( p1[ii]);
 	}
 	msg.packUint( p2);
 	msg.packCrc32();
@@ -9711,7 +9711,7 @@ try
 }
 }
 
-std::vector<VectorQueryResult> VectorStorageSearchImpl::findSimilarFromSelection( const std::vector<Index>& p1, const std::vector<double>& p2, unsigned int p3) const
+std::vector<VectorQueryResult> VectorStorageSearchImpl::findSimilarFromSelection( const std::vector<Index>& p1, const std::vector<float>& p2, unsigned int p3) const
 {
 try
 {
@@ -9724,7 +9724,7 @@ try
 	}
 	msg.packSize( p2.size());
 	for (unsigned int ii=0; ii < p2.size(); ++ii) {
-		msg.packDouble( p2[ii]);
+		msg.packFloat( p2[ii]);
 	}
 	msg.packUint( p3);
 	msg.packCrc32();
@@ -9775,7 +9775,7 @@ VectorStorageTransactionImpl::~VectorStorageTransactionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void VectorStorageTransactionImpl::addFeature( const std::string& p1, const std::vector<double>& p2)
+void VectorStorageTransactionImpl::addFeature( const std::string& p1, const std::vector<float>& p2)
 {
 try
 {
@@ -9785,7 +9785,7 @@ try
 	msg.packString( p1);
 	msg.packSize( p2.size());
 	for (unsigned int ii=0; ii < p2.size(); ++ii) {
-		msg.packDouble( p2[ii]);
+		msg.packFloat( p2[ii]);
 	}
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
