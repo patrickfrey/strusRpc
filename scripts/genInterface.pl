@@ -943,6 +943,10 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerContentStatisticsResult( " . $id . ");";
 	}
+	elsif ($type eq "PosTaggerDataInterface::Element")
+	{
+		$rt .= "msg.packPosTaggerDataElement( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -1297,6 +1301,10 @@ sub unpackParameter
 	elsif ($type eq "analyzer::ContentStatisticsView")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerContentStatisticsView();";
+	}
+	elsif ($type eq "PosTaggerDataInterface::Element")
+	{
+		$rt .= "$id = serializedMsg.unpackPosTaggerDataElement();";
 	}
 	else
 	{

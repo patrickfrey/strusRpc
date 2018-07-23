@@ -57,6 +57,7 @@
 #include "strus/analyzer/contentStatisticsView.hpp"
 #include "strus/analyzer/contentStatisticsItem.hpp"
 #include "strus/analyzer/contentStatisticsResult.hpp"
+#include "strus/posTaggerDataInterface.hpp"
 
 namespace strus {
 
@@ -137,6 +138,8 @@ public:
 	void packAnalyzerContentStatisticsItem( const analyzer::ContentStatisticsItem& val);
 	void packAnalyzerContentStatisticsResult( const analyzer::ContentStatisticsResult& val);
 	void packAnalyzerContentStatisticsView( const analyzer::ContentStatisticsView& val);
+	void packPosTaggerDataElement( const PosTaggerDataInterface::Element& val);
+
 	void packCrc32();
 	const std::string& content() const
 	{
@@ -230,6 +233,7 @@ public:
 	analyzer::ContentStatisticsView unpackAnalyzerContentStatisticsView();
 	analyzer::ContentStatisticsItem unpackAnalyzerContentStatisticsItem();
 	analyzer::ContentStatisticsResult unpackAnalyzerContentStatisticsResult();
+	PosTaggerDataInterface::Element unpackPosTaggerDataElement();
 
 	bool unpackCrc32();
 

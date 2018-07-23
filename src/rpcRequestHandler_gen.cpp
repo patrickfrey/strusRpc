@@ -3440,6 +3440,252 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_PosTaggerContext:
+	{
+	PosTaggerContextInterface* obj = getObject<PosTaggerContextInterface>( classId, objId);
+	switch( (PosTaggerContextConst::MethodId)methodId)
+	{
+		case PosTaggerContextConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PosTaggerContextConst::Method_markupDocument:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			int p1;
+			analyzer::DocumentClass p2;
+			std::string p3;
+			p1 = serializedMsg.unpackInt();
+			p2 = serializedMsg.unpackDocumentClass();
+			p3 = serializedMsg.unpackString();
+			p0 = obj->markupDocument(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_PosTaggerData:
+	{
+	PosTaggerDataInterface* obj = getObject<PosTaggerDataInterface>( classId, objId);
+	switch( (PosTaggerDataConst::MethodId)methodId)
+	{
+		case PosTaggerDataConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PosTaggerDataConst::Method_defineTag:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			obj->defineTag(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PosTaggerDataConst::Method_insert:
+		{
+			RpcSerializer msg;
+			int p1;
+			std::vector<PosTaggerDataInterface::Element> p2;
+			p1 = serializedMsg.unpackInt();
+			std::size_t n2 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n2; ++ii) {
+				PosTaggerDataInterface::Element ee = serializedMsg.unpackPosTaggerDataElement();
+				p2.push_back( ee);
+			}
+			obj->insert(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PosTaggerDataConst::Method_markupSegment:
+		{
+			RpcSerializer msg;
+			TokenMarkupContextInterface* p1;
+			int p2;
+			SegmenterPosition p3;
+			const char* p4;
+			std::size_t p5;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_TokenMarkupContext) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getObject<TokenMarkupContextInterface>( classId_1, objId_1);
+			p2 = serializedMsg.unpackInt();
+			p3 = serializedMsg.unpackGlobalCounter();
+			serializedMsg.unpackBuffer( p4, p5);
+			obj->markupSegment(p1,p2,p3,p4,p5);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_PosTaggerInstance:
+	{
+	PosTaggerInstanceInterface* obj = getObject<PosTaggerInstanceInterface>( classId, objId);
+	switch( (PosTaggerInstanceConst::MethodId)methodId)
+	{
+		case PosTaggerInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PosTaggerInstanceConst::Method_addContentExpression:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->addContentExpression(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PosTaggerInstanceConst::Method_addPosTaggerInputPunctuation:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			obj->addPosTaggerInputPunctuation(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PosTaggerInstanceConst::Method_getPosTaggerInput:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			analyzer::DocumentClass p1;
+			std::string p2;
+			p1 = serializedMsg.unpackDocumentClass();
+			p2 = serializedMsg.unpackString();
+			p0 = obj->getPosTaggerInput(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PosTaggerInstanceConst::Method_createContext:
+		{
+			RpcSerializer msg;
+			PosTaggerContextInterface* p0;
+			const PosTaggerDataInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_PosTaggerData) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<PosTaggerDataInterface>( classId_1, objId_1);
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createContext(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_PosTagger:
+	{
+	PosTaggerInterface* obj = getObject<PosTaggerInterface>( classId, objId);
+	switch( (PosTaggerConst::MethodId)methodId)
+	{
+		case PosTaggerConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PosTaggerConst::Method_createInstance:
+		{
+			RpcSerializer msg;
+			PosTaggerInstanceInterface* p0;
+			const SegmenterInterface* p1;
+			analyzer::SegmenterOptions p2;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_Segmenter) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<SegmenterInterface>( classId_1, objId_1);
+			p2 = serializedMsg.unpackSegmenterOptions();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createInstance(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+	}
+	break;
+	}
 	case ClassId_PostingIterator:
 	{
 	PostingIteratorInterface* obj = getObject<PostingIteratorInterface>( classId, objId);
@@ -7986,16 +8232,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p0;
-			const SegmenterInstanceInterface* p1;
-			analyzer::DocumentClass p2;
-			std::string p3;
-			unsigned char classId_1; unsigned int objId_1;
-			serializedMsg.unpackObject( classId_1, objId_1);
-			if (classId_1 != ClassId_SegmenterInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p1 = getConstObject<SegmenterInstanceInterface>( classId_1, objId_1);
-			p2 = serializedMsg.unpackDocumentClass();
-			p3 = serializedMsg.unpackString();
-			p0 = obj->markupDocument(p1,p2,p3);
+			analyzer::DocumentClass p1;
+			std::string p2;
+			p1 = serializedMsg.unpackDocumentClass();
+			p2 = serializedMsg.unpackString();
+			p0 = obj->markupDocument(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8025,9 +8266,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			TokenMarkupContextInterface* p0;
+			const SegmenterInstanceInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_SegmenterInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<SegmenterInstanceInterface>( classId_1, objId_1);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createContext();
+			p0 = obj->createContext(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

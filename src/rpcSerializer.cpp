@@ -955,6 +955,12 @@ void RpcSerializer::packAnalyzerContentStatisticsView( const analyzer::ContentSt
 	}
 }
 
+void RpcSerializer::packPosTaggerDataElement( const PosTaggerDataInterface::Element& val)
+{
+	packString( val.type());
+	packString( val.value());
+}
+
 void RpcSerializer::packCrc32()
 {
 #if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM
@@ -1797,4 +1803,12 @@ analyzer::ContentStatisticsView RpcDeserializer::unpackAnalyzerContentStatistics
 	}
 	return analyzer::ContentStatisticsView( elements);
 }
+
+PosTaggerDataInterface::Element RpcDeserializer::unpackPosTaggerDataElement()
+{
+	std::string type = unpackString();
+	std::string value = unpackString();
+	return PosTaggerDataInterface::Element( type, value);
+}
+
 

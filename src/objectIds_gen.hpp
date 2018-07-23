@@ -46,6 +46,10 @@ enum ClassId
 	ClassId_PatternMatcher,
 	ClassId_PatternTermFeederInstance,
 	ClassId_PatternTermFeeder,
+	ClassId_PosTaggerContext,
+	ClassId_PosTaggerData,
+	ClassId_PosTaggerInstance,
+	ClassId_PosTagger,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
 	ClassId_QueryAnalyzerContext,
@@ -534,6 +538,51 @@ public:
 };
 
 class PatternTermFeederConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createInstance
+	};
+};
+
+class PosTaggerContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_markupDocument
+	};
+};
+
+class PosTaggerDataConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_defineTag,
+		Method_insert,
+		Method_markupSegment
+	};
+};
+
+class PosTaggerInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addContentExpression,
+		Method_addPosTaggerInputPunctuation,
+		Method_getPosTaggerInput,
+		Method_createContext
+	};
+};
+
+class PosTaggerConst
 {
 public:
 	enum MethodId

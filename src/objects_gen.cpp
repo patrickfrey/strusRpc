@@ -3809,6 +3809,254 @@ try
 }
 }
 
+PosTaggerContextImpl::~PosTaggerContextImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+std::string PosTaggerContextImpl::markupDocument( int p1, const analyzer::DocumentClass& p2, const std::string& p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_markupDocument);
+	msg.packInt( p1);
+	msg.packDocumentClass( p2);
+	msg.packString( p3);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PosTaggerContextImpl::markupDocument");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PosTaggerContextImpl::markupDocument", err.what());
+	return std::string();
+}
+}
+
+PosTaggerDataImpl::~PosTaggerDataImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void PosTaggerDataImpl::defineTag( const std::string& p1, const std::string& p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineTag);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PosTaggerDataImpl::defineTag");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PosTaggerDataImpl::defineTag", err.what());
+	return void();
+}
+}
+
+void PosTaggerDataImpl::insert( int p1, const std::vector<PosTaggerDataInterface::Element>& p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_insert);
+	msg.packInt( p1);
+	msg.packSize( p2.size());
+	for (unsigned int ii=0; ii < p2.size(); ++ii) {
+		msg.packPosTaggerDataElement( p2[ii]);
+	}
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PosTaggerDataImpl::insert");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PosTaggerDataImpl::insert", err.what());
+	return void();
+}
+}
+
+void PosTaggerDataImpl::markupSegment( TokenMarkupContextInterface* p1, int p2, const SegmenterPosition& p3, const char* p4, std::size_t p5)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_markupSegment);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "TokenMarkupContext");
+	msg.packObject( impl_1->classId(), impl_1->objId());
+	msg.packInt( p2);
+	msg.packGlobalCounter( p3);
+	msg.packBuffer( p4, p5);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PosTaggerDataImpl::markupSegment");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PosTaggerDataImpl::markupSegment", err.what());
+	return void();
+}
+}
+
+PosTaggerInstanceImpl::~PosTaggerInstanceImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void PosTaggerInstanceImpl::addContentExpression( const std::string& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addContentExpression);
+	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PosTaggerInstanceImpl::addContentExpression");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PosTaggerInstanceImpl::addContentExpression", err.what());
+	return void();
+}
+}
+
+void PosTaggerInstanceImpl::addPosTaggerInputPunctuation( const std::string& p1, const std::string& p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addPosTaggerInputPunctuation);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PosTaggerInstanceImpl::addPosTaggerInputPunctuation");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PosTaggerInstanceImpl::addPosTaggerInputPunctuation", err.what());
+	return void();
+}
+}
+
+std::string PosTaggerInstanceImpl::getPosTaggerInput( const analyzer::DocumentClass& p1, const std::string& p2) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getPosTaggerInput);
+	msg.packDocumentClass( p1);
+	msg.packString( p2);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PosTaggerInstanceImpl::getPosTaggerInput");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PosTaggerInstanceImpl::getPosTaggerInput", err.what());
+	return std::string();
+}
+}
+
+PosTaggerContextInterface* PosTaggerInstanceImpl::createContext( const PosTaggerDataInterface* p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createContext);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PosTaggerData");
+	msg.packObject( impl_1->classId(), impl_1->objId());
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_PosTaggerContext;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	PosTaggerContextInterface* p0 = new PosTaggerContextImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PosTaggerInstanceImpl::createContext");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PosTaggerInstanceImpl::createContext", err.what());
+	return 0;
+}
+}
+
+PosTaggerImpl::~PosTaggerImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+PosTaggerInstanceInterface* PosTaggerImpl::createInstance( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createInstance);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Segmenter");
+	msg.packObject( impl_1->classId(), impl_1->objId());
+	msg.packSegmenterOptions( p2);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_PosTaggerInstance;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	PosTaggerInstanceInterface* p0 = new PosTaggerInstanceImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PosTaggerImpl::createInstance");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PosTaggerImpl::createInstance", err.what());
+	return 0;
+}
+}
+
 PostingIteratorImpl::~PostingIteratorImpl()
 {
 	if (isConst()) return;
@@ -8879,18 +9127,15 @@ try
 }
 }
 
-std::string TokenMarkupContextImpl::markupDocument( const SegmenterInstanceInterface* p1, const analyzer::DocumentClass& p2, const std::string& p3) const
+std::string TokenMarkupContextImpl::markupDocument( const analyzer::DocumentClass& p1, const std::string& p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_markupDocument);
-	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "SegmenterInstance");
-	msg.packObject( impl_1->classId(), impl_1->objId());
-	msg.packDocumentClass( p2);
-	msg.packString( p3);
+	msg.packDocumentClass( p1);
+	msg.packString( p2);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -8916,13 +9161,16 @@ TokenMarkupInstanceImpl::~TokenMarkupInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-TokenMarkupContextInterface* TokenMarkupInstanceImpl::createContext( ) const
+TokenMarkupContextInterface* TokenMarkupInstanceImpl::createContext( const SegmenterInstanceInterface* p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createContext);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "SegmenterInstance");
+	msg.packObject( impl_1->classId(), impl_1->objId());
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_TokenMarkupContext;
 	msg.packObject( classId_0, objId_0);

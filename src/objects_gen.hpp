@@ -29,6 +29,10 @@
 #include "strus/patternMatcherInterface.hpp"
 #include "strus/patternTermFeederInstanceInterface.hpp"
 #include "strus/patternTermFeederInterface.hpp"
+#include "strus/posTaggerContextInterface.hpp"
+#include "strus/posTaggerDataInterface.hpp"
+#include "strus/posTaggerInstanceInterface.hpp"
+#include "strus/posTaggerInterface.hpp"
 #include "strus/queryAnalyzerContextInterface.hpp"
 #include "strus/queryAnalyzerInstanceInterface.hpp"
 #include "strus/segmenterContextInterface.hpp"
@@ -677,6 +681,67 @@ public:
 	virtual PatternTermFeederInstanceInterface* createInstance( ) const;
 };
 
+class PosTaggerContextImpl
+		:public RpcInterfaceStub
+		,public strus::PosTaggerContextInterface
+		,public strus::PosTaggerContextConst
+{
+public:
+	virtual ~PosTaggerContextImpl();
+
+	PosTaggerContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PosTaggerContext, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual std::string markupDocument( int p1, const analyzer::DocumentClass& p2, const std::string& p3);
+};
+
+class PosTaggerDataImpl
+		:public RpcInterfaceStub
+		,public strus::PosTaggerDataInterface
+		,public strus::PosTaggerDataConst
+{
+public:
+	virtual ~PosTaggerDataImpl();
+
+	PosTaggerDataImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PosTaggerData, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void defineTag( const std::string& p1, const std::string& p2);
+	virtual void insert( int p1, const std::vector<PosTaggerDataInterface::Element>& p2);
+	virtual void markupSegment( TokenMarkupContextInterface* p1, int p2, const SegmenterPosition& p3, const char* p4, std::size_t p5);
+};
+
+class PosTaggerInstanceImpl
+		:public RpcInterfaceStub
+		,public strus::PosTaggerInstanceInterface
+		,public strus::PosTaggerInstanceConst
+{
+public:
+	virtual ~PosTaggerInstanceImpl();
+
+	PosTaggerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PosTaggerInstance, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void addContentExpression( const std::string& p1);
+	virtual void addPosTaggerInputPunctuation( const std::string& p1, const std::string& p2);
+	virtual std::string getPosTaggerInput( const analyzer::DocumentClass& p1, const std::string& p2) const;
+	virtual PosTaggerContextInterface* createContext( const PosTaggerDataInterface* p1) const;
+};
+
+class PosTaggerImpl
+		:public RpcInterfaceStub
+		,public strus::PosTaggerInterface
+		,public strus::PosTaggerConst
+{
+public:
+	virtual ~PosTaggerImpl();
+
+	PosTaggerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PosTagger, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual PosTaggerInstanceInterface* createInstance( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const;
+};
+
 class PostingIteratorImpl
 		:public RpcInterfaceStub
 		,public strus::PostingIteratorInterface
@@ -1286,7 +1351,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenMarkupContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void putMarkup( const analyzer::Position& p1, const analyzer::Position& p2, const analyzer::TokenMarkup& p3, unsigned int p4);
-	virtual std::string markupDocument( const SegmenterInstanceInterface* p1, const analyzer::DocumentClass& p2, const std::string& p3) const;
+	virtual std::string markupDocument( const analyzer::DocumentClass& p1, const std::string& p2) const;
 };
 
 class TokenMarkupInstanceImpl
@@ -1300,7 +1365,7 @@ public:
 	TokenMarkupInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenMarkupInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual TokenMarkupContextInterface* createContext( ) const;
+	virtual TokenMarkupContextInterface* createContext( const SegmenterInstanceInterface* p1) const;
 	virtual analyzer::FunctionView view( ) const;
 };
 
