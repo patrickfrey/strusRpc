@@ -3531,17 +3531,18 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			TokenMarkupContextInterface* p1;
 			int p2;
-			SegmenterPosition p3;
-			const char* p4;
-			std::size_t p5;
+			int p3;
+			SegmenterPosition p4;
+			const char* p5;
+			std::size_t p6;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_TokenMarkupContext) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getObject<TokenMarkupContextInterface>( classId_1, objId_1);
 			p2 = serializedMsg.unpackInt();
-			p3 = serializedMsg.unpackGlobalCounter();
-			serializedMsg.unpackBuffer( p4, p5);
-			obj->markupSegment(p1,p2,p3,p4,p5);
+			p4 = serializedMsg.unpackGlobalCounter();
+			serializedMsg.unpackBuffer( p5, p6);
+			obj->markupSegment(p1,p2,p3,p4,p5,p6);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3550,7 +3551,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			return std::string();
+			msg.packInt( p3);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
