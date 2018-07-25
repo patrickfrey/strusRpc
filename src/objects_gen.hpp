@@ -151,6 +151,7 @@ public:
 
 	virtual const TextProcessorInterface* getTextProcessor( ) const;
 	virtual DocumentAnalyzerInstanceInterface* createDocumentAnalyzer( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const;
+	virtual PosTaggerInstanceInterface* createPosTaggerInstance( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const;
 	virtual QueryAnalyzerInstanceInterface* createQueryAnalyzer( ) const;
 	virtual DocumentAnalyzerMapInterface* createDocumentAnalyzerMap( ) const;
 	virtual DocumentClassDetectorInterface* createDocumentClassDetector( ) const;
@@ -725,7 +726,7 @@ public:
 	virtual void addContentExpression( const std::string& p1);
 	virtual void addPosTaggerInputPunctuation( const std::string& p1, const std::string& p2);
 	virtual std::string getPosTaggerInput( const analyzer::DocumentClass& p1, const std::string& p2) const;
-	virtual PosTaggerContextInterface* createContext( const PosTaggerDataInterface* p1) const;
+	virtual std::string markupDocument( const PosTaggerDataInterface* p1, int p2, const analyzer::DocumentClass& p3, const std::string& p4) const;
 };
 
 class PosTaggerImpl
@@ -1328,7 +1329,7 @@ public:
 	virtual const PatternMatcherInterface* getPatternMatcher( const std::string& p1) const;
 	virtual const PatternTermFeederInterface* getPatternTermFeeder( ) const;
 	virtual PosTaggerDataInterface* createPosTaggerData( const std::string& p1, const std::vector<std::string>& p2) const;
-	virtual PosTaggerInterface* createPosTagger( ) const;
+	virtual const PosTaggerInterface* getPosTagger( ) const;
 	virtual TokenMarkupInstanceInterface* createTokenMarkupInstance( ) const;
 	virtual bool detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3, bool p4) const;
 	virtual void defineDocumentClassDetector( DocumentClassDetectorInterface* p1);

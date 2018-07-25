@@ -136,6 +136,7 @@ public:
 		Method_Destructor,
 		Method_getTextProcessor,
 		Method_createDocumentAnalyzer,
+		Method_createPosTaggerInstance,
 		Method_createQueryAnalyzer,
 		Method_createDocumentAnalyzerMap,
 		Method_createDocumentClassDetector,
@@ -578,7 +579,7 @@ public:
 		Method_addContentExpression,
 		Method_addPosTaggerInputPunctuation,
 		Method_getPosTaggerInput,
-		Method_createContext
+		Method_markupDocument
 	};
 };
 
@@ -1057,7 +1058,7 @@ public:
 		Method_getPatternMatcher,
 		Method_getPatternTermFeeder,
 		Method_createPosTaggerData,
-		Method_createPosTagger,
+		Method_getPosTagger,
 		Method_createTokenMarkupInstance,
 		Method_detectDocumentClass,
 		Method_defineDocumentClassDetector,

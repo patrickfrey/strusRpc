@@ -244,6 +244,33 @@ try
 }
 }
 
+PosTaggerInstanceInterface* AnalyzerObjectBuilderImpl::createPosTaggerInstance( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createPosTaggerInstance);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Segmenter");
+	msg.packObject( impl_1->classId(), impl_1->objId());
+	msg.packSegmenterOptions( p2);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_PosTaggerInstance;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	PosTaggerInstanceInterface* p0 = new PosTaggerInstanceImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "AnalyzerObjectBuilderImpl::createPosTaggerInstance");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "AnalyzerObjectBuilderImpl::createPosTaggerInstance", err.what());
+	return 0;
+}
+}
+
 QueryAnalyzerInstanceInterface* AnalyzerObjectBuilderImpl::createQueryAnalyzer( ) const
 {
 try
@@ -3997,29 +4024,31 @@ try
 }
 }
 
-PosTaggerContextInterface* PosTaggerInstanceImpl::createContext( const PosTaggerDataInterface* p1) const
+std::string PosTaggerInstanceImpl::markupDocument( const PosTaggerDataInterface* p1, int p2, const analyzer::DocumentClass& p3, const std::string& p4) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createContext);
+	msg.packByte( Method_markupDocument);
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PosTaggerData");
 	msg.packObject( impl_1->classId(), impl_1->objId());
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_PosTaggerContext;
-	msg.packObject( classId_0, objId_0);
+	msg.packInt( p2);
+	msg.packDocumentClass( p3);
+	msg.packString( p4);
 	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	PosTaggerContextInterface* p0 = new PosTaggerContextImpl( objId_0, ctx(), false, errorhnd());
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PosTaggerInstanceImpl::createContext");
-	return 0;
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PosTaggerInstanceImpl::markupDocument");
+	return std::string();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PosTaggerInstanceImpl::createContext", err.what());
-	return 0;
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PosTaggerInstanceImpl::markupDocument", err.what());
+	return std::string();
 }
 }
 
@@ -8888,25 +8917,26 @@ try
 }
 }
 
-PosTaggerInterface* TextProcessorImpl::createPosTagger( ) const
+const PosTaggerInterface* TextProcessorImpl::getPosTagger( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createPosTagger);
+	msg.packByte( Method_getPosTagger);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_PosTagger;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	PosTaggerInterface* p0 = new PosTaggerImpl( objId_0, ctx(), false, errorhnd());
+	PosTaggerImpl const_0( objId_0, ctx(), true, errorhnd());
+	const PosTaggerInterface* p0 = (const PosTaggerImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "TextProcessorImpl::createPosTagger");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "TextProcessorImpl::getPosTagger");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "TextProcessorImpl::createPosTagger", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "TextProcessorImpl::getPosTagger", err.what());
 	return 0;
 }
 }

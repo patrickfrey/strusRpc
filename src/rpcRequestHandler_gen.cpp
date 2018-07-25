@@ -231,6 +231,32 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case AnalyzerObjectBuilderConst::Method_createPosTaggerInstance:
+		{
+			RpcSerializer msg;
+			PosTaggerInstanceInterface* p0;
+			const SegmenterInterface* p1;
+			analyzer::SegmenterOptions p2;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_Segmenter) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<SegmenterInterface>( classId_1, objId_1);
+			p2 = serializedMsg.unpackSegmenterOptions();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createPosTaggerInstance(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case AnalyzerObjectBuilderConst::Method_createQueryAnalyzer:
 		{
 			RpcSerializer msg;
@@ -3623,18 +3649,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case PosTaggerInstanceConst::Method_createContext:
+		case PosTaggerInstanceConst::Method_markupDocument:
 		{
 			RpcSerializer msg;
-			PosTaggerContextInterface* p0;
+			std::string p0;
 			const PosTaggerDataInterface* p1;
+			int p2;
+			analyzer::DocumentClass p3;
+			std::string p4;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_PosTaggerData) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getConstObject<PosTaggerDataInterface>( classId_1, objId_1);
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createContext(p1);
+			p2 = serializedMsg.unpackInt();
+			p3 = serializedMsg.unpackDocumentClass();
+			p4 = serializedMsg.unpackString();
+			p0 = obj->markupDocument(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3643,9 +3673,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -8002,13 +8032,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case TextProcessorConst::Method_createPosTagger:
+		case TextProcessorConst::Method_getPosTagger:
 		{
 			RpcSerializer msg;
-			PosTaggerInterface* p0;
+			const PosTaggerInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createPosTagger();
+			p0 = obj->getPosTagger();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8017,7 +8047,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
+			defineConstObject( classId_0, objId_0, p0);
 			
 			return std::string();
 		}
