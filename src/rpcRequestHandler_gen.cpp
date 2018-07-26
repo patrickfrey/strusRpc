@@ -8009,17 +8009,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			PosTaggerDataInterface* p0;
-			std::string p1;
-			std::vector<std::string> p2;
-			p1 = serializedMsg.unpackString();
-			std::size_t n2 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n2; ++ii) {
-				std::string ee = serializedMsg.unpackString();
-				p2.push_back( ee);
-			}
+			TokenizerFunctionInstanceInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getObject<TokenizerFunctionInstanceInterface>( classId_1, objId_1);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createPosTaggerData(p1,p2);
+			p0 = obj->createPosTaggerData(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
