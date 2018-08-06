@@ -79,6 +79,7 @@ public:
 	void packBool( bool val);
 	void packByte( unsigned char val);
 	void packIndex( const Index& index);
+	void packIndexRange( const IndexRange& val);
 	void packGlobalCounter( const GlobalCounter& index);
 	void packUint( unsigned int val);
 	void packInt( int val);
@@ -175,6 +176,7 @@ public:
 	bool unpackBool();
 	unsigned char unpackByte();
 	Index unpackIndex();
+	IndexRange unpackIndexRange();
 	GlobalCounter unpackGlobalCounter();
 	unsigned int unpackUint();
 	int unpackInt();

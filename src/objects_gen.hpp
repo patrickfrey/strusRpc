@@ -78,6 +78,7 @@
 #include "strus/storageInterface.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/storageTransactionInterface.hpp"
+#include "strus/structIteratorInterface.hpp"
 #include "strus/summarizerFunctionContextInterface.hpp"
 #include "strus/summarizerFunctionInstanceInterface.hpp"
 #include "strus/summarizerFunctionInterface.hpp"
@@ -1110,6 +1111,7 @@ public:
 
 	virtual std::string config( ) const;
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3) const;
+	virtual StructIteratorInterface* createStructIterator( const std::string& p1) const;
 	virtual PostingIteratorInterface* createBrowsePostingIterator( const MetaDataRestrictionInterface* p1, const Index& p2) const;
 	virtual PostingIteratorInterface* createFieldPostingIterator( const std::string& p1, const std::string& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;
@@ -1123,6 +1125,7 @@ public:
 	virtual Index termTypeNumber( const std::string& p1) const;
 	virtual bool isForwardIndexTerm( const std::string& p1) const;
 	virtual ValueIteratorInterface* createTermTypeIterator( ) const;
+	virtual ValueIteratorInterface* createStructTypeIterator( ) const;
 	virtual ValueIteratorInterface* createTermValueIterator( ) const;
 	virtual ValueIteratorInterface* createDocIdIterator( ) const;
 	virtual ValueIteratorInterface* createUserNameIterator( ) const;
@@ -1151,6 +1154,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocument, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
+	virtual void addSearchIndexStructure( const std::string& p1, const IndexRange& p2, const IndexRange& p3);
 	virtual void addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
 	virtual void setMetaData( const std::string& p1, const NumericVariant& p2);
 	virtual void setAttribute( const std::string& p1, const std::string& p2);
@@ -1170,8 +1174,10 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocumentUpdate, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
+	virtual void addSearchIndexStructure( const std::string& p1, const IndexRange& p2, const IndexRange& p3);
 	virtual void addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
 	virtual void clearSearchIndexTerm( const std::string& p1);
+	virtual void clearSearchIndexStructure( const std::string& p1);
 	virtual void clearForwardIndexTerm( const std::string& p1);
 	virtual void setMetaData( const std::string& p1, const NumericVariant& p2);
 	virtual void setAttribute( const std::string& p1, const std::string& p2);
@@ -1254,6 +1260,24 @@ public:
 	virtual bool commit( );
 	virtual void rollback( );
 	virtual unsigned int nofDocumentsAffected( ) const;
+};
+
+class StructIteratorImpl
+		:public RpcInterfaceStub
+		,public strus::StructIteratorInterface
+		,public strus::StructIteratorConst
+{
+public:
+	virtual ~StructIteratorImpl();
+
+	StructIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StructIterator, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual Index skipDoc( const Index& p1);
+	virtual IndexRange skipPosSource( const Index& p1);
+	virtual IndexRange skipPosSink( const Index& p1);
+	virtual IndexRange source( ) const;
+	virtual IndexRange sink( ) const;
 };
 
 class SummarizerFunctionContextImpl

@@ -696,6 +696,10 @@ sub packParameter
 	{
 		$rt .= "msg.packIndex( " . $id . ");";
 	}
+	elsif ($type eq "IndexRange")
+	{
+		$rt .= "msg.packIndexRange( " . $id . ");";
+	}
 	elsif ($type eq "GlobalCounter")
 	{
 		$rt .= "msg.packGlobalCounter( " . $id . ");";
@@ -1014,6 +1018,10 @@ sub unpackParameter
 	elsif ($type eq "Index")
 	{
 		$rt .= "$id = serializedMsg.unpackIndex();";
+	}
+	elsif ($type eq "IndexRange")
+	{
+		$rt .= "$id = serializedMsg.unpackIndexRange();";
 	}
 	elsif ($type eq "GlobalCounter")
 	{

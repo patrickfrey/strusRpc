@@ -201,7 +201,8 @@ enum ProtocolAtomicTypes
 	ProtocolDouble,
 	ProtocolFloat,
 	ProtocolSize,
-	ProtocolNumericVariant
+	ProtocolNumericVariant,
+	ProtocolIndexRange
 };
 
 #if STRUS_RPC_PROTOCOL_WITH_TYPED_ATOMS
@@ -343,6 +344,16 @@ void RpcSerializer::packIndex( const Index& index)
 	std::cerr << "packIndex (" << (unsigned int)index << ")" << std::endl;
 #endif
 	packScalar( m_content, index);
+}
+
+void RpcSerializer::packIndexRange( const IndexRange& val)
+{
+	SET_TYPE( IndexRange)
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packIndexRange (" << (int)val.start() << "," << (int)val.end() << ")" << std::endl;
+#endif
+	packScalar( m_content, val.start());
+	packScalar( m_content, val.end());
 }
 
 void RpcSerializer::packGlobalCounter( const GlobalCounter& index)
@@ -1126,6 +1137,17 @@ Index RpcDeserializer::unpackIndex()
 	std::cerr << "unpackIndex(" << rt << ")" << std::endl;
 #endif
 	return rt;
+}
+
+IndexRange RpcDeserializer::unpackIndexRange()
+{
+	CHECK_TYPE( IndexRange)
+	Index start = unpackScalar<Index>( m_itr, m_end);
+	Index end = unpackScalar<Index>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackIndexRange (" << (int)start << "," << (int)end << ")" << std::endl;
+#endif
+	return IndexRange( start, end);
 }
 
 GlobalCounter RpcDeserializer::unpackGlobalCounter()

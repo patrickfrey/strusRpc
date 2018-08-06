@@ -6152,6 +6152,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case StorageClientConst::Method_createStructIterator:
+		{
+			RpcSerializer msg;
+			StructIteratorInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createStructIterator(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case StorageClientConst::Method_createBrowsePostingIterator:
 		{
 			RpcSerializer msg;
@@ -6402,6 +6423,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createTermTypeIterator();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StorageClientConst::Method_createStructTypeIterator:
+		{
+			RpcSerializer msg;
+			ValueIteratorInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createStructTypeIterator();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6707,6 +6747,26 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case StorageDocumentConst::Method_addSearchIndexStructure:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			IndexRange p2;
+			IndexRange p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackIndexRange();
+			p3 = serializedMsg.unpackIndexRange();
+			obj->addSearchIndexStructure(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case StorageDocumentConst::Method_addForwardIndexTerm:
 		{
 			RpcSerializer msg;
@@ -6826,6 +6886,26 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case StorageDocumentUpdateConst::Method_addSearchIndexStructure:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			IndexRange p2;
+			IndexRange p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackIndexRange();
+			p3 = serializedMsg.unpackIndexRange();
+			obj->addSearchIndexStructure(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case StorageDocumentUpdateConst::Method_addForwardIndexTerm:
 		{
 			RpcSerializer msg;
@@ -6852,6 +6932,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			p1 = serializedMsg.unpackString();
 			obj->clearSearchIndexTerm(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case StorageDocumentUpdateConst::Method_clearSearchIndexStructure:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->clearSearchIndexStructure(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -7488,6 +7584,110 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packUint( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_StructIterator:
+	{
+	StructIteratorInterface* obj = getObject<StructIteratorInterface>( classId, objId);
+	switch( (StructIteratorConst::MethodId)methodId)
+	{
+		case StructIteratorConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case StructIteratorConst::Method_skipDoc:
+		{
+			RpcSerializer msg;
+			Index p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->skipDoc(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndex( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StructIteratorConst::Method_skipPosSource:
+		{
+			RpcSerializer msg;
+			IndexRange p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->skipPosSource(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndexRange( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StructIteratorConst::Method_skipPosSink:
+		{
+			RpcSerializer msg;
+			IndexRange p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->skipPosSink(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndexRange( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StructIteratorConst::Method_source:
+		{
+			RpcSerializer msg;
+			IndexRange p0;
+			p0 = obj->source();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndexRange( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StructIteratorConst::Method_sink:
+		{
+			RpcSerializer msg;
+			IndexRange p0;
+			p0 = obj->sink();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndexRange( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

@@ -76,6 +76,7 @@ enum ClassId
 	ClassId_Storage,
 	ClassId_StorageObjectBuilder,
 	ClassId_StorageTransaction,
+	ClassId_StructIterator,
 	ClassId_SummarizerFunctionContext,
 	ClassId_SummarizerFunctionInstance,
 	ClassId_SummarizerFunction,
@@ -879,6 +880,7 @@ public:
 		Method_Destructor,
 		Method_config,
 		Method_createTermPostingIterator,
+		Method_createStructIterator,
 		Method_createBrowsePostingIterator,
 		Method_createFieldPostingIterator,
 		Method_createForwardIterator,
@@ -892,6 +894,7 @@ public:
 		Method_termTypeNumber,
 		Method_isForwardIndexTerm,
 		Method_createTermTypeIterator,
+		Method_createStructTypeIterator,
 		Method_createTermValueIterator,
 		Method_createDocIdIterator,
 		Method_createUserNameIterator,
@@ -916,6 +919,7 @@ public:
 	{
 		Method_Destructor,
 		Method_addSearchIndexTerm,
+		Method_addSearchIndexStructure,
 		Method_addForwardIndexTerm,
 		Method_setMetaData,
 		Method_setAttribute,
@@ -931,8 +935,10 @@ public:
 	{
 		Method_Destructor,
 		Method_addSearchIndexTerm,
+		Method_addSearchIndexStructure,
 		Method_addForwardIndexTerm,
 		Method_clearSearchIndexTerm,
+		Method_clearSearchIndexStructure,
 		Method_clearForwardIndexTerm,
 		Method_setMetaData,
 		Method_setAttribute,
@@ -999,6 +1005,20 @@ public:
 		Method_commit,
 		Method_rollback,
 		Method_nofDocumentsAffected
+	};
+};
+
+class StructIteratorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_skipDoc,
+		Method_skipPosSource,
+		Method_skipPosSink,
+		Method_source,
+		Method_sink
 	};
 };
 

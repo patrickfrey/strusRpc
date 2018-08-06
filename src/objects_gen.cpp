@@ -6790,6 +6790,30 @@ try
 }
 }
 
+StructIteratorInterface* StorageClientImpl::createStructIterator( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createStructIterator);
+	msg.packString( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StructIterator;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	StructIteratorInterface* p0 = new StructIteratorImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageClientImpl::createStructIterator");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::createStructIterator", err.what());
+	return 0;
+}
+}
+
 PostingIteratorInterface* StorageClientImpl::createBrowsePostingIterator( const MetaDataRestrictionInterface* p1, const Index& p2) const
 {
 try
@@ -7093,6 +7117,29 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::createTermTypeIterator", err.what());
+	return 0;
+}
+}
+
+ValueIteratorInterface* StorageClientImpl::createStructTypeIterator( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createStructTypeIterator);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_ValueIterator;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	ValueIteratorInterface* p0 = new ValueIteratorImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageClientImpl::createStructTypeIterator");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::createStructTypeIterator", err.what());
 	return 0;
 }
 }
@@ -7435,6 +7482,27 @@ try
 }
 }
 
+void StorageDocumentImpl::addSearchIndexStructure( const std::string& p1, const IndexRange& p2, const IndexRange& p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addSearchIndexStructure);
+	msg.packString( p1);
+	msg.packIndexRange( p2);
+	msg.packIndexRange( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageDocumentImpl::addSearchIndexStructure");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageDocumentImpl::addSearchIndexStructure", err.what());
+	return void();
+}
+}
+
 void StorageDocumentImpl::addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3)
 {
 try
@@ -7565,6 +7633,27 @@ try
 }
 }
 
+void StorageDocumentUpdateImpl::addSearchIndexStructure( const std::string& p1, const IndexRange& p2, const IndexRange& p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addSearchIndexStructure);
+	msg.packString( p1);
+	msg.packIndexRange( p2);
+	msg.packIndexRange( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::addSearchIndexStructure");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::addSearchIndexStructure", err.what());
+	return void();
+}
+}
+
 void StorageDocumentUpdateImpl::addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3)
 {
 try
@@ -7601,6 +7690,25 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearSearchIndexTerm", err.what());
+	return void();
+}
+}
+
+void StorageDocumentUpdateImpl::clearSearchIndexStructure( const std::string& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_clearSearchIndexStructure);
+	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageDocumentUpdateImpl::clearSearchIndexStructure");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageDocumentUpdateImpl::clearSearchIndexStructure", err.what());
 	return void();
 }
 }
@@ -8315,6 +8423,129 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageTransactionImpl::nofDocumentsAffected", err.what());
 	return 0;
+}
+}
+
+StructIteratorImpl::~StructIteratorImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+Index StructIteratorImpl::skipDoc( const Index& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_skipDoc);
+	msg.packIndex( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	Index p0 = serializedMsg.unpackIndex();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::skipDoc");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::skipDoc", err.what());
+	return 0;
+}
+}
+
+IndexRange StructIteratorImpl::skipPosSource( const Index& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_skipPosSource);
+	msg.packIndex( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	IndexRange p0 = serializedMsg.unpackIndexRange();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::skipPosSource");
+	return IndexRange();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::skipPosSource", err.what());
+	return IndexRange();
+}
+}
+
+IndexRange StructIteratorImpl::skipPosSink( const Index& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_skipPosSink);
+	msg.packIndex( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	IndexRange p0 = serializedMsg.unpackIndexRange();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::skipPosSink");
+	return IndexRange();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::skipPosSink", err.what());
+	return IndexRange();
+}
+}
+
+IndexRange StructIteratorImpl::source( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_source);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	IndexRange p0 = serializedMsg.unpackIndexRange();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::source");
+	return IndexRange();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::source", err.what());
+	return IndexRange();
+}
+}
+
+IndexRange StructIteratorImpl::sink( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_sink);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	IndexRange p0 = serializedMsg.unpackIndexRange();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::sink");
+	return IndexRange();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::sink", err.what());
+	return IndexRange();
 }
 }
 
