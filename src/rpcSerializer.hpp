@@ -13,8 +13,15 @@
 #include "strus/textProcessorInterface.hpp"
 #include "strus/analyzer/segmenterOptions.hpp"
 #include "strus/analyzer/documentClass.hpp"
-#include "strus/documentAnalyzerInterface.hpp"
-#include "strus/queryAnalyzerInterface.hpp"
+#include "strus/analyzer/documentAnalyzerView.hpp"
+#include "strus/analyzer/documentAnalyzerMapView.hpp"
+#include "strus/analyzer/functionView.hpp"
+#include "strus/analyzer/featureView.hpp"
+#include "strus/analyzer/aggregatorView.hpp"
+#include "strus/analyzer/subDocumentDefinitionView.hpp"
+#include "strus/analyzer/subContentDefinitionView.hpp"
+#include "strus/documentAnalyzerInstanceInterface.hpp"
+#include "strus/queryAnalyzerInstanceInterface.hpp"
 #include "strus/queryAnalyzerContextInterface.hpp"
 #include "strus/numericVariant.hpp"
 #include "strus/postingIteratorInterface.hpp"
@@ -47,6 +54,10 @@
 #include "strus/analyzer/documentMetaData.hpp"
 #include "strus/analyzer/documentAttribute.hpp"
 #include "strus/analyzer/document.hpp"
+#include "strus/analyzer/contentStatisticsView.hpp"
+#include "strus/analyzer/contentStatisticsItem.hpp"
+#include "strus/analyzer/contentStatisticsResult.hpp"
+#include "strus/posTaggerDataInterface.hpp"
 
 namespace strus {
 
@@ -68,6 +79,7 @@ public:
 	void packBool( bool val);
 	void packByte( unsigned char val);
 	void packIndex( const Index& index);
+	void packIndexRange( const IndexRange& val);
 	void packGlobalCounter( const GlobalCounter& index);
 	void packUint( unsigned int val);
 	void packInt( int val);
@@ -96,6 +108,7 @@ public:
 	void packAnalyzerDocumentMetaData( const analyzer::DocumentMetaData& val);
 	void packAnalyzerDocumentTerm( const analyzer::DocumentTerm& val);
 	void packAnalyzerDocument( const analyzer::Document& val);
+	void packAnalyzerPosition( const analyzer::Position& val);
 	void packAnalyzerToken( const analyzer::Token& val);
 	void packAnalyzerGroupBy( const QueryAnalyzerContextInterface::GroupBy& groupBy);
 	void packAnalyzerPatternLexem( const analyzer::PatternLexem& val);
@@ -108,12 +121,25 @@ public:
 	void packQueryResult( const QueryResult& val);
 	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
-	void packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val);
+	void packTermStatisticsChange( const TermStatisticsChange& val);
 	void packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val);
 	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
 	void packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val);
 	void packFunctionDescription( const FunctionDescription& val);
-	void packVectorStorageSearchResult( const VectorStorageSearchInterface::Result& val);
+	void packVectorQueryResult( const VectorQueryResult& val);
+	void packAnalyzerFunctionView( const analyzer::FunctionView& val);
+	void packAnalyzerFeatureView( const analyzer::FeatureView& val);
+	void packAnalyzerAggregatorView( const analyzer::AggregatorView& val);
+	void packAnalyzerSubDocumentDefinitionView( const analyzer::SubDocumentDefinitionView& val);
+	void packAnalyzerSubContentDefinitionView( const analyzer::SubContentDefinitionView& val);
+	void packAnalyzerDocumentAnalyzerView( const analyzer::DocumentAnalyzerView& val);
+	void packAnalyzerDocumentAnalyzerMapView( const analyzer::DocumentAnalyzerMapView& val);
+	void packAnalyzerQueryElementView( const analyzer::QueryElementView& val);
+	void packAnalyzerQueryAnalyzerView( const analyzer::QueryAnalyzerView& val);
+	void packAnalyzerContentStatisticsItem( const analyzer::ContentStatisticsItem& val);
+	void packAnalyzerContentStatisticsResult( const analyzer::ContentStatisticsResult& val);
+	void packAnalyzerContentStatisticsView( const analyzer::ContentStatisticsView& val);
+	void packPosTaggerDataElement( const PosTaggerDataInterface::Element& val);
 
 	void packCrc32();
 	const std::string& content() const
@@ -150,6 +176,7 @@ public:
 	bool unpackBool();
 	unsigned char unpackByte();
 	Index unpackIndex();
+	IndexRange unpackIndexRange();
 	GlobalCounter unpackGlobalCounter();
 	unsigned int unpackUint();
 	int unpackInt();
@@ -177,6 +204,7 @@ public:
 	analyzer::DocumentMetaData unpackAnalyzerDocumentMetaData();
 	analyzer::DocumentTerm unpackAnalyzerDocumentTerm();
 	analyzer::Document unpackAnalyzerDocument();
+	analyzer::Position unpackAnalyzerPosition();
 	analyzer::Token unpackAnalyzerToken();
 	QueryAnalyzerContextInterface::GroupBy unpackAnalyzerGroupBy();
 	analyzer::PatternLexem unpackAnalyzerPatternLexem();
@@ -189,12 +217,25 @@ public:
 	QueryResult unpackQueryResult();
 	QueryEvalInterface::FeatureParameter unpackFeatureParameter();
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();
-	StatisticsViewerInterface::DocumentFrequencyChange unpackStatisticsViewerDocumentFrequencyChange();
+	TermStatisticsChange unpackTermStatisticsChange();
 	QueryProcessorInterface::FunctionType unpackQueryProcessorFunctionType();
 	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();
 	PostingJoinOperatorInterface::Description unpackPostingJoinOperatorDescription();
 	FunctionDescription unpackFunctionDescription();
-	VectorStorageSearchInterface::Result unpackVectorStorageSearchResult();
+	VectorQueryResult unpackVectorQueryResult();
+	analyzer::FunctionView unpackAnalyzerFunctionView();
+	analyzer::FeatureView unpackAnalyzerFeatureView();
+	analyzer::AggregatorView unpackAnalyzerAggregatorView();
+	analyzer::SubDocumentDefinitionView unpackAnalyzerSubDocumentDefinitionView();
+	analyzer::SubContentDefinitionView unpackAnalyzerSubContentDefinitionView();
+	analyzer::DocumentAnalyzerView unpackAnalyzerDocumentAnalyzerView();
+	analyzer::DocumentAnalyzerMapView unpackAnalyzerDocumentAnalyzerMapView();
+	analyzer::QueryElementView unpackAnalyzerQueryElementView();
+	analyzer::QueryAnalyzerView unpackAnalyzerQueryAnalyzerView();
+	analyzer::ContentStatisticsView unpackAnalyzerContentStatisticsView();
+	analyzer::ContentStatisticsItem unpackAnalyzerContentStatisticsItem();
+	analyzer::ContentStatisticsResult unpackAnalyzerContentStatisticsResult();
+	PosTaggerDataInterface::Element unpackPosTaggerDataElement();
 
 	bool unpackCrc32();
 

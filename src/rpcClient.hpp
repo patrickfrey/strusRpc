@@ -40,6 +40,8 @@ public:
 
 	virtual void close();
 
+	virtual std::string config() const;
+
 private:
 	Reference<RpcClientContext> m_ctx;
 	ErrorBufferInterface* m_errorhnd;

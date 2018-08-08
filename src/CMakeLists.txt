@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR )
 
-# Patch for server.c/client.c to compile (not C99 because of non POSIX extensions)
-set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -fPIC -O${STRUS_OPTIMIZATION_LEVEL}" )
+string(REGEX REPLACE "-std=c[89]9" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+MESSAGE( STATUS "C compilation flags for libuv (remove C99): '${CMAKE_C_FLAGS}'" )
+# ... patch for libuv to compile (not C99 because of non POSIX extensions and no-strict-aliasing)
 
 # --------------------------------------
 # SOURCES AND INCLUDES
 # --------------------------------------
 set( private_utils_source_files
-	utils.cpp
 	traceUtils.cpp
-	internationalization.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/internationalization.cpp
 )
 
 set( server_source_files
@@ -36,7 +36,8 @@ set( client_socket_source_files
 )
 
 include_directories(
-        "${Boost_INCLUDE_DIRS}"
+        ${Boost_INCLUDE_DIRS}
+        "${Intl_INCLUDE_DIRS}"
 	"${RPC_INCLUDE_DIRS}"
 	"${LIBUV_INCLUDE_DIRS}"
 	"${strusbase_INCLUDE_DIRS}"
@@ -44,12 +45,14 @@ include_directories(
 	"${strusanalyzer_INCLUDE_DIRS}"
 	"${strustrace_INCLUDE_DIRS}"
 	"${strusmodule_INCLUDE_DIRS}"
+	"${CMAKE_CURRENT_BINARY_DIR}"
+	"${MAIN_SOURCE_DIR}"
 )
 
 link_directories(
 	"${RPC_LIBRARY_DIRS}"
 	"${LIBUV_LIBRARY_DIRS}"
-        "${Boost_LIBRARY_DIRS}"
+        ${Boost_LIBRARY_DIRS}
 	"${strusbase_LIBRARY_DIRS}"
 	"${strus_LIBRARY_DIRS}"
 	"${strusanalyzer_LIBRARY_DIRS}"
@@ -60,8 +63,13 @@ link_directories(
 # -------------------------------------------
 # LIBRARY
 # -------------------------------------------
+add_cppcheck( strusrpc_private_utils ${private_utils_source_files} )
+add_cppcheck( strus_rpc_client_socket ${client_socket_source_files} libstrus_rpc_client_socket.cpp )
+add_cppcheck( strus_rpc_client ${client_source_files} libstrus_rpc_client.cpp )
+add_cppcheck( strusRpcServer strusRpcServer.cpp ${server_source_files} )
+
 add_library( strusrpc_private_utils STATIC ${private_utils_source_files} )
-target_link_libraries( strusrpc_private_utils  "${Boost_LIBRARIES}" )
+target_link_libraries( strusrpc_private_utils  "${Boost_LIBRARIES}" ${Intl_LIBRARIES} )
 set_property( TARGET strusrpc_private_utils PROPERTY POSITION_INDEPENDENT_CODE TRUE )
 
 add_library( strus_rpc_client_socket SHARED ${client_socket_source_files} libstrus_rpc_client_socket.cpp )
@@ -82,7 +90,7 @@ target_link_libraries( strus_rpc_client_socket ${CMAKE_THREAD_LIBS_INIT} )
 set_target_properties(
     strus_rpc_client_socket
     PROPERTIES
-    DEBUG_POSTFIX "_d"
+    DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
     SOVERSION "${STRUS_MAJOR_VERSION}.${STRUS_MINOR_VERSION}"
     VERSION ${STRUS_VERSION}
 )
@@ -90,7 +98,7 @@ set_target_properties(
 set_target_properties(
     strus_rpc_client
     PROPERTIES
-    DEBUG_POSTFIX "_d"
+    DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
     SOVERSION "${STRUS_MAJOR_VERSION}.${STRUS_MINOR_VERSION}"
     VERSION ${STRUS_VERSION}
 )
@@ -98,7 +106,7 @@ set_target_properties(
 # ------------------------------
 # PROGRAMS
 # ------------------------------
-add_executable( strusRpcServer strusRpcServer.cpp utils.cpp ${server_source_files} )
+add_executable( strusRpcServer strusRpcServer.cpp ${server_source_files} )
 target_link_libraries( strusRpcServer  "${Boost_LIBRARIES}" strus_storage_objbuild strusrpc_private_utils strus_error strus_base strus_module uv ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${Intl_LIBRARIES} )
 if(LIBRT_LIBRARIES)
     target_link_libraries( strusRpcServer ${LIBRT_LIBRARIES} )

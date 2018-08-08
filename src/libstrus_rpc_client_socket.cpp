@@ -15,7 +15,7 @@
 
 DLL_PUBLIC strus::RpcClientMessagingInterface*
 	strus::createRpcClientMessaging(
-		const char* config,
+		const std::string& config,
 		ErrorBufferInterface* errorhnd)
 {
 	try

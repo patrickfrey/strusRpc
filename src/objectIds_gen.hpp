@@ -17,15 +17,20 @@ enum ClassId
 	ClassId_AggregatorFunction,
 	ClassId_AnalyzerObjectBuilder,
 	ClassId_AttributeReader,
+	ClassId_ContentIterator,
+	ClassId_ContentStatisticsContext,
+	ClassId_ContentStatistics,
 	ClassId_DatabaseBackupCursor,
 	ClassId_DatabaseClient,
 	ClassId_DatabaseCursor,
 	ClassId_Database,
 	ClassId_DatabaseTransaction,
 	ClassId_DocumentAnalyzerContext,
-	ClassId_DocumentAnalyzer,
+	ClassId_DocumentAnalyzerInstance,
+	ClassId_DocumentAnalyzerMap,
 	ClassId_DocumentClassDetector,
 	ClassId_DocumentTermIterator,
+	ClassId_FileLocator,
 	ClassId_ForwardIterator,
 	ClassId_InvAclIterator,
 	ClassId_MetaDataReader,
@@ -41,10 +46,14 @@ enum ClassId
 	ClassId_PatternMatcher,
 	ClassId_PatternTermFeederInstance,
 	ClassId_PatternTermFeeder,
+	ClassId_PosTaggerContext,
+	ClassId_PosTaggerData,
+	ClassId_PosTaggerInstance,
+	ClassId_PosTagger,
 	ClassId_PostingIterator,
 	ClassId_PostingJoinOperator,
 	ClassId_QueryAnalyzerContext,
-	ClassId_QueryAnalyzer,
+	ClassId_QueryAnalyzerInstance,
 	ClassId_QueryEval,
 	ClassId_Query,
 	ClassId_QueryProcessor,
@@ -67,6 +76,7 @@ enum ClassId
 	ClassId_Storage,
 	ClassId_StorageObjectBuilder,
 	ClassId_StorageTransaction,
+	ClassId_StructIterator,
 	ClassId_SummarizerFunctionContext,
 	ClassId_SummarizerFunctionInstance,
 	ClassId_SummarizerFunction,
@@ -103,7 +113,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_evaluate
+		Method_evaluate,
+		Method_view
 	};
 };
 
@@ -126,7 +137,11 @@ public:
 		Method_Destructor,
 		Method_getTextProcessor,
 		Method_createDocumentAnalyzer,
-		Method_createQueryAnalyzer
+		Method_createPosTaggerInstance,
+		Method_createQueryAnalyzer,
+		Method_createDocumentAnalyzerMap,
+		Method_createDocumentClassDetector,
+		Method_createContentStatistics
 	};
 };
 
@@ -140,6 +155,40 @@ public:
 		Method_skipDoc,
 		Method_getValue,
 		Method_getNames
+	};
+};
+
+class ContentIteratorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_getNext
+	};
+};
+
+class ContentStatisticsContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_putContent,
+		Method_statistics,
+		Method_nofDocuments
+	};
+};
+
+class ContentStatisticsConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addLibraryElement,
+		Method_createContext,
+		Method_view
 	};
 };
 
@@ -229,7 +278,7 @@ public:
 	};
 };
 
-class DocumentAnalyzerConst
+class DocumentAnalyzerInstanceConst
 {
 public:
 	enum MethodId
@@ -243,14 +292,30 @@ public:
 		Method_defineSubDocument,
 		Method_defineSubContent,
 		Method_addPatternLexem,
-		Method_definePatternMatcherPostProc,
-		Method_definePatternMatcherPreProc,
+		Method_defineTokenPatternMatcher,
+		Method_defineContentPatternMatcher,
 		Method_addSearchIndexFeatureFromPatternMatch,
 		Method_addForwardIndexFeatureFromPatternMatch,
 		Method_defineMetaDataFromPatternMatch,
 		Method_defineAttributeFromPatternMatch,
 		Method_analyze,
-		Method_createContext
+		Method_createContext,
+		Method_view
+	};
+};
+
+class DocumentAnalyzerMapConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createAnalyzer,
+		Method_addAnalyzer,
+		Method_getAnalyzer,
+		Method_analyze,
+		Method_createContext,
+		Method_view
 	};
 };
 
@@ -260,6 +325,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_defineDocumentSchemeDetector,
 		Method_detect
 	};
 };
@@ -274,6 +340,20 @@ public:
 		Method_nextTerm,
 		Method_termDocumentFrequency,
 		Method_termValue
+	};
+};
+
+class FileLocatorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addResourcePath,
+		Method_getResourceFilePath,
+		Method_defineWorkingDirectory,
+		Method_getWorkingDirectory,
+		Method_getResourcePaths
 	};
 };
 
@@ -343,7 +423,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_normalize
+		Method_normalize,
+		Method_view
 	};
 };
 
@@ -382,7 +463,8 @@ public:
 		Method_getSymbol,
 		Method_getLexemName,
 		Method_compile,
-		Method_createContext
+		Method_createContext,
+		Method_view
 	};
 };
 
@@ -425,7 +507,8 @@ public:
 		Method_attachVariable,
 		Method_definePattern,
 		Method_compile,
-		Method_createContext
+		Method_createContext,
+		Method_view
 	};
 };
 
@@ -451,11 +534,57 @@ public:
 		Method_defineSymbol,
 		Method_getLexem,
 		Method_lexemTypes,
-		Method_getSymbol
+		Method_getSymbol,
+		Method_view
 	};
 };
 
 class PatternTermFeederConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createInstance
+	};
+};
+
+class PosTaggerContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_markupDocument
+	};
+};
+
+class PosTaggerDataConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_defineTag,
+		Method_insert,
+		Method_markupSegment
+	};
+};
+
+class PosTaggerInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addContentExpression,
+		Method_addPosTaggerInputPunctuation,
+		Method_getPosTaggerInput,
+		Method_markupDocument
+	};
+};
+
+class PosTaggerConst
 {
 public:
 	enum MethodId
@@ -506,7 +635,7 @@ public:
 	};
 };
 
-class QueryAnalyzerConst
+class QueryAnalyzerInstanceConst
 {
 public:
 	enum MethodId
@@ -514,10 +643,13 @@ public:
 		Method_Destructor,
 		Method_addElement,
 		Method_addPatternLexem,
-		Method_definePatternMatcherPostProc,
-		Method_definePatternMatcherPreProc,
+		Method_defineTokenPatternMatcher,
+		Method_defineContentPatternMatcher,
 		Method_addElementFromPatternMatch,
-		Method_createContext
+		Method_queryTermTypes,
+		Method_queryFieldTypes,
+		Method_createContext,
+		Method_view
 	};
 };
 
@@ -531,6 +663,10 @@ public:
 		Method_addSelectionFeature,
 		Method_addRestrictionFeature,
 		Method_addExclusionFeature,
+		Method_getWeightingFeatureSets,
+		Method_getSelectionFeatureSets,
+		Method_getRestrictionFeatureSets,
+		Method_getExclusionFeatureSets,
 		Method_addSummarizerFunction,
 		Method_addWeightingFunction,
 		Method_defineWeightingFormula,
@@ -569,6 +705,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_getResourceFilePath,
 		Method_definePostingJoinOperator,
 		Method_getPostingJoinOperator,
 		Method_defineWeightingFunction,
@@ -613,7 +750,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createFunction
+		Method_createFunction,
+		Method_getDescription
 	};
 };
 
@@ -637,7 +775,8 @@ public:
 		Method_defineSelectorExpression,
 		Method_defineSubSection,
 		Method_createContext,
-		Method_createMarkupContext
+		Method_createMarkupContext,
+		Method_view
 	};
 };
 
@@ -649,6 +788,7 @@ public:
 		Method_Destructor,
 		Method_mimeType,
 		Method_createInstance,
+		Method_createContentIterator,
 		Method_getDescription
 	};
 };
@@ -740,6 +880,7 @@ public:
 		Method_Destructor,
 		Method_config,
 		Method_createTermPostingIterator,
+		Method_createStructIterator,
 		Method_createBrowsePostingIterator,
 		Method_createFieldPostingIterator,
 		Method_createForwardIterator,
@@ -753,6 +894,7 @@ public:
 		Method_termTypeNumber,
 		Method_isForwardIndexTerm,
 		Method_createTermTypeIterator,
+		Method_createStructTypeIterator,
 		Method_createTermValueIterator,
 		Method_createDocIdIterator,
 		Method_createUserNameIterator,
@@ -777,6 +919,7 @@ public:
 	{
 		Method_Destructor,
 		Method_addSearchIndexTerm,
+		Method_addSearchIndexStructure,
 		Method_addForwardIndexTerm,
 		Method_setMetaData,
 		Method_setAttribute,
@@ -792,8 +935,10 @@ public:
 	{
 		Method_Destructor,
 		Method_addSearchIndexTerm,
+		Method_addSearchIndexStructure,
 		Method_addForwardIndexTerm,
 		Method_clearSearchIndexTerm,
+		Method_clearSearchIndexStructure,
 		Method_clearForwardIndexTerm,
 		Method_setMetaData,
 		Method_setAttribute,
@@ -863,6 +1008,20 @@ public:
 	};
 };
 
+class StructIteratorConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_skipDoc,
+		Method_skipPosSource,
+		Method_skipPosSink,
+		Method_source,
+		Method_sink
+	};
+};
+
 class SummarizerFunctionContextConst
 {
 public:
@@ -908,8 +1067,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_addResourcePath,
-		Method_getResourcePath,
+		Method_getResourceFilePath,
 		Method_getSegmenterByName,
 		Method_getSegmenterByMimeType,
 		Method_getSegmenterOptions,
@@ -919,6 +1077,9 @@ public:
 		Method_getPatternLexer,
 		Method_getPatternMatcher,
 		Method_getPatternTermFeeder,
+		Method_createPosTaggerData,
+		Method_getPosTagger,
+		Method_createTokenMarkupInstance,
 		Method_detectDocumentClass,
 		Method_defineDocumentClassDetector,
 		Method_defineSegmenter,
@@ -949,7 +1110,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createContext
+		Method_createContext,
+		Method_view
 	};
 };
 
@@ -960,7 +1122,8 @@ public:
 	{
 		Method_Destructor,
 		Method_concatBeforeTokenize,
-		Method_tokenize
+		Method_tokenize,
+		Method_view
 	};
 };
 
@@ -982,6 +1145,7 @@ public:
 	{
 		Method_Destructor,
 		Method_skip,
+		Method_skipPrefix,
 		Method_fetchValues
 	};
 };

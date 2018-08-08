@@ -12,8 +12,12 @@
 #include "strus/aggregatorFunctionInstanceInterface.hpp"
 #include "strus/aggregatorFunctionInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
+#include "strus/contentIteratorInterface.hpp"
+#include "strus/contentStatisticsContextInterface.hpp"
+#include "strus/contentStatisticsInterface.hpp"
 #include "strus/documentAnalyzerContextInterface.hpp"
-#include "strus/documentAnalyzerInterface.hpp"
+#include "strus/documentAnalyzerInstanceInterface.hpp"
+#include "strus/documentAnalyzerMapInterface.hpp"
 #include "strus/documentClassDetectorInterface.hpp"
 #include "strus/normalizerFunctionInstanceInterface.hpp"
 #include "strus/normalizerFunctionInterface.hpp"
@@ -25,8 +29,12 @@
 #include "strus/patternMatcherInterface.hpp"
 #include "strus/patternTermFeederInstanceInterface.hpp"
 #include "strus/patternTermFeederInterface.hpp"
+#include "strus/posTaggerContextInterface.hpp"
+#include "strus/posTaggerDataInterface.hpp"
+#include "strus/posTaggerInstanceInterface.hpp"
+#include "strus/posTaggerInterface.hpp"
 #include "strus/queryAnalyzerContextInterface.hpp"
-#include "strus/queryAnalyzerInterface.hpp"
+#include "strus/queryAnalyzerInstanceInterface.hpp"
 #include "strus/segmenterContextInterface.hpp"
 #include "strus/segmenterInstanceInterface.hpp"
 #include "strus/segmenterInterface.hpp"
@@ -36,6 +44,7 @@
 #include "strus/tokenizerFunctionInterface.hpp"
 #include "strus/tokenMarkupContextInterface.hpp"
 #include "strus/tokenMarkupInstanceInterface.hpp"
+#include "strus/fileLocatorInterface.hpp"
 #include "strus/aclReaderInterface.hpp"
 #include "strus/attributeReaderInterface.hpp"
 #include "strus/databaseBackupCursorInterface.hpp"
@@ -69,6 +78,7 @@
 #include "strus/storageInterface.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/storageTransactionInterface.hpp"
+#include "strus/structIteratorInterface.hpp"
 #include "strus/summarizerFunctionContextInterface.hpp"
 #include "strus/summarizerFunctionInstanceInterface.hpp"
 #include "strus/summarizerFunctionInterface.hpp"
@@ -111,6 +121,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual NumericVariant evaluate( const analyzer::Document& p1) const;
+	virtual analyzer::FunctionView view( ) const;
 };
 
 class AggregatorFunctionImpl
@@ -140,8 +151,12 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_AnalyzerObjectBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual const TextProcessorInterface* getTextProcessor( ) const;
-	virtual DocumentAnalyzerInterface* createDocumentAnalyzer( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const;
-	virtual QueryAnalyzerInterface* createQueryAnalyzer( ) const;
+	virtual DocumentAnalyzerInstanceInterface* createDocumentAnalyzer( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const;
+	virtual PosTaggerInstanceInterface* createPosTaggerInstance( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const;
+	virtual QueryAnalyzerInstanceInterface* createQueryAnalyzer( ) const;
+	virtual DocumentAnalyzerMapInterface* createDocumentAnalyzerMap( ) const;
+	virtual DocumentClassDetectorInterface* createDocumentClassDetector( ) const;
+	virtual ContentStatisticsInterface* createContentStatistics( ) const;
 };
 
 class AttributeReaderImpl
@@ -159,6 +174,52 @@ public:
 	virtual void skipDoc( const Index& p1);
 	virtual std::string getValue( const Index& p1) const;
 	virtual std::vector<std::string> getNames( ) const;
+};
+
+class ContentIteratorImpl
+		:public RpcInterfaceStub
+		,public strus::ContentIteratorInterface
+		,public strus::ContentIteratorConst
+{
+public:
+	virtual ~ContentIteratorImpl();
+
+	ContentIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_ContentIterator, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual bool getNext( const char*& p1, std::size_t& p2, const char*& p3, std::size_t& p4);
+};
+
+class ContentStatisticsContextImpl
+		:public RpcInterfaceStub
+		,public strus::ContentStatisticsContextInterface
+		,public strus::ContentStatisticsContextConst
+{
+public:
+	virtual ~ContentStatisticsContextImpl();
+
+	ContentStatisticsContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_ContentStatisticsContext, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void putContent( const std::string& p1, const std::string& p2, const analyzer::DocumentClass& p3);
+	virtual analyzer::ContentStatisticsResult statistics( );
+	virtual int nofDocuments( ) const;
+};
+
+class ContentStatisticsImpl
+		:public RpcInterfaceStub
+		,public strus::ContentStatisticsInterface
+		,public strus::ContentStatisticsConst
+{
+public:
+	virtual ~ContentStatisticsImpl();
+
+	ContentStatisticsImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_ContentStatistics, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void addLibraryElement( const std::string& p1, const std::string& p2, int p3, int p4, int p5, TokenizerFunctionInstanceInterface* p6, const std::vector<NormalizerFunctionInstanceInterface*>& p7);
+	virtual ContentStatisticsContextInterface* createContext( ) const;
+	virtual analyzer::ContentStatisticsView view( ) const;
 };
 
 class DatabaseBackupCursorImpl
@@ -271,33 +332,53 @@ public:
 	virtual bool analyzeNext( analyzer::Document& p1);
 };
 
-class DocumentAnalyzerImpl
+class DocumentAnalyzerInstanceImpl
 		:public RpcInterfaceStub
-		,public strus::DocumentAnalyzerInterface
-		,public strus::DocumentAnalyzerConst
+		,public strus::DocumentAnalyzerInstanceInterface
+		,public strus::DocumentAnalyzerInstanceConst
 {
 public:
-	virtual ~DocumentAnalyzerImpl();
+	virtual ~DocumentAnalyzerInstanceImpl();
 
-	DocumentAnalyzerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzer, objId_, ctx_, isConst_, errorhnd_){}
+	DocumentAnalyzerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5);
-	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, const analyzer::FeatureOptions& p5);
+	virtual void addSearchIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5, const analyzer::FeatureOptions& p6);
+	virtual void addForwardIndexFeature( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5, const analyzer::FeatureOptions& p6);
 	virtual void defineMetaData( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void defineAggregatedMetaData( const std::string& p1, AggregatorFunctionInstanceInterface* p2);
 	virtual void defineAttribute( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
 	virtual void defineSubDocument( const std::string& p1, const std::string& p2);
 	virtual void defineSubContent( const std::string& p1, const analyzer::DocumentClass& p2);
-	virtual void addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
-	virtual void definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3);
-	virtual void definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4);
-	virtual void addSearchIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, const analyzer::FeatureOptions& p4);
-	virtual void addForwardIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, const analyzer::FeatureOptions& p4);
+	virtual void addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5);
+	virtual void defineTokenPatternMatcher( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3);
+	virtual void defineContentPatternMatcher( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4);
+	virtual void addSearchIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, int p4, const analyzer::FeatureOptions& p5);
+	virtual void addForwardIndexFeatureFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, int p4, const analyzer::FeatureOptions& p5);
 	virtual void defineMetaDataFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3);
 	virtual void defineAttributeFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3);
 	virtual analyzer::Document analyze( const std::string& p1, const analyzer::DocumentClass& p2) const;
 	virtual DocumentAnalyzerContextInterface* createContext( const analyzer::DocumentClass& p1) const;
+	virtual analyzer::DocumentAnalyzerView view( ) const;
+};
+
+class DocumentAnalyzerMapImpl
+		:public RpcInterfaceStub
+		,public strus::DocumentAnalyzerMapInterface
+		,public strus::DocumentAnalyzerMapConst
+{
+public:
+	virtual ~DocumentAnalyzerMapImpl();
+
+	DocumentAnalyzerMapImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_DocumentAnalyzerMap, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual DocumentAnalyzerInstanceInterface* createAnalyzer( const std::string& p1, const std::string& p2) const;
+	virtual void addAnalyzer( const std::string& p1, const std::string& p2, DocumentAnalyzerInstanceInterface* p3);
+	virtual const DocumentAnalyzerInstanceInterface* getAnalyzer( const std::string& p1, const std::string& p2) const;
+	virtual analyzer::Document analyze( const std::string& p1, const analyzer::DocumentClass& p2) const;
+	virtual DocumentAnalyzerContextInterface* createContext( const analyzer::DocumentClass& p1) const;
+	virtual analyzer::DocumentAnalyzerMapView view( ) const;
 };
 
 class DocumentClassDetectorImpl
@@ -311,7 +392,8 @@ public:
 	DocumentClassDetectorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_DocumentClassDetector, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual bool detect( analyzer::DocumentClass& p1, const char* p2, std::size_t p3) const;
+	virtual void defineDocumentSchemeDetector( const std::string& p1, const std::string& p2, const std::vector<std::string>& p3, const std::vector<std::string>& p4);
+	virtual bool detect( analyzer::DocumentClass& p1, const char* p2, std::size_t p3, bool p4) const;
 };
 
 class DocumentTermIteratorImpl
@@ -329,6 +411,24 @@ public:
 	virtual bool nextTerm( DocumentTermIteratorInterface::Term& p1);
 	virtual unsigned int termDocumentFrequency( const Index& p1) const;
 	virtual std::string termValue( const Index& p1) const;
+};
+
+class FileLocatorImpl
+		:public RpcInterfaceStub
+		,public strus::FileLocatorInterface
+		,public strus::FileLocatorConst
+{
+public:
+	virtual ~FileLocatorImpl();
+
+	FileLocatorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_FileLocator, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void addResourcePath( const std::string& p1);
+	virtual std::string getResourceFilePath( const std::string& p1) const;
+	virtual void defineWorkingDirectory( const std::string& p1);
+	virtual std::string getWorkingDirectory( ) const;
+	virtual std::vector<std::string> getResourcePaths( ) const;
 };
 
 class ForwardIteratorImpl
@@ -423,6 +523,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual std::string normalize( const char* p1, std::size_t p2) const;
+	virtual analyzer::FunctionView view( ) const;
 };
 
 class NormalizerFunctionImpl
@@ -474,6 +575,7 @@ public:
 	virtual const char* getLexemName( unsigned int p1) const;
 	virtual bool compile( );
 	virtual PatternLexerContextInterface* createContext( ) const;
+	virtual analyzer::FunctionView view( ) const;
 };
 
 class PatternLexerImpl
@@ -504,7 +606,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_PatternMatcherContext, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void putInput( const analyzer::PatternLexem& p1);
-	virtual std::vector<analyzer::PatternMatcherResult> fetchResults( ) const;
+	virtual std::vector<analyzer::PatternMatcherResult> fetchResults( );
 	virtual analyzer::PatternMatcherStatistics getStatistics( ) const;
 	virtual void reset( );
 };
@@ -526,9 +628,10 @@ public:
 	virtual void pushExpression( PatternMatcherInstanceInterface::JoinOperation p1, std::size_t p2, unsigned int p3, unsigned int p4);
 	virtual void pushPattern( const std::string& p1);
 	virtual void attachVariable( const std::string& p1);
-	virtual void definePattern( const std::string& p1, bool p2);
+	virtual void definePattern( const std::string& p1, const std::string& p2, bool p3);
 	virtual bool compile( );
 	virtual PatternMatcherContextInterface* createContext( ) const;
+	virtual analyzer::FunctionView view( ) const;
 };
 
 class PatternMatcherImpl
@@ -563,6 +666,7 @@ public:
 	virtual unsigned int getLexem( const std::string& p1) const;
 	virtual std::vector<std::string> lexemTypes( ) const;
 	virtual unsigned int getSymbol( unsigned int p1, const std::string& p2) const;
+	virtual analyzer::FunctionView view( ) const;
 };
 
 class PatternTermFeederImpl
@@ -577,6 +681,67 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_PatternTermFeeder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual PatternTermFeederInstanceInterface* createInstance( ) const;
+};
+
+class PosTaggerContextImpl
+		:public RpcInterfaceStub
+		,public strus::PosTaggerContextInterface
+		,public strus::PosTaggerContextConst
+{
+public:
+	virtual ~PosTaggerContextImpl();
+
+	PosTaggerContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PosTaggerContext, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual std::string markupDocument( int p1, const analyzer::DocumentClass& p2, const std::string& p3) const;
+};
+
+class PosTaggerDataImpl
+		:public RpcInterfaceStub
+		,public strus::PosTaggerDataInterface
+		,public strus::PosTaggerDataConst
+{
+public:
+	virtual ~PosTaggerDataImpl();
+
+	PosTaggerDataImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PosTaggerData, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void defineTag( const std::string& p1, const std::string& p2);
+	virtual void insert( int p1, const std::vector<PosTaggerDataInterface::Element>& p2);
+	virtual void markupSegment( TokenMarkupContextInterface* p1, int p2, int& p3, const SegmenterPosition& p4, const char* p5, std::size_t p6) const;
+};
+
+class PosTaggerInstanceImpl
+		:public RpcInterfaceStub
+		,public strus::PosTaggerInstanceInterface
+		,public strus::PosTaggerInstanceConst
+{
+public:
+	virtual ~PosTaggerInstanceImpl();
+
+	PosTaggerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PosTaggerInstance, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void addContentExpression( const std::string& p1);
+	virtual void addPosTaggerInputPunctuation( const std::string& p1, const std::string& p2);
+	virtual std::string getPosTaggerInput( const analyzer::DocumentClass& p1, const std::string& p2) const;
+	virtual std::string markupDocument( const PosTaggerDataInterface* p1, int p2, const analyzer::DocumentClass& p3, const std::string& p4) const;
+};
+
+class PosTaggerImpl
+		:public RpcInterfaceStub
+		,public strus::PosTaggerInterface
+		,public strus::PosTaggerConst
+{
+public:
+	virtual ~PosTaggerImpl();
+
+	PosTaggerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_PosTagger, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual PosTaggerInstanceInterface* createInstance( const SegmenterInterface* p1, const analyzer::SegmenterOptions& p2) const;
 };
 
 class PostingIteratorImpl
@@ -627,28 +792,31 @@ public:
 	QueryAnalyzerContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzerContext, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void putField( unsigned int p1, const std::string& p2, const std::string& p3);
-	virtual void groupElements( unsigned int p1, const std::vector<unsigned int>& p2, const QueryAnalyzerContextInterface::GroupBy& p3, bool p4);
+	virtual void putField( int p1, const std::string& p2, const std::string& p3);
+	virtual void groupElements( int p1, const std::vector<int>& p2, const QueryAnalyzerContextInterface::GroupBy& p3, bool p4);
 	virtual analyzer::QueryTermExpression analyze( );
 };
 
-class QueryAnalyzerImpl
+class QueryAnalyzerInstanceImpl
 		:public RpcInterfaceStub
-		,public strus::QueryAnalyzerInterface
-		,public strus::QueryAnalyzerConst
+		,public strus::QueryAnalyzerInstanceInterface
+		,public strus::QueryAnalyzerInstanceConst
 {
 public:
-	virtual ~QueryAnalyzerImpl();
+	virtual ~QueryAnalyzerInstanceImpl();
 
-	QueryAnalyzerImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzer, objId_, ctx_, isConst_, errorhnd_){}
+	QueryAnalyzerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_QueryAnalyzerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
-	virtual void addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4);
-	virtual void definePatternMatcherPostProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3);
-	virtual void definePatternMatcherPreProc( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4);
-	virtual void addElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3);
+	virtual void addElement( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5);
+	virtual void addPatternLexem( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4, int p5);
+	virtual void defineTokenPatternMatcher( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternTermFeederInstanceInterface* p3);
+	virtual void defineContentPatternMatcher( const std::string& p1, PatternMatcherInstanceInterface* p2, PatternLexerInstanceInterface* p3, const std::vector<std::string>& p4);
+	virtual void addElementFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3, int p4);
+	virtual std::vector<std::string> queryTermTypes( ) const;
+	virtual std::vector<std::string> queryFieldTypes( ) const;
 	virtual QueryAnalyzerContextInterface* createContext( ) const;
+	virtual analyzer::QueryAnalyzerView view( ) const;
 };
 
 class QueryEvalImpl
@@ -666,6 +834,10 @@ public:
 	virtual void addSelectionFeature( const std::string& p1);
 	virtual void addRestrictionFeature( const std::string& p1);
 	virtual void addExclusionFeature( const std::string& p1);
+	virtual std::vector<std::string> getWeightingFeatureSets( ) const;
+	virtual std::vector<std::string> getSelectionFeatureSets( ) const;
+	virtual std::vector<std::string> getRestrictionFeatureSets( ) const;
+	virtual std::vector<std::string> getExclusionFeatureSets( ) const;
 	virtual void addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4);
 	virtual void addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4);
 	virtual void defineWeightingFormula( ScalarFunctionInterface* p1);
@@ -712,6 +884,7 @@ public:
 	QueryProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_QueryProcessor, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual std::string getResourceFilePath( const std::string& p1) const;
 	virtual void definePostingJoinOperator( const std::string& p1, PostingJoinOperatorInterface* p2);
 	virtual const PostingJoinOperatorInterface* getPostingJoinOperator( const std::string& p1) const;
 	virtual void defineWeightingFunction( const std::string& p1, WeightingFunctionInterface* p2);
@@ -769,6 +942,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_ScalarFunctionParser, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual ScalarFunctionInterface* createFunction( const std::string& p1, const std::vector<std::string>& p2) const;
+	virtual const char* getDescription( ) const;
 };
 
 class SegmenterContextImpl
@@ -801,6 +975,7 @@ public:
 	virtual void defineSubSection( int p1, int p2, const std::string& p3);
 	virtual SegmenterContextInterface* createContext( const analyzer::DocumentClass& p1) const;
 	virtual SegmenterMarkupContextInterface* createMarkupContext( const analyzer::DocumentClass& p1, const std::string& p2) const;
+	virtual analyzer::FunctionView view( ) const;
 };
 
 class SegmenterImpl
@@ -816,6 +991,7 @@ public:
 
 	virtual const char* mimeType( ) const;
 	virtual SegmenterInstanceInterface* createInstance( const analyzer::SegmenterOptions& p1) const;
+	virtual ContentIteratorInterface* createContentIterator( const char* p1, std::size_t p2, const analyzer::DocumentClass& p3, const analyzer::SegmenterOptions& p4) const;
 	virtual const char* getDescription( ) const;
 };
 
@@ -899,7 +1075,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsViewer, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual int nofDocumentsInsertedChange( );
-	virtual bool nextDfChange( StatisticsViewerInterface::DocumentFrequencyChange& p1);
+	virtual bool nextDfChange( TermStatisticsChange& p1);
 };
 
 class StorageAlterMetaDataTableImpl
@@ -935,6 +1111,7 @@ public:
 
 	virtual std::string config( ) const;
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3) const;
+	virtual StructIteratorInterface* createStructIterator( const std::string& p1) const;
 	virtual PostingIteratorInterface* createBrowsePostingIterator( const MetaDataRestrictionInterface* p1, const Index& p2) const;
 	virtual PostingIteratorInterface* createFieldPostingIterator( const std::string& p1, const std::string& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;
@@ -948,6 +1125,7 @@ public:
 	virtual Index termTypeNumber( const std::string& p1) const;
 	virtual bool isForwardIndexTerm( const std::string& p1) const;
 	virtual ValueIteratorInterface* createTermTypeIterator( ) const;
+	virtual ValueIteratorInterface* createStructTypeIterator( ) const;
 	virtual ValueIteratorInterface* createTermValueIterator( ) const;
 	virtual ValueIteratorInterface* createDocIdIterator( ) const;
 	virtual ValueIteratorInterface* createUserNameIterator( ) const;
@@ -976,6 +1154,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocument, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
+	virtual void addSearchIndexStructure( const std::string& p1, const IndexRange& p2, const IndexRange& p3);
 	virtual void addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
 	virtual void setMetaData( const std::string& p1, const NumericVariant& p2);
 	virtual void setAttribute( const std::string& p1, const std::string& p2);
@@ -995,8 +1174,10 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageDocumentUpdate, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addSearchIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
+	virtual void addSearchIndexStructure( const std::string& p1, const IndexRange& p2, const IndexRange& p3);
 	virtual void addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
 	virtual void clearSearchIndexTerm( const std::string& p1);
+	virtual void clearSearchIndexStructure( const std::string& p1);
 	virtual void clearForwardIndexTerm( const std::string& p1);
 	virtual void setMetaData( const std::string& p1, const NumericVariant& p2);
 	virtual void setAttribute( const std::string& p1, const std::string& p2);
@@ -1081,6 +1262,24 @@ public:
 	virtual unsigned int nofDocumentsAffected( ) const;
 };
 
+class StructIteratorImpl
+		:public RpcInterfaceStub
+		,public strus::StructIteratorInterface
+		,public strus::StructIteratorConst
+{
+public:
+	virtual ~StructIteratorImpl();
+
+	StructIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StructIterator, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual Index skipDoc( const Index& p1);
+	virtual IndexRange skipPosSource( const Index& p1);
+	virtual IndexRange skipPosSink( const Index& p1);
+	virtual IndexRange source( ) const;
+	virtual IndexRange sink( ) const;
+};
+
 class SummarizerFunctionContextImpl
 		:public RpcInterfaceStub
 		,public strus::SummarizerFunctionContextInterface
@@ -1143,8 +1342,7 @@ public:
 	TextProcessorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TextProcessor, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addResourcePath( const std::string& p1);
-	virtual std::string getResourcePath( const std::string& p1) const;
+	virtual std::string getResourceFilePath( const std::string& p1) const;
 	virtual const SegmenterInterface* getSegmenterByName( const std::string& p1) const;
 	virtual const SegmenterInterface* getSegmenterByMimeType( const std::string& p1) const;
 	virtual analyzer::SegmenterOptions getSegmenterOptions( const std::string& p1) const;
@@ -1154,7 +1352,10 @@ public:
 	virtual const PatternLexerInterface* getPatternLexer( const std::string& p1) const;
 	virtual const PatternMatcherInterface* getPatternMatcher( const std::string& p1) const;
 	virtual const PatternTermFeederInterface* getPatternTermFeeder( ) const;
-	virtual bool detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3) const;
+	virtual PosTaggerDataInterface* createPosTaggerData( TokenizerFunctionInstanceInterface* p1) const;
+	virtual const PosTaggerInterface* getPosTagger( ) const;
+	virtual TokenMarkupInstanceInterface* createTokenMarkupInstance( ) const;
+	virtual bool detectDocumentClass( analyzer::DocumentClass& p1, const char* p2, std::size_t p3, bool p4) const;
 	virtual void defineDocumentClassDetector( DocumentClassDetectorInterface* p1);
 	virtual void defineSegmenter( const std::string& p1, SegmenterInterface* p2);
 	virtual void defineSegmenterOptions( const std::string& p1, const analyzer::SegmenterOptions& p2);
@@ -1177,8 +1378,8 @@ public:
 	TokenMarkupContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenMarkupContext, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void putMarkup( const SegmenterPosition& p1, std::size_t p2, const SegmenterPosition& p3, std::size_t p4, const analyzer::TokenMarkup& p5, unsigned int p6);
-	virtual std::string markupDocument( const SegmenterInstanceInterface* p1, const analyzer::DocumentClass& p2, const std::string& p3) const;
+	virtual void putMarkup( const analyzer::Position& p1, const analyzer::Position& p2, const analyzer::TokenMarkup& p3, unsigned int p4);
+	virtual std::string markupDocument( const analyzer::DocumentClass& p1, const std::string& p2) const;
 };
 
 class TokenMarkupInstanceImpl
@@ -1192,7 +1393,8 @@ public:
 	TokenMarkupInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenMarkupInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual TokenMarkupContextInterface* createContext( ) const;
+	virtual TokenMarkupContextInterface* createContext( const SegmenterInstanceInterface* p1) const;
+	virtual analyzer::FunctionView view( ) const;
 };
 
 class TokenizerFunctionInstanceImpl
@@ -1208,6 +1410,7 @@ public:
 
 	virtual bool concatBeforeTokenize( ) const;
 	virtual std::vector<analyzer::Token> tokenize( const char* p1, std::size_t p2) const;
+	virtual analyzer::FunctionView view( ) const;
 };
 
 class TokenizerFunctionImpl
@@ -1237,6 +1440,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_ValueIterator, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void skip( const char* p1, std::size_t p2);
+	virtual void skipPrefix( const char* p1, std::size_t p2);
 	virtual std::vector<std::string> fetchValues( std::size_t p1);
 };
 
@@ -1257,10 +1461,10 @@ public:
 	virtual std::vector<Index> conceptFeatures( const std::string& p1, const Index& p2) const;
 	virtual unsigned int nofConcepts( const std::string& p1) const;
 	virtual std::vector<Index> featureConcepts( const std::string& p1, const Index& p2) const;
-	virtual std::vector<double> featureVector( const Index& p1) const;
+	virtual std::vector<float> featureVector( const Index& p1) const;
 	virtual std::string featureName( const Index& p1) const;
 	virtual Index featureIndex( const std::string& p1) const;
-	virtual double vectorSimilarity( const std::vector<double>& p1, const std::vector<double>& p2) const;
+	virtual double vectorSimilarity( const std::vector<float>& p1, const std::vector<float>& p2) const;
 	virtual unsigned int nofFeatures( ) const;
 	virtual std::string config( ) const;
 	virtual void close( );
@@ -1308,8 +1512,8 @@ public:
 	VectorStorageSearchImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageSearch, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual std::vector<VectorStorageSearchInterface::Result> findSimilar( const std::vector<double>& p1, unsigned int p2) const;
-	virtual std::vector<VectorStorageSearchInterface::Result> findSimilarFromSelection( const std::vector<Index>& p1, const std::vector<double>& p2, unsigned int p3) const;
+	virtual std::vector<VectorQueryResult> findSimilar( const std::vector<float>& p1, unsigned int p2) const;
+	virtual std::vector<VectorQueryResult> findSimilarFromSelection( const std::vector<Index>& p1, const std::vector<float>& p2, unsigned int p3) const;
 	virtual void close( );
 };
 
@@ -1324,7 +1528,7 @@ public:
 	VectorStorageTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageTransaction, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addFeature( const std::string& p1, const std::vector<double>& p2);
+	virtual void addFeature( const std::string& p1, const std::vector<float>& p2);
 	virtual void defineFeatureConceptRelation( const std::string& p1, const Index& p2, const Index& p3);
 	virtual bool commit( );
 	virtual void rollback( );

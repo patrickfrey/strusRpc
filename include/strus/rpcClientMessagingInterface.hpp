@@ -36,6 +36,9 @@ public:
 
 	/// \brief Explicit close of the connection
 	virtual void close()=0;
+
+	/// \brief Get configuration string
+	virtual std::string config() const=0;
 };
 
 }//namespace

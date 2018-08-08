@@ -9,6 +9,7 @@
 /// \file rpc_client_socket.hpp
 #ifndef _STRUS_LIB_RPC_CLIENT_SOCKET_HPP_INCLUDED
 #define _STRUS_LIB_RPC_CLIENT_SOCKET_HPP_INCLUDED
+#include <string>
 
 /// \brief strus toplevel namespace
 namespace strus {
@@ -23,7 +24,7 @@ class ErrorBufferInterface;
 /// \param[in] errorhnd buffer for reporting errors
 RpcClientMessagingInterface*
 	createRpcClientMessaging(
-		const char* config,
+		const std::string& config,
 		ErrorBufferInterface* errorhnd);
 
 }//namespace

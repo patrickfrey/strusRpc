@@ -13,15 +13,16 @@
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/analyzerObjectBuilderInterface.hpp"
 #include "strus/moduleLoaderInterface.hpp"
+#include "strus/debugTraceInterface.hpp"
 #include "strus/errorBufferInterface.hpp"
 #include "strus/vectorStorageInterface.hpp"
 #include "strus/vectorStorageClientInterface.hpp"
 #include "strus/versionRpc.hpp"
 #include "strus/base/configParser.hpp"
 #include "strus/base/fileio.hpp"
+#include "strus/base/numstring.hpp"
 #include "private/errorUtils.hpp"
 #include "private/internationalization.hpp"
-#include "private/utils.hpp"
 #include "private/traceUtils.hpp"
 #include "rpcSerializer.hpp"
 extern "C" {
@@ -37,6 +38,7 @@ extern "C" {
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <limits>
 #include <netinet/in.h>
 
 #undef STRUS_LOWLEVEL_DEBUG
@@ -72,6 +74,7 @@ static void printUsage()
 	std::cout << "    " << _TXT("Example: -T \"log=dump;file=stdout\"") << std::endl;
 }
 
+static strus::DebugTraceInterface* g_debugTrace = 0;
 static strus::ErrorBufferInterface* g_errorBuffer = 0;
 static strus::ModuleLoaderInterface* g_moduleLoader = 0;
 static strus::StorageObjectBuilderInterface* g_storageObjectBuilder = 0;
@@ -238,6 +241,7 @@ static void done_global_context()
 	if (g_storageObjectBuilder) {delete g_storageObjectBuilder; g_storageObjectBuilder = 0;}
 	if (g_moduleLoader) {delete g_moduleLoader; g_moduleLoader = 0;}
 	if (g_errorBuffer) {delete g_errorBuffer; g_errorBuffer = 0;}
+	//... no delete of g_debugTrace because it has been passed with ownership to g_errorBuffer
 }
 
 enum
@@ -252,7 +256,7 @@ static void createStorageIfNotExist( const std::string& config)
 	std::string configstr( config);
 	std::string dbname;
 	(void)strus::extractStringFromConfigString( dbname, configstr, "database", g_errorBuffer);
-	if (g_errorBuffer->hasError()) throw strus::runtime_error( "%s", _TXT("cannot evaluate database"));
+	if (g_errorBuffer->hasError()) throw std::runtime_error( _TXT("cannot evaluate database"));
 
 	const strus::DatabaseInterface* dbi = g_storageObjectBuilder->getDatabase( dbname);
 	if (dbi->exists( config)) return;
@@ -262,16 +266,18 @@ static void createStorageIfNotExist( const std::string& config)
 	sti->createStorage( config, dbi);
 	if (g_errorBuffer->hasError())
 	{
-		throw strus::runtime_error( "%s", _TXT("error creating storage"));
+		throw std::runtime_error( _TXT("error creating storage"));
 	}
 }
 
 
 int main( int argc, const char* argv[])
 {
-	g_errorBuffer = strus::createErrorBuffer_standard( 0, 2);
+	g_debugTrace = strus::createDebugTrace_standard( 2/*initial number of threads*/);
+	g_errorBuffer = strus::createErrorBuffer_standard( 0/*initial log file handle*/, 2/*initial number of threads*/, g_debugTrace);
 	if (!g_errorBuffer)
 	{
+		delete g_debugTrace;
 		std::cerr << _TXT("failed to create error buffer") << std::endl;
 		return -1;
 	}
@@ -326,11 +332,7 @@ int main( int argc, const char* argv[])
 				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects argument"), "--port");
 				try
 				{
-					port = strus::utils::touint( argv[argi]);
-					if (port == 0 || port > 65535)
-					{
-						throw strus::runtime_error( "%s",  _TXT("value out of range"));
-					}
+					port = strus::numstring_conv::touint( argv[argi], 0xFFff);
 				}
 				catch (const std::runtime_error& err)
 				{
@@ -386,7 +388,7 @@ int main( int argc, const char* argv[])
 				if (argi == argc) throw strus::runtime_error(_TXT("option %s expects number as argument"), "--threads");
 				try
 				{
-					nofThreads = strus::utils::touint( argv[argi]);
+					nofThreads = strus::numstring_conv::touint( argv[argi], std::numeric_limits<int>::max());
 				}
 				catch (const std::runtime_error& err)
 				{
@@ -413,6 +415,7 @@ int main( int argc, const char* argv[])
 		if (doExit) return 0;
 		init_global_context( logfile.empty()?0:logfile.c_str());
 		g_errorBuffer->setLogFile( g_glbctx.logf);
+		g_debugTrace->setMaxNofThreads( strus_threadpool_size()+2);
 		g_errorBuffer->setMaxNofThreads( strus_threadpool_size()+2);
 
 		// Create the global context:

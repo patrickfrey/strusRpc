@@ -101,6 +101,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case AggregatorFunctionInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -191,7 +208,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case AnalyzerObjectBuilderConst::Method_createDocumentAnalyzer:
 		{
 			RpcSerializer msg;
-			DocumentAnalyzerInterface* p0;
+			DocumentAnalyzerInstanceInterface* p0;
 			const SegmenterInterface* p1;
 			analyzer::SegmenterOptions p2;
 			unsigned char classId_1; unsigned int objId_1;
@@ -214,13 +231,96 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case AnalyzerObjectBuilderConst::Method_createPosTaggerInstance:
+		{
+			RpcSerializer msg;
+			PosTaggerInstanceInterface* p0;
+			const SegmenterInterface* p1;
+			analyzer::SegmenterOptions p2;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_Segmenter) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<SegmenterInterface>( classId_1, objId_1);
+			p2 = serializedMsg.unpackSegmenterOptions();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createPosTaggerInstance(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case AnalyzerObjectBuilderConst::Method_createQueryAnalyzer:
 		{
 			RpcSerializer msg;
-			QueryAnalyzerInterface* p0;
+			QueryAnalyzerInstanceInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createQueryAnalyzer();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case AnalyzerObjectBuilderConst::Method_createDocumentAnalyzerMap:
+		{
+			RpcSerializer msg;
+			DocumentAnalyzerMapInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createDocumentAnalyzerMap();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case AnalyzerObjectBuilderConst::Method_createDocumentClassDetector:
+		{
+			RpcSerializer msg;
+			DocumentClassDetectorInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createDocumentClassDetector();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case AnalyzerObjectBuilderConst::Method_createContentStatistics:
+		{
+			RpcSerializer msg;
+			ContentStatisticsInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createContentStatistics();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -317,6 +417,196 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
 				msg.packString( p0[ii]);
 			}
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_ContentIterator:
+	{
+	ContentIteratorInterface* obj = getObject<ContentIteratorInterface>( classId, objId);
+	switch( (ContentIteratorConst::MethodId)methodId)
+	{
+		case ContentIteratorConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ContentIteratorConst::Method_getNext:
+		{
+			RpcSerializer msg;
+			bool p0;
+			const char* p1;
+			std::size_t p2;
+			const char* p3;
+			std::size_t p4;
+			p0 = obj->getNext(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packBuffer( p1, p2);
+			msg.packBuffer( p3, p4);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_ContentStatisticsContext:
+	{
+	ContentStatisticsContextInterface* obj = getObject<ContentStatisticsContextInterface>( classId, objId);
+	switch( (ContentStatisticsContextConst::MethodId)methodId)
+	{
+		case ContentStatisticsContextConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ContentStatisticsContextConst::Method_putContent:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			analyzer::DocumentClass p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackDocumentClass();
+			obj->putContent(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case ContentStatisticsContextConst::Method_statistics:
+		{
+			RpcSerializer msg;
+			analyzer::ContentStatisticsResult p0;
+			p0 = obj->statistics();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerContentStatisticsResult( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case ContentStatisticsContextConst::Method_nofDocuments:
+		{
+			RpcSerializer msg;
+			int p0;
+			p0 = obj->nofDocuments();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packInt( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_ContentStatistics:
+	{
+	ContentStatisticsInterface* obj = getObject<ContentStatisticsInterface>( classId, objId);
+	switch( (ContentStatisticsConst::MethodId)methodId)
+	{
+		case ContentStatisticsConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case ContentStatisticsConst::Method_addLibraryElement:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			int p3;
+			int p4;
+			int p5;
+			TokenizerFunctionInstanceInterface* p6;
+			std::vector<NormalizerFunctionInstanceInterface*> p7;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackInt();
+			p4 = serializedMsg.unpackInt();
+			p5 = serializedMsg.unpackInt();
+			unsigned char classId_6; unsigned int objId_6;
+			serializedMsg.unpackObject( classId_6, objId_6);
+			if (classId_6 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p6 = getObject<TokenizerFunctionInstanceInterface>( classId_6, objId_6);
+			std::size_t n7 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n7; ++ii) {
+				unsigned char classId_; unsigned int objId_;
+				serializedMsg.unpackObject( classId_, objId_);
+				if (classId_ != ClassId_NormalizerFunctionInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+				NormalizerFunctionInstanceInterface* ee = getObject<NormalizerFunctionInstanceInterface>( classId_, objId_);
+				p7.push_back( ee);
+			}
+			obj->addLibraryElement(p1,p2,p3,p4,p5,p6,p7);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case ContentStatisticsConst::Method_createContext:
+		{
+			RpcSerializer msg;
+			ContentStatisticsContextInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createContext();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case ContentStatisticsConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::ContentStatisticsView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerContentStatisticsView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -1012,24 +1302,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_DocumentAnalyzer:
+	case ClassId_DocumentAnalyzerInstance:
 	{
-	DocumentAnalyzerInterface* obj = getObject<DocumentAnalyzerInterface>( classId, objId);
-	switch( (DocumentAnalyzerConst::MethodId)methodId)
+	DocumentAnalyzerInstanceInterface* obj = getObject<DocumentAnalyzerInstanceInterface>( classId, objId);
+	switch( (DocumentAnalyzerInstanceConst::MethodId)methodId)
 	{
-		case DocumentAnalyzerConst::Method_Destructor:
+		case DocumentAnalyzerInstanceConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_addSearchIndexFeature:
+		case DocumentAnalyzerInstanceConst::Method_addSearchIndexFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
 			TokenizerFunctionInstanceInterface* p3;
 			std::vector<NormalizerFunctionInstanceInterface*> p4;
-			analyzer::FeatureOptions p5;
+			int p5;
+			analyzer::FeatureOptions p6;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
@@ -1046,8 +1337,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			p5 = serializedMsg.unpackFeatureOptions();
-			obj->addSearchIndexFeature(p1,p2,p3,p4,p5);
+			p5 = serializedMsg.unpackInt();
+			p6 = serializedMsg.unpackFeatureOptions();
+			obj->addSearchIndexFeature(p1,p2,p3,p4,p5,p6);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1060,14 +1352,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_addForwardIndexFeature:
+		case DocumentAnalyzerInstanceConst::Method_addForwardIndexFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
 			TokenizerFunctionInstanceInterface* p3;
 			std::vector<NormalizerFunctionInstanceInterface*> p4;
-			analyzer::FeatureOptions p5;
+			int p5;
+			analyzer::FeatureOptions p6;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
@@ -1084,8 +1377,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			p5 = serializedMsg.unpackFeatureOptions();
-			obj->addForwardIndexFeature(p1,p2,p3,p4,p5);
+			p5 = serializedMsg.unpackInt();
+			p6 = serializedMsg.unpackFeatureOptions();
+			obj->addForwardIndexFeature(p1,p2,p3,p4,p5,p6);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1098,7 +1392,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineMetaData:
+		case DocumentAnalyzerInstanceConst::Method_defineMetaData:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1134,7 +1428,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineAggregatedMetaData:
+		case DocumentAnalyzerInstanceConst::Method_defineAggregatedMetaData:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1158,7 +1452,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineAttribute:
+		case DocumentAnalyzerInstanceConst::Method_defineAttribute:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1194,7 +1488,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineSubDocument:
+		case DocumentAnalyzerInstanceConst::Method_defineSubDocument:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1212,7 +1506,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineSubContent:
+		case DocumentAnalyzerInstanceConst::Method_defineSubContent:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1230,13 +1524,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_addPatternLexem:
+		case DocumentAnalyzerInstanceConst::Method_addPatternLexem:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
 			TokenizerFunctionInstanceInterface* p3;
 			std::vector<NormalizerFunctionInstanceInterface*> p4;
+			int p5;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
@@ -1253,7 +1548,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			obj->addPatternLexem(p1,p2,p3,p4);
+			p5 = serializedMsg.unpackInt();
+			obj->addPatternLexem(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1266,7 +1562,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_definePatternMatcherPostProc:
+		case DocumentAnalyzerInstanceConst::Method_defineTokenPatternMatcher:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1277,26 +1573,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PatternMatcherInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PatternMatcherInstanceInterface>( classId_2, objId_2);
-			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_PatternTermFeederInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<PatternTermFeederInstanceInterface>( classId_3, objId_3);
-			markObjectToRelease( classId_3, objId_3);
-			obj->definePatternMatcherPostProc(p1,p2,p3);
+			obj->defineTokenPatternMatcher(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
-				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
-			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_definePatternMatcherPreProc:
+		case DocumentAnalyzerInstanceConst::Method_defineContentPatternMatcher:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1308,37 +1600,34 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PatternMatcherInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PatternMatcherInstanceInterface>( classId_2, objId_2);
-			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_PatternLexerInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<PatternLexerInstanceInterface>( classId_3, objId_3);
-			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				std::string ee = serializedMsg.unpackString();
 				p4.push_back( ee);
 			}
-			obj->definePatternMatcherPreProc(p1,p2,p3,p4);
+			obj->defineContentPatternMatcher(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
-				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
-			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_addSearchIndexFeatureFromPatternMatch:
+		case DocumentAnalyzerInstanceConst::Method_addSearchIndexFeatureFromPatternMatch:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
 			std::vector<NormalizerFunctionInstanceInterface*> p3;
-			analyzer::FeatureOptions p4;
+			int p4;
+			analyzer::FeatureOptions p5;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			std::size_t n3 = serializedMsg.unpackSize();
@@ -1350,8 +1639,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p3.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			p4 = serializedMsg.unpackFeatureOptions();
-			obj->addSearchIndexFeatureFromPatternMatch(p1,p2,p3,p4);
+			p4 = serializedMsg.unpackInt();
+			p5 = serializedMsg.unpackFeatureOptions();
+			obj->addSearchIndexFeatureFromPatternMatch(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1364,13 +1654,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_addForwardIndexFeatureFromPatternMatch:
+		case DocumentAnalyzerInstanceConst::Method_addForwardIndexFeatureFromPatternMatch:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
 			std::vector<NormalizerFunctionInstanceInterface*> p3;
-			analyzer::FeatureOptions p4;
+			int p4;
+			analyzer::FeatureOptions p5;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			std::size_t n3 = serializedMsg.unpackSize();
@@ -1382,8 +1673,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p3.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			p4 = serializedMsg.unpackFeatureOptions();
-			obj->addForwardIndexFeatureFromPatternMatch(p1,p2,p3,p4);
+			p4 = serializedMsg.unpackInt();
+			p5 = serializedMsg.unpackFeatureOptions();
+			obj->addForwardIndexFeatureFromPatternMatch(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1396,7 +1688,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineMetaDataFromPatternMatch:
+		case DocumentAnalyzerInstanceConst::Method_defineMetaDataFromPatternMatch:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1426,7 +1718,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_defineAttributeFromPatternMatch:
+		case DocumentAnalyzerInstanceConst::Method_defineAttributeFromPatternMatch:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -1456,7 +1748,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case DocumentAnalyzerConst::Method_analyze:
+		case DocumentAnalyzerInstanceConst::Method_analyze:
 		{
 			RpcSerializer msg;
 			analyzer::Document p0;
@@ -1477,7 +1769,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case DocumentAnalyzerConst::Method_createContext:
+		case DocumentAnalyzerInstanceConst::Method_createContext:
 		{
 			RpcSerializer msg;
 			DocumentAnalyzerContextInterface* p0;
@@ -1498,6 +1790,164 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case DocumentAnalyzerInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::DocumentAnalyzerView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerDocumentAnalyzerView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_DocumentAnalyzerMap:
+	{
+	DocumentAnalyzerMapInterface* obj = getObject<DocumentAnalyzerMapInterface>( classId, objId);
+	switch( (DocumentAnalyzerMapConst::MethodId)methodId)
+	{
+		case DocumentAnalyzerMapConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case DocumentAnalyzerMapConst::Method_createAnalyzer:
+		{
+			RpcSerializer msg;
+			DocumentAnalyzerInstanceInterface* p0;
+			std::string p1;
+			std::string p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createAnalyzer(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case DocumentAnalyzerMapConst::Method_addAnalyzer:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			DocumentAnalyzerInstanceInterface* p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			unsigned char classId_3; unsigned int objId_3;
+			serializedMsg.unpackObject( classId_3, objId_3);
+			if (classId_3 != ClassId_DocumentAnalyzerInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p3 = getObject<DocumentAnalyzerInstanceInterface>( classId_3, objId_3);
+			obj->addAnalyzer(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case DocumentAnalyzerMapConst::Method_getAnalyzer:
+		{
+			RpcSerializer msg;
+			const DocumentAnalyzerInstanceInterface* p0;
+			std::string p1;
+			std::string p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->getAnalyzer(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case DocumentAnalyzerMapConst::Method_analyze:
+		{
+			RpcSerializer msg;
+			analyzer::Document p0;
+			std::string p1;
+			analyzer::DocumentClass p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDocumentClass();
+			p0 = obj->analyze(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerDocument( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case DocumentAnalyzerMapConst::Method_createContext:
+		{
+			RpcSerializer msg;
+			DocumentAnalyzerContextInterface* p0;
+			analyzer::DocumentClass p1;
+			p1 = serializedMsg.unpackDocumentClass();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createContext(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case DocumentAnalyzerMapConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::DocumentAnalyzerMapView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerDocumentAnalyzerMapView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -1511,6 +1961,36 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case DocumentClassDetectorConst::Method_defineDocumentSchemeDetector:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			std::vector<std::string> p3;
+			std::vector<std::string> p4;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			std::size_t n3 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n3; ++ii) {
+				std::string ee = serializedMsg.unpackString();
+				p3.push_back( ee);
+			}
+			std::size_t n4 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n4; ++ii) {
+				std::string ee = serializedMsg.unpackString();
+				p4.push_back( ee);
+			}
+			obj->defineDocumentSchemeDetector(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case DocumentClassDetectorConst::Method_detect:
 		{
 			RpcSerializer msg;
@@ -1518,8 +1998,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			analyzer::DocumentClass p1;
 			const char* p2;
 			std::size_t p3;
+			bool p4;
 			serializedMsg.unpackBuffer( p2, p3);
-			p0 = obj->detect(p1,p2,p3);
+			p4 = serializedMsg.unpackBool();
+			p0 = obj->detect(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1619,6 +2101,107 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_FileLocator:
+	{
+	FileLocatorInterface* obj = getObject<FileLocatorInterface>( classId, objId);
+	switch( (FileLocatorConst::MethodId)methodId)
+	{
+		case FileLocatorConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case FileLocatorConst::Method_addResourcePath:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->addResourcePath(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case FileLocatorConst::Method_getResourceFilePath:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->getResourceFilePath(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case FileLocatorConst::Method_defineWorkingDirectory:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->defineWorkingDirectory(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case FileLocatorConst::Method_getWorkingDirectory:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			p0 = obj->getWorkingDirectory();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case FileLocatorConst::Method_getResourcePaths:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getResourcePaths();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -1997,6 +2580,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case NormalizerFunctionInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -2276,6 +2876,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case PatternLexerInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -2548,10 +3165,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			bool p2;
+			std::string p2;
+			bool p3;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackBool();
-			obj->definePattern(p1,p2);
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackBool();
+			obj->definePattern(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -2597,6 +3216,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case PatternMatcherInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -2778,6 +3414,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case PatternTermFeederInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -2798,6 +3451,259 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createInstance();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_PosTaggerContext:
+	{
+	PosTaggerContextInterface* obj = getObject<PosTaggerContextInterface>( classId, objId);
+	switch( (PosTaggerContextConst::MethodId)methodId)
+	{
+		case PosTaggerContextConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PosTaggerContextConst::Method_markupDocument:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			int p1;
+			analyzer::DocumentClass p2;
+			std::string p3;
+			p1 = serializedMsg.unpackInt();
+			p2 = serializedMsg.unpackDocumentClass();
+			p3 = serializedMsg.unpackString();
+			p0 = obj->markupDocument(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_PosTaggerData:
+	{
+	PosTaggerDataInterface* obj = getObject<PosTaggerDataInterface>( classId, objId);
+	switch( (PosTaggerDataConst::MethodId)methodId)
+	{
+		case PosTaggerDataConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PosTaggerDataConst::Method_defineTag:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			obj->defineTag(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PosTaggerDataConst::Method_insert:
+		{
+			RpcSerializer msg;
+			int p1;
+			std::vector<PosTaggerDataInterface::Element> p2;
+			p1 = serializedMsg.unpackInt();
+			std::size_t n2 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n2; ++ii) {
+				PosTaggerDataInterface::Element ee = serializedMsg.unpackPosTaggerDataElement();
+				p2.push_back( ee);
+			}
+			obj->insert(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PosTaggerDataConst::Method_markupSegment:
+		{
+			RpcSerializer msg;
+			TokenMarkupContextInterface* p1;
+			int p2;
+			int p3;
+			SegmenterPosition p4;
+			const char* p5;
+			std::size_t p6;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_TokenMarkupContext) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getObject<TokenMarkupContextInterface>( classId_1, objId_1);
+			p2 = serializedMsg.unpackInt();
+			p4 = serializedMsg.unpackGlobalCounter();
+			serializedMsg.unpackBuffer( p5, p6);
+			obj->markupSegment(p1,p2,p3,p4,p5,p6);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packInt( p3);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_PosTaggerInstance:
+	{
+	PosTaggerInstanceInterface* obj = getObject<PosTaggerInstanceInterface>( classId, objId);
+	switch( (PosTaggerInstanceConst::MethodId)methodId)
+	{
+		case PosTaggerInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PosTaggerInstanceConst::Method_addContentExpression:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->addContentExpression(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PosTaggerInstanceConst::Method_addPosTaggerInputPunctuation:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			obj->addPosTaggerInputPunctuation(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case PosTaggerInstanceConst::Method_getPosTaggerInput:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			analyzer::DocumentClass p1;
+			std::string p2;
+			p1 = serializedMsg.unpackDocumentClass();
+			p2 = serializedMsg.unpackString();
+			p0 = obj->getPosTaggerInput(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PosTaggerInstanceConst::Method_markupDocument:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			const PosTaggerDataInterface* p1;
+			int p2;
+			analyzer::DocumentClass p3;
+			std::string p4;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_PosTaggerData) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<PosTaggerDataInterface>( classId_1, objId_1);
+			p2 = serializedMsg.unpackInt();
+			p3 = serializedMsg.unpackDocumentClass();
+			p4 = serializedMsg.unpackString();
+			p0 = obj->markupDocument(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_PosTagger:
+	{
+	PosTaggerInterface* obj = getObject<PosTaggerInterface>( classId, objId);
+	switch( (PosTaggerConst::MethodId)methodId)
+	{
+		case PosTaggerConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case PosTaggerConst::Method_createInstance:
+		{
+			RpcSerializer msg;
+			PosTaggerInstanceInterface* p0;
+			const SegmenterInterface* p1;
+			analyzer::SegmenterOptions p2;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_Segmenter) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<SegmenterInterface>( classId_1, objId_1);
+			p2 = serializedMsg.unpackSegmenterOptions();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createInstance(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3036,10 +3942,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryAnalyzerContextConst::Method_putField:
 		{
 			RpcSerializer msg;
-			unsigned int p1;
+			int p1;
 			std::string p2;
 			std::string p3;
-			p1 = serializedMsg.unpackUint();
+			p1 = serializedMsg.unpackInt();
 			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackString();
 			obj->putField(p1,p2,p3);
@@ -3056,14 +3962,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryAnalyzerContextConst::Method_groupElements:
 		{
 			RpcSerializer msg;
-			unsigned int p1;
-			std::vector<unsigned int> p2;
+			int p1;
+			std::vector<int> p2;
 			QueryAnalyzerContextInterface::GroupBy p3;
 			bool p4;
-			p1 = serializedMsg.unpackUint();
+			p1 = serializedMsg.unpackInt();
 			std::size_t n2 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n2; ++ii) {
-				unsigned int ee = serializedMsg.unpackUint();
+				int ee = serializedMsg.unpackInt();
 				p2.push_back( ee);
 			}
 			p3 = serializedMsg.unpackAnalyzerGroupBy();
@@ -3099,23 +4005,24 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_QueryAnalyzer:
+	case ClassId_QueryAnalyzerInstance:
 	{
-	QueryAnalyzerInterface* obj = getObject<QueryAnalyzerInterface>( classId, objId);
-	switch( (QueryAnalyzerConst::MethodId)methodId)
+	QueryAnalyzerInstanceInterface* obj = getObject<QueryAnalyzerInstanceInterface>( classId, objId);
+	switch( (QueryAnalyzerInstanceConst::MethodId)methodId)
 	{
-		case QueryAnalyzerConst::Method_Destructor:
+		case QueryAnalyzerInstanceConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_addElement:
+		case QueryAnalyzerInstanceConst::Method_addElement:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
 			TokenizerFunctionInstanceInterface* p3;
 			std::vector<NormalizerFunctionInstanceInterface*> p4;
+			int p5;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
@@ -3132,7 +4039,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			obj->addElement(p1,p2,p3,p4);
+			p5 = serializedMsg.unpackInt();
+			obj->addElement(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3145,13 +4053,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_addPatternLexem:
+		case QueryAnalyzerInstanceConst::Method_addPatternLexem:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
 			TokenizerFunctionInstanceInterface* p3;
 			std::vector<NormalizerFunctionInstanceInterface*> p4;
+			int p5;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			unsigned char classId_3; unsigned int objId_3;
@@ -3168,7 +4077,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p4.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			obj->addPatternLexem(p1,p2,p3,p4);
+			p5 = serializedMsg.unpackInt();
+			obj->addPatternLexem(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3181,7 +4091,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_definePatternMatcherPostProc:
+		case QueryAnalyzerInstanceConst::Method_defineTokenPatternMatcher:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3192,26 +4102,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PatternMatcherInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PatternMatcherInstanceInterface>( classId_2, objId_2);
-			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_PatternTermFeederInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<PatternTermFeederInstanceInterface>( classId_3, objId_3);
-			markObjectToRelease( classId_3, objId_3);
-			obj->definePatternMatcherPostProc(p1,p2,p3);
+			obj->defineTokenPatternMatcher(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
-				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
-			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_definePatternMatcherPreProc:
+		case QueryAnalyzerInstanceConst::Method_defineContentPatternMatcher:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -3223,36 +4129,33 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PatternMatcherInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PatternMatcherInstanceInterface>( classId_2, objId_2);
-			markObjectToRelease( classId_2, objId_2);
 			unsigned char classId_3; unsigned int objId_3;
 			serializedMsg.unpackObject( classId_3, objId_3);
 			if (classId_3 != ClassId_PatternLexerInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p3 = getObject<PatternLexerInstanceInterface>( classId_3, objId_3);
-			markObjectToRelease( classId_3, objId_3);
 			std::size_t n4 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n4; ++ii) {
 				std::string ee = serializedMsg.unpackString();
 				p4.push_back( ee);
 			}
-			obj->definePatternMatcherPreProc(p1,p2,p3,p4);
+			obj->defineContentPatternMatcher(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
-				unmarkObjectsToRelease();
 				msg.packByte( MsgTypeError);
 				msg.packCharp( err);
 				return msg.content();
 			}
-			releaseObjectsMarked();
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_addElementFromPatternMatch:
+		case QueryAnalyzerInstanceConst::Method_addElementFromPatternMatch:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
 			std::vector<NormalizerFunctionInstanceInterface*> p3;
+			int p4;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			std::size_t n3 = serializedMsg.unpackSize();
@@ -3264,7 +4167,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p3.push_back( ee);
 				markObjectToRelease( classId_, objId_);
 			}
-			obj->addElementFromPatternMatch(p1,p2,p3);
+			p4 = serializedMsg.unpackInt();
+			obj->addElementFromPatternMatch(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3277,7 +4181,47 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryAnalyzerConst::Method_createContext:
+		case QueryAnalyzerInstanceConst::Method_queryTermTypes:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->queryTermTypes();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case QueryAnalyzerInstanceConst::Method_queryFieldTypes:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->queryFieldTypes();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case QueryAnalyzerInstanceConst::Method_createContext:
 		{
 			RpcSerializer msg;
 			QueryAnalyzerContextInterface* p0;
@@ -3295,6 +4239,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case QueryAnalyzerInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::QueryAnalyzerView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerQueryAnalyzerView( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -3376,6 +4337,86 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
+		}
+		case QueryEvalConst::Method_getWeightingFeatureSets:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getWeightingFeatureSets();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case QueryEvalConst::Method_getSelectionFeatureSets:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getSelectionFeatureSets();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case QueryEvalConst::Method_getRestrictionFeatureSets:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getRestrictionFeatureSets();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case QueryEvalConst::Method_getExclusionFeatureSets:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			p0 = obj->getExclusionFeatureSets();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
 		}
 		case QueryEvalConst::Method_addSummarizerFunction:
 		{
@@ -3804,6 +4845,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case QueryProcessorConst::Method_getResourceFilePath:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->getResourceFilePath(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case QueryProcessorConst::Method_definePostingJoinOperator:
 		{
 			RpcSerializer msg;
@@ -4220,6 +5280,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case ScalarFunctionParserConst::Method_getDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->getDescription();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -4371,6 +5448,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case SegmenterInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -4410,6 +5504,32 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createInstance(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case SegmenterConst::Method_createContentIterator:
+		{
+			RpcSerializer msg;
+			ContentIteratorInterface* p0;
+			const char* p1;
+			std::size_t p2;
+			analyzer::DocumentClass p3;
+			analyzer::SegmenterOptions p4;
+			serializedMsg.unpackBuffer( p1, p2);
+			p3 = serializedMsg.unpackDocumentClass();
+			p4 = serializedMsg.unpackSegmenterOptions();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createContentIterator(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -4828,7 +5948,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			bool p0;
-			StatisticsViewerInterface::DocumentFrequencyChange p1;
+			TermStatisticsChange p1;
 			p0 = obj->nextDfChange(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4839,7 +5959,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
-			msg.packStatisticsViewerDocumentFrequencyChange( p1);
+			msg.packTermStatisticsChange( p1);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -5020,6 +6140,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createTermPostingIterator(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StorageClientConst::Method_createStructIterator:
+		{
+			RpcSerializer msg;
+			StructIteratorInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createStructIterator(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5282,6 +6423,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createTermTypeIterator();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StorageClientConst::Method_createStructTypeIterator:
+		{
+			RpcSerializer msg;
+			ValueIteratorInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createStructTypeIterator();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5587,6 +6747,26 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case StorageDocumentConst::Method_addSearchIndexStructure:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			IndexRange p2;
+			IndexRange p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackIndexRange();
+			p3 = serializedMsg.unpackIndexRange();
+			obj->addSearchIndexStructure(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case StorageDocumentConst::Method_addForwardIndexTerm:
 		{
 			RpcSerializer msg;
@@ -5706,6 +6886,26 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case StorageDocumentUpdateConst::Method_addSearchIndexStructure:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			IndexRange p2;
+			IndexRange p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackIndexRange();
+			p3 = serializedMsg.unpackIndexRange();
+			obj->addSearchIndexStructure(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case StorageDocumentUpdateConst::Method_addForwardIndexTerm:
 		{
 			RpcSerializer msg;
@@ -5732,6 +6932,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			p1 = serializedMsg.unpackString();
 			obj->clearSearchIndexTerm(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case StorageDocumentUpdateConst::Method_clearSearchIndexStructure:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->clearSearchIndexStructure(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6374,6 +7590,110 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_StructIterator:
+	{
+	StructIteratorInterface* obj = getObject<StructIteratorInterface>( classId, objId);
+	switch( (StructIteratorConst::MethodId)methodId)
+	{
+		case StructIteratorConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case StructIteratorConst::Method_skipDoc:
+		{
+			RpcSerializer msg;
+			Index p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->skipDoc(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndex( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StructIteratorConst::Method_skipPosSource:
+		{
+			RpcSerializer msg;
+			IndexRange p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->skipPosSource(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndexRange( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StructIteratorConst::Method_skipPosSink:
+		{
+			RpcSerializer msg;
+			IndexRange p0;
+			Index p1;
+			p1 = serializedMsg.unpackIndex();
+			p0 = obj->skipPosSink(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndexRange( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StructIteratorConst::Method_source:
+		{
+			RpcSerializer msg;
+			IndexRange p0;
+			p0 = obj->source();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndexRange( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StructIteratorConst::Method_sink:
+		{
+			RpcSerializer msg;
+			IndexRange p0;
+			p0 = obj->sink();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packIndexRange( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_SummarizerFunctionContext:
 	{
 	SummarizerFunctionContextInterface* obj = getObject<SummarizerFunctionContextInterface>( classId, objId);
@@ -6681,29 +8001,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case TextProcessorConst::Method_addResourcePath:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			obj->addResourcePath(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case TextProcessorConst::Method_getResourcePath:
+		case TextProcessorConst::Method_getResourceFilePath:
 		{
 			RpcSerializer msg;
 			std::string p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			p0 = obj->getResourcePath(p1);
+			p0 = obj->getResourceFilePath(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6901,6 +8205,68 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case TextProcessorConst::Method_createPosTaggerData:
+		{
+			RpcSerializer msg;
+			PosTaggerDataInterface* p0;
+			TokenizerFunctionInstanceInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_TokenizerFunctionInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getObject<TokenizerFunctionInstanceInterface>( classId_1, objId_1);
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createPosTaggerData(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case TextProcessorConst::Method_getPosTagger:
+		{
+			RpcSerializer msg;
+			const PosTaggerInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->getPosTagger();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case TextProcessorConst::Method_createTokenMarkupInstance:
+		{
+			RpcSerializer msg;
+			TokenMarkupInstanceInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createTokenMarkupInstance();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case TextProcessorConst::Method_detectDocumentClass:
 		{
 			RpcSerializer msg;
@@ -6908,8 +8274,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			analyzer::DocumentClass p1;
 			const char* p2;
 			std::size_t p3;
+			bool p4;
 			serializedMsg.unpackBuffer( p2, p3);
-			p0 = obj->detectDocumentClass(p1,p2,p3);
+			p4 = serializedMsg.unpackBool();
+			p0 = obj->detectDocumentClass(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -7136,19 +8504,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case TokenMarkupContextConst::Method_putMarkup:
 		{
 			RpcSerializer msg;
-			SegmenterPosition p1;
-			std::size_t p2;
-			SegmenterPosition p3;
-			std::size_t p4;
-			analyzer::TokenMarkup p5;
-			unsigned int p6;
-			p1 = serializedMsg.unpackGlobalCounter();
-			p2 = serializedMsg.unpackSize();
-			p3 = serializedMsg.unpackGlobalCounter();
-			p4 = serializedMsg.unpackSize();
-			p5 = serializedMsg.unpackAnalyzerTokenMarkup();
-			p6 = serializedMsg.unpackUint();
-			obj->putMarkup(p1,p2,p3,p4,p5,p6);
+			analyzer::Position p1;
+			analyzer::Position p2;
+			analyzer::TokenMarkup p3;
+			unsigned int p4;
+			p1 = serializedMsg.unpackAnalyzerPosition();
+			p2 = serializedMsg.unpackAnalyzerPosition();
+			p3 = serializedMsg.unpackAnalyzerTokenMarkup();
+			p4 = serializedMsg.unpackUint();
+			obj->putMarkup(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -7163,16 +8527,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p0;
-			const SegmenterInstanceInterface* p1;
-			analyzer::DocumentClass p2;
-			std::string p3;
-			unsigned char classId_1; unsigned int objId_1;
-			serializedMsg.unpackObject( classId_1, objId_1);
-			if (classId_1 != ClassId_SegmenterInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p1 = getConstObject<SegmenterInstanceInterface>( classId_1, objId_1);
-			p2 = serializedMsg.unpackDocumentClass();
-			p3 = serializedMsg.unpackString();
-			p0 = obj->markupDocument(p1,p2,p3);
+			analyzer::DocumentClass p1;
+			std::string p2;
+			p1 = serializedMsg.unpackDocumentClass();
+			p2 = serializedMsg.unpackString();
+			p0 = obj->markupDocument(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -7202,9 +8561,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			TokenMarkupContextInterface* p0;
+			const SegmenterInstanceInterface* p1;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_SegmenterInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<SegmenterInstanceInterface>( classId_1, objId_1);
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createContext();
+			p0 = obj->createContext(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -7216,6 +8580,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case TokenMarkupInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -7267,6 +8648,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
 				msg.packAnalyzerToken( p0[ii]);
 			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case TokenizerFunctionInstanceConst::Method_view:
+		{
+			RpcSerializer msg;
+			analyzer::FunctionView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packAnalyzerFunctionView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -7350,6 +8748,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::size_t p2;
 			serializedMsg.unpackBuffer( p1, p2);
 			obj->skip(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case ValueIteratorConst::Method_skipPrefix:
+		{
+			RpcSerializer msg;
+			const char* p1;
+			std::size_t p2;
+			serializedMsg.unpackBuffer( p1, p2);
+			obj->skipPrefix(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -7527,7 +8942,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case VectorStorageClientConst::Method_featureVector:
 		{
 			RpcSerializer msg;
-			std::vector<double> p0;
+			std::vector<float> p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
 			p0 = obj->featureVector(p1);
@@ -7541,7 +8956,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packDouble( p0[ii]);
+				msg.packFloat( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();
@@ -7588,16 +9003,16 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			double p0;
-			std::vector<double> p1;
-			std::vector<double> p2;
+			std::vector<float> p1;
+			std::vector<float> p2;
 			std::size_t n1 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n1; ++ii) {
-				double ee = serializedMsg.unpackDouble();
+				float ee = serializedMsg.unpackFloat();
 				p1.push_back( ee);
 			}
 			std::size_t n2 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n2; ++ii) {
-				double ee = serializedMsg.unpackDouble();
+				float ee = serializedMsg.unpackFloat();
 				p2.push_back( ee);
 			}
 			p0 = obj->vectorSimilarity(p1,p2);
@@ -7827,12 +9242,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case VectorStorageSearchConst::Method_findSimilar:
 		{
 			RpcSerializer msg;
-			std::vector<VectorStorageSearchInterface::Result> p0;
-			std::vector<double> p1;
+			std::vector<VectorQueryResult> p0;
+			std::vector<float> p1;
 			unsigned int p2;
 			std::size_t n1 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n1; ++ii) {
-				double ee = serializedMsg.unpackDouble();
+				float ee = serializedMsg.unpackFloat();
 				p1.push_back( ee);
 			}
 			p2 = serializedMsg.unpackUint();
@@ -7847,7 +9262,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packVectorStorageSearchResult( p0[ii]);
+				msg.packVectorQueryResult( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();
@@ -7855,9 +9270,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case VectorStorageSearchConst::Method_findSimilarFromSelection:
 		{
 			RpcSerializer msg;
-			std::vector<VectorStorageSearchInterface::Result> p0;
+			std::vector<VectorQueryResult> p0;
 			std::vector<Index> p1;
-			std::vector<double> p2;
+			std::vector<float> p2;
 			unsigned int p3;
 			std::size_t n1 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n1; ++ii) {
@@ -7866,7 +9281,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			std::size_t n2 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n2; ++ii) {
-				double ee = serializedMsg.unpackDouble();
+				float ee = serializedMsg.unpackFloat();
 				p2.push_back( ee);
 			}
 			p3 = serializedMsg.unpackUint();
@@ -7881,7 +9296,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packVectorStorageSearchResult( p0[ii]);
+				msg.packVectorQueryResult( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();
@@ -7917,11 +9332,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			std::vector<double> p2;
+			std::vector<float> p2;
 			p1 = serializedMsg.unpackString();
 			std::size_t n2 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n2; ++ii) {
-				double ee = serializedMsg.unpackDouble();
+				float ee = serializedMsg.unpackFloat();
 				p2.push_back( ee);
 			}
 			obj->addFeature(p1,p2);

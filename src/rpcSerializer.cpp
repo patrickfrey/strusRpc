@@ -7,7 +7,6 @@
  */
 #include "rpcSerializer.hpp"
 #include "hexdump.h"
-#include "private/utils.hpp"
 #include "private/internationalization.hpp"
 #include "strus/base/crc32.hpp"
 #include "rpcProtocolDefines.hpp"
@@ -106,7 +105,7 @@ void pack<1>( std::string& buf, const void* ptr)
 template <>
 void unpack<1>( char const*& itr, const char* end, void* ptr)
 {
-	if (itr+1 > end) throw strus::runtime_error( "%s",  _TXT("message to small to encode next byte"));
+	if (itr+1 > end) throw std::runtime_error( _TXT("message to small to encode next byte"));
 	*(char*)ptr = *itr++;
 }
 
@@ -120,7 +119,7 @@ void pack<2>( std::string& buf, const void* ptr)
 template <>
 void unpack<2>( char const*& itr, const char* end, void* ptr)
 {
-	if (itr+2 > end) throw strus::runtime_error( "%s",  _TXT("message to small to encode next word"));
+	if (itr+2 > end) throw std::runtime_error( _TXT("message to small to encode next word"));
 	uint16_t val;
 	std::memcpy( &val, itr, 2);
 	itr += 2;
@@ -139,7 +138,7 @@ void unpack<4>( char const*& itr, const char* end, void* ptr)
 {
 	if (itr+4 > end)
 	{
-		throw strus::runtime_error( "%s",  _TXT("message to small to encode next dword"));
+		throw std::runtime_error( _TXT("message to small to encode next dword"));
 	}
 	uint32_t val;
 	std::memcpy( &val, itr, 4);
@@ -159,7 +158,7 @@ void pack<8>( std::string& buf, const void* ptr)
 template <>
 void unpack<8>( char const*& itr, const char* end, void* ptr)
 {
-	if (itr+8 > end) throw strus::runtime_error( "%s",  _TXT("message to small to encode next qword"));
+	if (itr+8 > end) throw std::runtime_error( _TXT("message to small to encode next qword"));
 	uint32_t vlo;
 	uint32_t vhi;
 	unpack<4>( itr, end, &vhi);
@@ -202,7 +201,8 @@ enum ProtocolAtomicTypes
 	ProtocolDouble,
 	ProtocolFloat,
 	ProtocolSize,
-	ProtocolNumericVariant
+	ProtocolNumericVariant,
+	ProtocolIndexRange
 };
 
 #if STRUS_RPC_PROTOCOL_WITH_TYPED_ATOMS
@@ -211,7 +211,7 @@ enum ProtocolAtomicTypes
 #define CHECK_TYPE( TP)\
 	if (unpackScalar<unsigned char>( m_itr, m_end) != (unsigned char)(Protocol ## TP))\
 	{\
-		throw strus::runtime_error( "%s",  _TXT("unpack RPC expected type " #TP));\
+		throw std::runtime_error( _TXT("unpack RPC expected type " #TP));\
 	}
 #else
 #define SET_TYPE(TP)
@@ -233,7 +233,7 @@ void RpcSerializer::packObject( unsigned char classId_, unsigned int objId_)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packObject (" << (unsigned int)classId_ << ", " << objId_ << ")" << std::endl;
 #endif
-	if (objId_ > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( "%s",  _TXT("object id out of range"));
+	if (objId_ > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( _TXT("object id out of range"));
 	packScalar( m_content, classId_);
 	packScalar( m_content, (uint32_t)objId_);
 }
@@ -244,7 +244,7 @@ void RpcSerializer::packString( const std::string& str)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packString ('" << str << "')" << std::endl;
 #endif
-	if (str.size() > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( "%s",  _TXT("string size out of range"));
+	if (str.size() > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( _TXT("string size out of range"));
 	packScalar( m_content, (uint32_t)str.size());
 	m_content.append( str);
 	
@@ -299,7 +299,7 @@ void RpcSerializer::packBuffer( const char* buf, std::size_t size)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packBuffer('" << std::string(buf,size) << "')" << std::endl;
 #endif
-	if (size > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( "%s",  _TXT("buffer size out of range"));
+	if (size > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( _TXT("buffer size out of range"));
 	packScalar( m_content, (uint32_t)size);
 	m_content.append( buf, size);
 }
@@ -310,7 +310,7 @@ void RpcSerializer::packBufferFloat( const double* buf, std::size_t size)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packBufferFloat( ... )" << std::endl;
 #endif
-	if (size > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( "%s",  _TXT("buffer size out of range"));
+	if (size > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( _TXT("buffer size out of range"));
 	packScalar( m_content, (uint32_t)size);
 	std::size_t ii=0;
 	for (ii=0; ii<size; ++ii)
@@ -346,6 +346,16 @@ void RpcSerializer::packIndex( const Index& index)
 	packScalar( m_content, index);
 }
 
+void RpcSerializer::packIndexRange( const IndexRange& val)
+{
+	SET_TYPE( IndexRange)
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "packIndexRange (" << (int)val.start() << "," << (int)val.end() << ")" << std::endl;
+#endif
+	packScalar( m_content, val.start());
+	packScalar( m_content, val.end());
+}
+
 void RpcSerializer::packGlobalCounter( const GlobalCounter& index)
 {
 	SET_TYPE( GlobalCounter)
@@ -361,7 +371,7 @@ void RpcSerializer::packUint( unsigned int val)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packUint (" << (unsigned int)val << ")" << std::endl;
 #endif
-	if (val > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( "%s",  _TXT("packed uint out of range"));
+	if (val > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( _TXT("packed uint out of range"));
 	packScalar( m_content, (uint32_t)val);
 }
 
@@ -372,7 +382,7 @@ void RpcSerializer::packInt( int val)
 	std::cerr << "packInt (" << (signed int)val << ")" << std::endl;
 #endif
 	if (val > std::numeric_limits<int32_t>::max()
-	||  val < std::numeric_limits<int32_t>::min()) throw strus::runtime_error( "%s",  _TXT("packed int out of range"));
+	||  val < std::numeric_limits<int32_t>::min()) throw std::runtime_error( _TXT("packed int out of range"));
 	packScalar( m_content, (int32_t)val);
 }
 
@@ -392,7 +402,7 @@ void RpcSerializer::packInt64( int64_t val)
 	std::cerr << "packInt (" << val << ")" << std::endl;
 #endif
 	if (val > std::numeric_limits<int64_t>::max()
-	||  val < std::numeric_limits<int64_t>::min()) throw strus::runtime_error( "%s",  _TXT("packed int out of range"));
+	||  val < std::numeric_limits<int64_t>::min()) throw std::runtime_error( _TXT("packed int out of range"));
 	packScalar( m_content, val);
 }
 
@@ -420,7 +430,7 @@ void RpcSerializer::packSize( std::size_t size)
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "packSize (" << (std::size_t)size << ")" << std::endl;
 #endif
-	if (size > std::numeric_limits<uint32_t>::max()) throw strus::runtime_error( "%s",  _TXT("packed size out of range"));
+	if (size > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( _TXT("packed size out of range"));
 	packScalar( m_content, (uint32_t)size);
 }
 
@@ -491,7 +501,7 @@ void RpcSerializer::packSummarizationVariable( const SummarizationVariable& val)
 {
 	packString( val.name());
 	const RpcInterfaceStub* so = dynamic_cast<const RpcInterfaceStub*>( val.itr());
-	if (!so) throw strus::runtime_error( "%s", _TXT("passing non RPC interface object in RPC call (summarization variable)"));
+	if (!so) throw std::runtime_error( _TXT("passing non RPC interface object in RPC call (summarization variable)"));
 	packObject( so->classId(), so->objId());
 }
 
@@ -586,12 +596,17 @@ void RpcSerializer::packAnalyzerDocumentTerm( const analyzer::DocumentTerm& val)
 	packIndex( val.pos());
 }
 
+void RpcSerializer::packAnalyzerPosition( const analyzer::Position& val)
+{
+	packUint( val.seg());
+	packUint( val.ofs());
+}
+
 void RpcSerializer::packAnalyzerToken( const analyzer::Token& val)
 {
 	packUint( val.ordpos());
-	packUint( val.origseg());
-	packUint( val.origpos());
 	packUint( val.origsize());
+	packAnalyzerPosition( val.origpos());
 }
 
 void RpcSerializer::packAnalyzerGroupBy( const QueryAnalyzerContextInterface::GroupBy& val)
@@ -603,8 +618,8 @@ void RpcSerializer::packAnalyzerPatternLexem( const analyzer::PatternLexem& val)
 {
 	packUint( val.id());
 	packUint( val.ordpos());
-	packUint( val.origseg());
-	packUint( val.origpos());
+	packUint( val.origpos().seg());
+	packUint( val.origpos().ofs());
 	packUint( val.origsize());
 }
 
@@ -623,24 +638,26 @@ void RpcSerializer::packAnalyzerTokenMarkup( const analyzer::TokenMarkup& val)
 void RpcSerializer::packAnalyzerPatternMatcherResult( const analyzer::PatternMatcherResult& val)
 {
 	packCharp( val.name());
-	packUint( val.start_ordpos());
-	packUint( val.end_ordpos());
-	packUint( val.start_origseg());
-	packUint( val.start_origpos());
-	packUint( val.end_origseg());
-	packUint( val.end_origpos());
+	packCharp( val.value());
+	packUint( val.ordpos());
+	packUint( val.ordend());
+	packUint( val.origpos().seg());
+	packUint( val.origpos().ofs());
+	packUint( val.origend().seg());
+	packUint( val.origend().ofs());
 
 	std::vector<analyzer::PatternMatcherResult::Item>::const_iterator ri = val.items().begin(), re = val.items().end();
 	packSize( re-ri);
 	for (; ri != re; ++ri)
 	{
 		packCharp( ri->name());
-		packUint( ri->start_ordpos());
-		packUint( ri->end_ordpos());
-		packUint( ri->start_origseg());
-		packUint( ri->start_origpos());
-		packUint( ri->end_origseg());
-		packUint( ri->end_origpos());
+		packCharp( ri->value());
+		packUint( ri->ordpos());
+		packUint( ri->ordend());
+		packUint( ri->origpos().seg());
+		packUint( ri->origpos().ofs());
+		packUint( ri->origend().seg());
+		packUint( ri->origend().ofs());
 	}
 }
 
@@ -712,13 +729,12 @@ void RpcSerializer::packDocumentStatisticsType( const StorageClientInterface::Do
 	packByte( val);
 }
 
-void RpcSerializer::packStatisticsViewerDocumentFrequencyChange( const StatisticsViewerInterface::DocumentFrequencyChange& val)
+void RpcSerializer::packTermStatisticsChange( const TermStatisticsChange& val)
 {
 	packCharp( val.type());
 	packCharp( val.value());
 	packInt( val.increment());
 }
-
 
 void RpcSerializer::packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val)
 {
@@ -750,10 +766,210 @@ void RpcSerializer::packFunctionDescription( const FunctionDescription& val)
 	}
 }
 
-void RpcSerializer::packVectorStorageSearchResult( const VectorStorageSearchInterface::Result& val)
+void RpcSerializer::packVectorQueryResult( const VectorQueryResult& val)
 {
 	packIndex( val.featidx());
 	packDouble( val.weight());
+}
+
+void RpcSerializer::packAnalyzerFunctionView( const analyzer::FunctionView& val)
+{
+	packString( val.name());
+	packSize( val.parameter().size());
+	std::vector<analyzer::FunctionView::NamedParameter>::const_iterator si = val.parameter().begin(), se = val.parameter().end();
+	for (; si != se; ++si)
+	{
+		packString( si->first);
+		packString( si->second);
+	}
+}
+
+void RpcSerializer::packAnalyzerFeatureView( const analyzer::FeatureView& val)
+{
+	packString( val.type());
+	packString( val.selectexpr());
+	packAnalyzerFunctionView( val.tokenizer());
+	packSize( val.normalizer().size());
+	std::vector<analyzer::FunctionView>::const_iterator fi = val.normalizer().begin(), fe = val.normalizer().end();
+	for (; fi != fe; ++fi)
+	{
+		packAnalyzerFunctionView( *fi);
+	}
+	packFeatureOptions( val.options());
+	packInt( val.priority());
+}
+
+void RpcSerializer::packAnalyzerAggregatorView( const analyzer::AggregatorView& val)
+{
+	packString( val.type());
+	packAnalyzerFunctionView( val.function());
+}
+
+void RpcSerializer::packAnalyzerSubDocumentDefinitionView( const analyzer::SubDocumentDefinitionView& val)
+{
+	packString( val.subDocumentTypeName());
+	packString( val.selection());
+}
+
+void RpcSerializer::packAnalyzerSubContentDefinitionView( const analyzer::SubContentDefinitionView& val)
+{
+	packDocumentClass( val.documentClass());
+	packString( val.selection());
+}
+
+void RpcSerializer::packAnalyzerDocumentAnalyzerView( const analyzer::DocumentAnalyzerView& val)
+{
+	packAnalyzerFunctionView( val.segmenter());
+	{
+		packSize( val.subcontents().size());
+		std::vector<analyzer::SubContentDefinitionView>::const_iterator si = val.subcontents().begin(), se = val.subcontents().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerSubContentDefinitionView( *si);
+		}
+	}
+	{
+		packSize( val.subdocuments().size());
+		std::vector<analyzer::SubDocumentDefinitionView>::const_iterator si = val.subdocuments().begin(), se = val.subdocuments().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerSubDocumentDefinitionView( *si);
+		}
+	}
+	{
+		packSize( val.attributes().size());
+		std::vector<analyzer::FeatureView>::const_iterator si = val.attributes().begin(), se = val.attributes().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerFeatureView( *si);
+		}
+	}
+	{
+		packSize( val.metadata().size());
+		std::vector<analyzer::FeatureView>::const_iterator si = val.metadata().begin(), se = val.metadata().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerFeatureView( *si);
+		}
+	}
+	{
+		packSize( val.searchindex().size());
+		std::vector<analyzer::FeatureView>::const_iterator si = val.searchindex().begin(), se = val.searchindex().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerFeatureView( *si);
+		}
+	}
+	{
+		packSize( val.forwardindex().size());
+		std::vector<analyzer::FeatureView>::const_iterator si = val.forwardindex().begin(), se = val.forwardindex().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerFeatureView( *si);
+		}
+	}
+	{
+		packSize( val.aggregators().size());
+		std::vector<analyzer::AggregatorView>::const_iterator si = val.aggregators().begin(), se = val.aggregators().end();
+		for (; si != se; ++si)
+		{
+			packAnalyzerAggregatorView( *si);
+		}
+	}
+}
+
+void RpcSerializer::packAnalyzerDocumentAnalyzerMapView( const analyzer::DocumentAnalyzerMapView& val)
+{
+	packSize( val.definitions().size());
+	std::vector<analyzer::DocumentAnalyzerMapElementView>::const_iterator di = val.definitions().begin(), de = val.definitions().end();
+	for (; di != de; ++di)
+	{
+		packString( di->mimeType());
+		packString( di->scheme());
+		packAnalyzerDocumentAnalyzerView( di->analyzer());
+	}
+}
+
+void RpcSerializer::packAnalyzerQueryElementView( const analyzer::QueryElementView& val)
+{
+	packString( val.type());
+	packString( val.field());
+	packAnalyzerFunctionView( val.tokenizer());
+	packSize( val.normalizer().size());
+	std::vector<analyzer::FunctionView>::const_iterator fi = val.normalizer().begin(), fe = val.normalizer().end();
+	for (; fi != fe; ++fi)
+	{
+		packAnalyzerFunctionView( *fi);
+	}
+	packInt( val.priority());
+}
+
+void RpcSerializer::packAnalyzerQueryAnalyzerView( const analyzer::QueryAnalyzerView& val)
+{
+	{
+		packSize( val.elements().size());
+		std::vector<analyzer::QueryElementView>::const_iterator ei = val.elements().begin(), ee = val.elements().end();
+		for (; ei != ee; ++ei)
+		{
+			packAnalyzerQueryElementView( *ei);
+		}
+	}
+	{
+		packSize( val.patternLexems().size());
+		std::vector<analyzer::QueryElementView>::const_iterator ei = val.patternLexems().begin(), ee = val.patternLexems().end();
+		for (; ei != ee; ++ei)
+		{
+			packAnalyzerQueryElementView( *ei);
+		}
+	}
+}
+
+void RpcSerializer::packAnalyzerContentStatisticsItem( const analyzer::ContentStatisticsItem& val)
+{
+	packString( val.select());
+	packString( val.type());
+	packString( val.example());
+	packInt( val.df());
+	packInt( val.tf());
+}
+
+void RpcSerializer::packAnalyzerContentStatisticsResult( const analyzer::ContentStatisticsResult& val)
+{
+	packInt( val.nofDocuments());
+	packSize( val.items().size());
+	std::vector<analyzer::ContentStatisticsItem>::const_iterator ii = val.items().begin(), ie = val.items().end();
+	for (; ii != ie; ++ii)
+	{
+		packAnalyzerContentStatisticsItem( *ii);
+	}
+}
+
+void RpcSerializer::packAnalyzerContentStatisticsView( const analyzer::ContentStatisticsView& val)
+{
+	packSize( val.elements().size());
+	std::vector<analyzer::ContentStatisticsElementView>::const_iterator ei = val.elements().begin(), ee = val.elements().end();
+	for (; ei != ee; ++ei)
+	{
+		packString( ei->type());
+		packString( ei->regex());
+		packInt( ei->priority());
+		packInt( ei->minLen());
+		packInt( ei->maxLen());
+		packAnalyzerFunctionView( ei->tokenizer());
+		packSize( ei->normalizer().size());
+		std::vector<analyzer::FunctionView>::const_iterator
+			fi = ei->normalizer().begin(), fe = ei->normalizer().end();
+		for (; fi != fe; ++fi)
+		{
+			packAnalyzerFunctionView( *fi);
+		}
+	}
+}
+
+void RpcSerializer::packPosTaggerDataElement( const PosTaggerDataInterface::Element& val)
+{
+	packString( val.type());
+	packString( val.value());
 }
 
 void RpcSerializer::packCrc32()
@@ -795,13 +1011,13 @@ std::string RpcDeserializer::unpackString()
 {
 	CHECK_TYPE( String)
 	std::string rt;
-	uint32_t size = unpackScalar<uint32_t>( m_itr, m_end);
-	if (m_itr+size > m_end)
+	uint32_t strsize = unpackScalar<uint32_t>( m_itr, m_end);
+	if (m_itr+strsize > m_end)
 	{
-		throw strus::runtime_error( "%s",  _TXT("message to small to encode next string"));
+		throw std::runtime_error( _TXT("message to small to encode next string"));
 	}
-	rt.append( m_itr, size);
-	m_itr += size;
+	rt.append( m_itr, strsize);
+	m_itr += strsize;
 #ifdef STRUS_LOWLEVEL_DEBUG
 	std::cerr << "unpackString ('" << rt << "')" << std::endl;
 #endif
@@ -815,7 +1031,7 @@ const char* RpcDeserializer::unpackConstCharp()
 	while (m_itr < m_end && *m_itr) ++m_itr;
 	if (m_itr == m_end)
 	{
-		throw strus::runtime_error( "%s",  _TXT("message to small to encode next C string"));
+		throw std::runtime_error( _TXT("message to small to encode next C string"));
 	}
 	++m_itr;
 #ifdef STRUS_LOWLEVEL_DEBUG
@@ -827,10 +1043,10 @@ const char* RpcDeserializer::unpackConstCharp()
 const char** RpcDeserializer::unpackConstCharpp()
 {
 	CHECK_TYPE( Charpp)
-	std::size_t ii=0,size = unpackSize();
+	std::size_t ii=0,strsize = unpackSize();
 	m_charpp_buf.clear();
-	m_charpp_buf.reserve( size+1);
-	for (; ii<size; ++ii)
+	m_charpp_buf.reserve( strsize+1);
+	for (; ii<strsize; ++ii)
 	{
 		m_charpp_buf.push_back( unpackConstCharp());
 	}
@@ -849,25 +1065,25 @@ const char** RpcDeserializer::unpackConstCharpp()
 	return (const char**)m_charpp_buf.data();
 }
 
-void RpcDeserializer::unpackBuffer( const char*& buf, std::size_t& size)
+void RpcDeserializer::unpackBuffer( const char*& buf, std::size_t& strsize)
 {
 	CHECK_TYPE( Buffer)
-	size = unpackScalar<uint32_t>( m_itr, m_end);
+	strsize = unpackScalar<uint32_t>( m_itr, m_end);
 	buf = m_itr;
-	m_itr += size;
+	m_itr += strsize;
 #ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "unpackBuffer('" << std::string(buf,size) << "')" << std::endl;
+	std::cerr << "unpackBuffer('" << std::string(buf,strsize) << "')" << std::endl;
 #endif
 }
 
-void RpcDeserializer::unpackBuffer( const void*& buf, std::size_t& size)
+void RpcDeserializer::unpackBuffer( const void*& buf, std::size_t& strsize)
 {
 	CHECK_TYPE( Buffer)
-	size = unpackScalar<uint32_t>( m_itr, m_end);
+	strsize = unpackScalar<uint32_t>( m_itr, m_end);
 	buf = m_itr;
-	m_itr += size;
+	m_itr += strsize;
 #ifdef STRUS_LOWLEVEL_DEBUG
-	strus_hexdump( stderr, (const char*)buf, size);
+	strus_hexdump( stderr, (const char*)buf, strsize);
 	fprintf( stderr, "\n");
 #endif
 }
@@ -879,8 +1095,8 @@ std::vector<double> RpcDeserializer::unpackBufferFloat()
 	std::ostringstream msg;
 #endif
 	std::vector<double> rt;
-	std::size_t ii=0, size = unpackScalar<uint32_t>( m_itr, m_end);
-	for (ii=0; ii<size; ++ii)
+	std::size_t ii=0, strsize = unpackScalar<uint32_t>( m_itr, m_end);
+	for (ii=0; ii<strsize; ++ii)
 	{
 		rt.push_back( unpackDouble());
 #ifdef STRUS_LOWLEVEL_DEBUG
@@ -921,6 +1137,17 @@ Index RpcDeserializer::unpackIndex()
 	std::cerr << "unpackIndex(" << rt << ")" << std::endl;
 #endif
 	return rt;
+}
+
+IndexRange RpcDeserializer::unpackIndexRange()
+{
+	CHECK_TYPE( IndexRange)
+	Index start = unpackScalar<Index>( m_itr, m_end);
+	Index end = unpackScalar<Index>( m_itr, m_end);
+#ifdef STRUS_LOWLEVEL_DEBUG
+	std::cerr << "unpackIndexRange (" << (int)start << "," << (int)end << ")" << std::endl;
+#endif
+	return IndexRange( start, end);
 }
 
 GlobalCounter RpcDeserializer::unpackGlobalCounter()
@@ -1014,7 +1241,7 @@ NumericVariant RpcDeserializer::unpackNumericVariant()
 		case NumericVariant::UInt: return NumericVariant::asuint( unpackUint64());
 		case NumericVariant::Float: return NumericVariant::asdouble( unpackDouble());
 	}
-	throw strus::runtime_error( "%s",  _TXT("unknown type of numeric variant"));
+	throw std::runtime_error( _TXT("unknown type of numeric variant"));
 }
 
 analyzer::DocumentClass RpcDeserializer::unpackDocumentClass()
@@ -1047,15 +1274,15 @@ MetaDataRestrictionInterface::CompareOperator RpcDeserializer::unpackMetaDataRes
 bool RpcDeserializer::unpackCrc32()
 {
 #if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM	
-	uint32_t size = (m_end - m_start) - 4;
+	uint32_t strsize = (m_end - m_start) - 4;
 #ifdef STRUS_ALTERNATIVE_CHECK_SUM
-	uint32_t crc = calcAlternativeCheckSum( m_start, size);
+	uint32_t crc = calcAlternativeCheckSum( m_start, strsize);
 #else
-	uint32_t crc = utils::Crc32::calc( m_start, size);
+	uint32_t crc = utils::Crc32::calc( m_start, strsize);
 #endif
 	char const* ee = m_end-4;
 #ifdef STRUS_LOWLEVEL_DEBUG
-	std::cerr << "unpackCrc32(" << crc << ") size=" << size << std::endl;
+	std::cerr << "unpackCrc32(" << crc << ") size=" << strsize << std::endl;
 #endif
 #ifdef STRUS_ALTERNATIVE_CHECK_SUM
 	if (checkAlternativeCheckSum( crc, unpackScalar<uint32_t>( ee, m_end)))
@@ -1065,7 +1292,7 @@ bool RpcDeserializer::unpackCrc32()
 	else
 	{
 #ifdef STRUS_LOWLEVEL_DEBUG
-		strus_hexdump( stderr, "CRC32 checksum failed", (const unsigned char*)m_start, (size_t)size);
+		strus_hexdump( stderr, "CRC32 checksum failed", (const unsigned char*)m_start, (size_t)strsize);
 #endif
 		return false;
 	}
@@ -1117,9 +1344,9 @@ DocumentTermIteratorInterface::Term RpcDeserializer::unpackDocumentTermIteratorT
 DatabaseCursorInterface::Slice RpcDeserializer::unpackSlice()
 {
 	const char* buf;
-	std::size_t size;
-	unpackBuffer( buf, size);
-	DatabaseCursorInterface::Slice rt( buf, size);
+	std::size_t strsize;
+	unpackBuffer( buf, strsize);
+	DatabaseCursorInterface::Slice rt( buf, strsize);
 	return rt;
 }
 
@@ -1127,23 +1354,23 @@ analyzer::Document RpcDeserializer::unpackAnalyzerDocument()
 {
 	analyzer::Document rt;
 	rt.setSubDocumentTypeName( unpackString());
-	std::size_t ii=0,size=unpackSize();
-	for (; ii<size; ++ii)
+	std::size_t ii=0,strsize=unpackSize();
+	for (; ii<strsize; ++ii)
 	{
 		analyzer::DocumentAttribute attr = unpackAnalyzerDocumentAttribute();
 		rt.setAttribute( attr.name(), attr.value());
 	}
-	for (ii=0,size=unpackSize(); ii<size; ++ii)
+	for (ii=0,strsize=unpackSize(); ii<strsize; ++ii)
 	{
 		analyzer::DocumentMetaData md = unpackAnalyzerDocumentMetaData();
 		rt.setMetaData( md.name(), md.value());
 	}
-	for (ii=0,size=unpackSize(); ii<size; ++ii)
+	for (ii=0,strsize=unpackSize(); ii<strsize; ++ii)
 	{
 		analyzer::DocumentTerm term = unpackAnalyzerDocumentTerm();
 		rt.addSearchIndexTerm( term.type(), term.value(), term.pos());
 	}
-	for (ii=0,size=unpackSize(); ii<size; ++ii)
+	for (ii=0,strsize=unpackSize(); ii<strsize; ++ii)
 	{
 		analyzer::DocumentTerm term = unpackAnalyzerDocumentTerm();
 		rt.addForwardIndexTerm( term.type(), term.value(), term.pos());
@@ -1162,8 +1389,8 @@ analyzer::QueryTerm RpcDeserializer::unpackAnalyzerQueryTerm()
 analyzer::QueryTermExpression RpcDeserializer::unpackAnalyzerQueryTermExpression()
 {
 	analyzer::QueryTermExpression rt;
-	std::size_t ii=0,size=unpackSize();
-	for (; ii<size; ++ii)
+	std::size_t ii=0,strsize=unpackSize();
+	for (; ii<strsize; ++ii)
 	{
 		analyzer::QueryTermExpression::Instruction::OpCode
 			opCode = (analyzer::QueryTermExpression::Instruction::OpCode)unpackByte();
@@ -1206,13 +1433,20 @@ analyzer::DocumentTerm RpcDeserializer::unpackAnalyzerDocumentTerm()
 	return analyzer::DocumentTerm( type, value, pos);
 }
 
+
+analyzer::Position RpcDeserializer::unpackAnalyzerPosition()
+{
+	int seg = unpackUint();
+	int ofs = unpackUint();
+	return analyzer::Position( seg, ofs);
+}
+
 analyzer::Token RpcDeserializer::unpackAnalyzerToken()
 {
-	unsigned int ordpos = unpackUint();
-	unsigned int origseg = unpackUint();
-	unsigned int origpos = unpackUint();
-	unsigned int origsize = unpackUint();
-	return analyzer::Token( ordpos, origseg, origpos, origsize);
+	int ordpos = unpackUint();
+	int origsize = unpackUint();
+	analyzer::Position origpos( unpackAnalyzerPosition());
+	return analyzer::Token( ordpos, origpos, origsize);
 }
 
 QueryAnalyzerContextInterface::GroupBy RpcDeserializer::unpackAnalyzerGroupBy()
@@ -1227,14 +1461,14 @@ analyzer::PatternLexem RpcDeserializer::unpackAnalyzerPatternLexem()
 	unsigned int origseg = unpackUint();
 	unsigned int origpos = unpackUint();
 	unsigned int origsize = unpackUint();
-	return analyzer::PatternLexem( id, ordpos, origseg, origpos, origsize);
+	return analyzer::PatternLexem( id, ordpos, analyzer::Position(origseg, origpos), origsize);
 }
 
 analyzer::TokenMarkup RpcDeserializer::unpackAnalyzerTokenMarkup()
 {
 	analyzer::TokenMarkup rt( unpackString());
-	std::size_t ii = 0, size = unpackSize();
-	for (; ii < size; ++ii)
+	std::size_t ii = 0, strsize = unpackSize();
+	for (; ii < strsize; ++ii)
 	{
 		rt( unpackString(), unpackString());
 	}
@@ -1244,6 +1478,7 @@ analyzer::TokenMarkup RpcDeserializer::unpackAnalyzerTokenMarkup()
 analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResult()
 {
 	const char* name( unpackConstCharp());
+	const char* value( unpackConstCharp());
 	unsigned int start_ordpos = unpackUint();
 	unsigned int end_ordpos = unpackUint();
 	unsigned int start_origseg = unpackUint();
@@ -1252,10 +1487,11 @@ analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResu
 	unsigned int end_origpos = unpackUint();
 
 	std::vector<analyzer::PatternMatcherResult::Item> itemlist;
-	std::size_t ii = 0, size = unpackSize();
-	for (; ii < size; ++ii)
+	std::size_t ii = 0, strsize = unpackSize();
+	for (; ii < strsize; ++ii)
 	{
 		const char* i_name( unpackConstCharp());
+		const char* i_value( unpackConstCharp());
 		unsigned int i_start_ordpos = unpackUint();
 		unsigned int i_end_ordpos = unpackUint();
 		unsigned int i_start_origseg = unpackUint();
@@ -1264,20 +1500,20 @@ analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResu
 		unsigned int i_end_origpos = unpackUint();
 
 		analyzer::PatternMatcherResult::Item
-			item( i_name, i_start_ordpos, i_end_ordpos,
-			i_start_origseg, i_start_origpos,
-			i_end_origseg, i_end_origpos);
+			item( i_name, i_value, i_start_ordpos, i_end_ordpos,
+			analyzer::Position(i_start_origseg, i_start_origpos),
+			analyzer::Position(i_end_origseg, i_end_origpos));
 		itemlist.push_back( item);
 	}
-	analyzer::PatternMatcherResult rt( name, start_ordpos, end_ordpos, start_origseg, start_origpos, end_origseg, end_origpos, itemlist);
+	analyzer::PatternMatcherResult rt( name, value, start_ordpos, end_ordpos, analyzer::Position(start_origseg, start_origpos), analyzer::Position(end_origseg, end_origpos), itemlist);
 	return rt;
 }
 
 analyzer::PatternMatcherStatistics RpcDeserializer::unpackAnalyzerPatternMatcherStatistics()
 {
 	analyzer::PatternMatcherStatistics rt;
-	std::size_t ii = 0, size = unpackSize();
-	for (; ii < size; ++ii)
+	std::size_t ii = 0, strsize = unpackSize();
+	for (; ii < strsize; ++ii)
 	{
 		rt.define( unpackConstCharp(), unpackDouble());
 	}
@@ -1287,8 +1523,8 @@ analyzer::PatternMatcherStatistics RpcDeserializer::unpackAnalyzerPatternMatcher
 analyzer::SegmenterOptions RpcDeserializer::unpackSegmenterOptions()
 {
 	analyzer::SegmenterOptions rt;
-	std::size_t ii = 0, size = unpackSize();
-	for (; ii < size; ++ii)
+	std::size_t ii = 0, strsize = unpackSize();
+	for (; ii < strsize; ++ii)
 	{
 		rt( unpackString(), unpackString());
 	}
@@ -1306,8 +1542,8 @@ ResultDocument RpcDeserializer::unpackResultDocument()
 {
 	WeightedDocument weightedDocument( unpackWeightedDocument());
 	std::vector<SummaryElement> summaryElements;
-	std::size_t ii=0,size=unpackSize();
-	for (; ii<size; ++ii)
+	std::size_t ii=0,strsize=unpackSize();
+	for (; ii<strsize; ++ii)
 	{
 		summaryElements.push_back( unpackSummaryElement());
 	}
@@ -1319,9 +1555,9 @@ QueryResult RpcDeserializer::unpackQueryResult()
 	unsigned int pass = unpackByte();
 	unsigned int nofRanked = unpackIndex();
 	unsigned int nofVisited = unpackIndex();
-	std::size_t ii=0,size=unpackSize();
+	std::size_t ii=0,strsize=unpackSize();
 	std::vector<ResultDocument> ranks;
-	for (; ii<size; ++ii)
+	for (; ii<strsize; ++ii)
 	{
 		ranks.push_back( unpackResultDocument());
 	}
@@ -1340,13 +1576,12 @@ StorageClientInterface::DocumentStatisticsType RpcDeserializer::unpackDocumentSt
 	return (StorageClientInterface::DocumentStatisticsType)unpackByte();
 }
 
-StatisticsViewerInterface::DocumentFrequencyChange RpcDeserializer::unpackStatisticsViewerDocumentFrequencyChange()
+TermStatisticsChange RpcDeserializer::unpackTermStatisticsChange()
 {
-	typedef StatisticsViewerInterface::DocumentFrequencyChange DocumentFrequencyChange;
 	const char* type = unpackConstCharp();
 	const char* value = unpackConstCharp();
 	int increment = unpackInt();
-	return DocumentFrequencyChange( type, value, increment);
+	return TermStatisticsChange( type, value, increment);
 }
 
 QueryProcessorInterface::FunctionType RpcDeserializer::unpackQueryProcessorFunctionType()
@@ -1381,11 +1616,221 @@ FunctionDescription RpcDeserializer::unpackFunctionDescription()
 	return rt;
 }
 
-VectorStorageSearchInterface::Result RpcDeserializer::unpackVectorStorageSearchResult()
+VectorQueryResult RpcDeserializer::unpackVectorQueryResult()
 {
 	Index featidx = unpackIndex();
 	double weight = unpackDouble();
-	return VectorStorageSearchInterface::Result( featidx, weight);
+	return VectorQueryResult( featidx, weight);
+}
+
+analyzer::FunctionView RpcDeserializer::unpackAnalyzerFunctionView()
+{
+	std::string name( unpackString());
+	std::vector<analyzer::FunctionView::NamedParameter> parameter;
+
+	unsigned int ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		std::string pname = unpackString();
+		std::string pval = unpackString();
+		parameter.push_back( analyzer::FunctionView::NamedParameter( pname, pval));
+	}
+	return analyzer::FunctionView( name, parameter);
+}
+
+analyzer::FeatureView RpcDeserializer::unpackAnalyzerFeatureView()
+{
+	std::string type = unpackString();
+	std::string selectexpr = unpackString();
+	analyzer::FunctionView tokenizer = unpackAnalyzerFunctionView();
+	std::vector<analyzer::FunctionView> normalizer;
+	unsigned int ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		normalizer.push_back( unpackAnalyzerFunctionView());
+	}
+	analyzer::FeatureOptions options = unpackFeatureOptions();
+	int priority = unpackInt();
+	return analyzer::FeatureView( type, selectexpr, tokenizer, normalizer, options, priority);
+}
+
+analyzer::AggregatorView RpcDeserializer::unpackAnalyzerAggregatorView()
+{
+	std::string type = unpackString();
+	analyzer::FunctionView func = unpackAnalyzerFunctionView();
+	return analyzer::AggregatorView( type, func);
+}
+
+analyzer::SubDocumentDefinitionView RpcDeserializer::unpackAnalyzerSubDocumentDefinitionView()
+{
+	std::string name = unpackString();
+	std::string select = unpackString();
+	return analyzer::SubDocumentDefinitionView( name, select);
+}
+
+analyzer::SubContentDefinitionView RpcDeserializer::unpackAnalyzerSubContentDefinitionView()
+{
+	analyzer::DocumentClass dclass = unpackDocumentClass();
+	std::string select = unpackString();
+	return analyzer::SubContentDefinitionView( select, dclass);
+}
+
+analyzer::DocumentAnalyzerView RpcDeserializer::unpackAnalyzerDocumentAnalyzerView()
+{
+	analyzer::FunctionView segmenter( unpackAnalyzerFunctionView());
+	std::vector<analyzer::SubContentDefinitionView> subContentDefinitionView;
+	std::vector<analyzer::SubDocumentDefinitionView> subDocumentDefinitionView;
+	std::vector<analyzer::FeatureView> attributes;
+	std::vector<analyzer::FeatureView> metadata;
+	std::vector<analyzer::FeatureView> searchindex;
+	std::vector<analyzer::FeatureView> forwardindex;
+	std::vector<analyzer::AggregatorView> aggregators;
+	{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			subContentDefinitionView.push_back( unpackAnalyzerSubContentDefinitionView());
+		}
+	}{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			subDocumentDefinitionView.push_back( unpackAnalyzerSubDocumentDefinitionView());
+		}
+	}{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			attributes.push_back( unpackAnalyzerFeatureView());
+		}
+	}{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			metadata.push_back( unpackAnalyzerFeatureView());
+		}
+	}{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			searchindex.push_back( unpackAnalyzerFeatureView());
+		}
+	}{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			forwardindex.push_back( unpackAnalyzerFeatureView());
+		}
+	}{
+		unsigned int ii=0, nn=unpackSize();
+		for (; ii<nn; ++ii)
+		{
+			aggregators.push_back( unpackAnalyzerAggregatorView());
+		}
+	}
+	return analyzer::DocumentAnalyzerView(
+				segmenter, subContentDefinitionView, subDocumentDefinitionView,
+				attributes, metadata, searchindex, forwardindex, aggregators);
+}
+
+analyzer::DocumentAnalyzerMapView RpcDeserializer::unpackAnalyzerDocumentAnalyzerMapView()
+{
+	std::vector<analyzer::DocumentAnalyzerMapElementView> definitions;
+	unsigned int di=0, de=unpackSize();
+	for (; di != de; ++di)
+	{
+		std::string mimeType = unpackString();
+		std::string scheme = unpackString();
+		analyzer::DocumentAnalyzerView analyzer = unpackAnalyzerDocumentAnalyzerView();
+		definitions.push_back( analyzer::DocumentAnalyzerMapElementView( mimeType, scheme, analyzer));
+	}
+	return analyzer::DocumentAnalyzerMapView( definitions);
+}
+
+analyzer::QueryElementView RpcDeserializer::unpackAnalyzerQueryElementView()
+{
+	std::string type = unpackString();
+	std::string field = unpackString();
+	analyzer::FunctionView tokenizer = unpackAnalyzerFunctionView();
+	std::vector<analyzer::FunctionView> normalizer;
+	unsigned int ii=0, nn=unpackSize();
+	int priority = unpackInt();
+	for (; ii<nn; ++ii)
+	{
+		normalizer.push_back( unpackAnalyzerFunctionView());
+	}
+	return analyzer::QueryElementView( type, field, tokenizer, normalizer, priority);
+}
+
+analyzer::QueryAnalyzerView RpcDeserializer::unpackAnalyzerQueryAnalyzerView()
+{
+	std::vector<analyzer::QueryElementView> elements;
+	unsigned int ei=0, ee=unpackSize();
+	for (; ei != ee; ++ei)
+	{
+		elements.push_back( unpackAnalyzerQueryElementView());
+	}
+	std::vector<analyzer::QueryElementView> patternLexems;
+	unsigned int li=0, le=unpackSize();
+	for (; li != le; ++li)
+	{
+		patternLexems.push_back( unpackAnalyzerQueryElementView());
+	}
+	return analyzer::QueryAnalyzerView( elements, patternLexems);
+}
+
+
+analyzer::ContentStatisticsItem RpcDeserializer::unpackAnalyzerContentStatisticsItem()
+{
+	std::string select = unpackString();
+	std::string type = unpackString();
+	std::string example = unpackString();
+	int df = unpackInt();
+	int tf = unpackInt();
+	return analyzer::ContentStatisticsItem( select, type, example, df, tf);
+}
+
+analyzer::ContentStatisticsResult RpcDeserializer::unpackAnalyzerContentStatisticsResult()
+{
+	int nofDocuments = unpackInt();
+	std::vector<analyzer::ContentStatisticsItem> items;
+	int ii=0, ie = unpackSize();
+	for (; ii != ie; ++ii)
+	{
+		items.push_back( unpackAnalyzerContentStatisticsItem());
+	}
+	return analyzer::ContentStatisticsResult( nofDocuments, items);
+}
+
+analyzer::ContentStatisticsView RpcDeserializer::unpackAnalyzerContentStatisticsView()
+{
+	std::vector<analyzer::ContentStatisticsElementView> elements;
+	unsigned int ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		std::string type = unpackString();
+		std::string regex = unpackString();
+		int priority = unpackInt();
+		int minlen = unpackInt();
+		int maxlen = unpackInt();
+		analyzer::FunctionView tokenizer( unpackAnalyzerFunctionView());
+		std::vector<analyzer::FunctionView> normalizers;
+		unsigned int ni=0, ne=unpackSize();
+		for (; ni != ne; ++ni)
+		{
+			analyzer::FunctionView normalizer = unpackAnalyzerFunctionView();
+			normalizers.push_back( normalizer);
+		}
+		elements.push_back( analyzer::ContentStatisticsElementView( type, regex, priority, minlen, maxlen, tokenizer, normalizers));
+	}
+	return analyzer::ContentStatisticsView( elements);
+}
+
+PosTaggerDataInterface::Element RpcDeserializer::unpackPosTaggerDataElement()
+{
+	std::string type = unpackString();
+	std::string value = unpackString();
+	return PosTaggerDataInterface::Element( type, value);
 }
 
 

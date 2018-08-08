@@ -5,7 +5,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-#include "private/utils.hpp"
 #include "private/internationalization.hpp"
 #include "rpcClientContext.hpp"
 #include "rpcProtocolDefines.hpp"
@@ -40,7 +39,7 @@ void RpcClientContext::handleError( const std::string& msgstr) const
 {
 	if (msgstr.empty())
 	{
-		throw strus::runtime_error( "%s", _TXT("got no answer from server"));
+		throw std::runtime_error( _TXT("got no answer from server"));
 	}
 	RpcDeserializer msg( msgstr.c_str(), msgstr.size());
 	RpcReturnType returntype = (RpcReturnType)msg.unpackByte();
@@ -81,7 +80,7 @@ void RpcClientContext::rpc_synchronize() const
 	handleError( answer);
 	if (answer.size() > EMPTY_ANSWER_SIZE)
 	{
-		throw strus::runtime_error( "%s", _TXT("got unexpected (non empty) answer from server calling rpc_synchronize"));
+		throw std::runtime_error( _TXT("got unexpected (non empty) answer from server calling rpc_synchronize"));
 	}
 }
 

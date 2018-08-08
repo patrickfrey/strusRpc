@@ -9,6 +9,7 @@
 /// \file rpcClientInterface.hpp
 #ifndef _STRUS_RPC_CLIENT_INTERFACE_HPP_INCLUDED
 #define _STRUS_RPC_CLIENT_INTERFACE_HPP_INCLUDED
+#include <string>
 
 /// \brief strus toplevel namespace
 namespace strus
@@ -37,6 +38,9 @@ public:
 
 	/// \brief Explicit close of the connection
 	virtual void close()=0;
+
+	/// \brief Get configuration string
+	virtual std::string config() const=0;
 };
 
 }//namespace

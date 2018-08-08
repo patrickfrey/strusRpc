@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
-# Patch for libuv to compile (not C99 because of non POSIX extensions and no-strict-aliasing)
-set( CMAKE_C_FLAGS "-Wall -pedantic -Wfatal-errors -fPIC -fno-strict-aliasing -O${STRUS_OPTIMIZATION_LEVEL}" )
+string(REGEX REPLACE "-std=c[89]9" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+MESSAGE( STATUS "C compilation flags for libuv (remove C99): '${CMAKE_C_FLAGS}'" )
+# ... patch for libuv to compile (not C99 because of non POSIX extensions and no-strict-aliasing)
 
 #
 # This CMakeLists.txt file is a patched clone from the project https://github.com/aseprite/libuv-cmake
