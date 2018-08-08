@@ -27,7 +27,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">strusRpc
-   &#160;<span id="projectnumber">0.15</span>
+   &#160;<span id="projectnumber">0.16</span>
    </div>
   </td>
  </tr>
@@ -47,7 +47,6 @@
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 <div id="nav-path" class="navpath">
@@ -69,39 +68,43 @@
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#ifndef _STRUS_RPC_CLIENT_INTERFACE_HPP_INCLUDED</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _STRUS_RPC_CLIENT_INTERFACE_HPP_INCLUDED</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>strus</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">class </span>AnalyzerObjectBuilderInterface;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">class </span>StorageObjectBuilderInterface;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">namespace </span>strus</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">class </span>AnalyzerObjectBuilderInterface;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">class </span>StorageObjectBuilderInterface;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classstrus_1_1RpcClientInterface.html">   24</a></span>&#160;<span class="keyword">class </span><a class="code" href="classstrus_1_1RpcClientInterface.html">RpcClientInterface</a></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classstrus_1_1RpcClientInterface.html#ad00c39ec9e19bd3c25abf5b47f655899">   28</a></span>&#160;        <span class="keyword">virtual</span> <a class="code" href="classstrus_1_1RpcClientInterface.html#ad00c39ec9e19bd3c25abf5b47f655899">~RpcClientInterface</a>(){}</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keyword">virtual</span> StorageObjectBuilderInterface* <a class="code" href="classstrus_1_1RpcClientInterface.html#af512b463e2510d6abf3f946ffc2a499c">createStorageObjectBuilder</a>() <span class="keyword">const</span>=0;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keyword">virtual</span> AnalyzerObjectBuilderInterface* <a class="code" href="classstrus_1_1RpcClientInterface.html#a841e19e2aa424df8e8bc3b7087c999c8">createAnalyzerObjectBuilder</a>() <span class="keyword">const</span>=0;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classstrus_1_1RpcClientInterface.html#a60ad30f4cbc39876b928fd07c8a22552">close</a>()=0;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;};</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classstrus_1_1RpcClientInterface.html">   25</a></span>&#160;<span class="keyword">class </span><a class="code" href="classstrus_1_1RpcClientInterface.html">RpcClientInterface</a></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;{</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classstrus_1_1RpcClientInterface.html#ad00c39ec9e19bd3c25abf5b47f655899">   29</a></span>&#160;        <span class="keyword">virtual</span> <a class="code" href="classstrus_1_1RpcClientInterface.html#ad00c39ec9e19bd3c25abf5b47f655899">~RpcClientInterface</a>(){}</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keyword">virtual</span> StorageObjectBuilderInterface* <a class="code" href="classstrus_1_1RpcClientInterface.html#af512b463e2510d6abf3f946ffc2a499c">createStorageObjectBuilder</a>() <span class="keyword">const</span>=0;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keyword">virtual</span> AnalyzerObjectBuilderInterface* <a class="code" href="classstrus_1_1RpcClientInterface.html#a841e19e2aa424df8e8bc3b7087c999c8">createAnalyzerObjectBuilder</a>() <span class="keyword">const</span>=0;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classstrus_1_1RpcClientInterface.html#a60ad30f4cbc39876b928fd07c8a22552">close</a>()=0;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}<span class="comment">//namespace</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor"></span></div>
-<div class="ttc" id="classstrus_1_1RpcClientInterface_html"><div class="ttname"><a href="classstrus_1_1RpcClientInterface.html">strus::RpcClientInterface</a></div><div class="ttdoc">Interface providing a mechanism to create and address objects residing on server side. </div><div class="ttdef"><b>Definition:</b> rpcClientInterface.hpp:24</div></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keyword">virtual</span> std::string <a class="code" href="classstrus_1_1RpcClientInterface.html#afd69fa9f22549bf302ee5fd5d67e818c">config</a>() <span class="keyword">const</span>=0;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;};</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}<span class="comment">//namespace</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor"></span></div>
+<div class="ttc" id="classstrus_1_1RpcClientInterface_html"><div class="ttname"><a href="classstrus_1_1RpcClientInterface.html">strus::RpcClientInterface</a></div><div class="ttdoc">Interface providing a mechanism to create and address objects residing on server side. </div><div class="ttdef"><b>Definition:</b> rpcClientInterface.hpp:25</div></div>
 <div class="ttc" id="classstrus_1_1RpcClientInterface_html_a60ad30f4cbc39876b928fd07c8a22552"><div class="ttname"><a href="classstrus_1_1RpcClientInterface.html#a60ad30f4cbc39876b928fd07c8a22552">strus::RpcClientInterface::close</a></div><div class="ttdeci">virtual void close()=0</div><div class="ttdoc">Explicit close of the connection. </div></div>
+<div class="ttc" id="classstrus_1_1RpcClientInterface_html_afd69fa9f22549bf302ee5fd5d67e818c"><div class="ttname"><a href="classstrus_1_1RpcClientInterface.html#afd69fa9f22549bf302ee5fd5d67e818c">strus::RpcClientInterface::config</a></div><div class="ttdeci">virtual std::string config() const =0</div><div class="ttdoc">Get configuration string. </div></div>
 <div class="ttc" id="classstrus_1_1RpcClientInterface_html_af512b463e2510d6abf3f946ffc2a499c"><div class="ttname"><a href="classstrus_1_1RpcClientInterface.html#af512b463e2510d6abf3f946ffc2a499c">strus::RpcClientInterface::createStorageObjectBuilder</a></div><div class="ttdeci">virtual StorageObjectBuilderInterface * createStorageObjectBuilder() const =0</div><div class="ttdoc">Creates an object builder for using the strus storage and query evaluation to be accessed via RPC cal...</div></div>
 <div class="ttc" id="classstrus_1_1RpcClientInterface_html_a841e19e2aa424df8e8bc3b7087c999c8"><div class="ttname"><a href="classstrus_1_1RpcClientInterface.html#a841e19e2aa424df8e8bc3b7087c999c8">strus::RpcClientInterface::createAnalyzerObjectBuilder</a></div><div class="ttdeci">virtual AnalyzerObjectBuilderInterface * createAnalyzerObjectBuilder() const =0</div><div class="ttdoc">Creates an object builder for using the strus analyzer to be accessed via RPC calls. </div></div>
-<div class="ttc" id="classstrus_1_1RpcClientInterface_html_ad00c39ec9e19bd3c25abf5b47f655899"><div class="ttname"><a href="classstrus_1_1RpcClientInterface.html#ad00c39ec9e19bd3c25abf5b47f655899">strus::RpcClientInterface::~RpcClientInterface</a></div><div class="ttdeci">virtual ~RpcClientInterface()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> rpcClientInterface.hpp:28</div></div>
+<div class="ttc" id="classstrus_1_1RpcClientInterface_html_ad00c39ec9e19bd3c25abf5b47f655899"><div class="ttname"><a href="classstrus_1_1RpcClientInterface.html#ad00c39ec9e19bd3c25abf5b47f655899">strus::RpcClientInterface::~RpcClientInterface</a></div><div class="ttdeci">virtual ~RpcClientInterface()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> rpcClientInterface.hpp:29</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.6-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 26 2017 22:57:02 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Aug 8 2018 19:04:17 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

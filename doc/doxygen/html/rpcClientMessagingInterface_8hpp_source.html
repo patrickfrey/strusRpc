@@ -27,7 +27,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">strusRpc
-   &#160;<span id="projectnumber">0.15</span>
+   &#160;<span id="projectnumber">0.16</span>
    </div>
   </td>
  </tr>
@@ -47,7 +47,6 @@
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 <div id="nav-path" class="navpath">
@@ -86,22 +85,25 @@
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keyword">virtual</span> std::string <a class="code" href="classstrus_1_1RpcClientMessagingInterface.html#a8ccf9bd5574d33584ea8687098d69149">synchronize</a>()=0;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classstrus_1_1RpcClientMessagingInterface.html#a9c55e21d1ad885a572429399619694ac">close</a>()=0;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;};</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}<span class="comment">//namespace</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keyword">virtual</span> std::string <a class="code" href="classstrus_1_1RpcClientMessagingInterface.html#af1c646defe4101120e92e724d12bfc9c">config</a>() <span class="keyword">const</span>=0;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}<span class="comment">//namespace</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor"></span></div>
 <div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html_a9835a577160450af6140a3a6210dfe5e"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html#a9835a577160450af6140a3a6210dfe5e">strus::RpcClientMessagingInterface::sendMessage</a></div><div class="ttdeci">virtual void sendMessage(const std::string &amp;content)=0</div><div class="ttdoc">Send a message and do not wait for reply. </div></div>
 <div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html">strus::RpcClientMessagingInterface</a></div><div class="ttdoc">Interface providing a mechanism for the client to send and receive messages. </div><div class="ttdef"><b>Definition:</b> rpcClientMessagingInterface.hpp:19</div></div>
 <div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html_a9c55e21d1ad885a572429399619694ac"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html#a9c55e21d1ad885a572429399619694ac">strus::RpcClientMessagingInterface::close</a></div><div class="ttdeci">virtual void close()=0</div><div class="ttdoc">Explicit close of the connection. </div></div>
 <div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html_a46a656d724221babafd7784ccbd17890"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html#a46a656d724221babafd7784ccbd17890">strus::RpcClientMessagingInterface::~RpcClientMessagingInterface</a></div><div class="ttdeci">virtual ~RpcClientMessagingInterface()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> rpcClientMessagingInterface.hpp:23</div></div>
 <div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html_a8ccf9bd5574d33584ea8687098d69149"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html#a8ccf9bd5574d33584ea8687098d69149">strus::RpcClientMessagingInterface::synchronize</a></div><div class="ttdeci">virtual std::string synchronize()=0</div><div class="ttdoc">Get result of previous sendMessage(const std::string&amp;) calls. </div></div>
+<div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html_af1c646defe4101120e92e724d12bfc9c"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html#af1c646defe4101120e92e724d12bfc9c">strus::RpcClientMessagingInterface::config</a></div><div class="ttdeci">virtual std::string config() const =0</div><div class="ttdoc">Get configuration string. </div></div>
 <div class="ttc" id="classstrus_1_1RpcClientMessagingInterface_html_a88fc838bd8e95d131a687f2b1c262aaa"><div class="ttname"><a href="classstrus_1_1RpcClientMessagingInterface.html#a88fc838bd8e95d131a687f2b1c262aaa">strus::RpcClientMessagingInterface::sendRequest</a></div><div class="ttdeci">virtual std::string sendRequest(const std::string &amp;content)=0</div><div class="ttdoc">Send a message (request) and wait for reply. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.6-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 26 2017 22:57:02 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Aug 8 2018 19:04:17 for strusRpc by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
