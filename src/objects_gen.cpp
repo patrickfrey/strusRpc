@@ -6086,7 +6086,7 @@ try
 }
 }
 
-ContentIteratorInterface* SegmenterImpl::createContentIterator( const char* p1, std::size_t p2, const analyzer::DocumentClass& p3, const analyzer::SegmenterOptions& p4) const
+ContentIteratorInterface* SegmenterImpl::createContentIterator( const char* p1, std::size_t p2, const std::vector<std::string>& p3, const analyzer::DocumentClass& p4, const analyzer::SegmenterOptions& p5) const
 {
 try
 {
@@ -6094,8 +6094,12 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createContentIterator);
 	msg.packBuffer( p1, p2);
-	msg.packDocumentClass( p3);
-	msg.packSegmenterOptions( p4);
+	msg.packSize( p3.size());
+	for (unsigned int ii=0; ii < p3.size(); ++ii) {
+		msg.packString( p3[ii]);
+	}
+	msg.packDocumentClass( p4);
+	msg.packSegmenterOptions( p5);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_ContentIterator;
 	msg.packObject( classId_0, objId_0);

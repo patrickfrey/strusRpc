@@ -5522,14 +5522,20 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			ContentIteratorInterface* p0;
 			const char* p1;
 			std::size_t p2;
-			analyzer::DocumentClass p3;
-			analyzer::SegmenterOptions p4;
+			std::vector<std::string> p3;
+			analyzer::DocumentClass p4;
+			analyzer::SegmenterOptions p5;
 			serializedMsg.unpackBuffer( p1, p2);
-			p3 = serializedMsg.unpackDocumentClass();
-			p4 = serializedMsg.unpackSegmenterOptions();
+			std::size_t n3 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n3; ++ii) {
+				std::string ee = serializedMsg.unpackString();
+				p3.push_back( ee);
+			}
+			p4 = serializedMsg.unpackDocumentClass();
+			p5 = serializedMsg.unpackSegmenterOptions();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createContentIterator(p1,p2,p3,p4);
+			p0 = obj->createContentIterator(p1,p2,p3,p4,p5);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

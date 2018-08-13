@@ -991,7 +991,7 @@ public:
 
 	virtual const char* mimeType( ) const;
 	virtual SegmenterInstanceInterface* createInstance( const analyzer::SegmenterOptions& p1) const;
-	virtual ContentIteratorInterface* createContentIterator( const char* p1, std::size_t p2, const analyzer::DocumentClass& p3, const analyzer::SegmenterOptions& p4) const;
+	virtual ContentIteratorInterface* createContentIterator( const char* p1, std::size_t p2, const std::vector<std::string>& p3, const analyzer::DocumentClass& p4, const analyzer::SegmenterOptions& p5) const;
 	virtual const char* getDescription( ) const;
 };
 
