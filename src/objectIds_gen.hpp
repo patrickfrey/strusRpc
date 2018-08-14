@@ -187,6 +187,7 @@ public:
 	{
 		Method_Destructor,
 		Method_addLibraryElement,
+		Method_addCollectedAttribute,
 		Method_createContext,
 		Method_view
 	};

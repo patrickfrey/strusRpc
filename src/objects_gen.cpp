@@ -620,6 +620,25 @@ try
 }
 }
 
+void ContentStatisticsImpl::addCollectedAttribute( const std::string& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addCollectedAttribute);
+	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ContentStatisticsImpl::addCollectedAttribute");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ContentStatisticsImpl::addCollectedAttribute", err.what());
+	return void();
+}
+}
+
 ContentStatisticsContextInterface* ContentStatisticsImpl::createContext( ) const
 {
 try
