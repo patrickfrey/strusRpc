@@ -218,7 +218,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_ContentStatistics, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addLibraryElement( const std::string& p1, const std::string& p2, int p3, int p4, int p5, TokenizerFunctionInstanceInterface* p6, const std::vector<NormalizerFunctionInstanceInterface*>& p7);
-	virtual void addCollectedAttribute( const std::string& p1);
+	virtual void addVisibleAttribute( const std::string& p1);
 	virtual ContentStatisticsContextInterface* createContext( ) const;
 	virtual analyzer::ContentStatisticsView view( ) const;
 };

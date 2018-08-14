@@ -620,21 +620,21 @@ try
 }
 }
 
-void ContentStatisticsImpl::addCollectedAttribute( const std::string& p1)
+void ContentStatisticsImpl::addVisibleAttribute( const std::string& p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_addCollectedAttribute);
+	msg.packByte( Method_addVisibleAttribute);
 	msg.packString( p1);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ContentStatisticsImpl::addCollectedAttribute");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ContentStatisticsImpl::addVisibleAttribute");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ContentStatisticsImpl::addCollectedAttribute", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ContentStatisticsImpl::addVisibleAttribute", err.what());
 	return void();
 }
 }

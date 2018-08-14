@@ -574,12 +574,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case ContentStatisticsConst::Method_addCollectedAttribute:
+		case ContentStatisticsConst::Method_addVisibleAttribute:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			obj->addCollectedAttribute(p1);
+			obj->addVisibleAttribute(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
