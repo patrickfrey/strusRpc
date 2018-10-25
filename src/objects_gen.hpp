@@ -709,7 +709,6 @@ public:
 	PosTaggerDataImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PosTaggerData, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void defineTag( const std::string& p1, const std::string& p2);
 	virtual void insert( int p1, const std::vector<PosTaggerDataInterface::Element>& p2);
 	virtual void markupSegment( TokenMarkupContextInterface* p1, int p2, int& p3, const SegmenterPosition& p4, const char* p5, std::size_t p6) const;
 };

@@ -968,7 +968,8 @@ void RpcSerializer::packAnalyzerContentStatisticsView( const analyzer::ContentSt
 
 void RpcSerializer::packPosTaggerDataElement( const PosTaggerDataInterface::Element& val)
 {
-	packString( val.type());
+	packScalar( m_content, val.type());
+	packString( val.tag());
 	packString( val.value());
 }
 
@@ -1828,9 +1829,10 @@ analyzer::ContentStatisticsView RpcDeserializer::unpackAnalyzerContentStatistics
 
 PosTaggerDataInterface::Element RpcDeserializer::unpackPosTaggerDataElement()
 {
-	std::string type = unpackString();
+	PosTaggerDataInterface::Element::Type type = unpackScalar<PosTaggerDataInterface::Element::Type>( m_itr, m_end);
+	std::string tag = unpackString();
 	std::string value = unpackString();
-	return PosTaggerDataInterface::Element( type, value);
+	return PosTaggerDataInterface::Element( type, tag, value);
 }
 
 
