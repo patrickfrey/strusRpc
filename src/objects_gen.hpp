@@ -709,6 +709,7 @@ public:
 	PosTaggerDataImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PosTaggerData, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual void declareIgnoredToken( const std::string& p1);
 	virtual void insert( int p1, const std::vector<PosTaggerDataInterface::Element>& p2);
 	virtual void markupSegment( TokenMarkupContextInterface* p1, int p2, int& p3, const SegmenterPosition& p4, const char* p5, std::size_t p6) const;
 };
@@ -725,7 +726,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_PosTaggerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addContentExpression( const std::string& p1);
-	virtual void addPosTaggerInputPunctuation( const std::string& p1, const std::string& p2);
+	virtual void addPosTaggerInputPunctuation( const std::string& p1, const std::string& p2, int p3);
 	virtual std::string getPosTaggerInput( const analyzer::DocumentClass& p1, const std::string& p2) const;
 	virtual std::string markupDocument( const PosTaggerDataInterface* p1, int p2, const analyzer::DocumentClass& p3, const std::string& p4) const;
 };

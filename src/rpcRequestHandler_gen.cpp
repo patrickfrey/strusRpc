@@ -3528,6 +3528,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
+		case PosTaggerDataConst::Method_declareIgnoredToken:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->declareIgnoredToken(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case PosTaggerDataConst::Method_insert:
 		{
 			RpcSerializer msg;
@@ -3613,9 +3629,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
+			int p3;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			obj->addPosTaggerInputPunctuation(p1,p2);
+			p3 = serializedMsg.unpackInt();
+			obj->addPosTaggerInputPunctuation(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

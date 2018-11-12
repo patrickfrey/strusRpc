@@ -566,6 +566,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_declareIgnoredToken,
 		Method_insert,
 		Method_markupSegment
 	};
