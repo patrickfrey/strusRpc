@@ -971,6 +971,7 @@ void RpcSerializer::packPosTaggerDataElement( const PosTaggerDataInterface::Elem
 	packScalar( m_content, val.type());
 	packString( val.tag());
 	packString( val.value());
+	packString( val.ref());
 }
 
 void RpcSerializer::packCrc32()
@@ -1832,7 +1833,8 @@ PosTaggerDataInterface::Element RpcDeserializer::unpackPosTaggerDataElement()
 	PosTaggerDataInterface::Element::Type type = unpackScalar<PosTaggerDataInterface::Element::Type>( m_itr, m_end);
 	std::string tag = unpackString();
 	std::string value = unpackString();
-	return PosTaggerDataInterface::Element( type, tag, value);
+	std::string ref = unpackString();
+	return PosTaggerDataInterface::Element( type, tag, value, ref);
 }
 
 
