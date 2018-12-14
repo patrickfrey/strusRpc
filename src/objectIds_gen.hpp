@@ -188,6 +188,7 @@ public:
 		Method_Destructor,
 		Method_addLibraryElement,
 		Method_addVisibleAttribute,
+		Method_addSelectorExpression,
 		Method_createContext,
 		Method_view
 	};

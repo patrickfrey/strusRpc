@@ -590,6 +590,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case ContentStatisticsConst::Method_addSelectorExpression:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->addSelectorExpression(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case ContentStatisticsConst::Method_createContext:
 		{
 			RpcSerializer msg;
@@ -5539,19 +5555,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			const char* p1;
 			std::size_t p2;
 			std::vector<std::string> p3;
-			analyzer::DocumentClass p4;
-			analyzer::SegmenterOptions p5;
+			std::vector<std::string> p4;
+			analyzer::DocumentClass p5;
+			analyzer::SegmenterOptions p6;
 			serializedMsg.unpackBuffer( p1, p2);
 			std::size_t n3 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n3; ++ii) {
 				std::string ee = serializedMsg.unpackString();
 				p3.push_back( ee);
 			}
-			p4 = serializedMsg.unpackDocumentClass();
-			p5 = serializedMsg.unpackSegmenterOptions();
+			std::size_t n4 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n4; ++ii) {
+				std::string ee = serializedMsg.unpackString();
+				p4.push_back( ee);
+			}
+			p5 = serializedMsg.unpackDocumentClass();
+			p6 = serializedMsg.unpackSegmenterOptions();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createContentIterator(p1,p2,p3,p4,p5);
+			p0 = obj->createContentIterator(p1,p2,p3,p4,p5,p6);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

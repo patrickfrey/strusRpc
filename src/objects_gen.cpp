@@ -639,6 +639,25 @@ try
 }
 }
 
+void ContentStatisticsImpl::addSelectorExpression( const std::string& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addSelectorExpression);
+	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ContentStatisticsImpl::addSelectorExpression");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ContentStatisticsImpl::addSelectorExpression", err.what());
+	return void();
+}
+}
+
 ContentStatisticsContextInterface* ContentStatisticsImpl::createContext( ) const
 {
 try
@@ -6105,7 +6124,7 @@ try
 }
 }
 
-ContentIteratorInterface* SegmenterImpl::createContentIterator( const char* p1, std::size_t p2, const std::vector<std::string>& p3, const analyzer::DocumentClass& p4, const analyzer::SegmenterOptions& p5) const
+ContentIteratorInterface* SegmenterImpl::createContentIterator( const char* p1, std::size_t p2, const std::vector<std::string>& p3, const std::vector<std::string>& p4, const analyzer::DocumentClass& p5, const analyzer::SegmenterOptions& p6) const
 {
 try
 {
@@ -6117,8 +6136,12 @@ try
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
 		msg.packString( p3[ii]);
 	}
-	msg.packDocumentClass( p4);
-	msg.packSegmenterOptions( p5);
+	msg.packSize( p4.size());
+	for (unsigned int ii=0; ii < p4.size(); ++ii) {
+		msg.packString( p4[ii]);
+	}
+	msg.packDocumentClass( p5);
+	msg.packSegmenterOptions( p6);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_ContentIterator;
 	msg.packObject( classId_0, objId_0);

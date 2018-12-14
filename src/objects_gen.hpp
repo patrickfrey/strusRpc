@@ -219,6 +219,7 @@ public:
 
 	virtual void addLibraryElement( const std::string& p1, const std::string& p2, int p3, int p4, int p5, TokenizerFunctionInstanceInterface* p6, const std::vector<NormalizerFunctionInstanceInterface*>& p7);
 	virtual void addVisibleAttribute( const std::string& p1);
+	virtual void addSelectorExpression( const std::string& p1);
 	virtual ContentStatisticsContextInterface* createContext( ) const;
 	virtual analyzer::ContentStatisticsView view( ) const;
 };
@@ -992,7 +993,7 @@ public:
 
 	virtual const char* mimeType( ) const;
 	virtual SegmenterInstanceInterface* createInstance( const analyzer::SegmenterOptions& p1) const;
-	virtual ContentIteratorInterface* createContentIterator( const char* p1, std::size_t p2, const std::vector<std::string>& p3, const analyzer::DocumentClass& p4, const analyzer::SegmenterOptions& p5) const;
+	virtual ContentIteratorInterface* createContentIterator( const char* p1, std::size_t p2, const std::vector<std::string>& p3, const std::vector<std::string>& p4, const analyzer::DocumentClass& p5, const analyzer::SegmenterOptions& p6) const;
 	virtual const char* getDescription( ) const;
 };
 
