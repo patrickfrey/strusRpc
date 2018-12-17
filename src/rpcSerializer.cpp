@@ -964,6 +964,18 @@ void RpcSerializer::packAnalyzerContentStatisticsView( const analyzer::ContentSt
 			packAnalyzerFunctionView( *fi);
 		}
 	}
+	packSize( val.attributes().size());
+	std::vector<std::string>::const_iterator ai = val.attributes().begin(), ae = val.attributes().end();
+	for (; ai != ae; ++ai)
+	{
+		packString( *ai);
+	}
+	packSize( val.expressions().size());
+	ai = val.expressions().begin(), ae = val.expressions().end();
+	for (; ai != ae; ++ai)
+	{
+		packString( *ai);
+	}
 }
 
 void RpcSerializer::packPosTaggerDataElement( const PosTaggerDataInterface::Element& val)
@@ -1807,6 +1819,9 @@ analyzer::ContentStatisticsResult RpcDeserializer::unpackAnalyzerContentStatisti
 analyzer::ContentStatisticsView RpcDeserializer::unpackAnalyzerContentStatisticsView()
 {
 	std::vector<analyzer::ContentStatisticsElementView> elements;
+	std::vector<std::string> attributes;
+	std::vector<std::string> expressions;
+
 	unsigned int ii=0, nn=unpackSize();
 	for (; ii<nn; ++ii)
 	{
@@ -1825,7 +1840,17 @@ analyzer::ContentStatisticsView RpcDeserializer::unpackAnalyzerContentStatistics
 		}
 		elements.push_back( analyzer::ContentStatisticsElementView( type, regex, priority, minlen, maxlen, tokenizer, normalizers));
 	}
-	return analyzer::ContentStatisticsView( elements);
+	ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		attributes.push_back( unpackString());
+	}
+	ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		expressions.push_back( unpackString());
+	}
+	return analyzer::ContentStatisticsView( elements, attributes, expressions);
 }
 
 PosTaggerDataInterface::Element RpcDeserializer::unpackPosTaggerDataElement()
