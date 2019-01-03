@@ -1160,15 +1160,13 @@ public:
 		Method_Destructor,
 		Method_createSearcher,
 		Method_createTransaction,
-		Method_conceptClassNames,
-		Method_conceptFeatures,
-		Method_nofConcepts,
-		Method_featureConcepts,
+		Method_getTypes,
+		Method_createFeatureValueIterator,
+		Method_getFeatureTypes,
+		Method_nofVectors,
 		Method_featureVector,
-		Method_featureName,
-		Method_featureIndex,
 		Method_vectorSimilarity,
-		Method_nofFeatures,
+		Method_normalize,
 		Method_config,
 		Method_close
 	};
@@ -1192,8 +1190,7 @@ public:
 		Method_Destructor,
 		Method_createStorage,
 		Method_createClient,
-		Method_createDump,
-		Method_runBuild
+		Method_createDump
 	};
 };
 
@@ -1204,7 +1201,6 @@ public:
 	{
 		Method_Destructor,
 		Method_findSimilar,
-		Method_findSimilarFromSelection,
 		Method_close
 	};
 };
@@ -1215,8 +1211,10 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_addFeature,
-		Method_defineFeatureConceptRelation,
+		Method_defineVector,
+		Method_defineFeature,
+		Method_defineScalar,
+		Method_clear,
 		Method_commit,
 		Method_rollback
 	};

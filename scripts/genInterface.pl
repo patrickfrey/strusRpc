@@ -951,6 +951,10 @@ sub packParameter
 	{
 		$rt .= "msg.packPosTaggerDataElement( " . $id . ");";
 	}
+	elsif ($type eq "WordVector")
+	{
+		$rt .= "msg.packWordVector( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -1313,6 +1317,10 @@ sub unpackParameter
 	elsif ($type eq "PosTaggerDataInterface::Element")
 	{
 		$rt .= "$id = serializedMsg.unpackPosTaggerDataElement();";
+	}
+	elsif ($type eq "WordVector")
+	{
+		$rt .= "$id = serializedMsg.unpackWordVector();";
 	}
 	else
 	{

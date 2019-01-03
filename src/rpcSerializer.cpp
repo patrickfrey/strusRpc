@@ -447,6 +447,16 @@ void RpcSerializer::packNumericVariant( const NumericVariant& val)
 	}
 }
 
+void RpcSerializer::packWordVector( const WordVector& val)
+{
+	packSize( val.size());
+	WordVector::const_iterator vi = val.begin(), ve = val.end();
+	for (; vi != ve; ++vi)
+	{
+		packFloat( *vi);
+	}
+}
+
 void RpcSerializer::packDocumentClass( const analyzer::DocumentClass& dclass)
 {
 	packString( dclass.mimeType());
@@ -768,7 +778,7 @@ void RpcSerializer::packFunctionDescription( const FunctionDescription& val)
 
 void RpcSerializer::packVectorQueryResult( const VectorQueryResult& val)
 {
-	packIndex( val.featidx());
+	packString( val.value());
 	packDouble( val.weight());
 }
 
@@ -1318,6 +1328,20 @@ bool RpcDeserializer::unpackCrc32()
 #endif
 }
 
+WordVector RpcDeserializer::unpackWordVector()
+{
+	std::size_t ii=0, ie=unpackSize();
+	WordVector rt;
+
+	for (; ii != ie; ++ii)
+	{
+		rt.push_back( unpackFloat());
+	}
+	return rt;
+}
+
+WordVector unpackWordVector();
+
 DatabaseOptions RpcDeserializer::unpackDatabaseOptions()
 {
 	return DatabaseOptions( unpackUint());
@@ -1632,9 +1656,9 @@ FunctionDescription RpcDeserializer::unpackFunctionDescription()
 
 VectorQueryResult RpcDeserializer::unpackVectorQueryResult()
 {
-	Index featidx = unpackIndex();
+	std::string value = unpackString();
 	double weight = unpackDouble();
-	return VectorQueryResult( featidx, weight);
+	return VectorQueryResult( value, weight);
 }
 
 analyzer::FunctionView RpcDeserializer::unpackAnalyzerFunctionView()

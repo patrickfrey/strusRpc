@@ -93,6 +93,7 @@ public:
 	void packTermStatistics( const TermStatistics& stats);
 	void packGlobalStatistics( const GlobalStatistics& stats);
 	void packMetaDataRestrictionCompareOperator( MetaDataRestrictionInterface::CompareOperator val);
+	void packWordVector( const WordVector& val);
 
 	void packDatabaseOptions( const DatabaseOptions& val);
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
@@ -190,6 +191,7 @@ public:
 	TermStatistics unpackTermStatistics();
 	GlobalStatistics unpackGlobalStatistics();
 	MetaDataRestrictionInterface::CompareOperator unpackMetaDataRestrictionCompareOperator();
+	WordVector unpackWordVector();
 
 	DatabaseOptions unpackDatabaseOptions();
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();
