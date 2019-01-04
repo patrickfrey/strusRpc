@@ -1459,9 +1459,9 @@ public:
 
 	virtual VectorStorageSearchInterface* createSearcher( const std::string& p1, int p2, int p3, bool p4) const;
 	virtual VectorStorageTransactionInterface* createTransaction( );
-	virtual std::vector<std::string> getTypes( ) const;
+	virtual std::vector<std::string> types( ) const;
 	virtual ValueIteratorInterface* createFeatureValueIterator( ) const;
-	virtual std::vector<std::string> getFeatureTypes( const std::string& p1) const;
+	virtual std::vector<std::string> featureTypes( const std::string& p1) const;
 	virtual int nofVectors( const std::string& p1) const;
 	virtual WordVector featureVector( const std::string& p1, const std::string& p2) const;
 	virtual double vectorSimilarity( const WordVector& p1, const WordVector& p2) const;

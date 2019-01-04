@@ -8900,11 +8900,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case VectorStorageClientConst::Method_getTypes:
+		case VectorStorageClientConst::Method_types:
 		{
 			RpcSerializer msg;
 			std::vector<std::string> p0;
-			p0 = obj->getTypes();
+			p0 = obj->types();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8939,13 +8939,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case VectorStorageClientConst::Method_getFeatureTypes:
+		case VectorStorageClientConst::Method_featureTypes:
 		{
 			RpcSerializer msg;
 			std::vector<std::string> p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			p0 = obj->getFeatureTypes(p1);
+			p0 = obj->featureTypes(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

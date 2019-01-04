@@ -9871,13 +9871,13 @@ try
 }
 }
 
-std::vector<std::string> VectorStorageClientImpl::getTypes( ) const
+std::vector<std::string> VectorStorageClientImpl::types( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_getTypes);
+	msg.packByte( Method_types);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -9890,10 +9890,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::getTypes");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::types");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::getTypes", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::types", err.what());
 	return std::vector<std::string>();
 }
 }
@@ -9921,13 +9921,13 @@ try
 }
 }
 
-std::vector<std::string> VectorStorageClientImpl::getFeatureTypes( const std::string& p1) const
+std::vector<std::string> VectorStorageClientImpl::featureTypes( const std::string& p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_getFeatureTypes);
+	msg.packByte( Method_featureTypes);
 	msg.packString( p1);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
@@ -9941,10 +9941,10 @@ try
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::getFeatureTypes");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::featureTypes");
 	return std::vector<std::string>();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::getFeatureTypes", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::featureTypes", err.what());
 	return std::vector<std::string>();
 }
 }
