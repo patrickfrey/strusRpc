@@ -9821,7 +9821,7 @@ VectorStorageClientImpl::~VectorStorageClientImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-VectorStorageSearchInterface* VectorStorageClientImpl::createSearcher( const std::string& p1, int p2, int p3, bool p4) const
+VectorStorageSearchInterface* VectorStorageClientImpl::createSearcher( const std::string& p1, int p2, int p3) const
 {
 try
 {
@@ -9831,7 +9831,6 @@ try
 	msg.packString( p1);
 	msg.packInt( p2);
 	msg.packInt( p3);
-	msg.packBool( p4);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_VectorStorageSearch;
 	msg.packObject( classId_0, objId_0);
@@ -10221,7 +10220,7 @@ VectorStorageSearchImpl::~VectorStorageSearchImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::vector<VectorQueryResult> VectorStorageSearchImpl::findSimilar( const WordVector& p1, int p2, double p3) const
+std::vector<VectorQueryResult> VectorStorageSearchImpl::findSimilar( const WordVector& p1, int p2, double p3, bool p4) const
 {
 try
 {
@@ -10231,6 +10230,7 @@ try
 	msg.packWordVector( p1);
 	msg.packInt( p2);
 	msg.packDouble( p3);
+	msg.packBool( p4);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());

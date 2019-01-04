@@ -8861,14 +8861,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			int p2;
 			int p3;
-			bool p4;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackInt();
 			p3 = serializedMsg.unpackInt();
-			p4 = serializedMsg.unpackBool();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createSearcher(p1,p2,p3,p4);
+			p0 = obj->createSearcher(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -9214,10 +9212,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			WordVector p1;
 			int p2;
 			double p3;
+			bool p4;
 			p1 = serializedMsg.unpackWordVector();
 			p2 = serializedMsg.unpackInt();
 			p3 = serializedMsg.unpackDouble();
-			p0 = obj->findSimilar(p1,p2,p3);
+			p4 = serializedMsg.unpackBool();
+			p0 = obj->findSimilar(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
