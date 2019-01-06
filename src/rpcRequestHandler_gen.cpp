@@ -811,20 +811,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case DatabaseClientConst::Method_close:
-		{
-			RpcSerializer msg;
-			obj->close();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
 		case DatabaseClientConst::Method_config:
 		{
 			RpcSerializer msg;
@@ -841,6 +827,37 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packString( p0);
 			msg.packCrc32();
 			return msg.content();
+		}
+		case DatabaseClientConst::Method_compactDatabase:
+		{
+			RpcSerializer msg;
+			bool p0;
+			p0 = obj->compactDatabase();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case DatabaseClientConst::Method_close:
+		{
+			RpcSerializer msg;
+			obj->close();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
 		}
 	}
 	break;

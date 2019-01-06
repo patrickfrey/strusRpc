@@ -886,25 +886,6 @@ try
 }
 }
 
-void DatabaseClientImpl::close( )
-{
-try
-{
-	if (objId() == 0) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_close);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DatabaseClientImpl::close");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DatabaseClientImpl::close", err.what());
-	return void();
-}
-}
-
 std::string DatabaseClientImpl::config( ) const
 {
 try
@@ -924,6 +905,47 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DatabaseClientImpl::config", err.what());
 	return std::string();
+}
+}
+
+bool DatabaseClientImpl::compactDatabase( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_compactDatabase);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DatabaseClientImpl::compactDatabase");
+	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DatabaseClientImpl::compactDatabase", err.what());
+	return false;
+}
+}
+
+void DatabaseClientImpl::close( )
+{
+try
+{
+	if (objId() == 0) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_close);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DatabaseClientImpl::close");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DatabaseClientImpl::close", err.what());
+	return void();
 }
 }
 

@@ -216,8 +216,9 @@ public:
 		Method_writeImm,
 		Method_removeImm,
 		Method_readValue,
-		Method_close,
-		Method_config
+		Method_config,
+		Method_compactDatabase,
+		Method_close
 	};
 };
 

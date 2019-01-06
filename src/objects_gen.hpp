@@ -255,8 +255,9 @@ public:
 	virtual void writeImm( const char* p1, std::size_t p2, const char* p3, std::size_t p4);
 	virtual void removeImm( const char* p1, std::size_t p2);
 	virtual bool readValue( const char* p1, std::size_t p2, std::string& p3, const DatabaseOptions& p4) const;
-	virtual void close( );
 	virtual std::string config( ) const;
+	virtual bool compactDatabase( );
+	virtual void close( );
 };
 
 class DatabaseCursorImpl
