@@ -8871,19 +8871,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case VectorStorageClientConst::Method_createSearcher:
+		case VectorStorageClientConst::Method_prepareSearch:
 		{
 			RpcSerializer msg;
-			VectorStorageSearchInterface* p0;
 			std::string p1;
-			int p2;
-			int p3;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackInt();
-			p3 = serializedMsg.unpackInt();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createSearcher(p1,p2,p3);
+			obj->prepareSearch(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8892,9 +8885,37 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
 			return std::string();
+		}
+		case VectorStorageClientConst::Method_findSimilar:
+		{
+			RpcSerializer msg;
+			std::vector<VectorQueryResult> p0;
+			std::string p1;
+			WordVector p2;
+			int p3;
+			double p4;
+			bool p5;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackWordVector();
+			p3 = serializedMsg.unpackInt();
+			p4 = serializedMsg.unpackDouble();
+			p5 = serializedMsg.unpackBool();
+			p0 = obj->findSimilar(p1,p2,p3,p4,p5);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packVectorQueryResult( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
 		}
 		case VectorStorageClientConst::Method_createTransaction:
 		{
@@ -9207,61 +9228,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
-			return std::string();
-		}
-	}
-	break;
-	}
-	case ClassId_VectorStorageSearch:
-	{
-	VectorStorageSearchInterface* obj = getObject<VectorStorageSearchInterface>( classId, objId);
-	switch( (VectorStorageSearchConst::MethodId)methodId)
-	{
-		case VectorStorageSearchConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case VectorStorageSearchConst::Method_findSimilar:
-		{
-			RpcSerializer msg;
-			std::vector<VectorQueryResult> p0;
-			WordVector p1;
-			int p2;
-			double p3;
-			bool p4;
-			p1 = serializedMsg.unpackWordVector();
-			p2 = serializedMsg.unpackInt();
-			p3 = serializedMsg.unpackDouble();
-			p4 = serializedMsg.unpackBool();
-			p0 = obj->findSimilar(p1,p2,p3,p4);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packVectorQueryResult( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorStorageSearchConst::Method_close:
-		{
-			RpcSerializer msg;
-			obj->close();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 	}

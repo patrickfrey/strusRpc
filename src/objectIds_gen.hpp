@@ -89,7 +89,6 @@ enum ClassId
 	ClassId_VectorStorageClient,
 	ClassId_VectorStorageDump,
 	ClassId_VectorStorage,
-	ClassId_VectorStorageSearch,
 	ClassId_VectorStorageTransaction,
 	ClassId_WeightingFunctionContext,
 	ClassId_WeightingFunctionInstance,
@@ -1159,7 +1158,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createSearcher,
+		Method_prepareSearch,
+		Method_findSimilar,
 		Method_createTransaction,
 		Method_types,
 		Method_createFeatureValueIterator,
@@ -1192,17 +1192,6 @@ public:
 		Method_createStorage,
 		Method_createClient,
 		Method_createDump
-	};
-};
-
-class VectorStorageSearchConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_findSimilar,
-		Method_close
 	};
 };
 

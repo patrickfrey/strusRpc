@@ -86,7 +86,6 @@
 #include "strus/vectorStorageClientInterface.hpp"
 #include "strus/vectorStorageDumpInterface.hpp"
 #include "strus/vectorStorageInterface.hpp"
-#include "strus/vectorStorageSearchInterface.hpp"
 #include "strus/vectorStorageTransactionInterface.hpp"
 #include "strus/weightingFunctionContextInterface.hpp"
 #include "strus/weightingFunctionInstanceInterface.hpp"
@@ -1458,7 +1457,8 @@ public:
 	VectorStorageClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageClient, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual VectorStorageSearchInterface* createSearcher( const std::string& p1, int p2, int p3) const;
+	virtual void prepareSearch( const std::string& p1);
+	virtual std::vector<VectorQueryResult> findSimilar( const std::string& p1, const WordVector& p2, int p3, double p4, bool p5) const;
 	virtual VectorStorageTransactionInterface* createTransaction( );
 	virtual std::vector<std::string> types( ) const;
 	virtual ValueIteratorInterface* createFeatureValueIterator( ) const;
@@ -1499,21 +1499,6 @@ public:
 	virtual bool createStorage( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual VectorStorageClientInterface* createClient( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual VectorStorageDumpInterface* createDump( const std::string& p1, const DatabaseInterface* p2) const;
-};
-
-class VectorStorageSearchImpl
-		:public RpcInterfaceStub
-		,public strus::VectorStorageSearchInterface
-		,public strus::VectorStorageSearchConst
-{
-public:
-	virtual ~VectorStorageSearchImpl();
-
-	VectorStorageSearchImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageSearch, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual std::vector<VectorQueryResult> findSimilar( const WordVector& p1, int p2, double p3, bool p4) const;
-	virtual void close( );
 };
 
 class VectorStorageTransactionImpl

@@ -9843,29 +9843,54 @@ VectorStorageClientImpl::~VectorStorageClientImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-VectorStorageSearchInterface* VectorStorageClientImpl::createSearcher( const std::string& p1, int p2, int p3) const
+void VectorStorageClientImpl::prepareSearch( const std::string& p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createSearcher);
+	msg.packByte( Method_prepareSearch);
 	msg.packString( p1);
-	msg.packInt( p2);
-	msg.packInt( p3);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_VectorStorageSearch;
-	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	VectorStorageSearchInterface* p0 = new VectorStorageSearchImpl( objId_0, ctx(), false, errorhnd());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::prepareSearch");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::prepareSearch", err.what());
+	return void();
+}
+}
+
+std::vector<VectorQueryResult> VectorStorageClientImpl::findSimilar( const std::string& p1, const WordVector& p2, int p3, double p4, bool p5) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_findSimilar);
+	msg.packString( p1);
+	msg.packWordVector( p2);
+	msg.packInt( p3);
+	msg.packDouble( p4);
+	msg.packBool( p5);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<VectorQueryResult> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		VectorQueryResult elem_p0 = serializedMsg.unpackVectorQueryResult();
+		p0.push_back( elem_p0);
+	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::createSearcher");
-	return 0;
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::findSimilar");
+	return std::vector<VectorQueryResult>();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::createSearcher", err.what());
-	return 0;
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::findSimilar", err.what());
+	return std::vector<VectorQueryResult>();
 }
 }
 
@@ -10229,65 +10254,6 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageImpl::createDump", err.what());
 	return 0;
-}
-}
-
-VectorStorageSearchImpl::~VectorStorageSearchImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-std::vector<VectorQueryResult> VectorStorageSearchImpl::findSimilar( const WordVector& p1, int p2, double p3, bool p4) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_findSimilar);
-	msg.packWordVector( p1);
-	msg.packInt( p2);
-	msg.packDouble( p3);
-	msg.packBool( p4);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<VectorQueryResult> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		VectorQueryResult elem_p0 = serializedMsg.unpackVectorQueryResult();
-		p0.push_back( elem_p0);
-	}
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageSearchImpl::findSimilar");
-	return std::vector<VectorQueryResult>();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageSearchImpl::findSimilar", err.what());
-	return std::vector<VectorQueryResult>();
-}
-}
-
-void VectorStorageSearchImpl::close( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_close);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageSearchImpl::close");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageSearchImpl::close", err.what());
-	return void();
 }
 }
 
