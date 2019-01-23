@@ -45,7 +45,6 @@
 #include "strus/statisticsViewerInterface.hpp"
 #include "strus/wordVector.hpp"
 #include "strus/vectorQueryResult.hpp"
-#include "strus/vectorSearchStatistics.hpp"
 #include "strus/analyzer/token.hpp"
 #include "strus/analyzer/patternLexem.hpp"
 #include "strus/analyzer/tokenMarkup.hpp"
@@ -130,7 +129,6 @@ public:
 	void packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val);
 	void packFunctionDescription( const FunctionDescription& val);
 	void packVectorQueryResult( const VectorQueryResult& val);
-	void packVectorSearchStatistics( const VectorSearchStatistics& val);
 	void packAnalyzerFunctionView( const analyzer::FunctionView& val);
 	void packAnalyzerFeatureView( const analyzer::FeatureView& val);
 	void packAnalyzerAggregatorView( const analyzer::AggregatorView& val);
@@ -228,7 +226,6 @@ public:
 	PostingJoinOperatorInterface::Description unpackPostingJoinOperatorDescription();
 	FunctionDescription unpackFunctionDescription();
 	VectorQueryResult unpackVectorQueryResult();
-	VectorSearchStatistics unpackVectorSearchStatistics();
 	analyzer::FunctionView unpackAnalyzerFunctionView();
 	analyzer::FeatureView unpackAnalyzerFeatureView();
 	analyzer::AggregatorView unpackAnalyzerAggregatorView();

@@ -8917,31 +8917,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorStorageClientConst::Method_findSimilarWithStats:
-		{
-			RpcSerializer msg;
-			VectorSearchStatistics p0;
-			std::string p1;
-			WordVector p2;
-			int p3;
-			double p4;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackWordVector();
-			p3 = serializedMsg.unpackInt();
-			p4 = serializedMsg.unpackDouble();
-			p0 = obj->findSimilarWithStats(p1,p2,p3,p4);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packVectorSearchStatistics( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
 		case VectorStorageClientConst::Method_createTransaction:
 		{
 			RpcSerializer msg;

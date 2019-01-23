@@ -903,10 +903,6 @@ sub packParameter
 	{
 		$rt .= "msg.packVectorQueryResult( " . $id . ");";
 	}
-	elsif ($type eq "VectorSearchStatistics")
-	{
-		$rt .= "msg.packVectorSearchStatistics( " . $id . ");";
-	}
 	elsif ($type eq "analyzer::FunctionView")
 	{
 		$rt .= "msg.packAnalyzerFunctionView( " . $id . ");";
@@ -1273,10 +1269,6 @@ sub unpackParameter
 	elsif ($type eq "VectorQueryResult")
 	{
 		$rt .= "$id = serializedMsg.unpackVectorQueryResult();";
-	}
-	elsif ($type eq "VectorSearchStatistics")
-	{
-		$rt .= "$id = serializedMsg.unpackVectorSearchStatistics();";
 	}
 	elsif ($type eq "analyzer::FunctionView")
 	{
