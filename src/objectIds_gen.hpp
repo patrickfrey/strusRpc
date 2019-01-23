@@ -1160,6 +1160,7 @@ public:
 		Method_Destructor,
 		Method_prepareSearch,
 		Method_findSimilar,
+		Method_findSimilarWithStats,
 		Method_createTransaction,
 		Method_types,
 		Method_createFeatureValueIterator,

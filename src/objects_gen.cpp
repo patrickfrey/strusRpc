@@ -9894,6 +9894,32 @@ try
 }
 }
 
+VectorSearchStatistics VectorStorageClientImpl::findSimilarWithStats( const std::string& p1, const WordVector& p2, int p3, double p4) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_findSimilarWithStats);
+	msg.packString( p1);
+	msg.packWordVector( p2);
+	msg.packInt( p3);
+	msg.packDouble( p4);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	VectorSearchStatistics p0 = serializedMsg.unpackVectorSearchStatistics();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::findSimilarWithStats");
+	return VectorSearchStatistics();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::findSimilarWithStats", err.what());
+	return VectorSearchStatistics();
+}
+}
+
 VectorStorageTransactionInterface* VectorStorageClientImpl::createTransaction( )
 {
 try

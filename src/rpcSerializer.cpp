@@ -782,6 +782,23 @@ void RpcSerializer::packVectorQueryResult( const VectorQueryResult& val)
 	packDouble( val.weight());
 }
 
+void RpcSerializer::packVectorSearchStatistics( const VectorSearchStatistics& val)
+{
+	packSize( val.items().size());
+	VectorSearchStatistics::const_iterator ii = val.begin(), ie = val.end();
+	for (; ii != ie; ++ii)
+	{
+		packString( ii->name());
+		packNumericVariant( ii->value());
+	}
+	packSize( val.results().size());
+	std::vector<VectorQueryResult>::const_iterator ri = val.results().begin(), re = val.results().end();
+	for (; ri != re; ++ri)
+	{
+		packVectorQueryResult( *ri);
+	}
+}
+
 void RpcSerializer::packAnalyzerFunctionView( const analyzer::FunctionView& val)
 {
 	packString( val.name());
@@ -1659,6 +1676,25 @@ VectorQueryResult RpcDeserializer::unpackVectorQueryResult()
 	std::string value = unpackString();
 	double weight = unpackDouble();
 	return VectorQueryResult( value, weight);
+}
+
+VectorSearchStatistics RpcDeserializer::unpackVectorSearchStatistics()
+{
+	std::vector<VectorSearchStatistics::Item> items;
+	std::size_t ii = 0, ie = unpackSize();
+	for (; ii < ie; ++ii)
+	{
+		std::string name = unpackString();
+		NumericVariant value = unpackNumericVariant();
+		items.push_back( VectorSearchStatistics::Item( name, value));
+	}
+	std::vector<VectorQueryResult> results;
+	std::size_t ri = 0, re = unpackSize();
+	for (; ri < re; ++ri)
+	{
+		results.push_back( unpackVectorQueryResult());
+	}
+	return VectorSearchStatistics( items, results);
 }
 
 analyzer::FunctionView RpcDeserializer::unpackAnalyzerFunctionView()
