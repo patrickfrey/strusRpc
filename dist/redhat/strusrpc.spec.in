@@ -337,7 +337,12 @@ make test
 %{_includedir}/strus/lib/*.hpp
 
 %changelog
+* Thu Jan 24 2019 Patrick Frey <patrickpfrey@yahoo.com> 0.17.0-0.1
+- adapted changes in strus core and analyzer interface
+
 * Fri May 11 2018 Patrick Frey <patrickpfrey@yahoo.com> 0.16.0-0.1
+- change handling of gettext to avoid warning: return a const char*
+- adapted changes in strus analyzer: introspection interface
 
 * Thu Mar 15 2018 Patrick Frey <patrickpfrey@yahoo.com> 0.15.7-0.1
 - added make target cppcheck for static code analysis

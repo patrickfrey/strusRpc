@@ -43,7 +43,8 @@
 #include "strus/metaDataRestrictionInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
 #include "strus/statisticsViewerInterface.hpp"
-#include "strus/vectorStorageSearchInterface.hpp"
+#include "strus/wordVector.hpp"
+#include "strus/vectorQueryResult.hpp"
 #include "strus/analyzer/token.hpp"
 #include "strus/analyzer/patternLexem.hpp"
 #include "strus/analyzer/tokenMarkup.hpp"
@@ -93,6 +94,7 @@ public:
 	void packTermStatistics( const TermStatistics& stats);
 	void packGlobalStatistics( const GlobalStatistics& stats);
 	void packMetaDataRestrictionCompareOperator( MetaDataRestrictionInterface::CompareOperator val);
+	void packWordVector( const WordVector& val);
 
 	void packDatabaseOptions( const DatabaseOptions& val);
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
@@ -190,6 +192,7 @@ public:
 	TermStatistics unpackTermStatistics();
 	GlobalStatistics unpackGlobalStatistics();
 	MetaDataRestrictionInterface::CompareOperator unpackMetaDataRestrictionCompareOperator();
+	WordVector unpackWordVector();
 
 	DatabaseOptions unpackDatabaseOptions();
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();

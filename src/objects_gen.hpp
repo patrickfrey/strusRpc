@@ -86,7 +86,6 @@
 #include "strus/vectorStorageClientInterface.hpp"
 #include "strus/vectorStorageDumpInterface.hpp"
 #include "strus/vectorStorageInterface.hpp"
-#include "strus/vectorStorageSearchInterface.hpp"
 #include "strus/vectorStorageTransactionInterface.hpp"
 #include "strus/weightingFunctionContextInterface.hpp"
 #include "strus/weightingFunctionInstanceInterface.hpp"
@@ -218,6 +217,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_ContentStatistics, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addLibraryElement( const std::string& p1, const std::string& p2, int p3, int p4, int p5, TokenizerFunctionInstanceInterface* p6, const std::vector<NormalizerFunctionInstanceInterface*>& p7);
+	virtual void addVisibleAttribute( const std::string& p1);
+	virtual void addSelectorExpression( const std::string& p1);
 	virtual ContentStatisticsContextInterface* createContext( ) const;
 	virtual analyzer::ContentStatisticsView view( ) const;
 };
@@ -253,8 +254,9 @@ public:
 	virtual void writeImm( const char* p1, std::size_t p2, const char* p3, std::size_t p4);
 	virtual void removeImm( const char* p1, std::size_t p2);
 	virtual bool readValue( const char* p1, std::size_t p2, std::string& p3, const DatabaseOptions& p4) const;
-	virtual void close( );
 	virtual std::string config( ) const;
+	virtual bool compactDatabase( );
+	virtual void close( );
 };
 
 class DatabaseCursorImpl
@@ -708,7 +710,7 @@ public:
 	PosTaggerDataImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_PosTaggerData, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void defineTag( const std::string& p1, const std::string& p2);
+	virtual void declareIgnoredToken( const std::string& p1);
 	virtual void insert( int p1, const std::vector<PosTaggerDataInterface::Element>& p2);
 	virtual void markupSegment( TokenMarkupContextInterface* p1, int p2, int& p3, const SegmenterPosition& p4, const char* p5, std::size_t p6) const;
 };
@@ -725,7 +727,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_PosTaggerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addContentExpression( const std::string& p1);
-	virtual void addPosTaggerInputPunctuation( const std::string& p1, const std::string& p2);
+	virtual void addPosTaggerInputPunctuation( const std::string& p1, const std::string& p2, int p3);
 	virtual std::string getPosTaggerInput( const analyzer::DocumentClass& p1, const std::string& p2) const;
 	virtual std::string markupDocument( const PosTaggerDataInterface* p1, int p2, const analyzer::DocumentClass& p3, const std::string& p4) const;
 };
@@ -991,7 +993,7 @@ public:
 
 	virtual const char* mimeType( ) const;
 	virtual SegmenterInstanceInterface* createInstance( const analyzer::SegmenterOptions& p1) const;
-	virtual ContentIteratorInterface* createContentIterator( const char* p1, std::size_t p2, const analyzer::DocumentClass& p3, const analyzer::SegmenterOptions& p4) const;
+	virtual ContentIteratorInterface* createContentIterator( const char* p1, std::size_t p2, const std::vector<std::string>& p3, const std::vector<std::string>& p4, const analyzer::DocumentClass& p5, const analyzer::SegmenterOptions& p6) const;
 	virtual const char* getDescription( ) const;
 };
 
@@ -1455,17 +1457,16 @@ public:
 	VectorStorageClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageClient, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual VectorStorageSearchInterface* createSearcher( const Index& p1, const Index& p2) const;
+	virtual void prepareSearch( const std::string& p1);
+	virtual std::vector<VectorQueryResult> findSimilar( const std::string& p1, const WordVector& p2, int p3, double p4, bool p5) const;
 	virtual VectorStorageTransactionInterface* createTransaction( );
-	virtual std::vector<std::string> conceptClassNames( ) const;
-	virtual std::vector<Index> conceptFeatures( const std::string& p1, const Index& p2) const;
-	virtual unsigned int nofConcepts( const std::string& p1) const;
-	virtual std::vector<Index> featureConcepts( const std::string& p1, const Index& p2) const;
-	virtual std::vector<float> featureVector( const Index& p1) const;
-	virtual std::string featureName( const Index& p1) const;
-	virtual Index featureIndex( const std::string& p1) const;
-	virtual double vectorSimilarity( const std::vector<float>& p1, const std::vector<float>& p2) const;
-	virtual unsigned int nofFeatures( ) const;
+	virtual std::vector<std::string> types( ) const;
+	virtual ValueIteratorInterface* createFeatureValueIterator( ) const;
+	virtual std::vector<std::string> featureTypes( const std::string& p1) const;
+	virtual int nofVectors( const std::string& p1) const;
+	virtual WordVector featureVector( const std::string& p1, const std::string& p2) const;
+	virtual double vectorSimilarity( const WordVector& p1, const WordVector& p2) const;
+	virtual WordVector normalize( const WordVector& p1) const;
 	virtual std::string config( ) const;
 	virtual void close( );
 };
@@ -1497,24 +1498,7 @@ public:
 
 	virtual bool createStorage( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual VectorStorageClientInterface* createClient( const std::string& p1, const DatabaseInterface* p2) const;
-	virtual VectorStorageDumpInterface* createDump( const std::string& p1, const DatabaseInterface* p2, const std::string& p3) const;
-	virtual bool runBuild( const std::string& p1, const std::string& p2, const DatabaseInterface* p3) const;
-};
-
-class VectorStorageSearchImpl
-		:public RpcInterfaceStub
-		,public strus::VectorStorageSearchInterface
-		,public strus::VectorStorageSearchConst
-{
-public:
-	virtual ~VectorStorageSearchImpl();
-
-	VectorStorageSearchImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageSearch, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual std::vector<VectorQueryResult> findSimilar( const std::vector<float>& p1, unsigned int p2) const;
-	virtual std::vector<VectorQueryResult> findSimilarFromSelection( const std::vector<Index>& p1, const std::vector<float>& p2, unsigned int p3) const;
-	virtual void close( );
+	virtual VectorStorageDumpInterface* createDump( const std::string& p1, const DatabaseInterface* p2) const;
 };
 
 class VectorStorageTransactionImpl
@@ -1528,8 +1512,10 @@ public:
 	VectorStorageTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageTransaction, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addFeature( const std::string& p1, const std::vector<float>& p2);
-	virtual void defineFeatureConceptRelation( const std::string& p1, const Index& p2, const Index& p3);
+	virtual void defineVector( const std::string& p1, const std::string& p2, const WordVector& p3);
+	virtual void defineFeature( const std::string& p1, const std::string& p2);
+	virtual void defineScalar( const std::string& p1, double p2);
+	virtual void clear( );
 	virtual bool commit( );
 	virtual void rollback( );
 };

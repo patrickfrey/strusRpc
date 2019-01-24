@@ -447,6 +447,16 @@ void RpcSerializer::packNumericVariant( const NumericVariant& val)
 	}
 }
 
+void RpcSerializer::packWordVector( const WordVector& val)
+{
+	packSize( val.size());
+	WordVector::const_iterator vi = val.begin(), ve = val.end();
+	for (; vi != ve; ++vi)
+	{
+		packFloat( *vi);
+	}
+}
+
 void RpcSerializer::packDocumentClass( const analyzer::DocumentClass& dclass)
 {
 	packString( dclass.mimeType());
@@ -768,7 +778,7 @@ void RpcSerializer::packFunctionDescription( const FunctionDescription& val)
 
 void RpcSerializer::packVectorQueryResult( const VectorQueryResult& val)
 {
-	packIndex( val.featidx());
+	packString( val.value());
 	packDouble( val.weight());
 }
 
@@ -964,12 +974,26 @@ void RpcSerializer::packAnalyzerContentStatisticsView( const analyzer::ContentSt
 			packAnalyzerFunctionView( *fi);
 		}
 	}
+	packSize( val.attributes().size());
+	std::vector<std::string>::const_iterator ai = val.attributes().begin(), ae = val.attributes().end();
+	for (; ai != ae; ++ai)
+	{
+		packString( *ai);
+	}
+	packSize( val.expressions().size());
+	ai = val.expressions().begin(), ae = val.expressions().end();
+	for (; ai != ae; ++ai)
+	{
+		packString( *ai);
+	}
 }
 
 void RpcSerializer::packPosTaggerDataElement( const PosTaggerDataInterface::Element& val)
 {
-	packString( val.type());
+	packScalar( m_content, val.type());
+	packString( val.tag());
 	packString( val.value());
+	packString( val.ref());
 }
 
 void RpcSerializer::packCrc32()
@@ -1304,6 +1328,20 @@ bool RpcDeserializer::unpackCrc32()
 #endif
 }
 
+WordVector RpcDeserializer::unpackWordVector()
+{
+	std::size_t ii=0, ie=unpackSize();
+	WordVector rt;
+
+	for (; ii != ie; ++ii)
+	{
+		rt.push_back( unpackFloat());
+	}
+	return rt;
+}
+
+WordVector unpackWordVector();
+
 DatabaseOptions RpcDeserializer::unpackDatabaseOptions()
 {
 	return DatabaseOptions( unpackUint());
@@ -1618,9 +1656,9 @@ FunctionDescription RpcDeserializer::unpackFunctionDescription()
 
 VectorQueryResult RpcDeserializer::unpackVectorQueryResult()
 {
-	Index featidx = unpackIndex();
+	std::string value = unpackString();
 	double weight = unpackDouble();
-	return VectorQueryResult( featidx, weight);
+	return VectorQueryResult( value, weight);
 }
 
 analyzer::FunctionView RpcDeserializer::unpackAnalyzerFunctionView()
@@ -1805,6 +1843,9 @@ analyzer::ContentStatisticsResult RpcDeserializer::unpackAnalyzerContentStatisti
 analyzer::ContentStatisticsView RpcDeserializer::unpackAnalyzerContentStatisticsView()
 {
 	std::vector<analyzer::ContentStatisticsElementView> elements;
+	std::vector<std::string> attributes;
+	std::vector<std::string> expressions;
+
 	unsigned int ii=0, nn=unpackSize();
 	for (; ii<nn; ++ii)
 	{
@@ -1823,14 +1864,26 @@ analyzer::ContentStatisticsView RpcDeserializer::unpackAnalyzerContentStatistics
 		}
 		elements.push_back( analyzer::ContentStatisticsElementView( type, regex, priority, minlen, maxlen, tokenizer, normalizers));
 	}
-	return analyzer::ContentStatisticsView( elements);
+	ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		attributes.push_back( unpackString());
+	}
+	ii=0, nn=unpackSize();
+	for (; ii<nn; ++ii)
+	{
+		expressions.push_back( unpackString());
+	}
+	return analyzer::ContentStatisticsView( elements, attributes, expressions);
 }
 
 PosTaggerDataInterface::Element RpcDeserializer::unpackPosTaggerDataElement()
 {
-	std::string type = unpackString();
+	PosTaggerDataInterface::Element::Type type = unpackScalar<PosTaggerDataInterface::Element::Type>( m_itr, m_end);
+	std::string tag = unpackString();
 	std::string value = unpackString();
-	return PosTaggerDataInterface::Element( type, value);
+	std::string ref = unpackString();
+	return PosTaggerDataInterface::Element( type, tag, value, ref);
 }
 
 

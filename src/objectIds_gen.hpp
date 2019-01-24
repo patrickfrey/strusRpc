@@ -89,7 +89,6 @@ enum ClassId
 	ClassId_VectorStorageClient,
 	ClassId_VectorStorageDump,
 	ClassId_VectorStorage,
-	ClassId_VectorStorageSearch,
 	ClassId_VectorStorageTransaction,
 	ClassId_WeightingFunctionContext,
 	ClassId_WeightingFunctionInstance,
@@ -187,6 +186,8 @@ public:
 	{
 		Method_Destructor,
 		Method_addLibraryElement,
+		Method_addVisibleAttribute,
+		Method_addSelectorExpression,
 		Method_createContext,
 		Method_view
 	};
@@ -214,8 +215,9 @@ public:
 		Method_writeImm,
 		Method_removeImm,
 		Method_readValue,
-		Method_close,
-		Method_config
+		Method_config,
+		Method_compactDatabase,
+		Method_close
 	};
 };
 
@@ -565,7 +567,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_defineTag,
+		Method_declareIgnoredToken,
 		Method_insert,
 		Method_markupSegment
 	};
@@ -1156,17 +1158,16 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createSearcher,
+		Method_prepareSearch,
+		Method_findSimilar,
 		Method_createTransaction,
-		Method_conceptClassNames,
-		Method_conceptFeatures,
-		Method_nofConcepts,
-		Method_featureConcepts,
+		Method_types,
+		Method_createFeatureValueIterator,
+		Method_featureTypes,
+		Method_nofVectors,
 		Method_featureVector,
-		Method_featureName,
-		Method_featureIndex,
 		Method_vectorSimilarity,
-		Method_nofFeatures,
+		Method_normalize,
 		Method_config,
 		Method_close
 	};
@@ -1190,20 +1191,7 @@ public:
 		Method_Destructor,
 		Method_createStorage,
 		Method_createClient,
-		Method_createDump,
-		Method_runBuild
-	};
-};
-
-class VectorStorageSearchConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_findSimilar,
-		Method_findSimilarFromSelection,
-		Method_close
+		Method_createDump
 	};
 };
 
@@ -1213,8 +1201,10 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_addFeature,
-		Method_defineFeatureConceptRelation,
+		Method_defineVector,
+		Method_defineFeature,
+		Method_defineScalar,
+		Method_clear,
 		Method_commit,
 		Method_rollback
 	};

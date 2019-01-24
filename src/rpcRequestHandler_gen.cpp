@@ -574,6 +574,38 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case ContentStatisticsConst::Method_addVisibleAttribute:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->addVisibleAttribute(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case ContentStatisticsConst::Method_addSelectorExpression:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->addSelectorExpression(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case ContentStatisticsConst::Method_createContext:
 		{
 			RpcSerializer msg;
@@ -779,20 +811,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case DatabaseClientConst::Method_close:
-		{
-			RpcSerializer msg;
-			obj->close();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
 		case DatabaseClientConst::Method_config:
 		{
 			RpcSerializer msg;
@@ -809,6 +827,37 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packString( p0);
 			msg.packCrc32();
 			return msg.content();
+		}
+		case DatabaseClientConst::Method_compactDatabase:
+		{
+			RpcSerializer msg;
+			bool p0;
+			p0 = obj->compactDatabase();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case DatabaseClientConst::Method_close:
+		{
+			RpcSerializer msg;
+			obj->close();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
 		}
 	}
 	break;
@@ -3512,14 +3561,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case PosTaggerDataConst::Method_defineTag:
+		case PosTaggerDataConst::Method_declareIgnoredToken:
 		{
 			RpcSerializer msg;
 			std::string p1;
-			std::string p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackString();
-			obj->defineTag(p1,p2);
+			obj->declareIgnoredToken(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3615,9 +3662,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
+			int p3;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			obj->addPosTaggerInputPunctuation(p1,p2);
+			p3 = serializedMsg.unpackInt();
+			obj->addPosTaggerInputPunctuation(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5522,14 +5571,26 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			ContentIteratorInterface* p0;
 			const char* p1;
 			std::size_t p2;
-			analyzer::DocumentClass p3;
-			analyzer::SegmenterOptions p4;
+			std::vector<std::string> p3;
+			std::vector<std::string> p4;
+			analyzer::DocumentClass p5;
+			analyzer::SegmenterOptions p6;
 			serializedMsg.unpackBuffer( p1, p2);
-			p3 = serializedMsg.unpackDocumentClass();
-			p4 = serializedMsg.unpackSegmenterOptions();
+			std::size_t n3 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n3; ++ii) {
+				std::string ee = serializedMsg.unpackString();
+				p3.push_back( ee);
+			}
+			std::size_t n4 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n4; ++ii) {
+				std::string ee = serializedMsg.unpackString();
+				p4.push_back( ee);
+			}
+			p5 = serializedMsg.unpackDocumentClass();
+			p6 = serializedMsg.unpackSegmenterOptions();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createContentIterator(p1,p2,p3,p4);
+			p0 = obj->createContentIterator(p1,p2,p3,p4,p5,p6);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8810,17 +8871,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case VectorStorageClientConst::Method_createSearcher:
+		case VectorStorageClientConst::Method_prepareSearch:
 		{
 			RpcSerializer msg;
-			VectorStorageSearchInterface* p0;
-			Index p1;
-			Index p2;
-			p1 = serializedMsg.unpackIndex();
-			p2 = serializedMsg.unpackIndex();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createSearcher(p1,p2);
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->prepareSearch(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8829,9 +8885,37 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
 			return std::string();
+		}
+		case VectorStorageClientConst::Method_findSimilar:
+		{
+			RpcSerializer msg;
+			std::vector<VectorQueryResult> p0;
+			std::string p1;
+			WordVector p2;
+			int p3;
+			double p4;
+			bool p5;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackWordVector();
+			p3 = serializedMsg.unpackInt();
+			p4 = serializedMsg.unpackDouble();
+			p5 = serializedMsg.unpackBool();
+			p0 = obj->findSimilar(p1,p2,p3,p4,p5);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packVectorQueryResult( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
 		}
 		case VectorStorageClientConst::Method_createTransaction:
 		{
@@ -8852,11 +8936,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case VectorStorageClientConst::Method_conceptClassNames:
+		case VectorStorageClientConst::Method_types:
 		{
 			RpcSerializer msg;
 			std::vector<std::string> p0;
-			p0 = obj->conceptClassNames();
+			p0 = obj->types();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8872,15 +8956,32 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorStorageClientConst::Method_conceptFeatures:
+		case VectorStorageClientConst::Method_createFeatureValueIterator:
 		{
 			RpcSerializer msg;
-			std::vector<Index> p0;
+			ValueIteratorInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createFeatureValueIterator();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case VectorStorageClientConst::Method_featureTypes:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
 			std::string p1;
-			Index p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackIndex();
-			p0 = obj->conceptFeatures(p1,p2);
+			p0 = obj->featureTypes(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8891,18 +8992,18 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packIndex( p0[ii]);
+				msg.packString( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorStorageClientConst::Method_nofConcepts:
+		case VectorStorageClientConst::Method_nofVectors:
 		{
 			RpcSerializer msg;
-			unsigned int p0;
+			int p0;
 			std::string p1;
 			p1 = serializedMsg.unpackString();
-			p0 = obj->nofConcepts(p1);
+			p0 = obj->nofVectors(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8911,82 +9012,19 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packUint( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorStorageClientConst::Method_featureConcepts:
-		{
-			RpcSerializer msg;
-			std::vector<Index> p0;
-			std::string p1;
-			Index p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackIndex();
-			p0 = obj->featureConcepts(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packIndex( p0[ii]);
-			}
+			msg.packInt( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
 		case VectorStorageClientConst::Method_featureVector:
 		{
 			RpcSerializer msg;
-			std::vector<float> p0;
-			Index p1;
-			p1 = serializedMsg.unpackIndex();
-			p0 = obj->featureVector(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packFloat( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorStorageClientConst::Method_featureName:
-		{
-			RpcSerializer msg;
-			std::string p0;
-			Index p1;
-			p1 = serializedMsg.unpackIndex();
-			p0 = obj->featureName(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packString( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorStorageClientConst::Method_featureIndex:
-		{
-			RpcSerializer msg;
-			Index p0;
+			WordVector p0;
 			std::string p1;
+			std::string p2;
 			p1 = serializedMsg.unpackString();
-			p0 = obj->featureIndex(p1);
+			p2 = serializedMsg.unpackString();
+			p0 = obj->featureVector(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8995,7 +9033,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packIndex( p0);
+			msg.packWordVector( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -9003,18 +9041,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			double p0;
-			std::vector<float> p1;
-			std::vector<float> p2;
-			std::size_t n1 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n1; ++ii) {
-				float ee = serializedMsg.unpackFloat();
-				p1.push_back( ee);
-			}
-			std::size_t n2 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n2; ++ii) {
-				float ee = serializedMsg.unpackFloat();
-				p2.push_back( ee);
-			}
+			WordVector p1;
+			WordVector p2;
+			p1 = serializedMsg.unpackWordVector();
+			p2 = serializedMsg.unpackWordVector();
 			p0 = obj->vectorSimilarity(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -9028,11 +9058,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case VectorStorageClientConst::Method_nofFeatures:
+		case VectorStorageClientConst::Method_normalize:
 		{
 			RpcSerializer msg;
-			unsigned int p0;
-			p0 = obj->nofFeatures();
+			WordVector p0;
+			WordVector p1;
+			p1 = serializedMsg.unpackWordVector();
+			p0 = obj->normalize(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -9041,7 +9073,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packUint( p0);
+			msg.packWordVector( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -9178,16 +9210,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			VectorStorageDumpInterface* p0;
 			std::string p1;
 			const DatabaseInterface* p2;
-			std::string p3;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_Database) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
-			p3 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createDump(p1,p2,p3);
+			p0 = obj->createDump(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -9198,121 +9228,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			defineObject( classId_0, objId_0, p0);
 			
-			return std::string();
-		}
-		case VectorStorageConst::Method_runBuild:
-		{
-			RpcSerializer msg;
-			bool p0;
-			std::string p1;
-			std::string p2;
-			const DatabaseInterface* p3;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackString();
-			unsigned char classId_3; unsigned int objId_3;
-			serializedMsg.unpackObject( classId_3, objId_3);
-			if (classId_3 != ClassId_Database) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p3 = getConstObject<DatabaseInterface>( classId_3, objId_3);
-			p0 = obj->runBuild(p1,p2,p3);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-	}
-	break;
-	}
-	case ClassId_VectorStorageSearch:
-	{
-	VectorStorageSearchInterface* obj = getObject<VectorStorageSearchInterface>( classId, objId);
-	switch( (VectorStorageSearchConst::MethodId)methodId)
-	{
-		case VectorStorageSearchConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case VectorStorageSearchConst::Method_findSimilar:
-		{
-			RpcSerializer msg;
-			std::vector<VectorQueryResult> p0;
-			std::vector<float> p1;
-			unsigned int p2;
-			std::size_t n1 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n1; ++ii) {
-				float ee = serializedMsg.unpackFloat();
-				p1.push_back( ee);
-			}
-			p2 = serializedMsg.unpackUint();
-			p0 = obj->findSimilar(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packVectorQueryResult( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorStorageSearchConst::Method_findSimilarFromSelection:
-		{
-			RpcSerializer msg;
-			std::vector<VectorQueryResult> p0;
-			std::vector<Index> p1;
-			std::vector<float> p2;
-			unsigned int p3;
-			std::size_t n1 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n1; ++ii) {
-				Index ee = serializedMsg.unpackIndex();
-				p1.push_back( ee);
-			}
-			std::size_t n2 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n2; ++ii) {
-				float ee = serializedMsg.unpackFloat();
-				p2.push_back( ee);
-			}
-			p3 = serializedMsg.unpackUint();
-			p0 = obj->findSimilarFromSelection(p1,p2,p3);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packVectorQueryResult( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case VectorStorageSearchConst::Method_close:
-		{
-			RpcSerializer msg;
-			obj->close();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 	}
@@ -9328,18 +9243,16 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case VectorStorageTransactionConst::Method_addFeature:
+		case VectorStorageTransactionConst::Method_defineVector:
 		{
 			RpcSerializer msg;
 			std::string p1;
-			std::vector<float> p2;
+			std::string p2;
+			WordVector p3;
 			p1 = serializedMsg.unpackString();
-			std::size_t n2 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n2; ++ii) {
-				float ee = serializedMsg.unpackFloat();
-				p2.push_back( ee);
-			}
-			obj->addFeature(p1,p2);
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackWordVector();
+			obj->defineVector(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -9350,16 +9263,46 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case VectorStorageTransactionConst::Method_defineFeatureConceptRelation:
+		case VectorStorageTransactionConst::Method_defineFeature:
 		{
 			RpcSerializer msg;
 			std::string p1;
-			Index p2;
-			Index p3;
+			std::string p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackIndex();
-			p3 = serializedMsg.unpackIndex();
-			obj->defineFeatureConceptRelation(p1,p2,p3);
+			p2 = serializedMsg.unpackString();
+			obj->defineFeature(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case VectorStorageTransactionConst::Method_defineScalar:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			double p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackDouble();
+			obj->defineScalar(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case VectorStorageTransactionConst::Method_clear:
+		{
+			RpcSerializer msg;
+			obj->clear();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
