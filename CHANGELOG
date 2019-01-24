@@ -1,3 +1,7 @@
+strusRpc (0.17.0)
+  * adapted changes in strus core and analyzer interface
+ -- Patrick Frey <patrickpfrey@yahoo.com>  Thu, 24 Jan 2019 07:30:00 +0100
+
 strusRpc (0.16.0)
   * change handling of gettext to avoid warning: return a const char*
   * adapted changes in strus analyzer: introspection interface
