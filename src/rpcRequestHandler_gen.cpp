@@ -5794,6 +5794,259 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
+	case ClassId_SentenceAnalyzerInstance:
+	{
+	SentenceAnalyzerInstanceInterface* obj = getObject<SentenceAnalyzerInstanceInterface>( classId, objId);
+	switch( (SentenceAnalyzerInstanceConst::MethodId)methodId)
+	{
+		case SentenceAnalyzerInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case SentenceAnalyzerInstanceConst::Method_pushTerm:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			int p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackInt();
+			obj->pushTerm(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SentenceAnalyzerInstanceConst::Method_pushAlt:
+		{
+			RpcSerializer msg;
+			int p1;
+			bool p2;
+			int p3;
+			p1 = serializedMsg.unpackInt();
+			p2 = serializedMsg.unpackBool();
+			p3 = serializedMsg.unpackInt();
+			obj->pushAlt(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SentenceAnalyzerInstanceConst::Method_pushSequenceImm:
+		{
+			RpcSerializer msg;
+			int p1;
+			int p2;
+			p1 = serializedMsg.unpackInt();
+			p2 = serializedMsg.unpackInt();
+			obj->pushSequenceImm(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SentenceAnalyzerInstanceConst::Method_pushRepeat:
+		{
+			RpcSerializer msg;
+			int p1;
+			p1 = serializedMsg.unpackInt();
+			obj->pushRepeat(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SentenceAnalyzerInstanceConst::Method_defineSentence:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			int p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackInt();
+			obj->defineSentence(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SentenceAnalyzerInstanceConst::Method_analyzeSentence:
+		{
+			RpcSerializer msg;
+			std::vector<SentenceGuess> p0;
+			const SentenceLexerInstanceInterface* p1;
+			std::string p2;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_SentenceLexerInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getConstObject<SentenceLexerInstanceInterface>( classId_1, objId_1);
+			p2 = serializedMsg.unpackString();
+			p0 = obj->analyzeSentence(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packSentenceGuess( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
+	case ClassId_SentenceLexerContext:
+	{
+	SentenceLexerContextInterface* obj = getObject<SentenceLexerContextInterface>( classId, objId);
+	switch( (SentenceLexerContextConst::MethodId)methodId)
+	{
+		case SentenceLexerContextConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case SentenceLexerContextConst::Method_altLexems:
+		{
+			RpcSerializer msg;
+			std::vector<SentenceTerm> p0;
+			p0 = obj->altLexems();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packSentenceTerm( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SentenceLexerContextConst::Method_skipToFollow:
+		{
+			RpcSerializer msg;
+			bool p0;
+			int p1;
+			p1 = serializedMsg.unpackInt();
+			p0 = obj->skipToFollow(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SentenceLexerContextConst::Method_skipBack:
+		{
+			RpcSerializer msg;
+			obj->skipBack();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_SentenceLexerInstance:
+	{
+	SentenceLexerInstanceInterface* obj = getObject<SentenceLexerInstanceInterface>( classId, objId);
+	switch( (SentenceLexerInstanceConst::MethodId)methodId)
+	{
+		case SentenceLexerInstanceConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case SentenceLexerInstanceConst::Method_createLexer:
+		{
+			RpcSerializer msg;
+			SentenceLexerContextInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createLexer(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case SentenceLexerInstanceConst::Method_getSimilarity:
+		{
+			RpcSerializer msg;
+			double p0;
+			SentenceTerm p1;
+			SentenceTerm p2;
+			p1 = serializedMsg.unpackSentenceTerm();
+			p2 = serializedMsg.unpackSentenceTerm();
+			p0 = obj->getSimilarity(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packDouble( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+	}
+	break;
+	}
 	case ClassId_StatisticsBuilder:
 	{
 	StatisticsBuilderInterface* obj = getObject<StatisticsBuilderInterface>( classId, objId);
@@ -7473,6 +7726,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case StorageObjectBuilderConst::Method_createSentenceAnalyzer:
+		{
+			RpcSerializer msg;
+			SentenceAnalyzerInstanceInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createSentenceAnalyzer(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 	}
 	break;
 	}
@@ -9076,6 +9350,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packWordVector( p0);
 			msg.packCrc32();
 			return msg.content();
+		}
+		case VectorStorageClientConst::Method_createSentenceLexer:
+		{
+			RpcSerializer msg;
+			SentenceLexerInstanceInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createSentenceLexer();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
 		}
 		case VectorStorageClientConst::Method_config:
 		{

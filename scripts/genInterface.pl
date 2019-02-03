@@ -955,6 +955,14 @@ sub packParameter
 	{
 		$rt .= "msg.packWordVector( " . $id . ");";
 	}
+	elsif ($type eq "SentenceTerm")
+	{
+		$rt .= "msg.packSentenceTerm( " . $id . ");";
+	}
+	elsif ($type eq "SentenceGuess")
+	{
+		$rt .= "msg.packSentenceGuess( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -1321,6 +1329,14 @@ sub unpackParameter
 	elsif ($type eq "WordVector")
 	{
 		$rt .= "$id = serializedMsg.unpackWordVector();";
+	}
+	elsif ($type eq "SentenceTerm")
+	{
+		$rt .= "$id = serializedMsg.unpackSentenceTerm();";
+	}
+	elsif ($type eq "SentenceGuess")
+	{
+		$rt .= "$id = serializedMsg.unpackSentenceGuess();";
 	}
 	else
 	{

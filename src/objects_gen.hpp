@@ -66,6 +66,9 @@
 #include "strus/scalarFunctionInstanceInterface.hpp"
 #include "strus/scalarFunctionInterface.hpp"
 #include "strus/scalarFunctionParserInterface.hpp"
+#include "strus/sentenceAnalyzerInstanceInterface.hpp"
+#include "strus/sentenceLexerContextInterface.hpp"
+#include "strus/sentenceLexerInstanceInterface.hpp"
 #include "strus/statisticsBuilderInterface.hpp"
 #include "strus/statisticsIteratorInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
@@ -1018,6 +1021,56 @@ public:
 	virtual std::string getContent( ) const;
 };
 
+class SentenceAnalyzerInstanceImpl
+		:public RpcInterfaceStub
+		,public strus::SentenceAnalyzerInstanceInterface
+		,public strus::SentenceAnalyzerInstanceConst
+{
+public:
+	virtual ~SentenceAnalyzerInstanceImpl();
+
+	SentenceAnalyzerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SentenceAnalyzerInstance, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void pushTerm( const std::string& p1, const std::string& p2, int p3);
+	virtual void pushAlt( int p1, bool p2, int p3);
+	virtual void pushSequenceImm( int p1, int p2);
+	virtual void pushRepeat( int p1) const;
+	virtual void defineSentence( const std::string& p1, int p2);
+	virtual std::vector<SentenceGuess> analyzeSentence( const SentenceLexerInstanceInterface* p1, const std::string& p2) const;
+};
+
+class SentenceLexerContextImpl
+		:public RpcInterfaceStub
+		,public strus::SentenceLexerContextInterface
+		,public strus::SentenceLexerContextConst
+{
+public:
+	virtual ~SentenceLexerContextImpl();
+
+	SentenceLexerContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SentenceLexerContext, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual std::vector<SentenceTerm> altLexems( ) const;
+	virtual bool skipToFollow( int p1);
+	virtual void skipBack( );
+};
+
+class SentenceLexerInstanceImpl
+		:public RpcInterfaceStub
+		,public strus::SentenceLexerInstanceInterface
+		,public strus::SentenceLexerInstanceConst
+{
+public:
+	virtual ~SentenceLexerInstanceImpl();
+
+	SentenceLexerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_SentenceLexerInstance, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual SentenceLexerContextInterface* createLexer( const std::string& p1) const;
+	virtual double getSimilarity( const SentenceTerm& p1, const SentenceTerm& p2) const;
+};
+
 class StatisticsBuilderImpl
 		:public RpcInterfaceStub
 		,public strus::StatisticsBuilderInterface
@@ -1240,6 +1293,7 @@ public:
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( const std::string& p1) const;
 	virtual const VectorStorageInterface* getVectorStorage( const std::string& p1) const;
 	virtual QueryEvalInterface* createQueryEval( ) const;
+	virtual SentenceAnalyzerInstanceInterface* createSentenceAnalyzer( const std::string& p1) const;
 };
 
 class StorageTransactionImpl
@@ -1467,6 +1521,7 @@ public:
 	virtual WordVector featureVector( const std::string& p1, const std::string& p2) const;
 	virtual double vectorSimilarity( const WordVector& p1, const WordVector& p2) const;
 	virtual WordVector normalize( const WordVector& p1) const;
+	virtual SentenceLexerInstanceInterface* createSentenceLexer( ) const;
 	virtual std::string config( ) const;
 	virtual void close( );
 };

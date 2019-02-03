@@ -64,6 +64,9 @@ enum ClassId
 	ClassId_SegmenterInstance,
 	ClassId_Segmenter,
 	ClassId_SegmenterMarkupContext,
+	ClassId_SentenceAnalyzerInstance,
+	ClassId_SentenceLexerContext,
+	ClassId_SentenceLexerInstance,
 	ClassId_StatisticsBuilder,
 	ClassId_StatisticsIterator,
 	ClassId_StatisticsProcessor,
@@ -812,6 +815,44 @@ public:
 	};
 };
 
+class SentenceAnalyzerInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_pushTerm,
+		Method_pushAlt,
+		Method_pushSequenceImm,
+		Method_pushRepeat,
+		Method_defineSentence,
+		Method_analyzeSentence
+	};
+};
+
+class SentenceLexerContextConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_altLexems,
+		Method_skipToFollow,
+		Method_skipBack
+	};
+};
+
+class SentenceLexerInstanceConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createLexer,
+		Method_getSimilarity
+	};
+};
+
 class StatisticsBuilderConst
 {
 public:
@@ -988,7 +1029,8 @@ public:
 		Method_getQueryProcessor,
 		Method_getStatisticsProcessor,
 		Method_getVectorStorage,
-		Method_createQueryEval
+		Method_createQueryEval,
+		Method_createSentenceAnalyzer
 	};
 };
 
@@ -1168,6 +1210,7 @@ public:
 		Method_featureVector,
 		Method_vectorSimilarity,
 		Method_normalize,
+		Method_createSentenceLexer,
 		Method_config,
 		Method_close
 	};
