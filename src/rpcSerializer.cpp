@@ -786,7 +786,6 @@ void RpcSerializer::packSentenceTerm( const SentenceTerm& val)
 {
 	packString( val.type());
 	packString( val.value());
-	packInt( val.origsize());
 }
 
 void RpcSerializer::packSentenceGuess( const SentenceGuess& val)
@@ -1683,8 +1682,7 @@ SentenceTerm RpcDeserializer::unpackSentenceTerm()
 {
 	std::string type = unpackString();
 	std::string value = unpackString();
-	int origsize = unpackInt();
-	return SentenceTerm( type, value, origsize);
+	return SentenceTerm( type, value);
 }
 
 SentenceGuess RpcDeserializer::unpackSentenceGuess()
