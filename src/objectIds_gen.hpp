@@ -836,9 +836,11 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_altLexems,
-		Method_skipToFollow,
-		Method_skipBack
+		Method_fetchFirstSplit,
+		Method_fetchNextSplit,
+		Method_nofTokens,
+		Method_featureValue,
+		Method_featureTypes
 	};
 };
 
@@ -848,7 +850,9 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createLexer,
+		Method_addSeparator,
+		Method_addLink,
+		Method_createContext,
 		Method_getSimilarity
 	};
 };

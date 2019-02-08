@@ -1051,9 +1051,11 @@ public:
 	SentenceLexerContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SentenceLexerContext, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual std::vector<SentenceTerm> altLexems( ) const;
-	virtual bool skipToFollow( int p1);
-	virtual void skipBack( );
+	virtual bool fetchFirstSplit( );
+	virtual bool fetchNextSplit( );
+	virtual int nofTokens( ) const;
+	virtual std::string featureValue( int p1);
+	virtual std::vector<std::string> featureTypes( int p1);
 };
 
 class SentenceLexerInstanceImpl
@@ -1067,7 +1069,9 @@ public:
 	SentenceLexerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SentenceLexerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual SentenceLexerContextInterface* createLexer( const std::string& p1) const;
+	virtual void addSeparator( int p1);
+	virtual void addLink( int p1, char p2, int p3);
+	virtual SentenceLexerContextInterface* createContext( const std::string& p1) const;
 	virtual double getSimilarity( const SentenceTerm& p1, const SentenceTerm& p2) const;
 };
 

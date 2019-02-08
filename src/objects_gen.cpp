@@ -6545,41 +6545,13 @@ SentenceLexerContextImpl::~SentenceLexerContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::vector<SentenceTerm> SentenceLexerContextImpl::altLexems( ) const
+bool SentenceLexerContextImpl::fetchFirstSplit( )
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_altLexems);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<SentenceTerm> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		SentenceTerm elem_p0 = serializedMsg.unpackSentenceTerm();
-		p0.push_back( elem_p0);
-	}
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::altLexems");
-	return std::vector<SentenceTerm>();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::altLexems", err.what());
-	return std::vector<SentenceTerm>();
-}
-}
-
-bool SentenceLexerContextImpl::skipToFollow( int p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_skipToFollow);
-	msg.packInt( p1);
+	msg.packByte( Method_fetchFirstSplit);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -6587,29 +6559,106 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::skipToFollow");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::fetchFirstSplit");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::skipToFollow", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::fetchFirstSplit", err.what());
 	return false;
 }
 }
 
-void SentenceLexerContextImpl::skipBack( )
+bool SentenceLexerContextImpl::fetchNextSplit( )
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_skipBack);
+	msg.packByte( Method_fetchNextSplit);
 	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::skipBack");
-	return void();
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::fetchNextSplit");
+	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::skipBack", err.what());
-	return void();
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::fetchNextSplit", err.what());
+	return false;
+}
+}
+
+int SentenceLexerContextImpl::nofTokens( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_nofTokens);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	int p0 = serializedMsg.unpackInt();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::nofTokens");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::nofTokens", err.what());
+	return 0;
+}
+}
+
+std::string SentenceLexerContextImpl::featureValue( int p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_featureValue);
+	msg.packInt( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::string p0 = serializedMsg.unpackString();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::featureValue");
+	return std::string();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::featureValue", err.what());
+	return std::string();
+}
+}
+
+std::vector<std::string> SentenceLexerContextImpl::featureTypes( int p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_featureTypes);
+	msg.packInt( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<std::string> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		std::string elem_p0 = serializedMsg.unpackString();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::featureTypes");
+	return std::vector<std::string>();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::featureTypes", err.what());
+	return std::vector<std::string>();
 }
 }
 
@@ -6623,13 +6672,53 @@ SentenceLexerInstanceImpl::~SentenceLexerInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-SentenceLexerContextInterface* SentenceLexerInstanceImpl::createLexer( const std::string& p1) const
+void SentenceLexerInstanceImpl::addSeparator( int p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createLexer);
+	msg.packByte( Method_addSeparator);
+	msg.packInt( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::addSeparator");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::addSeparator", err.what());
+	return void();
+}
+}
+
+void SentenceLexerInstanceImpl::addLink( int p1, char p2, int p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addLink);
+	msg.packInt( p1);
+	msg.packByte( p2);
+	msg.packInt( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::addLink");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::addLink", err.what());
+	return void();
+}
+}
+
+SentenceLexerContextInterface* SentenceLexerInstanceImpl::createContext( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createContext);
 	msg.packString( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_SentenceLexerContext;
@@ -6639,10 +6728,10 @@ try
 	SentenceLexerContextInterface* p0 = new SentenceLexerContextImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::createLexer");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::createContext");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::createLexer", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::createContext", err.what());
 	return 0;
 }
 }

@@ -5936,33 +5936,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case SentenceLexerContextConst::Method_altLexems:
-		{
-			RpcSerializer msg;
-			std::vector<SentenceTerm> p0;
-			p0 = obj->altLexems();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packSentenceTerm( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case SentenceLexerContextConst::Method_skipToFollow:
+		case SentenceLexerContextConst::Method_fetchFirstSplit:
 		{
 			RpcSerializer msg;
 			bool p0;
-			int p1;
-			p1 = serializedMsg.unpackInt();
-			p0 = obj->skipToFollow(p1);
+			p0 = obj->fetchFirstSplit();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5975,10 +5953,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case SentenceLexerContextConst::Method_skipBack:
+		case SentenceLexerContextConst::Method_fetchNextSplit:
 		{
 			RpcSerializer msg;
-			obj->skipBack();
+			bool p0;
+			p0 = obj->fetchNextSplit();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5987,7 +5966,67 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			return std::string();
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SentenceLexerContextConst::Method_nofTokens:
+		{
+			RpcSerializer msg;
+			int p0;
+			p0 = obj->nofTokens();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packInt( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SentenceLexerContextConst::Method_featureValue:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			int p1;
+			p1 = serializedMsg.unpackInt();
+			p0 = obj->featureValue(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SentenceLexerContextConst::Method_featureTypes:
+		{
+			RpcSerializer msg;
+			std::vector<std::string> p0;
+			int p1;
+			p1 = serializedMsg.unpackInt();
+			p0 = obj->featureTypes(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packString( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -6002,7 +6041,43 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case SentenceLexerInstanceConst::Method_createLexer:
+		case SentenceLexerInstanceConst::Method_addSeparator:
+		{
+			RpcSerializer msg;
+			int p1;
+			p1 = serializedMsg.unpackInt();
+			obj->addSeparator(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SentenceLexerInstanceConst::Method_addLink:
+		{
+			RpcSerializer msg;
+			int p1;
+			char p2;
+			int p3;
+			p1 = serializedMsg.unpackInt();
+			p2 = serializedMsg.unpackByte();
+			p3 = serializedMsg.unpackInt();
+			obj->addLink(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case SentenceLexerInstanceConst::Method_createContext:
 		{
 			RpcSerializer msg;
 			SentenceLexerContextInterface* p0;
@@ -6010,7 +6085,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createLexer(p1);
+			p0 = obj->createContext(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
