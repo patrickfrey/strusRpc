@@ -6691,7 +6691,26 @@ try
 }
 }
 
-void SentenceLexerInstanceImpl::addLink( int p1, char p2, int p3)
+void SentenceLexerInstanceImpl::addSpace( int p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addSpace);
+	msg.packInt( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::addSpace");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::addSpace", err.what());
+	return void();
+}
+}
+
+void SentenceLexerInstanceImpl::addLink( int p1, char p2)
 {
 try
 {
@@ -6700,7 +6719,6 @@ try
 	msg.packByte( Method_addLink);
 	msg.packInt( p1);
 	msg.packByte( p2);
-	msg.packInt( p3);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {

@@ -851,6 +851,7 @@ public:
 	{
 		Method_Destructor,
 		Method_addSeparator,
+		Method_addSpace,
 		Method_addLink,
 		Method_createContext,
 		Method_getSimilarity

@@ -1070,7 +1070,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_SentenceLexerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addSeparator( int p1);
-	virtual void addLink( int p1, char p2, int p3);
+	virtual void addSpace( int p1);
+	virtual void addLink( int p1, char p2);
 	virtual SentenceLexerContextInterface* createContext( const std::string& p1) const;
 	virtual double getSimilarity( const SentenceTerm& p1, const SentenceTerm& p2) const;
 };

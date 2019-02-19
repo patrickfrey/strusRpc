@@ -6057,16 +6057,30 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case SentenceLexerInstanceConst::Method_addSpace:
+		{
+			RpcSerializer msg;
+			int p1;
+			p1 = serializedMsg.unpackInt();
+			obj->addSpace(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case SentenceLexerInstanceConst::Method_addLink:
 		{
 			RpcSerializer msg;
 			int p1;
 			char p2;
-			int p3;
 			p1 = serializedMsg.unpackInt();
 			p2 = serializedMsg.unpackByte();
-			p3 = serializedMsg.unpackInt();
-			obj->addLink(p1,p2,p3);
+			obj->addLink(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
