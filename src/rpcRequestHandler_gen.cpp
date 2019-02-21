@@ -6028,6 +6028,29 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case SentenceLexerContextConst::Method_getWeight:
+		{
+			RpcSerializer msg;
+			double p0;
+			std::vector<SentenceTerm> p1;
+			std::size_t n1 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n1; ++ii) {
+				SentenceTerm ee = serializedMsg.unpackSentenceTerm();
+				p1.push_back( ee);
+			}
+			p0 = obj->getWeight(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packDouble( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -6111,27 +6134,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
-		}
-		case SentenceLexerInstanceConst::Method_getSimilarity:
-		{
-			RpcSerializer msg;
-			double p0;
-			SentenceTerm p1;
-			SentenceTerm p2;
-			p1 = serializedMsg.unpackSentenceTerm();
-			p2 = serializedMsg.unpackSentenceTerm();
-			p0 = obj->getSimilarity(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packDouble( p0);
-			msg.packCrc32();
-			return msg.content();
 		}
 	}
 	break;

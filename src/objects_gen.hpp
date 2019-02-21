@@ -1056,6 +1056,7 @@ public:
 	virtual int nofTokens( ) const;
 	virtual std::string featureValue( int p1);
 	virtual std::vector<std::string> featureTypes( int p1);
+	virtual double getWeight( const std::vector<SentenceTerm>& p1);
 };
 
 class SentenceLexerInstanceImpl
@@ -1073,7 +1074,6 @@ public:
 	virtual void addSpace( int p1);
 	virtual void addLink( int p1, char p2);
 	virtual SentenceLexerContextInterface* createContext( const std::string& p1) const;
-	virtual double getSimilarity( const SentenceTerm& p1, const SentenceTerm& p2) const;
 };
 
 class StatisticsBuilderImpl

@@ -840,7 +840,8 @@ public:
 		Method_fetchNextSplit,
 		Method_nofTokens,
 		Method_featureValue,
-		Method_featureTypes
+		Method_featureTypes,
+		Method_getWeight
 	};
 };
 
@@ -853,8 +854,7 @@ public:
 		Method_addSeparator,
 		Method_addSpace,
 		Method_addLink,
-		Method_createContext,
-		Method_getSimilarity
+		Method_createContext
 	};
 };
 
