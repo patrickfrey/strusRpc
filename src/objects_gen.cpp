@@ -10689,6 +10689,52 @@ try
 }
 }
 
+const char* VectorStorageImpl::getConfigDescription( const VectorStorageInterface::ConfigType& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getConfigDescription);
+	msg.packVectorStorageConfigType( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageImpl::getConfigDescription");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageImpl::getConfigDescription", err.what());
+	return 0;
+}
+}
+
+const char** VectorStorageImpl::getConfigParameters( const VectorStorageInterface::ConfigType& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getConfigParameters);
+	msg.packVectorStorageConfigType( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	const char** p0 =  ctx()->constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageImpl::getConfigParameters");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageImpl::getConfigParameters", err.what());
+	return 0;
+}
+}
+
 VectorStorageTransactionImpl::~VectorStorageTransactionImpl()
 {
 	if (isConst()) return;

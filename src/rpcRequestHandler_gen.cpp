@@ -9612,6 +9612,44 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case VectorStorageConst::Method_getConfigDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			VectorStorageInterface::ConfigType p1;
+			p1 = serializedMsg.unpackVectorStorageConfigType();
+			p0 = obj->getConfigDescription(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorStorageConst::Method_getConfigParameters:
+		{
+			RpcSerializer msg;
+			const char** p0;
+			VectorStorageInterface::ConfigType p1;
+			p1 = serializedMsg.unpackVectorStorageConfigType();
+			p0 = obj->getConfigParameters(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharpp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}

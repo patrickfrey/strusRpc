@@ -767,6 +767,10 @@ sub packParameter
 	{
 		$rt .= "msg.packStorageConfigType( " . $id . ");";
 	}
+	elsif ($type eq "VectorStorageInterface::ConfigType")
+	{
+		$rt .= "msg.packVectorStorageConfigType( " . $id . ");";
+	}
 	elsif ($type eq "analyzer::SegmenterOptions")
 	{
 		$rt .= "msg.packSegmenterOptions( " . $id . ");";
@@ -1122,6 +1126,10 @@ sub unpackParameter
 	elsif ($type eq "StorageInterface::ConfigType")
 	{
 		$rt .= "$id = serializedMsg.unpackStorageConfigType();";
+	}
+	elsif ($type eq "VectorStorageInterface::ConfigType")
+	{
+		$rt .= "$id = serializedMsg.unpackVectorStorageConfigType();";
 	}
 	elsif ($type eq "analyzer::SegmenterOptions")
 	{

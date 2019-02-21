@@ -494,6 +494,11 @@ void RpcSerializer::packStorageConfigType( const StorageInterface::ConfigType& v
 	packByte( (unsigned char)val);
 }
 
+void RpcSerializer::packVectorStorageConfigType( const VectorStorageInterface::ConfigType& val)
+{
+	packByte( (unsigned char)val);
+}
+
 void RpcSerializer::packFeatureOptions( const analyzer::FeatureOptions& val)
 {
 	packUint( val.opt());
@@ -1372,6 +1377,11 @@ DatabaseInterface::ConfigType RpcDeserializer::unpackDatabaseConfigType()
 StorageInterface::ConfigType RpcDeserializer::unpackStorageConfigType()
 {
 	return StorageInterface::ConfigType( unpackByte());
+}
+
+VectorStorageInterface::ConfigType RpcDeserializer::unpackVectorStorageConfigType()
+{
+	return VectorStorageInterface::ConfigType( unpackByte());
 }
 
 analyzer::FeatureOptions RpcDeserializer::unpackFeatureOptions()

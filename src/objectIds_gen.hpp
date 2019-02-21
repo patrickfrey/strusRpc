@@ -1239,7 +1239,9 @@ public:
 		Method_Destructor,
 		Method_createStorage,
 		Method_createClient,
-		Method_createDump
+		Method_createDump,
+		Method_getConfigDescription,
+		Method_getConfigParameters
 	};
 };
 

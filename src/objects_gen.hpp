@@ -1559,6 +1559,8 @@ public:
 	virtual bool createStorage( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual VectorStorageClientInterface* createClient( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual VectorStorageDumpInterface* createDump( const std::string& p1, const DatabaseInterface* p2) const;
+	virtual const char* getConfigDescription( const VectorStorageInterface::ConfigType& p1) const;
+	virtual const char** getConfigParameters( const VectorStorageInterface::ConfigType& p1) const;
 };
 
 class VectorStorageTransactionImpl
