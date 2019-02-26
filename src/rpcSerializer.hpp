@@ -47,6 +47,7 @@
 #include "strus/wordVector.hpp"
 #include "strus/vectorQueryResult.hpp"
 #include "strus/sentenceTerm.hpp"
+#include "strus/sentenceGuess.hpp"
 #include "strus/analyzer/token.hpp"
 #include "strus/analyzer/patternLexem.hpp"
 #include "strus/analyzer/tokenMarkup.hpp"
@@ -133,6 +134,7 @@ public:
 	void packFunctionDescription( const FunctionDescription& val);
 	void packVectorQueryResult( const VectorQueryResult& val);
 	void packSentenceTerm( const SentenceTerm& val);
+	void packSentenceTermList( const SentenceTermList& val);
 	void packSentenceGuess( const SentenceGuess& val);
 	void packAnalyzerFunctionView( const analyzer::FunctionView& val);
 	void packAnalyzerFeatureView( const analyzer::FeatureView& val);
@@ -233,6 +235,7 @@ public:
 	FunctionDescription unpackFunctionDescription();
 	VectorQueryResult unpackVectorQueryResult();
 	SentenceTerm unpackSentenceTerm();
+	SentenceTermList unpackSentenceTermList();
 	SentenceGuess unpackSentenceGuess();
 	analyzer::FunctionView unpackAnalyzerFunctionView();
 	analyzer::FeatureView unpackAnalyzerFeatureView();

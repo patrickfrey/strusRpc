@@ -6403,7 +6403,7 @@ SentenceAnalyzerInstanceImpl::~SentenceAnalyzerInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void SentenceAnalyzerInstanceImpl::pushTerm( const std::string& p1, const std::string& p2, int p3)
+void SentenceAnalyzerInstanceImpl::pushTerm( const std::string& p1, const std::string& p2, float p3)
 {
 try
 {
@@ -6412,7 +6412,7 @@ try
 	msg.packByte( Method_pushTerm);
 	msg.packString( p1);
 	msg.packString( p2);
-	msg.packInt( p3);
+	msg.packFloat( p3);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -6424,7 +6424,7 @@ try
 }
 }
 
-void SentenceAnalyzerInstanceImpl::pushAlt( int p1, bool p2, int p3)
+void SentenceAnalyzerInstanceImpl::pushAlt( int p1)
 {
 try
 {
@@ -6432,8 +6432,6 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushAlt);
 	msg.packInt( p1);
-	msg.packBool( p2);
-	msg.packInt( p3);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -6445,7 +6443,7 @@ try
 }
 }
 
-void SentenceAnalyzerInstanceImpl::pushSequenceImm( int p1, int p2)
+void SentenceAnalyzerInstanceImpl::pushSequenceImm( int p1)
 {
 try
 {
@@ -6453,7 +6451,6 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushSequenceImm);
 	msg.packInt( p1);
-	msg.packInt( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -6465,7 +6462,7 @@ try
 }
 }
 
-void SentenceAnalyzerInstanceImpl::pushRepeat( int p1) const
+void SentenceAnalyzerInstanceImpl::pushRepeat( int p1)
 {
 try
 {
@@ -6484,7 +6481,7 @@ try
 }
 }
 
-void SentenceAnalyzerInstanceImpl::defineSentence( const std::string& p1, int p2)
+void SentenceAnalyzerInstanceImpl::defineSentence( const std::string& p1, float p2)
 {
 try
 {
@@ -6492,7 +6489,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_defineSentence);
 	msg.packString( p1);
-	msg.packInt( p2);
+	msg.packFloat( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -6501,6 +6498,28 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::defineSentence", err.what());
 	return void();
+}
+}
+
+bool SentenceAnalyzerInstanceImpl::compile( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_compile);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::compile");
+	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::compile", err.what());
+	return false;
 }
 }
 
@@ -6662,29 +6681,35 @@ try
 }
 }
 
-double SentenceLexerContextImpl::getWeight( const std::vector<SentenceTerm>& p1)
+std::vector<SentenceGuess> SentenceLexerContextImpl::rankSentences( const std::vector<SentenceTermList>& p1, int p2)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_getWeight);
+	msg.packByte( Method_rankSentences);
 	msg.packSize( p1.size());
 	for (unsigned int ii=0; ii < p1.size(); ++ii) {
-		msg.packSentenceTerm( p1[ii]);
+		msg.packSentenceTermList( p1[ii]);
 	}
+	msg.packInt( p2);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	double p0 = serializedMsg.unpackDouble();;
+	std::vector<SentenceGuess> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		SentenceGuess elem_p0 = serializedMsg.unpackSentenceGuess();
+		p0.push_back( elem_p0);
+	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::getWeight");
-	return 0;
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::rankSentences");
+	return std::vector<SentenceGuess>();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::getWeight", err.what());
-	return 0;
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::rankSentences", err.what());
+	return std::vector<SentenceGuess>();
 }
 }
 

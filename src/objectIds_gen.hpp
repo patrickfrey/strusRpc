@@ -826,6 +826,7 @@ public:
 		Method_pushSequenceImm,
 		Method_pushRepeat,
 		Method_defineSentence,
+		Method_compile,
 		Method_analyzeSentence
 	};
 };
@@ -841,7 +842,7 @@ public:
 		Method_nofTokens,
 		Method_featureValue,
 		Method_featureTypes,
-		Method_getWeight
+		Method_rankSentences
 	};
 };
 

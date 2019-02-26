@@ -5809,10 +5809,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			std::string p1;
 			std::string p2;
-			int p3;
+			float p3;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
-			p3 = serializedMsg.unpackInt();
+			p3 = serializedMsg.unpackFloat();
 			obj->pushTerm(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -5828,12 +5828,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			int p1;
-			bool p2;
-			int p3;
 			p1 = serializedMsg.unpackInt();
-			p2 = serializedMsg.unpackBool();
-			p3 = serializedMsg.unpackInt();
-			obj->pushAlt(p1,p2,p3);
+			obj->pushAlt(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5848,10 +5844,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			int p1;
-			int p2;
 			p1 = serializedMsg.unpackInt();
-			p2 = serializedMsg.unpackInt();
-			obj->pushSequenceImm(p1,p2);
+			obj->pushSequenceImm(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5882,9 +5876,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p1;
-			int p2;
+			float p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackInt();
+			p2 = serializedMsg.unpackFloat();
 			obj->defineSentence(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -5895,6 +5889,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
+		}
+		case SentenceAnalyzerInstanceConst::Method_compile:
+		{
+			RpcSerializer msg;
+			bool p0;
+			p0 = obj->compile();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 		case SentenceAnalyzerInstanceConst::Method_analyzeSentence:
 		{
@@ -6028,17 +6039,19 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case SentenceLexerContextConst::Method_getWeight:
+		case SentenceLexerContextConst::Method_rankSentences:
 		{
 			RpcSerializer msg;
-			double p0;
-			std::vector<SentenceTerm> p1;
+			std::vector<SentenceGuess> p0;
+			std::vector<SentenceTermList> p1;
+			int p2;
 			std::size_t n1 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n1; ++ii) {
-				SentenceTerm ee = serializedMsg.unpackSentenceTerm();
+				SentenceTermList ee = serializedMsg.unpackSentenceTermList();
 				p1.push_back( ee);
 			}
-			p0 = obj->getWeight(p1);
+			p2 = serializedMsg.unpackInt();
+			p0 = obj->rankSentences(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6047,7 +6060,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packDouble( p0);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packSentenceGuess( p0[ii]);
+			}
 			msg.packCrc32();
 			return msg.content();
 		}

@@ -963,6 +963,10 @@ sub packParameter
 	{
 		$rt .= "msg.packSentenceTerm( " . $id . ");";
 	}
+	elsif ($type eq "SentenceTermList")
+	{
+		$rt .= "msg.packSentenceTermList( " . $id . ");";
+	}
 	elsif ($type eq "SentenceGuess")
 	{
 		$rt .= "msg.packSentenceGuess( " . $id . ");";
@@ -1341,6 +1345,10 @@ sub unpackParameter
 	elsif ($type eq "SentenceTerm")
 	{
 		$rt .= "$id = serializedMsg.unpackSentenceTerm();";
+	}
+	elsif ($type eq "SentenceTermList")
+	{
+		$rt .= "$id = serializedMsg.unpackSentenceTermList();";
 	}
 	elsif ($type eq "SentenceGuess")
 	{

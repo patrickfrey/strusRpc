@@ -1032,11 +1032,12 @@ public:
 	SentenceAnalyzerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SentenceAnalyzerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void pushTerm( const std::string& p1, const std::string& p2, int p3);
-	virtual void pushAlt( int p1, bool p2, int p3);
-	virtual void pushSequenceImm( int p1, int p2);
-	virtual void pushRepeat( int p1) const;
-	virtual void defineSentence( const std::string& p1, int p2);
+	virtual void pushTerm( const std::string& p1, const std::string& p2, float p3);
+	virtual void pushAlt( int p1);
+	virtual void pushSequenceImm( int p1);
+	virtual void pushRepeat( int p1);
+	virtual void defineSentence( const std::string& p1, float p2);
+	virtual bool compile( );
 	virtual std::vector<SentenceGuess> analyzeSentence( const SentenceLexerInstanceInterface* p1, const std::string& p2) const;
 };
 
@@ -1056,7 +1057,7 @@ public:
 	virtual int nofTokens( ) const;
 	virtual std::string featureValue( int p1);
 	virtual std::vector<std::string> featureTypes( int p1);
-	virtual double getWeight( const std::vector<SentenceTerm>& p1);
+	virtual std::vector<SentenceGuess> rankSentences( const std::vector<SentenceTermList>& p1, int p2);
 };
 
 class SentenceLexerInstanceImpl

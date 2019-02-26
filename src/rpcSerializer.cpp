@@ -793,15 +793,21 @@ void RpcSerializer::packSentenceTerm( const SentenceTerm& val)
 	packString( val.value());
 }
 
-void RpcSerializer::packSentenceGuess( const SentenceGuess& val)
+void RpcSerializer::packSentenceTermList( const SentenceTermList& val)
 {
-	packString( val.classname());
-	packSize( val.terms().size());
-	std::vector<SentenceTerm>::const_iterator ti = val.terms().begin(), te = val.terms().end();
+	packSize( val.size());
+	std::vector<SentenceTerm>::const_iterator ti = val.begin(), te = val.end();
 	for (; ti != te; ++ti)
 	{
 		packSentenceTerm( *ti);
 	}
+}
+
+void RpcSerializer::packSentenceGuess( const SentenceGuess& val)
+{
+	packString( val.classname());
+	packSentenceTermList( val.terms());
+	packDouble( val.weight());
 }
 
 void RpcSerializer::packAnalyzerFunctionView( const analyzer::FunctionView& val)
@@ -1695,17 +1701,25 @@ SentenceTerm RpcDeserializer::unpackSentenceTerm()
 	return SentenceTerm( type, value);
 }
 
+SentenceTermList RpcDeserializer::unpackSentenceTermList()
+{
+	SentenceTermList rt;
+	unsigned int ii=0, nn=unpackSize();
+	rt.reserve( nn);
+	for (; ii<nn; ++ii)
+	{
+		rt.push_back( unpackSentenceTerm());
+	}
+	return rt;
+}
+
 SentenceGuess RpcDeserializer::unpackSentenceGuess()
 {
 	std::string classname( unpackString());
-	std::vector<SentenceTerm> terms;
+	std::vector<SentenceTerm> terms( unpackSentenceTermList());
+	double weight = unpackDouble();
 
-	unsigned int ii=0, nn=unpackSize();
-	for (; ii<nn; ++ii)
-	{
-		terms.push_back( unpackSentenceTerm());
-	}
-	return SentenceGuess( classname, terms);
+	return SentenceGuess( classname, terms, weight);
 }
 
 analyzer::FunctionView RpcDeserializer::unpackAnalyzerFunctionView()
