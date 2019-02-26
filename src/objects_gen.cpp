@@ -6630,7 +6630,7 @@ try
 }
 }
 
-std::string SentenceLexerContextImpl::featureValue( int p1)
+std::string SentenceLexerContextImpl::featureValue( int p1) const
 {
 try
 {
@@ -6653,7 +6653,7 @@ try
 }
 }
 
-std::vector<std::string> SentenceLexerContextImpl::featureTypes( int p1)
+std::vector<std::string> SentenceLexerContextImpl::featureTypes( int p1) const
 {
 try
 {
@@ -6681,7 +6681,7 @@ try
 }
 }
 
-std::vector<SentenceGuess> SentenceLexerContextImpl::rankSentences( const std::vector<SentenceTermList>& p1, int p2)
+std::vector<SentenceGuess> SentenceLexerContextImpl::rankSentences( const std::vector<SentenceGuess>& p1, int p2) const
 {
 try
 {
@@ -6690,7 +6690,7 @@ try
 	msg.packByte( Method_rankSentences);
 	msg.packSize( p1.size());
 	for (unsigned int ii=0; ii < p1.size(); ++ii) {
-		msg.packSentenceTermList( p1[ii]);
+		msg.packSentenceGuess( p1[ii]);
 	}
 	msg.packInt( p2);
 	msg.packCrc32();

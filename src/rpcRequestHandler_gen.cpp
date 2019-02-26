@@ -6043,11 +6043,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::vector<SentenceGuess> p0;
-			std::vector<SentenceTermList> p1;
+			std::vector<SentenceGuess> p1;
 			int p2;
 			std::size_t n1 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n1; ++ii) {
-				SentenceTermList ee = serializedMsg.unpackSentenceTermList();
+				SentenceGuess ee = serializedMsg.unpackSentenceGuess();
 				p1.push_back( ee);
 			}
 			p2 = serializedMsg.unpackInt();
