@@ -6523,7 +6523,7 @@ try
 }
 }
 
-std::vector<SentenceGuess> SentenceAnalyzerInstanceImpl::analyzeSentence( const SentenceLexerInstanceInterface* p1, const std::string& p2) const
+std::vector<SentenceGuess> SentenceAnalyzerInstanceImpl::analyzeSentence( const SentenceLexerInstanceInterface* p1, const std::string& p2, int p3) const
 {
 try
 {
@@ -6534,6 +6534,7 @@ try
 	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "SentenceLexerInstance");
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	msg.packString( p2);
+	msg.packInt( p3);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());

@@ -5913,12 +5913,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::vector<SentenceGuess> p0;
 			const SentenceLexerInstanceInterface* p1;
 			std::string p2;
+			int p3;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_SentenceLexerInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getConstObject<SentenceLexerInstanceInterface>( classId_1, objId_1);
 			p2 = serializedMsg.unpackString();
-			p0 = obj->analyzeSentence(p1,p2);
+			p3 = serializedMsg.unpackInt();
+			p0 = obj->analyzeSentence(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
