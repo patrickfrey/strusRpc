@@ -1033,6 +1033,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_SentenceAnalyzerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void pushTerm( const std::string& p1, const std::string& p2, float p3);
+	virtual void pushNone( float p1);
 	virtual void pushAlt( int p1);
 	virtual void pushSequenceImm( int p1);
 	virtual void pushRepeat( int p1);

@@ -5824,6 +5824,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case SentenceAnalyzerInstanceConst::Method_pushNone:
+		{
+			RpcSerializer msg;
+			float p1;
+			p1 = serializedMsg.unpackFloat();
+			obj->pushNone(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case SentenceAnalyzerInstanceConst::Method_pushAlt:
 		{
 			RpcSerializer msg;

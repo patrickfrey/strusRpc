@@ -822,6 +822,7 @@ public:
 	{
 		Method_Destructor,
 		Method_pushTerm,
+		Method_pushNone,
 		Method_pushAlt,
 		Method_pushSequenceImm,
 		Method_pushRepeat,

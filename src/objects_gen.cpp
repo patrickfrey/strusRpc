@@ -6424,6 +6424,25 @@ try
 }
 }
 
+void SentenceAnalyzerInstanceImpl::pushNone( float p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_pushNone);
+	msg.packFloat( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::pushNone");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::pushNone", err.what());
+	return void();
+}
+}
+
 void SentenceAnalyzerInstanceImpl::pushAlt( int p1)
 {
 try
