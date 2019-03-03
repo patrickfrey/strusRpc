@@ -5876,8 +5876,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			int p1;
+			int p2;
 			p1 = serializedMsg.unpackInt();
-			obj->pushRepeat(p1);
+			p2 = serializedMsg.unpackInt();
+			obj->pushRepeat(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

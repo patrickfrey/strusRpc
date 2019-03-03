@@ -6481,7 +6481,7 @@ try
 }
 }
 
-void SentenceAnalyzerInstanceImpl::pushRepeat( int p1)
+void SentenceAnalyzerInstanceImpl::pushRepeat( int p1, int p2)
 {
 try
 {
@@ -6489,6 +6489,7 @@ try
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_pushRepeat);
 	msg.packInt( p1);
+	msg.packInt( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
