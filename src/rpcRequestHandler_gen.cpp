@@ -9296,13 +9296,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			WordVector p2;
 			int p3;
 			double p4;
-			bool p5;
+			double p5;
+			bool p6;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackWordVector();
 			p3 = serializedMsg.unpackInt();
 			p4 = serializedMsg.unpackDouble();
-			p5 = serializedMsg.unpackBool();
-			p0 = obj->findSimilar(p1,p2,p3,p4,p5);
+			p5 = serializedMsg.unpackDouble();
+			p6 = serializedMsg.unpackBool();
+			p0 = obj->findSimilar(p1,p2,p3,p4,p5,p6);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -9729,24 +9731,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			obj->defineFeature(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case VectorStorageTransactionConst::Method_defineScalar:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			double p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackDouble();
-			obj->defineScalar(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

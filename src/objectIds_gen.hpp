@@ -1255,7 +1255,6 @@ public:
 		Method_Destructor,
 		Method_defineVector,
 		Method_defineFeature,
-		Method_defineScalar,
 		Method_clear,
 		Method_commit,
 		Method_rollback

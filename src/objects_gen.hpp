@@ -1519,7 +1519,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageClient, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void prepareSearch( const std::string& p1);
-	virtual std::vector<VectorQueryResult> findSimilar( const std::string& p1, const WordVector& p2, int p3, double p4, bool p5) const;
+	virtual std::vector<VectorQueryResult> findSimilar( const std::string& p1, const WordVector& p2, int p3, double p4, double p5, bool p6) const;
 	virtual VectorStorageTransactionInterface* createTransaction( );
 	virtual std::vector<std::string> types( ) const;
 	virtual ValueIteratorInterface* createFeatureValueIterator( ) const;
@@ -1578,7 +1578,6 @@ public:
 
 	virtual void defineVector( const std::string& p1, const std::string& p2, const WordVector& p3);
 	virtual void defineFeature( const std::string& p1, const std::string& p2);
-	virtual void defineScalar( const std::string& p1, double p2);
 	virtual void clear( );
 	virtual bool commit( );
 	virtual void rollback( );

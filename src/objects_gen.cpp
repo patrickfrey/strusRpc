@@ -10319,7 +10319,7 @@ try
 }
 }
 
-std::vector<VectorQueryResult> VectorStorageClientImpl::findSimilar( const std::string& p1, const WordVector& p2, int p3, double p4, bool p5) const
+std::vector<VectorQueryResult> VectorStorageClientImpl::findSimilar( const std::string& p1, const WordVector& p2, int p3, double p4, double p5, bool p6) const
 {
 try
 {
@@ -10330,7 +10330,8 @@ try
 	msg.packWordVector( p2);
 	msg.packInt( p3);
 	msg.packDouble( p4);
-	msg.packBool( p5);
+	msg.packDouble( p5);
+	msg.packBool( p6);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -10830,26 +10831,6 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageTransactionImpl::defineFeature", err.what());
-	return void();
-}
-}
-
-void VectorStorageTransactionImpl::defineScalar( const std::string& p1, double p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineScalar);
-	msg.packString( p1);
-	msg.packDouble( p2);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageTransactionImpl::defineScalar");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageTransactionImpl::defineScalar", err.what());
 	return void();
 }
 }
