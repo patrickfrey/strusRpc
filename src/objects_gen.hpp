@@ -1039,7 +1039,7 @@ public:
 	virtual void pushRepeat( int p1, int p2);
 	virtual void defineSentence( const std::string& p1, float p2);
 	virtual bool compile( );
-	virtual std::vector<SentenceGuess> analyzeSentence( const SentenceLexerInstanceInterface* p1, const std::string& p2, int p3) const;
+	virtual std::vector<SentenceGuess> analyzeSentence( const SentenceLexerInstanceInterface* p1, const std::string& p2, int p3, double p4) const;
 };
 
 class SentenceLexerContextImpl

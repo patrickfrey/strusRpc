@@ -6543,7 +6543,7 @@ try
 }
 }
 
-std::vector<SentenceGuess> SentenceAnalyzerInstanceImpl::analyzeSentence( const SentenceLexerInstanceInterface* p1, const std::string& p2, int p3) const
+std::vector<SentenceGuess> SentenceAnalyzerInstanceImpl::analyzeSentence( const SentenceLexerInstanceInterface* p1, const std::string& p2, int p3, double p4) const
 {
 try
 {
@@ -6555,6 +6555,7 @@ try
 	msg.packObject( impl_1->classId(), impl_1->objId());
 	msg.packString( p2);
 	msg.packInt( p3);
+	msg.packDouble( p4);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
