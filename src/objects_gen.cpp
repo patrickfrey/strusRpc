@@ -7953,6 +7953,24 @@ try
 }
 }
 
+void StorageClientImpl::compaction( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_compaction);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageClientImpl::compaction");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::compaction", err.what());
+	return void();
+}
+}
+
 StorageDocumentImpl::~StorageDocumentImpl()
 {
 	if (isConst()) return;

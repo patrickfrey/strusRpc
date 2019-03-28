@@ -958,7 +958,8 @@ public:
 		Method_getStatisticsProcessor,
 		Method_createDocumentChecker,
 		Method_checkStorage,
-		Method_close
+		Method_close,
+		Method_compaction
 	};
 };
 
