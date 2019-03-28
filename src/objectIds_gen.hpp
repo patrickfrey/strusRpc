@@ -1220,7 +1220,8 @@ public:
 		Method_normalize,
 		Method_createSentenceLexer,
 		Method_config,
-		Method_close
+		Method_close,
+		Method_compaction
 	};
 };
 

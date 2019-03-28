@@ -10630,6 +10630,24 @@ try
 }
 }
 
+void VectorStorageClientImpl::compaction( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_compaction);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageClientImpl::compaction");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageClientImpl::compaction", err.what());
+	return void();
+}
+}
+
 VectorStorageDumpImpl::~VectorStorageDumpImpl()
 {
 	if (isConst()) return;

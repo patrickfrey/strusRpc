@@ -1532,6 +1532,7 @@ public:
 	virtual SentenceLexerInstanceInterface* createSentenceLexer( ) const;
 	virtual std::string config( ) const;
 	virtual void close( );
+	virtual void compaction( );
 };
 
 class VectorStorageDumpImpl
