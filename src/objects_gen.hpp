@@ -1525,6 +1525,8 @@ public:
 	virtual std::vector<std::string> types( ) const;
 	virtual ValueIteratorInterface* createFeatureValueIterator( ) const;
 	virtual std::vector<std::string> featureTypes( const std::string& p1) const;
+	virtual int nofTypes( ) const;
+	virtual int nofFeatures( ) const;
 	virtual int nofVectors( const std::string& p1) const;
 	virtual WordVector featureVector( const std::string& p1, const std::string& p2) const;
 	virtual double vectorSimilarity( const WordVector& p1, const WordVector& p2) const;

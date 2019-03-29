@@ -9416,6 +9416,40 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case VectorStorageClientConst::Method_nofTypes:
+		{
+			RpcSerializer msg;
+			int p0;
+			p0 = obj->nofTypes();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packInt( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case VectorStorageClientConst::Method_nofFeatures:
+		{
+			RpcSerializer msg;
+			int p0;
+			p0 = obj->nofFeatures();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packInt( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case VectorStorageClientConst::Method_nofVectors:
 		{
 			RpcSerializer msg;

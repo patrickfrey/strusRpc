@@ -1214,6 +1214,8 @@ public:
 		Method_types,
 		Method_createFeatureValueIterator,
 		Method_featureTypes,
+		Method_nofTypes,
+		Method_nofFeatures,
 		Method_nofVectors,
 		Method_featureVector,
 		Method_vectorSimilarity,
