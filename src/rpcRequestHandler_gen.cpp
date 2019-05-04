@@ -6152,6 +6152,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case SentenceLexerInstanceConst::Method_defineGroupSimilarityDistance:
+		{
+			RpcSerializer msg;
+			double p1;
+			p1 = serializedMsg.unpackDouble();
+			obj->defineGroupSimilarityDistance(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case SentenceLexerInstanceConst::Method_createContext:
 		{
 			RpcSerializer msg;

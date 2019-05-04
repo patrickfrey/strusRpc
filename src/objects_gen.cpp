@@ -6803,6 +6803,25 @@ try
 }
 }
 
+void SentenceLexerInstanceImpl::defineGroupSimilarityDistance( double p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineGroupSimilarityDistance);
+	msg.packDouble( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::defineGroupSimilarityDistance");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::defineGroupSimilarityDistance", err.what());
+	return void();
+}
+}
+
 SentenceLexerContextInterface* SentenceLexerInstanceImpl::createContext( const std::string& p1) const
 {
 try

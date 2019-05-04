@@ -856,6 +856,7 @@ public:
 		Method_addSeparator,
 		Method_addSpace,
 		Method_addLink,
+		Method_defineGroupSimilarityDistance,
 		Method_createContext
 	};
 };
