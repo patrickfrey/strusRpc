@@ -69,6 +69,7 @@ enum ClassId
 	ClassId_SentenceLexerInstance,
 	ClassId_StatisticsBuilder,
 	ClassId_StatisticsIterator,
+	ClassId_StatisticsMap,
 	ClassId_StatisticsProcessor,
 	ClassId_StatisticsViewer,
 	ClassId_StorageAlterMetaDataTable,
@@ -869,9 +870,11 @@ public:
 		Method_Destructor,
 		Method_setNofDocumentsInsertedChange,
 		Method_addDfChange,
-		Method_start,
+		Method_createIteratorAndRollback,
+		Method_commit,
 		Method_rollback,
-		Method_fetchMessage
+		Method_releaseStatistics,
+		Method_createIterator
 	};
 };
 
@@ -885,6 +888,20 @@ public:
 	};
 };
 
+class StatisticsMapConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_setNofDocumentsInsertedChange,
+		Method_addDfChange,
+		Method_processStatisticsMessage,
+		Method_nofDocuments,
+		Method_df
+	};
+};
+
 class StatisticsProcessorConst
 {
 public:
@@ -892,7 +909,8 @@ public:
 	{
 		Method_Destructor,
 		Method_createViewer,
-		Method_createBuilder
+		Method_createBuilder,
+		Method_createMap
 	};
 };
 

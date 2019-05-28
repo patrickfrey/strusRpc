@@ -6896,21 +6896,48 @@ try
 }
 }
 
-void StatisticsBuilderImpl::start( )
+StatisticsIteratorInterface* StatisticsBuilderImpl::createIteratorAndRollback( )
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_start);
+	msg.packByte( Method_createIteratorAndRollback);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StatisticsIterator;
+	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+	StatisticsIteratorInterface* p0 = new StatisticsIteratorImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::start");
-	return void();
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::createIteratorAndRollback");
+	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::start", err.what());
-	return void();
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::createIteratorAndRollback", err.what());
+	return 0;
+}
+}
+
+bool StatisticsBuilderImpl::commit( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_commit);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::commit");
+	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::commit", err.what());
+	return false;
 }
 }
 
@@ -6932,28 +6959,46 @@ try
 }
 }
 
-bool StatisticsBuilderImpl::fetchMessage( const void*& p1, std::size_t& p2)
+void StatisticsBuilderImpl::releaseStatistics( const TimeStamp& p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_fetchMessage);
+	msg.packByte( Method_releaseStatistics);
+	msg.packTimeStamp( p1);
 	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	const char* bp1;
-	serializedMsg.unpackBuffer( bp1, p2);
-	p1 = (const void*) ctx()->constConstructor()->get( bp1, p2);
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::releaseStatistics");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::releaseStatistics", err.what());
+	return void();
+}
+}
+
+StatisticsIteratorInterface* StatisticsBuilderImpl::createIterator( const TimeStamp& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createIterator);
+	msg.packTimeStamp( p1);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StatisticsIterator;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	StatisticsIteratorInterface* p0 = new StatisticsIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::fetchMessage");
-	return false;
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::createIterator");
+	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::fetchMessage", err.what());
-	return false;
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::createIterator", err.what());
+	return 0;
 }
 }
 
@@ -6967,7 +7012,7 @@ StatisticsIteratorImpl::~StatisticsIteratorImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-bool StatisticsIteratorImpl::getNext( const void*& p1, std::size_t& p2)
+StatisticsMessage StatisticsIteratorImpl::getNext( )
 {
 try
 {
@@ -6978,17 +7023,133 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	const char* bp1;
-	serializedMsg.unpackBuffer( bp1, p2);
-	p1 = (const void*) ctx()->constConstructor()->get( bp1, p2);
+	StatisticsMessage p0 = serializedMsg.unpackStatisticsMessage();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsIteratorImpl::getNext");
-	return false;
+	return StatisticsMessage();
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsIteratorImpl::getNext", err.what());
+	return StatisticsMessage();
+}
+}
+
+StatisticsMapImpl::~StatisticsMapImpl()
+{
+	if (isConst()) return;
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_Destructor);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+}
+
+void StatisticsMapImpl::setNofDocumentsInsertedChange( int p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_setNofDocumentsInsertedChange);
+	msg.packInt( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::setNofDocumentsInsertedChange");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::setNofDocumentsInsertedChange", err.what());
+	return void();
+}
+}
+
+void StatisticsMapImpl::addDfChange( const char* p1, const char* p2, int p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addDfChange);
+	msg.packCharp( p1);
+	msg.packCharp( p2);
+	msg.packInt( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::addDfChange");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::addDfChange", err.what());
+	return void();
+}
+}
+
+bool StatisticsMapImpl::processStatisticsMessage( const void* p1, std::size_t p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_processStatisticsMessage);
+	msg.packBuffer( (const char*)p1, p2);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	bool p0 = serializedMsg.unpackBool();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::processStatisticsMessage");
 	return false;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::processStatisticsMessage", err.what());
+	return false;
+}
+}
+
+GlobalCounter StatisticsMapImpl::nofDocuments( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_nofDocuments);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	GlobalCounter p0 = serializedMsg.unpackGlobalCounter();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::nofDocuments");
+	return GlobalCounter();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::nofDocuments", err.what());
+	return GlobalCounter();
+}
+}
+
+GlobalCounter StatisticsMapImpl::df( const std::string& p1, const std::string& p2)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_df);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	GlobalCounter p0 = serializedMsg.unpackGlobalCounter();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::df");
+	return GlobalCounter();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::df", err.what());
+	return GlobalCounter();
 }
 }
 
@@ -7026,13 +7187,14 @@ try
 }
 }
 
-StatisticsBuilderInterface* StatisticsProcessorImpl::createBuilder( ) const
+StatisticsBuilderInterface* StatisticsProcessorImpl::createBuilder( const std::string& p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createBuilder);
+	msg.packString( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StatisticsBuilder;
 	msg.packObject( classId_0, objId_0);
@@ -7045,6 +7207,29 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsProcessorImpl::createBuilder", err.what());
+	return 0;
+}
+}
+
+StatisticsMapInterface* StatisticsProcessorImpl::createMap( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createMap);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StatisticsMap;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	StatisticsMapInterface* p0 = new StatisticsMapImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsProcessorImpl::createMap");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsProcessorImpl::createMap", err.what());
 	return 0;
 }
 }
@@ -7875,13 +8060,14 @@ try
 }
 }
 
-StatisticsIteratorInterface* StorageClientImpl::createChangeStatisticsIterator( )
+StatisticsIteratorInterface* StorageClientImpl::createChangeStatisticsIterator( const TimeStamp& p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createChangeStatisticsIterator);
+	msg.packTimeStamp( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StatisticsIterator;
 	msg.packObject( classId_0, objId_0);

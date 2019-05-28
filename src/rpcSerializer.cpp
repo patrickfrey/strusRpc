@@ -527,9 +527,21 @@ void RpcSerializer::packDocumentTermIteratorTerm( const DocumentTermIteratorInte
 	packIndex( val.termno);
 }
 
-void RpcSerializer::packSlice( DatabaseCursorInterface::Slice& val)
+void RpcSerializer::packSlice( const DatabaseCursorInterface::Slice& val)
 {
 	packBuffer( val.ptr(), val.size());
+}
+
+void RpcSerializer::packTimeStamp( const TimeStamp& val)
+{
+	packInt( (Index)val.unixtime());
+	packInt( (Index)val.counter());
+}
+
+void RpcSerializer::packStatisticsMessage( const StatisticsMessage& val)
+{
+	packTimeStamp( val.timestamp());
+	packBuffer( (const char*)val.ptr(), val.size());
 }
 
 void RpcSerializer::packAnalyzerDocument( const analyzer::Document& val)
@@ -1419,6 +1431,22 @@ DatabaseCursorInterface::Slice RpcDeserializer::unpackSlice()
 	unpackBuffer( buf, strsize);
 	DatabaseCursorInterface::Slice rt( buf, strsize);
 	return rt;
+}
+
+TimeStamp RpcDeserializer::unpackTimeStamp()
+{
+	int unixtime = unpackInt();
+	int counter = unpackInt();
+	return TimeStamp( unixtime, counter);
+}
+
+StatisticsMessage RpcDeserializer::unpackStatisticsMessage()
+{
+	TimeStamp tm = unpackTimeStamp();
+	const char* buf;
+	std::size_t bufsize;
+	unpackBuffer( buf, bufsize);
+	return StatisticsMessage( buf, bufsize, tm);
 }
 
 analyzer::Document RpcDeserializer::unpackAnalyzerDocument()

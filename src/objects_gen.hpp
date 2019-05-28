@@ -71,6 +71,7 @@
 #include "strus/sentenceLexerInstanceInterface.hpp"
 #include "strus/statisticsBuilderInterface.hpp"
 #include "strus/statisticsIteratorInterface.hpp"
+#include "strus/statisticsMapInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
 #include "strus/statisticsViewerInterface.hpp"
 #include "strus/storageAlterMetaDataTableInterface.hpp"
@@ -1092,9 +1093,11 @@ public:
 
 	virtual void setNofDocumentsInsertedChange( int p1);
 	virtual void addDfChange( const char* p1, const char* p2, int p3);
-	virtual void start( );
+	virtual StatisticsIteratorInterface* createIteratorAndRollback( );
+	virtual bool commit( );
 	virtual void rollback( );
-	virtual bool fetchMessage( const void*& p1, std::size_t& p2);
+	virtual void releaseStatistics( const TimeStamp& p1);
+	virtual StatisticsIteratorInterface* createIterator( const TimeStamp& p1);
 };
 
 class StatisticsIteratorImpl
@@ -1108,7 +1111,25 @@ public:
 	StatisticsIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsIterator, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual bool getNext( const void*& p1, std::size_t& p2);
+	virtual StatisticsMessage getNext( );
+};
+
+class StatisticsMapImpl
+		:public RpcInterfaceStub
+		,public strus::StatisticsMapInterface
+		,public strus::StatisticsMapConst
+{
+public:
+	virtual ~StatisticsMapImpl();
+
+	StatisticsMapImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsMap, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void setNofDocumentsInsertedChange( int p1);
+	virtual void addDfChange( const char* p1, const char* p2, int p3);
+	virtual bool processStatisticsMessage( const void* p1, std::size_t p2);
+	virtual GlobalCounter nofDocuments( );
+	virtual GlobalCounter df( const std::string& p1, const std::string& p2);
 };
 
 class StatisticsProcessorImpl
@@ -1123,7 +1144,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsProcessor, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual StatisticsViewerInterface* createViewer( const void* p1, std::size_t p2) const;
-	virtual StatisticsBuilderInterface* createBuilder( ) const;
+	virtual StatisticsBuilderInterface* createBuilder( const std::string& p1) const;
+	virtual StatisticsMapInterface* createMap( ) const;
 };
 
 class StatisticsViewerImpl
@@ -1198,7 +1220,7 @@ public:
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual StorageTransactionInterface* createTransaction( );
 	virtual StatisticsIteratorInterface* createAllStatisticsIterator( bool p1);
-	virtual StatisticsIteratorInterface* createChangeStatisticsIterator( );
+	virtual StatisticsIteratorInterface* createChangeStatisticsIterator( const TimeStamp& p1);
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
 	virtual bool checkStorage( std::ostream& p1) const;

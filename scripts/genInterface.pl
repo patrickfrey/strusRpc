@@ -799,6 +799,14 @@ sub packParameter
 	{
 		$rt .= "msg.packSlice( " . $id . ");";
 	}
+	elsif ($type eq "TimeStamp")
+	{
+		$rt .= "msg.packTimeStamp( " . $id . ");";
+	}
+	elsif ($type eq "StatisticsMessage")
+	{
+		$rt .= "msg.packStatisticsMessage( " . $id . ");";
+	}
 	elsif ($type eq "analyzer::QueryTerm")
 	{
 		$rt .= "msg.packAnalyzerQueryTerm( " . $id . ");";
@@ -1181,6 +1189,14 @@ sub unpackParameter
 			$rt .= "DatabaseCursorInterface::Slice slice$idx = serializedMsg.unpackSlice();\n";
 			$rt .= "$id = DatabaseCursorInterface::Slice( (const char*) ctx()->constConstructor()->get( slice$idx" . ".ptr(), slice$idx" . ".size()), slice$idx" . ".size());";
 		}
+	}
+	elsif ($type eq "TimeStamp")
+	{
+		$rt .= "$id = serializedMsg.unpackTimeStamp();";
+	}
+	elsif ($type eq "StatisticsMessage")
+	{
+		$rt .= "$id = serializedMsg.unpackStatisticsMessage();";
 	}
 	elsif ($type eq "analyzer::QueryTerm")
 	{

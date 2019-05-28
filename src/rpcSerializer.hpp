@@ -10,6 +10,7 @@
 #include <string>
 #include "rpcInterfaceStub.hpp"
 #include "strus/index.hpp"
+#include "strus/statisticsMessage.hpp"
 #include "strus/textProcessorInterface.hpp"
 #include "strus/analyzer/segmenterOptions.hpp"
 #include "strus/analyzer/documentClass.hpp"
@@ -107,7 +108,9 @@ public:
 	void packSummaryElement( const SummaryElement& val);
 	void packSummarizationVariable( const SummarizationVariable& val);
 	void packDocumentTermIteratorTerm( const DocumentTermIteratorInterface::Term& term);
-	void packSlice( DatabaseCursorInterface::Slice& val);
+	void packSlice( const DatabaseCursorInterface::Slice& val);
+	void packTimeStamp( const TimeStamp& val);
+	void packStatisticsMessage( const StatisticsMessage& val);
 	void packAnalyzerQueryTerm( const analyzer::QueryTerm& val);
 	void packAnalyzerQueryTermExpression( const analyzer::QueryTermExpression& val);
 	void packAnalyzerDocumentAttribute( const analyzer::DocumentAttribute& val);
@@ -209,6 +212,8 @@ public:
 	SummaryElement unpackSummaryElement();
 	DocumentTermIteratorInterface::Term unpackDocumentTermIteratorTerm();
 	DatabaseCursorInterface::Slice unpackSlice();
+	TimeStamp unpackTimeStamp();
+	StatisticsMessage unpackStatisticsMessage();
 	analyzer::QueryTerm unpackAnalyzerQueryTerm();
 	analyzer::QueryTermExpression unpackAnalyzerQueryTermExpression();
 	analyzer::DocumentAttribute unpackAnalyzerDocumentAttribute();
