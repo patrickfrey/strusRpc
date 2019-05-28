@@ -7237,11 +7237,9 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			StatisticsIteratorInterface* p0;
-			bool p1;
-			p1 = serializedMsg.unpackBool();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createAllStatisticsIterator(p1);
+			p0 = obj->createAllStatisticsIterator();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

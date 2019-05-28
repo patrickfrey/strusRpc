@@ -8036,14 +8036,13 @@ try
 }
 }
 
-StatisticsIteratorInterface* StorageClientImpl::createAllStatisticsIterator( bool p1)
+StatisticsIteratorInterface* StorageClientImpl::createAllStatisticsIterator( )
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createAllStatisticsIterator);
-	msg.packBool( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StatisticsIterator;
 	msg.packObject( classId_0, objId_0);

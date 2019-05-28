@@ -1219,7 +1219,7 @@ public:
 	virtual MetaDataRestrictionInterface* createMetaDataRestriction( ) const;
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual StorageTransactionInterface* createTransaction( );
-	virtual StatisticsIteratorInterface* createAllStatisticsIterator( bool p1);
+	virtual StatisticsIteratorInterface* createAllStatisticsIterator( );
 	virtual StatisticsIteratorInterface* createChangeStatisticsIterator( const TimeStamp& p1);
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
