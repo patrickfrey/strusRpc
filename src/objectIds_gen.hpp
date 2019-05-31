@@ -910,6 +910,7 @@ public:
 		Method_createViewer,
 		Method_createIterator,
 		Method_getChangeTimeStamps,
+		Method_loadChangeMessage,
 		Method_createBuilder,
 		Method_createMap
 	};

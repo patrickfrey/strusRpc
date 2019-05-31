@@ -1145,6 +1145,7 @@ public:
 	virtual StatisticsViewerInterface* createViewer( const void* p1, std::size_t p2) const;
 	virtual StatisticsIteratorInterface* createIterator( const std::string& p1, const TimeStamp& p2) const;
 	virtual std::vector<TimeStamp> getChangeTimeStamps( const std::string& p1) const;
+	virtual StatisticsMessage loadChangeMessage( const std::string& p1, const TimeStamp& p2) const;
 	virtual StatisticsBuilderInterface* createBuilder( const std::string& p1) const;
 	virtual StatisticsMapInterface* createMap( ) const;
 };
