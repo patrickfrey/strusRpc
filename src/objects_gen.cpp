@@ -7083,7 +7083,7 @@ try
 }
 }
 
-GlobalCounter StatisticsMapImpl::nofDocuments( )
+GlobalCounter StatisticsMapImpl::nofDocuments( ) const
 {
 try
 {
@@ -7105,7 +7105,7 @@ try
 }
 }
 
-GlobalCounter StatisticsMapImpl::df( const std::string& p1, const std::string& p2)
+GlobalCounter StatisticsMapImpl::df( const std::string& p1, const std::string& p2) const
 {
 try
 {

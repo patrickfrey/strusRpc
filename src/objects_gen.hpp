@@ -1127,8 +1127,8 @@ public:
 	virtual void addNofDocumentsInsertedChange( int p1);
 	virtual void addDfChange( const char* p1, const char* p2, int p3);
 	virtual bool processStatisticsMessage( const void* p1, std::size_t p2);
-	virtual GlobalCounter nofDocuments( );
-	virtual GlobalCounter df( const std::string& p1, const std::string& p2);
+	virtual GlobalCounter nofDocuments( ) const;
+	virtual GlobalCounter df( const std::string& p1, const std::string& p2) const;
 };
 
 class StatisticsProcessorImpl
