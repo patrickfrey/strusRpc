@@ -868,7 +868,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_setNofDocumentsInsertedChange,
+		Method_addNofDocumentsInsertedChange,
 		Method_addDfChange,
 		Method_createIteratorAndRollback,
 		Method_commit,
@@ -893,7 +893,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_setNofDocumentsInsertedChange,
+		Method_addNofDocumentsInsertedChange,
 		Method_addDfChange,
 		Method_processStatisticsMessage,
 		Method_nofDocuments,

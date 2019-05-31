@@ -1091,7 +1091,7 @@ public:
 	StatisticsBuilderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsBuilder, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void setNofDocumentsInsertedChange( int p1);
+	virtual void addNofDocumentsInsertedChange( int p1);
 	virtual void addDfChange( const char* p1, const char* p2, int p3);
 	virtual StatisticsIteratorInterface* createIteratorAndRollback( );
 	virtual bool commit( );
@@ -1124,7 +1124,7 @@ public:
 	StatisticsMapImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsMap, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void setNofDocumentsInsertedChange( int p1);
+	virtual void addNofDocumentsInsertedChange( int p1);
 	virtual void addDfChange( const char* p1, const char* p2, int p3);
 	virtual bool processStatisticsMessage( const void* p1, std::size_t p2);
 	virtual GlobalCounter nofDocuments( );

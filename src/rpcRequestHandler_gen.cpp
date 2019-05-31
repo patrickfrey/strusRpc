@@ -6202,12 +6202,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case StatisticsBuilderConst::Method_setNofDocumentsInsertedChange:
+		case StatisticsBuilderConst::Method_addNofDocumentsInsertedChange:
 		{
 			RpcSerializer msg;
 			int p1;
 			p1 = serializedMsg.unpackInt();
-			obj->setNofDocumentsInsertedChange(p1);
+			obj->addNofDocumentsInsertedChange(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6347,12 +6347,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case StatisticsMapConst::Method_setNofDocumentsInsertedChange:
+		case StatisticsMapConst::Method_addNofDocumentsInsertedChange:
 		{
 			RpcSerializer msg;
 			int p1;
 			p1 = serializedMsg.unpackInt();
-			obj->setNofDocumentsInsertedChange(p1);
+			obj->addNofDocumentsInsertedChange(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

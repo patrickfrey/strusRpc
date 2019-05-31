@@ -6856,21 +6856,21 @@ StatisticsBuilderImpl::~StatisticsBuilderImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void StatisticsBuilderImpl::setNofDocumentsInsertedChange( int p1)
+void StatisticsBuilderImpl::addNofDocumentsInsertedChange( int p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_setNofDocumentsInsertedChange);
+	msg.packByte( Method_addNofDocumentsInsertedChange);
 	msg.packInt( p1);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::setNofDocumentsInsertedChange");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsBuilderImpl::addNofDocumentsInsertedChange");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::setNofDocumentsInsertedChange", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsBuilderImpl::addNofDocumentsInsertedChange", err.what());
 	return void();
 }
 }
@@ -7020,21 +7020,21 @@ StatisticsMapImpl::~StatisticsMapImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void StatisticsMapImpl::setNofDocumentsInsertedChange( int p1)
+void StatisticsMapImpl::addNofDocumentsInsertedChange( int p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_setNofDocumentsInsertedChange);
+	msg.packByte( Method_addNofDocumentsInsertedChange);
 	msg.packInt( p1);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::setNofDocumentsInsertedChange");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::addNofDocumentsInsertedChange");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::setNofDocumentsInsertedChange", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::addNofDocumentsInsertedChange", err.what());
 	return void();
 }
 }
