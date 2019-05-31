@@ -1097,7 +1097,6 @@ public:
 	virtual bool commit( );
 	virtual void rollback( );
 	virtual void releaseStatistics( const TimeStamp& p1);
-	virtual StatisticsIteratorInterface* createIterator( const TimeStamp& p1);
 };
 
 class StatisticsIteratorImpl
@@ -1144,6 +1143,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsProcessor, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual StatisticsViewerInterface* createViewer( const void* p1, std::size_t p2) const;
+	virtual StatisticsIteratorInterface* createIterator( const std::string& p1, const TimeStamp& p2) const;
 	virtual StatisticsBuilderInterface* createBuilder( const std::string& p1) const;
 	virtual StatisticsMapInterface* createMap( ) const;
 };

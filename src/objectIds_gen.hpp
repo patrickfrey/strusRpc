@@ -873,8 +873,7 @@ public:
 		Method_createIteratorAndRollback,
 		Method_commit,
 		Method_rollback,
-		Method_releaseStatistics,
-		Method_createIterator
+		Method_releaseStatistics
 	};
 };
 
@@ -909,6 +908,7 @@ public:
 	{
 		Method_Destructor,
 		Method_createViewer,
+		Method_createIterator,
 		Method_createBuilder,
 		Method_createMap
 	};
