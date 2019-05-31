@@ -909,6 +909,7 @@ public:
 		Method_Destructor,
 		Method_createViewer,
 		Method_createIterator,
+		Method_getChangeTimeStamps,
 		Method_createBuilder,
 		Method_createMap
 	};
@@ -974,6 +975,7 @@ public:
 		Method_createTransaction,
 		Method_createAllStatisticsIterator,
 		Method_createChangeStatisticsIterator,
+		Method_getChangeStatisticTimeStamps,
 		Method_getStatisticsProcessor,
 		Method_createDocumentChecker,
 		Method_checkStorage,

@@ -7188,6 +7188,34 @@ try
 }
 }
 
+std::vector<TimeStamp> StatisticsProcessorImpl::getChangeTimeStamps( const std::string& p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getChangeTimeStamps);
+	msg.packString( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<TimeStamp> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		TimeStamp elem_p0 = serializedMsg.unpackTimeStamp();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsProcessorImpl::getChangeTimeStamps");
+	return std::vector<TimeStamp>();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsProcessorImpl::getChangeTimeStamps", err.what());
+	return std::vector<TimeStamp>();
+}
+}
+
 StatisticsBuilderInterface* StatisticsProcessorImpl::createBuilder( const std::string& p1) const
 {
 try
@@ -8081,6 +8109,33 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::createChangeStatisticsIterator", err.what());
 	return 0;
+}
+}
+
+std::vector<TimeStamp> StorageClientImpl::getChangeStatisticTimeStamps( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getChangeStatisticTimeStamps);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<TimeStamp> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		TimeStamp elem_p0 = serializedMsg.unpackTimeStamp();
+		p0.push_back( elem_p0);
+	}
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageClientImpl::getChangeStatisticTimeStamps");
+	return std::vector<TimeStamp>();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::getChangeStatisticTimeStamps", err.what());
+	return std::vector<TimeStamp>();
 }
 }
 

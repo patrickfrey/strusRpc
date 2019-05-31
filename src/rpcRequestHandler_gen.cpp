@@ -6499,6 +6499,28 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case StatisticsProcessorConst::Method_getChangeTimeStamps:
+		{
+			RpcSerializer msg;
+			std::vector<TimeStamp> p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->getChangeTimeStamps(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packTimeStamp( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
 		case StatisticsProcessorConst::Method_createBuilder:
 		{
 			RpcSerializer msg;
@@ -7274,6 +7296,26 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case StorageClientConst::Method_getChangeStatisticTimeStamps:
+		{
+			RpcSerializer msg;
+			std::vector<TimeStamp> p0;
+			p0 = obj->getChangeStatisticTimeStamps();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packTimeStamp( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
 		}
 		case StorageClientConst::Method_getStatisticsProcessor:
 		{
