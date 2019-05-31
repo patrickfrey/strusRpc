@@ -8089,7 +8089,7 @@ try
 }
 }
 
-StatisticsIteratorInterface* StorageClientImpl::createAllStatisticsIterator( )
+StatisticsIteratorInterface* StorageClientImpl::createAllStatisticsIterator( ) const
 {
 try
 {
@@ -8112,7 +8112,7 @@ try
 }
 }
 
-StatisticsIteratorInterface* StorageClientImpl::createChangeStatisticsIterator( const TimeStamp& p1)
+StatisticsIteratorInterface* StorageClientImpl::createChangeStatisticsIterator( const TimeStamp& p1) const
 {
 try
 {

@@ -1221,8 +1221,8 @@ public:
 	virtual MetaDataRestrictionInterface* createMetaDataRestriction( ) const;
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual StorageTransactionInterface* createTransaction( );
-	virtual StatisticsIteratorInterface* createAllStatisticsIterator( );
-	virtual StatisticsIteratorInterface* createChangeStatisticsIterator( const TimeStamp& p1);
+	virtual StatisticsIteratorInterface* createAllStatisticsIterator( ) const;
+	virtual StatisticsIteratorInterface* createChangeStatisticsIterator( const TimeStamp& p1) const;
 	virtual std::vector<TimeStamp> getChangeStatisticTimeStamps( ) const;
 	virtual StatisticsMessage loadChangeStatisticsMessage( const TimeStamp& p1) const;
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
