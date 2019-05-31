@@ -977,6 +977,7 @@ public:
 		Method_createAllStatisticsIterator,
 		Method_createChangeStatisticsIterator,
 		Method_getChangeStatisticTimeStamps,
+		Method_loadChangeStatisticsMessage,
 		Method_getStatisticsProcessor,
 		Method_createDocumentChecker,
 		Method_checkStorage,

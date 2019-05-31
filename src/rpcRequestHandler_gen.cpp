@@ -7338,6 +7338,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case StorageClientConst::Method_loadChangeStatisticsMessage:
+		{
+			RpcSerializer msg;
+			StatisticsMessage p0;
+			TimeStamp p1;
+			p1 = serializedMsg.unpackTimeStamp();
+			p0 = obj->loadChangeStatisticsMessage(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStatisticsMessage( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case StorageClientConst::Method_getStatisticsProcessor:
 		{
 			RpcSerializer msg;
