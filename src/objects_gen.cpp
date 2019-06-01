@@ -7264,13 +7264,14 @@ try
 }
 }
 
-StatisticsMapInterface* StatisticsProcessorImpl::createMap( ) const
+StatisticsMapInterface* StatisticsProcessorImpl::createMap( const std::string& p1) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_createMap);
+	msg.packString( p1);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_StatisticsMap;
 	msg.packObject( classId_0, objId_0);

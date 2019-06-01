@@ -1147,7 +1147,7 @@ public:
 	virtual std::vector<TimeStamp> getChangeTimeStamps( const std::string& p1) const;
 	virtual StatisticsMessage loadChangeMessage( const std::string& p1, const TimeStamp& p2) const;
 	virtual StatisticsBuilderInterface* createBuilder( const std::string& p1) const;
-	virtual StatisticsMapInterface* createMap( ) const;
+	virtual StatisticsMapInterface* createMap( const std::string& p1) const;
 };
 
 class StatisticsViewerImpl
