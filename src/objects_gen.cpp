@@ -2195,13 +2195,13 @@ DocumentClassDetectorImpl::~DocumentClassDetectorImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void DocumentClassDetectorImpl::defineDocumentSchemeDetector( const std::string& p1, const std::string& p2, const std::vector<std::string>& p3, const std::vector<std::string>& p4)
+void DocumentClassDetectorImpl::defineDocumentSchemaDetector( const std::string& p1, const std::string& p2, const std::vector<std::string>& p3, const std::vector<std::string>& p4)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineDocumentSchemeDetector);
+	msg.packByte( Method_defineDocumentSchemaDetector);
 	msg.packString( p1);
 	msg.packString( p2);
 	msg.packSize( p3.size());
@@ -2215,10 +2215,10 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentClassDetectorImpl::defineDocumentSchemeDetector");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentClassDetectorImpl::defineDocumentSchemaDetector");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentClassDetectorImpl::defineDocumentSchemeDetector", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentClassDetectorImpl::defineDocumentSchemaDetector", err.what());
 	return void();
 }
 }

@@ -460,7 +460,7 @@ void RpcSerializer::packWordVector( const WordVector& val)
 void RpcSerializer::packDocumentClass( const analyzer::DocumentClass& dclass)
 {
 	packString( dclass.mimeType());
-	packString( dclass.scheme());
+	packString( dclass.schema());
 	packString( dclass.encoding());
 }
 
@@ -935,7 +935,7 @@ void RpcSerializer::packAnalyzerDocumentAnalyzerMapView( const analyzer::Documen
 	for (; di != de; ++di)
 	{
 		packString( di->mimeType());
-		packString( di->scheme());
+		packString( di->schema());
 		packAnalyzerDocumentAnalyzerView( di->analyzer());
 	}
 }
@@ -1311,7 +1311,7 @@ NumericVariant RpcDeserializer::unpackNumericVariant()
 analyzer::DocumentClass RpcDeserializer::unpackDocumentClass()
 {
 	analyzer::DocumentClass rt( unpackString());
-	rt.setScheme( unpackString());
+	rt.setSchema( unpackString());
 	rt.setEncoding( unpackString());
 	return rt;
 }
@@ -1867,9 +1867,9 @@ analyzer::DocumentAnalyzerMapView RpcDeserializer::unpackAnalyzerDocumentAnalyze
 	for (; di != de; ++di)
 	{
 		std::string mimeType = unpackString();
-		std::string scheme = unpackString();
+		std::string schema = unpackString();
 		analyzer::DocumentAnalyzerView analyzer = unpackAnalyzerDocumentAnalyzerView();
-		definitions.push_back( analyzer::DocumentAnalyzerMapElementView( mimeType, scheme, analyzer));
+		definitions.push_back( analyzer::DocumentAnalyzerMapElementView( mimeType, schema, analyzer));
 	}
 	return analyzer::DocumentAnalyzerMapView( definitions);
 }

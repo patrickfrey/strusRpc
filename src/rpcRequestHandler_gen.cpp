@@ -2010,7 +2010,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case DocumentClassDetectorConst::Method_defineDocumentSchemeDetector:
+		case DocumentClassDetectorConst::Method_defineDocumentSchemaDetector:
 		{
 			RpcSerializer msg;
 			std::string p1;
@@ -2029,7 +2029,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				std::string ee = serializedMsg.unpackString();
 				p4.push_back( ee);
 			}
-			obj->defineDocumentSchemeDetector(p1,p2,p3,p4);
+			obj->defineDocumentSchemaDetector(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
