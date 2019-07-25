@@ -676,7 +676,8 @@ public:
 		Method_addSummarizerFunction,
 		Method_addWeightingFunction,
 		Method_defineWeightingFormula,
-		Method_createQuery
+		Method_createQuery,
+		Method_view
 	};
 };
 
@@ -1121,7 +1122,7 @@ public:
 		Method_defineResultName,
 		Method_getVariables,
 		Method_createFunctionContext,
-		Method_tostring
+		Method_view
 	};
 };
 
@@ -1311,7 +1312,7 @@ public:
 		Method_addNumericParameter,
 		Method_createFunctionContext,
 		Method_getVariables,
-		Method_tostring
+		Method_view
 	};
 };
 

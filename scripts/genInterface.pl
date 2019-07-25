@@ -911,6 +911,10 @@ sub packParameter
 	{
 		$rt .= "msg.packFunctionDescription( " . $id . ");";
 	}
+	elsif ($type eq "StructView")
+	{
+		$rt .= "msg.packStructView( " . $id . ");";
+	}
 	elsif ($type eq "VectorQueryResult")
 	{
 		$rt .= "msg.packVectorQueryResult( " . $id . ");";
@@ -1301,6 +1305,10 @@ sub unpackParameter
 	elsif ($type eq "FunctionDescription")
 	{
 		$rt .= "$id = serializedMsg.unpackFunctionDescription();";
+	}
+	elsif ($type eq "StructView")
+	{
+		$rt .= "$id = serializedMsg.unpackStructView();";
 	}
 	elsif ($type eq "VectorQueryResult")
 	{

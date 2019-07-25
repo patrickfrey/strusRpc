@@ -793,6 +793,47 @@ void RpcSerializer::packFunctionDescription( const FunctionDescription& val)
 	}
 }
 
+void RpcSerializer::packStructView( const StructView& val)
+{
+	packByte( val.type());
+	switch (val.type())
+	{
+		case StructView::Null:
+			break;
+		case StructView::String:
+			packString( val.asstring());
+			break;
+		case StructView::Numeric:
+			packNumericVariant( val.asnumeric());
+			break;
+		case StructView::Structure:
+		{
+			packBool( val.isArray());
+			if (val.isArray())
+			{
+				std::size_t ai = 0, ae = val.arraySize();
+				packSize( ae);
+				for (; ai != ae; ++ai)
+				{
+					packStructView( *val.get( ai));
+				}
+			}
+			else
+			{
+				packSize( val.dictSize());
+				StructView::dict_iterator ai = val.dict_begin(), ae = val.dict_end();
+				for (; ai != ae; ++ai)
+				{
+					packString( ai->first);
+					packStructView( ai->second);
+				}
+			}
+			break;
+		}
+	}
+	
+}
+
 void RpcSerializer::packVectorQueryResult( const VectorQueryResult& val)
 {
 	packString( val.value());
@@ -1713,6 +1754,43 @@ FunctionDescription RpcDeserializer::unpackFunctionDescription()
 		rt( type, name, text, domain);
 	}
 	return rt;
+}
+
+StructView RpcDeserializer::unpackStructView()
+{
+	StructView::Type type = (StructView::Type)unpackByte();
+	switch (type)
+	{
+		case StructView::Null:
+			return StructView();
+		case StructView::String:
+			return StructView( unpackString());
+		case StructView::Numeric:
+			return StructView( unpackNumericVariant());
+		case StructView::Structure:
+		{
+			StructView rt;
+			bool isArray = unpackBool();
+			if (isArray)
+			{
+				std::size_t ai = 0, ae = unpackSize();
+				for (; ai != ae; ++ai)
+				{
+					rt( unpackStructView());
+				}
+			}
+			else
+			{
+				std::size_t ai = 0, ae = unpackSize();
+				for (; ai != ae; ++ai)
+				{
+					rt( unpackString(), unpackStructView());
+				}
+			}
+			return rt;
+		}
+	}
+	return StructView();
 }
 
 VectorQueryResult RpcDeserializer::unpackVectorQueryResult()

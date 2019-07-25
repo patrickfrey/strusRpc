@@ -4577,6 +4577,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case QueryEvalConst::Method_view:
+		{
+			RpcSerializer msg;
+			StructView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStructView( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
@@ -8661,11 +8678,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case SummarizerFunctionInstanceConst::Method_tostring:
+		case SummarizerFunctionInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			std::string p0;
-			p0 = obj->tostring();
+			StructView p0;
+			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8674,7 +8691,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packString( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -10310,11 +10327,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case WeightingFunctionInstanceConst::Method_tostring:
+		case WeightingFunctionInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			std::string p0;
-			p0 = obj->tostring();
+			StructView p0;
+			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -10323,7 +10340,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packString( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

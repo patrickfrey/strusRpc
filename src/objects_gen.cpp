@@ -5053,6 +5053,28 @@ try
 }
 }
 
+StructView QueryEvalImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	StructView p0 = serializedMsg.unpackStructView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryEvalImpl::view");
+	return StructView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryEvalImpl::view", err.what());
+	return StructView();
+}
+}
+
 QueryImpl::~QueryImpl()
 {
 	if (isConst()) return;
@@ -9637,25 +9659,25 @@ try
 }
 }
 
-std::string SummarizerFunctionInstanceImpl::tostring( ) const
+StructView SummarizerFunctionInstanceImpl::view( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_tostring);
+	msg.packByte( Method_view);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::string p0 = serializedMsg.unpackString();;
+	StructView p0 = serializedMsg.unpackStructView();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::tostring");
-	return std::string();
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::view");
+	return StructView();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::tostring", err.what());
-	return std::string();
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::view", err.what());
+	return StructView();
 }
 }
 
@@ -11489,25 +11511,25 @@ try
 }
 }
 
-std::string WeightingFunctionInstanceImpl::tostring( ) const
+StructView WeightingFunctionInstanceImpl::view( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_tostring);
+	msg.packByte( Method_view);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::string p0 = serializedMsg.unpackString();;
+	StructView p0 = serializedMsg.unpackStructView();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::tostring");
-	return std::string();
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::view");
+	return StructView();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::tostring", err.what());
-	return std::string();
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::view", err.what());
+	return StructView();
 }
 }
 
