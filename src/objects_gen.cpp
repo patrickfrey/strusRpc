@@ -5391,25 +5391,25 @@ try
 }
 }
 
-std::string QueryImpl::tostring( ) const
+StructView QueryImpl::view( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_tostring);
+	msg.packByte( Method_view);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::string p0 = serializedMsg.unpackString();;
+	StructView p0 = serializedMsg.unpackStructView();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryImpl::tostring");
-	return std::string();
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryImpl::view");
+	return StructView();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryImpl::tostring", err.what());
-	return std::string();
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryImpl::view", err.what());
+	return StructView();
 }
 }
 
@@ -5727,25 +5727,25 @@ try
 }
 }
 
-std::string ScalarFunctionInstanceImpl::tostring( ) const
+StructView ScalarFunctionInstanceImpl::view( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_tostring);
+	msg.packByte( Method_view);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::string p0 = serializedMsg.unpackString();;
+	StructView p0 = serializedMsg.unpackStructView();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::tostring");
-	return std::string();
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::view");
+	return StructView();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::tostring", err.what());
-	return std::string();
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::view", err.what());
+	return StructView();
 }
 }
 
@@ -5851,25 +5851,25 @@ try
 }
 }
 
-std::string ScalarFunctionImpl::tostring( ) const
+StructView ScalarFunctionImpl::view( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_tostring);
+	msg.packByte( Method_view);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::string p0 = serializedMsg.unpackString();;
+	StructView p0 = serializedMsg.unpackStructView();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::tostring");
-	return std::string();
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::view");
+	return StructView();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ScalarFunctionImpl::tostring", err.what());
-	return std::string();
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ScalarFunctionImpl::view", err.what());
+	return StructView();
 }
 }
 

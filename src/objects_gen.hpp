@@ -877,7 +877,7 @@ public:
 	virtual void setWeightingVariableValue( const std::string& p1, double p2);
 	virtual void setDebugMode( bool p1);
 	virtual QueryResult evaluate( ) const;
-	virtual std::string tostring( ) const;
+	virtual StructView view( ) const;
 };
 
 class QueryProcessorImpl
@@ -916,7 +916,7 @@ public:
 
 	virtual void setVariableValue( const std::string& p1, double p2);
 	virtual double call( const double* p1, unsigned int p2) const;
-	virtual std::string tostring( ) const;
+	virtual StructView view( ) const;
 };
 
 class ScalarFunctionImpl
@@ -934,7 +934,7 @@ public:
 	virtual unsigned int getNofArguments( ) const;
 	virtual void setDefaultVariableValue( const std::string& p1, double p2);
 	virtual ScalarFunctionInstanceInterface* createInstance( ) const;
-	virtual std::string tostring( ) const;
+	virtual StructView view( ) const;
 };
 
 class ScalarFunctionParserImpl

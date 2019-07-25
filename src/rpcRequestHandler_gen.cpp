@@ -4881,11 +4881,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case QueryConst::Method_tostring:
+		case QueryConst::Method_view:
 		{
 			RpcSerializer msg;
-			std::string p0;
-			p0 = obj->tostring();
+			StructView p0;
+			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -4894,7 +4894,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packString( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -5185,11 +5185,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case ScalarFunctionInstanceConst::Method_tostring:
+		case ScalarFunctionInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			std::string p0;
-			p0 = obj->tostring();
+			StructView p0;
+			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5198,7 +5198,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packString( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -5289,11 +5289,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case ScalarFunctionConst::Method_tostring:
+		case ScalarFunctionConst::Method_view:
 		{
 			RpcSerializer msg;
-			std::string p0;
-			p0 = obj->tostring();
+			StructView p0;
+			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5302,7 +5302,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packString( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

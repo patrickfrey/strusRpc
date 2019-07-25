@@ -702,7 +702,7 @@ public:
 		Method_setWeightingVariableValue,
 		Method_setDebugMode,
 		Method_evaluate,
-		Method_tostring
+		Method_view
 	};
 };
 
@@ -733,7 +733,7 @@ public:
 		Method_Destructor,
 		Method_setVariableValue,
 		Method_call,
-		Method_tostring
+		Method_view
 	};
 };
 
@@ -747,7 +747,7 @@ public:
 		Method_getNofArguments,
 		Method_setDefaultVariableValue,
 		Method_createInstance,
-		Method_tostring
+		Method_view
 	};
 };
 
