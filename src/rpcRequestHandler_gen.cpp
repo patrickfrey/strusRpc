@@ -5397,11 +5397,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case ScalarFunctionParserConst::Method_getDescription:
+		case ScalarFunctionParserConst::Method_view:
 		{
 			RpcSerializer msg;
-			const char* p0;
-			p0 = obj->getDescription();
+			StructView p0;
+			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5410,7 +5410,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packCharp( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

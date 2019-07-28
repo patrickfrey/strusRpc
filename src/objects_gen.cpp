@@ -5977,25 +5977,25 @@ try
 }
 }
 
-const char* ScalarFunctionParserImpl::getDescription( ) const
+StructView ScalarFunctionParserImpl::view( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_getDescription);
+	msg.packByte( Method_view);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	StructView p0 = serializedMsg.unpackStructView();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ScalarFunctionParserImpl::getDescription");
-	return 0;
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ScalarFunctionParserImpl::view");
+	return StructView();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ScalarFunctionParserImpl::getDescription", err.what());
-	return 0;
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ScalarFunctionParserImpl::view", err.what());
+	return StructView();
 }
 }
 

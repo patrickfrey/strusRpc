@@ -761,7 +761,7 @@ public:
 	{
 		Method_Destructor,
 		Method_createFunction,
-		Method_getDescription
+		Method_view
 	};
 };
 

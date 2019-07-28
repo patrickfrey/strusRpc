@@ -952,7 +952,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_ScalarFunctionParser, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual ScalarFunctionInterface* createFunction( const std::string& p1, const std::vector<std::string>& p2) const;
-	virtual const char* getDescription( ) const;
+	virtual StructView view( ) const;
 };
 
 class SegmenterContextImpl
