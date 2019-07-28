@@ -903,14 +903,6 @@ sub packParameter
 	{
 		$rt .= "msg.packTextProcessorFunctionType( " . $id . ");";
 	}
-	elsif ($type eq "PostingJoinOperatorInterface::Description")
-	{
-		$rt .= "msg.packPostingJoinOperatorDescription( " . $id . ");";
-	}
-	elsif ($type eq "FunctionDescription")
-	{
-		$rt .= "msg.packFunctionDescription( " . $id . ");";
-	}
 	elsif ($type eq "StructView")
 	{
 		$rt .= "msg.packStructView( " . $id . ");";
@@ -1297,14 +1289,6 @@ sub unpackParameter
 	elsif ($type eq "TextProcessorInterface::FunctionType")
 	{
 		$rt .= "$id = serializedMsg.unpackTextProcessorFunctionType();";
-	}
-	elsif ($type eq "PostingJoinOperatorInterface::Description")
-	{
-		$rt .= "$id = serializedMsg.unpackPostingJoinOperatorDescription();";
-	}
-	elsif ($type eq "FunctionDescription")
-	{
-		$rt .= "$id = serializedMsg.unpackFunctionDescription();";
 	}
 	elsif ($type eq "StructView")
 	{

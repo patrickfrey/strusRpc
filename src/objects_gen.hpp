@@ -784,7 +784,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_PostingJoinOperator, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual PostingIteratorInterface* createResultIterator( const std::vector<Reference<PostingIteratorInterface> >& p1, int p2, unsigned int p3) const;
-	virtual PostingJoinOperatorInterface::Description getDescription( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class QueryAnalyzerContextImpl
@@ -916,6 +917,7 @@ public:
 
 	virtual void setVariableValue( const std::string& p1, double p2);
 	virtual double call( const double* p1, unsigned int p2) const;
+	virtual const char* name( ) const;
 	virtual StructView view( ) const;
 };
 
@@ -934,6 +936,7 @@ public:
 	virtual unsigned int getNofArguments( ) const;
 	virtual void setDefaultVariableValue( const std::string& p1, double p2);
 	virtual ScalarFunctionInstanceInterface* createInstance( ) const;
+	virtual const char* name( ) const;
 	virtual StructView view( ) const;
 };
 
@@ -1405,6 +1408,7 @@ public:
 	virtual void defineResultName( const std::string& p1, const std::string& p2);
 	virtual std::vector<std::string> getVariables( ) const;
 	virtual SummarizerFunctionContextInterface* createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const;
+	virtual const char* name( ) const;
 	virtual StructView view( ) const;
 };
 
@@ -1420,7 +1424,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual SummarizerFunctionInstanceInterface* createInstance( const QueryProcessorInterface* p1) const;
-	virtual FunctionDescription getDescription( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class TextProcessorImpl
@@ -1647,6 +1652,7 @@ public:
 	virtual void addNumericParameter( const std::string& p1, const NumericVariant& p2);
 	virtual WeightingFunctionContextInterface* createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const;
 	virtual std::vector<std::string> getVariables( ) const;
+	virtual const char* name( ) const;
 	virtual StructView view( ) const;
 };
 
@@ -1662,7 +1668,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual WeightingFunctionInstanceInterface* createInstance( const QueryProcessorInterface* p1) const;
-	virtual FunctionDescription getDescription( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 } //namespace
 #endif

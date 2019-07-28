@@ -4376,25 +4376,47 @@ PostingIteratorInterface* PostingJoinOperatorImpl::createResultIterator( const s
 	return 0;
 }
 
-PostingJoinOperatorInterface::Description PostingJoinOperatorImpl::getDescription( ) const
+const char* PostingJoinOperatorImpl::name( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_getDescription);
+	msg.packByte( Method_name);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	PostingJoinOperatorInterface::Description p0 = serializedMsg.unpackPostingJoinOperatorDescription();;
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PostingJoinOperatorImpl::getDescription");
-	return PostingJoinOperatorInterface::Description();
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PostingJoinOperatorImpl::name");
+	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PostingJoinOperatorImpl::getDescription", err.what());
-	return PostingJoinOperatorInterface::Description();
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PostingJoinOperatorImpl::name", err.what());
+	return 0;
+}
+}
+
+StructView PostingJoinOperatorImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	StructView p0 = serializedMsg.unpackStructView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PostingJoinOperatorImpl::view");
+	return StructView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PostingJoinOperatorImpl::view", err.what());
+	return StructView();
 }
 }
 
@@ -5727,6 +5749,28 @@ try
 }
 }
 
+const char* ScalarFunctionInstanceImpl::name( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_name);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ScalarFunctionInstanceImpl::name");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ScalarFunctionInstanceImpl::name", err.what());
+	return 0;
+}
+}
+
 StructView ScalarFunctionInstanceImpl::view( ) const
 {
 try
@@ -5847,6 +5891,28 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ScalarFunctionImpl::createInstance", err.what());
+	return 0;
+}
+}
+
+const char* ScalarFunctionImpl::name( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_name);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "ScalarFunctionImpl::name");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "ScalarFunctionImpl::name", err.what());
 	return 0;
 }
 }
@@ -9659,6 +9725,28 @@ try
 }
 }
 
+const char* SummarizerFunctionInstanceImpl::name( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_name);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::name");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::name", err.what());
+	return 0;
+}
+}
+
 StructView SummarizerFunctionInstanceImpl::view( ) const
 {
 try
@@ -9717,25 +9805,47 @@ try
 }
 }
 
-FunctionDescription SummarizerFunctionImpl::getDescription( ) const
+const char* SummarizerFunctionImpl::name( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_getDescription);
+	msg.packByte( Method_name);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	FunctionDescription p0 = serializedMsg.unpackFunctionDescription();;
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SummarizerFunctionImpl::getDescription");
-	return FunctionDescription();
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SummarizerFunctionImpl::name");
+	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SummarizerFunctionImpl::getDescription", err.what());
-	return FunctionDescription();
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SummarizerFunctionImpl::name", err.what());
+	return 0;
+}
+}
+
+StructView SummarizerFunctionImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	StructView p0 = serializedMsg.unpackStructView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SummarizerFunctionImpl::view");
+	return StructView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SummarizerFunctionImpl::view", err.what());
+	return StructView();
 }
 }
 
@@ -11511,6 +11621,28 @@ try
 }
 }
 
+const char* WeightingFunctionInstanceImpl::name( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_name);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "WeightingFunctionInstanceImpl::name");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "WeightingFunctionInstanceImpl::name", err.what());
+	return 0;
+}
+}
+
 StructView WeightingFunctionInstanceImpl::view( ) const
 {
 try
@@ -11569,25 +11701,47 @@ try
 }
 }
 
-FunctionDescription WeightingFunctionImpl::getDescription( ) const
+const char* WeightingFunctionImpl::name( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_getDescription);
+	msg.packByte( Method_name);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	FunctionDescription p0 = serializedMsg.unpackFunctionDescription();;
+	const char* p0 =  ctx()->constConstructor()->getCharp( serializedMsg.unpackConstCharp());;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "WeightingFunctionImpl::getDescription");
-	return FunctionDescription();
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "WeightingFunctionImpl::name");
+	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "WeightingFunctionImpl::getDescription", err.what());
-	return FunctionDescription();
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "WeightingFunctionImpl::name", err.what());
+	return 0;
+}
+}
+
+StructView WeightingFunctionImpl::view( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_view);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	StructView p0 = serializedMsg.unpackStructView();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "WeightingFunctionImpl::view");
+	return StructView();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "WeightingFunctionImpl::view", err.what());
+	return StructView();
 }
 }
 

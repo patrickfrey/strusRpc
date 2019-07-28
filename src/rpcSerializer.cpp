@@ -773,26 +773,6 @@ void RpcSerializer::packTextProcessorFunctionType( const TextProcessorInterface:
 	packByte((unsigned char)val);
 }
 
-void RpcSerializer::packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val)
-{
-	packString( val.name());
-	packString( val.text());
-}
-
-void RpcSerializer::packFunctionDescription( const FunctionDescription& val)
-{
-	packString( val.text());
-	packSize( val.parameter().size());
-	std::vector<FunctionDescription::Parameter>::const_iterator vi = val.parameter().begin(), ve = val.parameter().end();
-	for (; vi != ve; ++vi)
-	{
-		packByte( (unsigned char)vi->type());
-		packString( vi->name());
-		packString( vi->text());
-		packString( vi->domain());
-	}
-}
-
 void RpcSerializer::packStructView( const StructView& val)
 {
 	packByte( val.type());
@@ -1732,28 +1712,6 @@ QueryProcessorInterface::FunctionType RpcDeserializer::unpackQueryProcessorFunct
 TextProcessorInterface::FunctionType RpcDeserializer::unpackTextProcessorFunctionType()
 {
 	return (TextProcessorInterface::FunctionType)unpackByte();
-}
-
-PostingJoinOperatorInterface::Description RpcDeserializer::unpackPostingJoinOperatorDescription()
-{
-	std::string name( unpackString());
-	std::string descr( unpackString());
-	return PostingJoinOperatorInterface::Description( name, descr);
-}
-
-FunctionDescription RpcDeserializer::unpackFunctionDescription()
-{
-	FunctionDescription rt( unpackString());
-	unsigned int ii=0, nn=unpackSize();
-	for (; ii<nn; ++ii)
-	{
-		FunctionDescription::Parameter::Type type = (FunctionDescription::Parameter::Type)unpackByte();
-		std::string name( unpackString());
-		std::string text( unpackString());
-		std::string domain( unpackString());
-		rt( type, name, text, domain);
-	}
-	return rt;
 }
 
 StructView RpcDeserializer::unpackStructView()

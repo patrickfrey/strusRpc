@@ -134,8 +134,6 @@ public:
 	void packTermStatisticsChange( const TermStatisticsChange& val);
 	void packQueryProcessorFunctionType( const QueryProcessorInterface::FunctionType& val);
 	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
-	void packPostingJoinOperatorDescription( const PostingJoinOperatorInterface::Description& val);
-	void packFunctionDescription( const FunctionDescription& val);
 	void packStructView( const StructView& val);
 	void packVectorQueryResult( const VectorQueryResult& val);
 	void packSentenceTerm( const SentenceTerm& val);
@@ -238,8 +236,6 @@ public:
 	TermStatisticsChange unpackTermStatisticsChange();
 	QueryProcessorInterface::FunctionType unpackQueryProcessorFunctionType();
 	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();
-	PostingJoinOperatorInterface::Description unpackPostingJoinOperatorDescription();
-	FunctionDescription unpackFunctionDescription();
 	StructView unpackStructView();
 	VectorQueryResult unpackVectorQueryResult();
 	SentenceTerm unpackSentenceTerm();

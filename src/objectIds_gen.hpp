@@ -625,7 +625,8 @@ public:
 	{
 		Method_Destructor,
 		Method_createResultIterator,
-		Method_getDescription
+		Method_name,
+		Method_view
 	};
 };
 
@@ -733,6 +734,7 @@ public:
 		Method_Destructor,
 		Method_setVariableValue,
 		Method_call,
+		Method_name,
 		Method_view
 	};
 };
@@ -747,6 +749,7 @@ public:
 		Method_getNofArguments,
 		Method_setDefaultVariableValue,
 		Method_createInstance,
+		Method_name,
 		Method_view
 	};
 };
@@ -1122,6 +1125,7 @@ public:
 		Method_defineResultName,
 		Method_getVariables,
 		Method_createFunctionContext,
+		Method_name,
 		Method_view
 	};
 };
@@ -1133,7 +1137,8 @@ public:
 	{
 		Method_Destructor,
 		Method_createInstance,
-		Method_getDescription
+		Method_name,
+		Method_view
 	};
 };
 
@@ -1312,6 +1317,7 @@ public:
 		Method_addNumericParameter,
 		Method_createFunctionContext,
 		Method_getVariables,
+		Method_name,
 		Method_view
 	};
 };
@@ -1323,7 +1329,8 @@ public:
 	{
 		Method_Destructor,
 		Method_createInstance,
-		Method_getDescription
+		Method_name,
+		Method_view
 	};
 };
 } //namespace

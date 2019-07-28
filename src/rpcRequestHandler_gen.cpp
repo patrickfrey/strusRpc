@@ -3958,11 +3958,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packString( "the method 'createResultIterator' is not implemented for RPC");
 			return msg.content();
 		}
-		case PostingJoinOperatorConst::Method_getDescription:
+		case PostingJoinOperatorConst::Method_name:
 		{
 			RpcSerializer msg;
-			PostingJoinOperatorInterface::Description p0;
-			p0 = obj->getDescription();
+			const char* p0;
+			p0 = obj->name();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3971,7 +3971,24 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packPostingJoinOperatorDescription( p0);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PostingJoinOperatorConst::Method_view:
+		{
+			RpcSerializer msg;
+			StructView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -5185,6 +5202,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case ScalarFunctionInstanceConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case ScalarFunctionInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
@@ -5288,6 +5322,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case ScalarFunctionConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 		case ScalarFunctionConst::Method_view:
 		{
@@ -8678,6 +8729,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case SummarizerFunctionInstanceConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case SummarizerFunctionInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
@@ -8732,11 +8800,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case SummarizerFunctionConst::Method_getDescription:
+		case SummarizerFunctionConst::Method_name:
 		{
 			RpcSerializer msg;
-			FunctionDescription p0;
-			p0 = obj->getDescription();
+			const char* p0;
+			p0 = obj->name();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8745,7 +8813,24 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packFunctionDescription( p0);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SummarizerFunctionConst::Method_view:
+		{
+			RpcSerializer msg;
+			StructView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -10327,6 +10412,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case WeightingFunctionInstanceConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case WeightingFunctionInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
@@ -10381,11 +10483,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case WeightingFunctionConst::Method_getDescription:
+		case WeightingFunctionConst::Method_name:
 		{
 			RpcSerializer msg;
-			FunctionDescription p0;
-			p0 = obj->getDescription();
+			const char* p0;
+			p0 = obj->name();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -10394,7 +10496,24 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packFunctionDescription( p0);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case WeightingFunctionConst::Method_view:
+		{
+			RpcSerializer msg;
+			StructView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
