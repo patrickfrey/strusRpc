@@ -14,13 +14,6 @@
 #include "strus/textProcessorInterface.hpp"
 #include "strus/analyzer/segmenterOptions.hpp"
 #include "strus/analyzer/documentClass.hpp"
-#include "strus/analyzer/documentAnalyzerView.hpp"
-#include "strus/analyzer/documentAnalyzerMapView.hpp"
-#include "strus/analyzer/functionView.hpp"
-#include "strus/analyzer/featureView.hpp"
-#include "strus/analyzer/aggregatorView.hpp"
-#include "strus/analyzer/subDocumentDefinitionView.hpp"
-#include "strus/analyzer/subContentDefinitionView.hpp"
 #include "strus/documentAnalyzerInstanceInterface.hpp"
 #include "strus/queryAnalyzerInstanceInterface.hpp"
 #include "strus/queryAnalyzerContextInterface.hpp"
@@ -60,7 +53,6 @@
 #include "strus/analyzer/documentMetaData.hpp"
 #include "strus/analyzer/documentAttribute.hpp"
 #include "strus/analyzer/document.hpp"
-#include "strus/analyzer/contentStatisticsView.hpp"
 #include "strus/analyzer/contentStatisticsItem.hpp"
 #include "strus/analyzer/contentStatisticsResult.hpp"
 #include "strus/posTaggerDataInterface.hpp"
@@ -139,18 +131,8 @@ public:
 	void packSentenceTerm( const SentenceTerm& val);
 	void packSentenceTermList( const SentenceTermList& val);
 	void packSentenceGuess( const SentenceGuess& val);
-	void packAnalyzerFunctionView( const analyzer::FunctionView& val);
-	void packAnalyzerFeatureView( const analyzer::FeatureView& val);
-	void packAnalyzerAggregatorView( const analyzer::AggregatorView& val);
-	void packAnalyzerSubDocumentDefinitionView( const analyzer::SubDocumentDefinitionView& val);
-	void packAnalyzerSubContentDefinitionView( const analyzer::SubContentDefinitionView& val);
-	void packAnalyzerDocumentAnalyzerView( const analyzer::DocumentAnalyzerView& val);
-	void packAnalyzerDocumentAnalyzerMapView( const analyzer::DocumentAnalyzerMapView& val);
-	void packAnalyzerQueryElementView( const analyzer::QueryElementView& val);
-	void packAnalyzerQueryAnalyzerView( const analyzer::QueryAnalyzerView& val);
 	void packAnalyzerContentStatisticsItem( const analyzer::ContentStatisticsItem& val);
 	void packAnalyzerContentStatisticsResult( const analyzer::ContentStatisticsResult& val);
-	void packAnalyzerContentStatisticsView( const analyzer::ContentStatisticsView& val);
 	void packPosTaggerDataElement( const PosTaggerDataInterface::Element& val);
 
 	void packCrc32();
@@ -241,16 +223,6 @@ public:
 	SentenceTerm unpackSentenceTerm();
 	SentenceTermList unpackSentenceTermList();
 	SentenceGuess unpackSentenceGuess();
-	analyzer::FunctionView unpackAnalyzerFunctionView();
-	analyzer::FeatureView unpackAnalyzerFeatureView();
-	analyzer::AggregatorView unpackAnalyzerAggregatorView();
-	analyzer::SubDocumentDefinitionView unpackAnalyzerSubDocumentDefinitionView();
-	analyzer::SubContentDefinitionView unpackAnalyzerSubContentDefinitionView();
-	analyzer::DocumentAnalyzerView unpackAnalyzerDocumentAnalyzerView();
-	analyzer::DocumentAnalyzerMapView unpackAnalyzerDocumentAnalyzerMapView();
-	analyzer::QueryElementView unpackAnalyzerQueryElementView();
-	analyzer::QueryAnalyzerView unpackAnalyzerQueryAnalyzerView();
-	analyzer::ContentStatisticsView unpackAnalyzerContentStatisticsView();
 	analyzer::ContentStatisticsItem unpackAnalyzerContentStatisticsItem();
 	analyzer::ContentStatisticsResult unpackAnalyzerContentStatisticsResult();
 	PosTaggerDataInterface::Element unpackPosTaggerDataElement();

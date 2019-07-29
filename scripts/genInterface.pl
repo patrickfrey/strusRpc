@@ -911,42 +911,6 @@ sub packParameter
 	{
 		$rt .= "msg.packVectorQueryResult( " . $id . ");";
 	}
-	elsif ($type eq "analyzer::FunctionView")
-	{
-		$rt .= "msg.packAnalyzerFunctionView( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::FeatureView")
-	{
-		$rt .= "msg.packAnalyzerFeatureView( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::AggregatorView")
-	{
-		$rt .= "msg.packAnalyzerAggregatorView( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::SubDocumentDefinitionView")
-	{
-		$rt .= "msg.packSubDocumentDefinitionView( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::SubContentDefinitionView")
-	{
-		$rt .= "msg.packSubContentDefinitionView( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::DocumentAnalyzerView")
-	{
-		$rt .= "msg.packAnalyzerDocumentAnalyzerView( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::DocumentAnalyzerMapView")
-	{
-		$rt .= "msg.packAnalyzerDocumentAnalyzerMapView( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::QueryAnalyzerView")
-	{
-		$rt .= "msg.packAnalyzerQueryAnalyzerView( " . $id . ");";
-	}
-	elsif ($type eq "analyzer::ContentStatisticsView")
-	{
-		$rt .= "msg.packAnalyzerContentStatisticsView( " . $id . ");";
-	}
 	elsif ($type eq "analyzer::ContentStatisticsItem")
 	{
 		$rt .= "msg.packAnalyzerContentStatisticsItem( " . $id . ");";
@@ -1298,38 +1262,6 @@ sub unpackParameter
 	{
 		$rt .= "$id = serializedMsg.unpackVectorQueryResult();";
 	}
-	elsif ($type eq "analyzer::FunctionView")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerFunctionView();";
-	}
-	elsif ($type eq "analyzer::FeatureView")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerFeatureView();";
-	}
-	elsif ($type eq "analyzer::AggregatorView")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerAggregatorView();";
-	}
-	elsif ($type eq "analyzer::SubDocumentDefinitionView")
-	{
-		$rt .= "$id = serializedMsg.unpackSubDocumentDefinitionView();";
-	}
-	elsif ($type eq "analyzer::SubContentDefinitionView")
-	{
-		$rt .= "$id = serializedMsg.unpackSubContentDefinitionView();";
-	}
-	elsif ($type eq "analyzer::DocumentAnalyzerView")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerDocumentAnalyzerView();";
-	}
-	elsif ($type eq "analyzer::DocumentAnalyzerMapView")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerDocumentAnalyzerMapView();";
-	}
-	elsif ($type eq "analyzer::QueryAnalyzerView")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerQueryAnalyzerView();";
-	}
 	elsif ($type eq "analyzer::ContentStatisticsItem")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerContentStatisticsItem();";
@@ -1337,10 +1269,6 @@ sub unpackParameter
 	elsif ($type eq "analyzer::ContentStatisticsResult")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerContentStatisticsResult();";
-	}
-	elsif ($type eq "analyzer::ContentStatisticsView")
-	{
-		$rt .= "$id = serializedMsg.unpackAnalyzerContentStatisticsView();";
 	}
 	elsif ($type eq "PosTaggerDataInterface::Element")
 	{

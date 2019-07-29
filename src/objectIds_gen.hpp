@@ -117,6 +117,7 @@ public:
 	{
 		Method_Destructor,
 		Method_evaluate,
+		Method_name,
 		Method_view
 	};
 };
@@ -128,7 +129,8 @@ public:
 	{
 		Method_Destructor,
 		Method_createInstance,
-		Method_getDescription
+		Method_name,
+		Method_view
 	};
 };
 
@@ -332,7 +334,8 @@ public:
 	{
 		Method_Destructor,
 		Method_defineDocumentSchemaDetector,
-		Method_detect
+		Method_detect,
+		Method_view
 	};
 };
 
@@ -430,6 +433,7 @@ public:
 	{
 		Method_Destructor,
 		Method_normalize,
+		Method_name,
 		Method_view
 	};
 };
@@ -441,7 +445,8 @@ public:
 	{
 		Method_Destructor,
 		Method_createInstance,
-		Method_getDescription
+		Method_name,
+		Method_view
 	};
 };
 
@@ -470,6 +475,7 @@ public:
 		Method_getLexemName,
 		Method_compile,
 		Method_createContext,
+		Method_name,
 		Method_view
 	};
 };
@@ -482,7 +488,8 @@ public:
 		Method_Destructor,
 		Method_getCompileOptionNames,
 		Method_createInstance,
-		Method_getDescription
+		Method_name,
+		Method_view
 	};
 };
 
@@ -514,6 +521,7 @@ public:
 		Method_definePattern,
 		Method_compile,
 		Method_createContext,
+		Method_name,
 		Method_view
 	};
 };
@@ -526,7 +534,8 @@ public:
 		Method_Destructor,
 		Method_getCompileOptionNames,
 		Method_createInstance,
-		Method_getDescription
+		Method_name,
+		Method_view
 	};
 };
 
@@ -541,6 +550,7 @@ public:
 		Method_getLexem,
 		Method_lexemTypes,
 		Method_getSymbol,
+		Method_name,
 		Method_view
 	};
 };
@@ -551,7 +561,9 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_createInstance
+		Method_createInstance,
+		Method_name,
+		Method_view
 	};
 };
 
@@ -786,6 +798,7 @@ public:
 		Method_defineSubSection,
 		Method_createContext,
 		Method_createMarkupContext,
+		Method_name,
 		Method_view
 	};
 };
@@ -799,7 +812,8 @@ public:
 		Method_mimeType,
 		Method_createInstance,
 		Method_createContentIterator,
-		Method_getDescription
+		Method_name,
+		Method_view
 	};
 };
 
@@ -1192,6 +1206,7 @@ public:
 	{
 		Method_Destructor,
 		Method_createContext,
+		Method_name,
 		Method_view
 	};
 };
@@ -1204,6 +1219,7 @@ public:
 		Method_Destructor,
 		Method_concatBeforeTokenize,
 		Method_tokenize,
+		Method_name,
 		Method_view
 	};
 };
@@ -1215,7 +1231,8 @@ public:
 	{
 		Method_Destructor,
 		Method_createInstance,
-		Method_getDescription
+		Method_name,
+		Method_view
 	};
 };
 

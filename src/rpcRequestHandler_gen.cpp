@@ -101,10 +101,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case AggregatorFunctionInstanceConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case AggregatorFunctionInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			analyzer::FunctionView p0;
+			StructView p0;
 			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -114,7 +131,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerFunctionView( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -156,11 +173,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case AggregatorFunctionConst::Method_getDescription:
+		case AggregatorFunctionConst::Method_name:
 		{
 			RpcSerializer msg;
 			const char* p0;
-			p0 = obj->getDescription();
+			p0 = obj->name();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -170,6 +187,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case AggregatorFunctionConst::Method_view:
+		{
+			RpcSerializer msg;
+			StructView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -628,7 +662,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case ContentStatisticsConst::Method_view:
 		{
 			RpcSerializer msg;
-			analyzer::ContentStatisticsView p0;
+			StructView p0;
 			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -638,7 +672,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerContentStatisticsView( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -1842,7 +1876,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case DocumentAnalyzerInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			analyzer::DocumentAnalyzerView p0;
+			StructView p0;
 			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -1852,7 +1886,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerDocumentAnalyzerView( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -1983,7 +2017,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case DocumentAnalyzerMapConst::Method_view:
 		{
 			RpcSerializer msg;
-			analyzer::DocumentAnalyzerMapView p0;
+			StructView p0;
 			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -1993,7 +2027,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerDocumentAnalyzerMapView( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -2061,6 +2095,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
 			msg.packDocumentClass( p1);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case DocumentClassDetectorConst::Method_view:
+		{
+			RpcSerializer msg;
+			StructView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -2629,10 +2680,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case NormalizerFunctionInstanceConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case NormalizerFunctionInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			analyzer::FunctionView p0;
+			StructView p0;
 			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -2642,7 +2710,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerFunctionView( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -2689,11 +2757,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case NormalizerFunctionConst::Method_getDescription:
+		case NormalizerFunctionConst::Method_name:
 		{
 			RpcSerializer msg;
 			const char* p0;
-			p0 = obj->getDescription();
+			p0 = obj->name();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -2703,6 +2771,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case NormalizerFunctionConst::Method_view:
+		{
+			RpcSerializer msg;
+			StructView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -2925,10 +3010,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case PatternLexerInstanceConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case PatternLexerInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			analyzer::FunctionView p0;
+			StructView p0;
 			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -2938,7 +3040,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerFunctionView( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -2994,11 +3096,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case PatternLexerConst::Method_getDescription:
+		case PatternLexerConst::Method_name:
 		{
 			RpcSerializer msg;
 			const char* p0;
-			p0 = obj->getDescription();
+			p0 = obj->name();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3008,6 +3110,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PatternLexerConst::Method_view:
+		{
+			RpcSerializer msg;
+			StructView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -3266,10 +3385,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case PatternMatcherInstanceConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case PatternMatcherInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			analyzer::FunctionView p0;
+			StructView p0;
 			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -3279,7 +3415,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerFunctionView( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -3335,11 +3471,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case PatternMatcherConst::Method_getDescription:
+		case PatternMatcherConst::Method_name:
 		{
 			RpcSerializer msg;
 			const char* p0;
-			p0 = obj->getDescription();
+			p0 = obj->name();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -3349,6 +3485,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PatternMatcherConst::Method_view:
+		{
+			RpcSerializer msg;
+			StructView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -3463,10 +3616,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case PatternTermFeederInstanceConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case PatternTermFeederInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			analyzer::FunctionView p0;
+			StructView p0;
 			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -3476,7 +3646,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerFunctionView( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -3511,6 +3681,40 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case PatternTermFeederConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case PatternTermFeederConst::Method_view:
+		{
+			RpcSerializer msg;
+			StructView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStructView( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -4309,7 +4513,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryAnalyzerInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			analyzer::QueryAnalyzerView p0;
+			StructView p0;
 			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4319,7 +4523,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerQueryAnalyzerView( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -5565,10 +5769,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case SegmenterInstanceConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case SegmenterInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			analyzer::FunctionView p0;
+			StructView p0;
 			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -5578,7 +5799,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerFunctionView( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -5671,11 +5892,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case SegmenterConst::Method_getDescription:
+		case SegmenterConst::Method_name:
 		{
 			RpcSerializer msg;
 			const char* p0;
-			p0 = obj->getDescription();
+			p0 = obj->name();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5685,6 +5906,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case SegmenterConst::Method_view:
+		{
+			RpcSerializer msg;
+			StructView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -9427,10 +9665,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case TokenMarkupInstanceConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case TokenMarkupInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			analyzer::FunctionView p0;
+			StructView p0;
 			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -9440,7 +9695,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerFunctionView( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -9497,10 +9752,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case TokenizerFunctionInstanceConst::Method_name:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->name();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case TokenizerFunctionInstanceConst::Method_view:
 		{
 			RpcSerializer msg;
-			analyzer::FunctionView p0;
+			StructView p0;
 			p0 = obj->view();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -9510,7 +9782,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packAnalyzerFunctionView( p0);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -9557,11 +9829,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case TokenizerFunctionConst::Method_getDescription:
+		case TokenizerFunctionConst::Method_name:
 		{
 			RpcSerializer msg;
 			const char* p0;
-			p0 = obj->getDescription();
+			p0 = obj->name();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -9571,6 +9843,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case TokenizerFunctionConst::Method_view:
+		{
+			RpcSerializer msg;
+			StructView p0;
+			p0 = obj->view();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packStructView( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

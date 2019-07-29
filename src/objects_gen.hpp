@@ -124,7 +124,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual NumericVariant evaluate( const analyzer::Document& p1) const;
-	virtual analyzer::FunctionView view( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class AggregatorFunctionImpl
@@ -139,7 +140,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_AggregatorFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual AggregatorFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1) const;
-	virtual const char* getDescription( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class AnalyzerObjectBuilderImpl
@@ -224,7 +226,7 @@ public:
 	virtual void addVisibleAttribute( const std::string& p1);
 	virtual void addSelectorExpression( const std::string& p1);
 	virtual ContentStatisticsContextInterface* createContext( ) const;
-	virtual analyzer::ContentStatisticsView view( ) const;
+	virtual StructView view( ) const;
 };
 
 class DatabaseBackupCursorImpl
@@ -365,7 +367,7 @@ public:
 	virtual void defineAttributeFromPatternMatch( const std::string& p1, const std::string& p2, const std::vector<NormalizerFunctionInstanceInterface*>& p3);
 	virtual analyzer::Document analyze( const std::string& p1, const analyzer::DocumentClass& p2) const;
 	virtual DocumentAnalyzerContextInterface* createContext( const analyzer::DocumentClass& p1) const;
-	virtual analyzer::DocumentAnalyzerView view( ) const;
+	virtual StructView view( ) const;
 };
 
 class DocumentAnalyzerMapImpl
@@ -384,7 +386,7 @@ public:
 	virtual const DocumentAnalyzerInstanceInterface* getAnalyzer( const std::string& p1, const std::string& p2) const;
 	virtual analyzer::Document analyze( const std::string& p1, const analyzer::DocumentClass& p2) const;
 	virtual DocumentAnalyzerContextInterface* createContext( const analyzer::DocumentClass& p1) const;
-	virtual analyzer::DocumentAnalyzerMapView view( ) const;
+	virtual StructView view( ) const;
 };
 
 class DocumentClassDetectorImpl
@@ -400,6 +402,7 @@ public:
 
 	virtual void defineDocumentSchemaDetector( const std::string& p1, const std::string& p2, const std::vector<std::string>& p3, const std::vector<std::string>& p4);
 	virtual bool detect( analyzer::DocumentClass& p1, const char* p2, std::size_t p3, bool p4) const;
+	virtual StructView view( ) const;
 };
 
 class DocumentTermIteratorImpl
@@ -529,7 +532,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunctionInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual std::string normalize( const char* p1, std::size_t p2) const;
-	virtual analyzer::FunctionView view( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class NormalizerFunctionImpl
@@ -544,7 +548,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_NormalizerFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual NormalizerFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
-	virtual const char* getDescription( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class PatternLexerContextImpl
@@ -581,7 +586,8 @@ public:
 	virtual const char* getLexemName( unsigned int p1) const;
 	virtual bool compile( );
 	virtual PatternLexerContextInterface* createContext( ) const;
-	virtual analyzer::FunctionView view( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class PatternLexerImpl
@@ -597,7 +603,8 @@ public:
 
 	virtual std::vector<std::string> getCompileOptionNames( ) const;
 	virtual PatternLexerInstanceInterface* createInstance( ) const;
-	virtual const char* getDescription( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class PatternMatcherContextImpl
@@ -637,7 +644,8 @@ public:
 	virtual void definePattern( const std::string& p1, const std::string& p2, bool p3);
 	virtual bool compile( );
 	virtual PatternMatcherContextInterface* createContext( ) const;
-	virtual analyzer::FunctionView view( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class PatternMatcherImpl
@@ -653,7 +661,8 @@ public:
 
 	virtual std::vector<std::string> getCompileOptionNames( ) const;
 	virtual PatternMatcherInstanceInterface* createInstance( ) const;
-	virtual const char* getDescription( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class PatternTermFeederInstanceImpl
@@ -672,7 +681,8 @@ public:
 	virtual unsigned int getLexem( const std::string& p1) const;
 	virtual std::vector<std::string> lexemTypes( ) const;
 	virtual unsigned int getSymbol( unsigned int p1, const std::string& p2) const;
-	virtual analyzer::FunctionView view( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class PatternTermFeederImpl
@@ -687,6 +697,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_PatternTermFeeder, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual PatternTermFeederInstanceInterface* createInstance( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class PosTaggerContextImpl
@@ -823,7 +835,7 @@ public:
 	virtual std::vector<std::string> queryTermTypes( ) const;
 	virtual std::vector<std::string> queryFieldTypes( ) const;
 	virtual QueryAnalyzerContextInterface* createContext( ) const;
-	virtual analyzer::QueryAnalyzerView view( ) const;
+	virtual StructView view( ) const;
 };
 
 class QueryEvalImpl
@@ -985,7 +997,8 @@ public:
 	virtual void defineSubSection( int p1, int p2, const std::string& p3);
 	virtual SegmenterContextInterface* createContext( const analyzer::DocumentClass& p1) const;
 	virtual SegmenterMarkupContextInterface* createMarkupContext( const analyzer::DocumentClass& p1, const std::string& p2) const;
-	virtual analyzer::FunctionView view( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class SegmenterImpl
@@ -1002,7 +1015,8 @@ public:
 	virtual const char* mimeType( ) const;
 	virtual SegmenterInstanceInterface* createInstance( const analyzer::SegmenterOptions& p1) const;
 	virtual ContentIteratorInterface* createContentIterator( const char* p1, std::size_t p2, const std::vector<std::string>& p3, const std::vector<std::string>& p4, const analyzer::DocumentClass& p5, const analyzer::SegmenterOptions& p6) const;
-	virtual const char* getDescription( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class SegmenterMarkupContextImpl
@@ -1491,7 +1505,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenMarkupInstance, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual TokenMarkupContextInterface* createContext( const SegmenterInstanceInterface* p1) const;
-	virtual analyzer::FunctionView view( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class TokenizerFunctionInstanceImpl
@@ -1507,7 +1522,8 @@ public:
 
 	virtual bool concatBeforeTokenize( ) const;
 	virtual std::vector<analyzer::Token> tokenize( const char* p1, std::size_t p2) const;
-	virtual analyzer::FunctionView view( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class TokenizerFunctionImpl
@@ -1522,7 +1538,8 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_TokenizerFunction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual TokenizerFunctionInstanceInterface* createInstance( const std::vector<std::string>& p1, const TextProcessorInterface* p2) const;
-	virtual const char* getDescription( ) const;
+	virtual const char* name( ) const;
+	virtual StructView view( ) const;
 };
 
 class ValueIteratorImpl
