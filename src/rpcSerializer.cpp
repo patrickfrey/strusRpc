@@ -747,7 +747,7 @@ void RpcSerializer::packQueryResult( const QueryResult& val)
 
 void RpcSerializer::packFeatureParameter( const QueryEvalInterface::FeatureParameter& val)
 {
-	packString( val.parameterName());
+	packString( val.featureRole());
 	packString( val.featureSet());
 }
 
@@ -1500,9 +1500,9 @@ QueryResult RpcDeserializer::unpackQueryResult()
 
 QueryEvalInterface::FeatureParameter RpcDeserializer::unpackFeatureParameter()
 {
-	std::string parameterName = unpackString();
+	std::string featureRole = unpackString();
 	std::string featureSet = unpackString();
-	return QueryEvalInterface::FeatureParameter( parameterName, featureSet);
+	return QueryEvalInterface::FeatureParameter( featureRole, featureSet);
 }
 
 StorageClientInterface::DocumentStatisticsType RpcDeserializer::unpackDocumentStatisticsType()
