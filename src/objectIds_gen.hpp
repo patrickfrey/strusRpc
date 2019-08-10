@@ -915,7 +915,8 @@ public:
 		Method_addDfChange,
 		Method_processStatisticsMessage,
 		Method_nofDocuments,
-		Method_df
+		Method_df,
+		Method_types
 	};
 };
 
