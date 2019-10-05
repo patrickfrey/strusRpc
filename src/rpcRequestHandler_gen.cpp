@@ -5019,38 +5019,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryConst::Method_setMaxNofRanks:
-		{
-			RpcSerializer msg;
-			std::size_t p1;
-			p1 = serializedMsg.unpackSize();
-			obj->setMaxNofRanks(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case QueryConst::Method_setMinRank:
-		{
-			RpcSerializer msg;
-			std::size_t p1;
-			p1 = serializedMsg.unpackSize();
-			obj->setMinRank(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
 		case QueryConst::Method_setWeightingVariableValue:
 		{
 			RpcSerializer msg;
@@ -5089,7 +5057,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			QueryResult p0;
-			p0 = obj->evaluate();
+			int p1;
+			int p2;
+			p1 = serializedMsg.unpackInt();
+			p2 = serializedMsg.unpackInt();
+			p0 = obj->evaluate(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

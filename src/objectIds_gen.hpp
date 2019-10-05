@@ -710,8 +710,6 @@ public:
 		Method_addMetaDataRestrictionCondition,
 		Method_addDocumentEvaluationSet,
 		Method_addAccess,
-		Method_setMaxNofRanks,
-		Method_setMinRank,
 		Method_setWeightingVariableValue,
 		Method_setDebugMode,
 		Method_evaluate,

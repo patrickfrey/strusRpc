@@ -5578,44 +5578,6 @@ try
 }
 }
 
-void QueryImpl::setMaxNofRanks( std::size_t p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_setMaxNofRanks);
-	msg.packSize( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryImpl::setMaxNofRanks");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryImpl::setMaxNofRanks", err.what());
-	return void();
-}
-}
-
-void QueryImpl::setMinRank( std::size_t p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_setMinRank);
-	msg.packSize( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryImpl::setMinRank");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryImpl::setMinRank", err.what());
-	return void();
-}
-}
-
 void QueryImpl::setWeightingVariableValue( const std::string& p1, double p2)
 {
 try
@@ -5655,13 +5617,15 @@ try
 }
 }
 
-QueryResult QueryImpl::evaluate( ) const
+QueryResult QueryImpl::evaluate( int p1, int p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_evaluate);
+	msg.packInt( p1);
+	msg.packInt( p2);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
