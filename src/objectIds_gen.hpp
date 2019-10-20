@@ -72,12 +72,12 @@ enum ClassId
 	ClassId_StatisticsMap,
 	ClassId_StatisticsProcessor,
 	ClassId_StatisticsViewer,
-	ClassId_StorageAlterMetaDataTable,
 	ClassId_StorageClient,
 	ClassId_StorageDocument,
 	ClassId_StorageDocumentUpdate,
 	ClassId_StorageDump,
 	ClassId_Storage,
+	ClassId_StorageMetaDataTransaction,
 	ClassId_StorageObjectBuilder,
 	ClassId_StorageTransaction,
 	ClassId_StructIterator,
@@ -944,22 +944,6 @@ public:
 	};
 };
 
-class StorageAlterMetaDataTableConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_addElement,
-		Method_alterElement,
-		Method_renameElement,
-		Method_deleteElement,
-		Method_clearElement,
-		Method_commit,
-		Method_rollback
-	};
-};
-
 class StorageClientConst
 {
 public:
@@ -991,12 +975,14 @@ public:
 		Method_createMetaDataRestriction,
 		Method_createAttributeReader,
 		Method_createTransaction,
+		Method_createMetaDataTransaction,
 		Method_createAllStatisticsIterator,
 		Method_createChangeStatisticsIterator,
 		Method_getChangeStatisticTimeStamps,
 		Method_loadChangeStatisticsMessage,
 		Method_getStatisticsProcessor,
 		Method_createDocumentChecker,
+		Method_createDump,
 		Method_checkStorage,
 		Method_close,
 		Method_compaction
@@ -1059,10 +1045,24 @@ public:
 		Method_Destructor,
 		Method_createClient,
 		Method_createStorage,
-		Method_createAlterMetaDataTable,
 		Method_getConfigDescription,
-		Method_getConfigParameters,
-		Method_createDump
+		Method_getConfigParameters
+	};
+};
+
+class StorageMetaDataTransactionConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_addElement,
+		Method_alterElement,
+		Method_renameElement,
+		Method_deleteElement,
+		Method_clearElement,
+		Method_commit,
+		Method_rollback
 	};
 };
 

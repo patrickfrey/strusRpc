@@ -74,12 +74,12 @@
 #include "strus/statisticsMapInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
 #include "strus/statisticsViewerInterface.hpp"
-#include "strus/storageAlterMetaDataTableInterface.hpp"
 #include "strus/storageClientInterface.hpp"
 #include "strus/storageDocumentInterface.hpp"
 #include "strus/storageDocumentUpdateInterface.hpp"
 #include "strus/storageDumpInterface.hpp"
 #include "strus/storageInterface.hpp"
+#include "strus/storageMetaDataTransactionInterface.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/storageTransactionInterface.hpp"
 #include "strus/structIteratorInterface.hpp"
@@ -1182,26 +1182,6 @@ public:
 	virtual bool nextDfChange( TermStatisticsChange& p1);
 };
 
-class StorageAlterMetaDataTableImpl
-		:public RpcInterfaceStub
-		,public strus::StorageAlterMetaDataTableInterface
-		,public strus::StorageAlterMetaDataTableConst
-{
-public:
-	virtual ~StorageAlterMetaDataTableImpl();
-
-	StorageAlterMetaDataTableImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_StorageAlterMetaDataTable, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual void addElement( const std::string& p1, const std::string& p2);
-	virtual void alterElement( const std::string& p1, const std::string& p2, const std::string& p3);
-	virtual void renameElement( const std::string& p1, const std::string& p2);
-	virtual void deleteElement( const std::string& p1);
-	virtual void clearElement( const std::string& p1);
-	virtual bool commit( );
-	virtual void rollback( );
-};
-
 class StorageClientImpl
 		:public RpcInterfaceStub
 		,public strus::StorageClientInterface
@@ -1238,12 +1218,14 @@ public:
 	virtual MetaDataRestrictionInterface* createMetaDataRestriction( ) const;
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual StorageTransactionInterface* createTransaction( );
+	virtual StorageMetaDataTransactionInterface* createMetaDataTransaction( );
 	virtual StatisticsIteratorInterface* createAllStatisticsIterator( ) const;
 	virtual StatisticsIteratorInterface* createChangeStatisticsIterator( const TimeStamp& p1) const;
 	virtual std::vector<TimeStamp> getChangeStatisticTimeStamps( ) const;
 	virtual StatisticsMessage loadChangeStatisticsMessage( const TimeStamp& p1) const;
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
+	virtual StorageDumpInterface* createDump( const std::string& p1) const;
 	virtual bool checkStorage( std::ostream& p1) const;
 	virtual void close( );
 	virtual void compaction( );
@@ -1322,10 +1304,28 @@ public:
 
 	virtual StorageClientInterface* createClient( const std::string& p1, const DatabaseInterface* p2, const StatisticsProcessorInterface* p3) const;
 	virtual bool createStorage( const std::string& p1, const DatabaseInterface* p2) const;
-	virtual StorageAlterMetaDataTableInterface* createAlterMetaDataTable( const std::string& p1, const DatabaseInterface* p2) const;
 	virtual const char* getConfigDescription( const StorageInterface::ConfigType& p1) const;
 	virtual const char** getConfigParameters( const StorageInterface::ConfigType& p1) const;
-	virtual StorageDumpInterface* createDump( const std::string& p1, const DatabaseInterface* p2, const std::string& p3) const;
+};
+
+class StorageMetaDataTransactionImpl
+		:public RpcInterfaceStub
+		,public strus::StorageMetaDataTransactionInterface
+		,public strus::StorageMetaDataTransactionConst
+{
+public:
+	virtual ~StorageMetaDataTransactionImpl();
+
+	StorageMetaDataTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageMetaDataTransaction, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual void addElement( const std::string& p1, const std::string& p2);
+	virtual void alterElement( const std::string& p1, const std::string& p2, const std::string& p3);
+	virtual void renameElement( const std::string& p1, const std::string& p2);
+	virtual void deleteElement( const std::string& p1);
+	virtual void clearElement( const std::string& p1);
+	virtual bool commit( );
+	virtual void rollback( );
 };
 
 class StorageObjectBuilderImpl

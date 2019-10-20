@@ -6934,140 +6934,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_StorageAlterMetaDataTable:
-	{
-	StorageAlterMetaDataTableInterface* obj = getObject<StorageAlterMetaDataTableInterface>( classId, objId);
-	switch( (StorageAlterMetaDataTableConst::MethodId)methodId)
-	{
-		case StorageAlterMetaDataTableConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case StorageAlterMetaDataTableConst::Method_addElement:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			std::string p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackString();
-			obj->addElement(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				unmarkObjectsToRelease();
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			releaseObjectsMarked();
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case StorageAlterMetaDataTableConst::Method_alterElement:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			std::string p2;
-			std::string p3;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackString();
-			p3 = serializedMsg.unpackString();
-			obj->alterElement(p1,p2,p3);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case StorageAlterMetaDataTableConst::Method_renameElement:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			std::string p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackString();
-			obj->renameElement(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case StorageAlterMetaDataTableConst::Method_deleteElement:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			obj->deleteElement(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case StorageAlterMetaDataTableConst::Method_clearElement:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			obj->clearElement(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case StorageAlterMetaDataTableConst::Method_commit:
-		{
-			RpcSerializer msg;
-			bool p0;
-			p0 = obj->commit();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case StorageAlterMetaDataTableConst::Method_rollback:
-		{
-			RpcSerializer msg;
-			obj->rollback();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-	}
-	break;
-	}
 	case ClassId_StorageClient:
 	{
 	StorageClientInterface* obj = getObject<StorageClientInterface>( classId, objId);
@@ -7578,6 +7444,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
+		case StorageClientConst::Method_createMetaDataTransaction:
+		{
+			RpcSerializer msg;
+			StorageMetaDataTransactionInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createMetaDataTransaction();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
 		case StorageClientConst::Method_createAllStatisticsIterator:
 		{
 			RpcSerializer msg;
@@ -7687,6 +7572,27 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createDocumentChecker(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StorageClientConst::Method_createDump:
+		{
+			RpcSerializer msg;
+			StorageDumpInterface* p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createDump(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8208,32 +8114,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case StorageConst::Method_createAlterMetaDataTable:
-		{
-			RpcSerializer msg;
-			StorageAlterMetaDataTableInterface* p0;
-			std::string p1;
-			const DatabaseInterface* p2;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_2; unsigned int objId_2;
-			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_Database) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createAlterMetaDataTable(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
 		case StorageConst::Method_getConfigDescription:
 		{
 			RpcSerializer msg;
@@ -8272,22 +8152,49 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case StorageConst::Method_createDump:
+	}
+	break;
+	}
+	case ClassId_StorageMetaDataTransaction:
+	{
+	StorageMetaDataTransactionInterface* obj = getObject<StorageMetaDataTransactionInterface>( classId, objId);
+	switch( (StorageMetaDataTransactionConst::MethodId)methodId)
+	{
+		case StorageMetaDataTransactionConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case StorageMetaDataTransactionConst::Method_addElement:
 		{
 			RpcSerializer msg;
-			StorageDumpInterface* p0;
 			std::string p1;
-			const DatabaseInterface* p2;
+			std::string p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			obj->addElement(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				unmarkObjectsToRelease();
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case StorageMetaDataTransactionConst::Method_alterElement:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
 			std::string p3;
 			p1 = serializedMsg.unpackString();
-			unsigned char classId_2; unsigned int objId_2;
-			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_Database) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
+			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackString();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createDump(p1,p2,p3);
+			obj->alterElement(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8296,8 +8203,87 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
+			return std::string();
+		}
+		case StorageMetaDataTransactionConst::Method_renameElement:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			obj->renameElement(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case StorageMetaDataTransactionConst::Method_deleteElement:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->deleteElement(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case StorageMetaDataTransactionConst::Method_clearElement:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			obj->clearElement(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case StorageMetaDataTransactionConst::Method_commit:
+		{
+			RpcSerializer msg;
+			bool p0;
+			p0 = obj->commit();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StorageMetaDataTransactionConst::Method_rollback:
+		{
+			RpcSerializer msg;
+			obj->rollback();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 	}
