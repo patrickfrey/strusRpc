@@ -1193,6 +1193,7 @@ public:
 	StorageClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageClient, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual bool reload( const std::string& p1);
 	virtual std::string config( ) const;
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3) const;
 	virtual StructIteratorInterface* createStructIterator( const std::string& p1) const;

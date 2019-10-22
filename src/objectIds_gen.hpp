@@ -950,6 +950,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_reload,
 		Method_config,
 		Method_createTermPostingIterator,
 		Method_createStructIterator,
