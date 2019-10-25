@@ -8544,6 +8544,28 @@ try
 }
 }
 
+const char** StorageClientImpl::getConfigParameters( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getConfigParameters);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	const char** p0 =  ctx()->constConstructor()->getCharpp( serializedMsg.unpackConstCharpp());;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageClientImpl::getConfigParameters");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::getConfigParameters", err.what());
+	return 0;
+}
+}
+
 bool StorageClientImpl::checkStorage( std::ostream& p1) const
 {
 	errorhnd()->report( ErrorCodeNotImplemented, _TXT("the method '%s' is not implemented for RPC"),"checkStorage");

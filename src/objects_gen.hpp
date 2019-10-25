@@ -1227,6 +1227,7 @@ public:
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
 	virtual StorageDumpInterface* createDump( const std::string& p1) const;
+	virtual const char** getConfigParameters( ) const;
 	virtual bool checkStorage( std::ostream& p1) const;
 	virtual void close( );
 	virtual void compaction( );

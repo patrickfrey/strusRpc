@@ -984,6 +984,7 @@ public:
 		Method_getStatisticsProcessor,
 		Method_createDocumentChecker,
 		Method_createDump,
+		Method_getConfigParameters,
 		Method_checkStorage,
 		Method_close,
 		Method_compaction
