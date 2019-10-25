@@ -1324,6 +1324,7 @@ public:
 	virtual void alterElement( const std::string& p1, const std::string& p2, const std::string& p3);
 	virtual void renameElement( const std::string& p1, const std::string& p2);
 	virtual void deleteElement( const std::string& p1);
+	virtual void deleteElements( );
 	virtual void clearElement( const std::string& p1);
 	virtual bool commit( );
 	virtual void rollback( );

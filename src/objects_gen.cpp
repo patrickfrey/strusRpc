@@ -9241,6 +9241,24 @@ try
 }
 }
 
+void StorageMetaDataTransactionImpl::deleteElements( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_deleteElements);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTransactionImpl::deleteElements");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTransactionImpl::deleteElements", err.what());
+	return void();
+}
+}
+
 void StorageMetaDataTransactionImpl::clearElement( const std::string& p1)
 {
 try

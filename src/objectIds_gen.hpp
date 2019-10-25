@@ -1061,6 +1061,7 @@ public:
 		Method_alterElement,
 		Method_renameElement,
 		Method_deleteElement,
+		Method_deleteElements,
 		Method_clearElement,
 		Method_commit,
 		Method_rollback
