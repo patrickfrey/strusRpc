@@ -77,7 +77,7 @@ enum ClassId
 	ClassId_StorageDocumentUpdate,
 	ClassId_StorageDump,
 	ClassId_Storage,
-	ClassId_StorageMetaDataTransaction,
+	ClassId_StorageMetaDataTableUpdate,
 	ClassId_StorageObjectBuilder,
 	ClassId_StorageTransaction,
 	ClassId_StructIterator,
@@ -976,7 +976,6 @@ public:
 		Method_createMetaDataRestriction,
 		Method_createAttributeReader,
 		Method_createTransaction,
-		Method_createMetaDataTransaction,
 		Method_createAllStatisticsIterator,
 		Method_createChangeStatisticsIterator,
 		Method_getChangeStatisticTimeStamps,
@@ -1052,7 +1051,7 @@ public:
 	};
 };
 
-class StorageMetaDataTransactionConst
+class StorageMetaDataTableUpdateConst
 {
 public:
 	enum MethodId
@@ -1064,8 +1063,7 @@ public:
 		Method_deleteElement,
 		Method_deleteElements,
 		Method_clearElement,
-		Method_commit,
-		Method_rollback
+		Method_done
 	};
 };
 
@@ -1097,9 +1095,9 @@ public:
 		Method_deleteUserAccessRights,
 		Method_updateMetaData,
 		Method_updateDocumentFrequency,
+		Method_createMetaDataTableUpdate,
 		Method_commit,
-		Method_rollback,
-		Method_nofDocumentsAffected
+		Method_rollback
 	};
 };
 

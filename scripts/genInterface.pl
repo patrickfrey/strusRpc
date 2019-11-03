@@ -879,6 +879,10 @@ sub packParameter
 	{
 		$rt .= "msg.packQueryResult( " . $id . ");";
 	}
+	elsif ($type eq "StorageCommitResult")
+	{
+		$rt .= "msg.packStorageCommitResult( " . $id . ");";
+	}
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{
 		$rt .= "msg.packFeatureParameter( " . $id . ");";
@@ -1229,6 +1233,10 @@ sub unpackParameter
 	elsif ($type eq "QueryResult")
 	{
 		$rt .= "$id = serializedMsg.unpackQueryResult();";
+	}
+	elsif ($type eq "StorageCommitResult")
+	{
+		$rt .= "$id = serializedMsg.unpackStorageCommitResult();";
 	}
 	elsif ($type eq "QueryEvalInterface::FeatureParameter")
 	{

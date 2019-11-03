@@ -26,6 +26,8 @@
 #include "strus/databaseCursorInterface.hpp"
 #include "strus/storageInterface.hpp"
 #include "strus/storageClientInterface.hpp"
+#include "strus/storageClientInterface.hpp"
+#include "strus/storageCommitResult.hpp"
 #include "strus/vectorStorageInterface.hpp"
 #include "strus/summarizerFunctionInterface.hpp"
 #include "strus/summarizerFunctionContextInterface.hpp"
@@ -121,6 +123,7 @@ public:
 	void packWeightedDocument( const WeightedDocument& val);
 	void packResultDocument( const ResultDocument& val);
 	void packQueryResult( const QueryResult& val);
+	void packStorageCommitResult( const StorageCommitResult& val);
 	void packFeatureParameter( const QueryEvalInterface::FeatureParameter& val);
 	void packDocumentStatisticsType( const StorageClientInterface::DocumentStatisticsType& val);
 	void packTermStatisticsChange( const TermStatisticsChange& val);
@@ -213,6 +216,7 @@ public:
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();
 	QueryResult unpackQueryResult();
+	StorageCommitResult unpackStorageCommitResult();
 	QueryEvalInterface::FeatureParameter unpackFeatureParameter();
 	StorageClientInterface::DocumentStatisticsType unpackDocumentStatisticsType();
 	TermStatisticsChange unpackTermStatisticsChange();

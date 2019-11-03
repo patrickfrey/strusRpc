@@ -79,7 +79,7 @@
 #include "strus/storageDocumentUpdateInterface.hpp"
 #include "strus/storageDumpInterface.hpp"
 #include "strus/storageInterface.hpp"
-#include "strus/storageMetaDataTransactionInterface.hpp"
+#include "strus/storageMetaDataTableUpdateInterface.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/storageTransactionInterface.hpp"
 #include "strus/structIteratorInterface.hpp"
@@ -1219,7 +1219,6 @@ public:
 	virtual MetaDataRestrictionInterface* createMetaDataRestriction( ) const;
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual StorageTransactionInterface* createTransaction( );
-	virtual StorageMetaDataTransactionInterface* createMetaDataTransaction( );
 	virtual StatisticsIteratorInterface* createAllStatisticsIterator( ) const;
 	virtual StatisticsIteratorInterface* createChangeStatisticsIterator( const TimeStamp& p1) const;
 	virtual std::vector<TimeStamp> getChangeStatisticTimeStamps( ) const;
@@ -1310,16 +1309,16 @@ public:
 	virtual const char** getConfigParameters( const StorageInterface::ConfigType& p1) const;
 };
 
-class StorageMetaDataTransactionImpl
+class StorageMetaDataTableUpdateImpl
 		:public RpcInterfaceStub
-		,public strus::StorageMetaDataTransactionInterface
-		,public strus::StorageMetaDataTransactionConst
+		,public strus::StorageMetaDataTableUpdateInterface
+		,public strus::StorageMetaDataTableUpdateConst
 {
 public:
-	virtual ~StorageMetaDataTransactionImpl();
+	virtual ~StorageMetaDataTableUpdateImpl();
 
-	StorageMetaDataTransactionImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_StorageMetaDataTransaction, objId_, ctx_, isConst_, errorhnd_){}
+	StorageMetaDataTableUpdateImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StorageMetaDataTableUpdate, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void addElement( const std::string& p1, const std::string& p2);
 	virtual void alterElement( const std::string& p1, const std::string& p2, const std::string& p3);
@@ -1327,8 +1326,7 @@ public:
 	virtual void deleteElement( const std::string& p1);
 	virtual void deleteElements( );
 	virtual void clearElement( const std::string& p1);
-	virtual bool commit( );
-	virtual void rollback( );
+	virtual bool done( );
 };
 
 class StorageObjectBuilderImpl
@@ -1368,9 +1366,9 @@ public:
 	virtual void deleteUserAccessRights( const std::string& p1);
 	virtual void updateMetaData( const Index& p1, const std::string& p2, const NumericVariant& p3);
 	virtual void updateDocumentFrequency( const std::string& p1, const std::string& p2, int p3);
-	virtual bool commit( );
+	virtual StorageMetaDataTableUpdateInterface* createMetaDataTableUpdate( );
+	virtual StorageCommitResult commit( );
 	virtual void rollback( );
-	virtual unsigned int nofDocumentsAffected( ) const;
 };
 
 class StructIteratorImpl

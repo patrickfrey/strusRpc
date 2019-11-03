@@ -8351,29 +8351,6 @@ try
 }
 }
 
-StorageMetaDataTransactionInterface* StorageClientImpl::createMetaDataTransaction( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createMetaDataTransaction);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_StorageMetaDataTransaction;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	StorageMetaDataTransactionInterface* p0 = new StorageMetaDataTransactionImpl( objId_0, ctx(), false, errorhnd());
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageClientImpl::createMetaDataTransaction");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::createMetaDataTransaction", err.what());
-	return 0;
-}
-}
-
 StatisticsIteratorInterface* StorageClientImpl::createAllStatisticsIterator( ) const
 {
 try
@@ -9173,7 +9150,7 @@ try
 }
 }
 
-StorageMetaDataTransactionImpl::~StorageMetaDataTransactionImpl()
+StorageMetaDataTableUpdateImpl::~StorageMetaDataTableUpdateImpl()
 {
 	if (isConst()) return;
 	RpcSerializer msg;
@@ -9183,7 +9160,7 @@ StorageMetaDataTransactionImpl::~StorageMetaDataTransactionImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void StorageMetaDataTransactionImpl::addElement( const std::string& p1, const std::string& p2)
+void StorageMetaDataTableUpdateImpl::addElement( const std::string& p1, const std::string& p2)
 {
 try
 {
@@ -9195,15 +9172,15 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTransactionImpl::addElement");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTableUpdateImpl::addElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTransactionImpl::addElement", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTableUpdateImpl::addElement", err.what());
 	return void();
 }
 }
 
-void StorageMetaDataTransactionImpl::alterElement( const std::string& p1, const std::string& p2, const std::string& p3)
+void StorageMetaDataTableUpdateImpl::alterElement( const std::string& p1, const std::string& p2, const std::string& p3)
 {
 try
 {
@@ -9216,15 +9193,15 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTransactionImpl::alterElement");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTableUpdateImpl::alterElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTransactionImpl::alterElement", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTableUpdateImpl::alterElement", err.what());
 	return void();
 }
 }
 
-void StorageMetaDataTransactionImpl::renameElement( const std::string& p1, const std::string& p2)
+void StorageMetaDataTableUpdateImpl::renameElement( const std::string& p1, const std::string& p2)
 {
 try
 {
@@ -9236,15 +9213,15 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTransactionImpl::renameElement");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTableUpdateImpl::renameElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTransactionImpl::renameElement", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTableUpdateImpl::renameElement", err.what());
 	return void();
 }
 }
 
-void StorageMetaDataTransactionImpl::deleteElement( const std::string& p1)
+void StorageMetaDataTableUpdateImpl::deleteElement( const std::string& p1)
 {
 try
 {
@@ -9255,15 +9232,15 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTransactionImpl::deleteElement");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTableUpdateImpl::deleteElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTransactionImpl::deleteElement", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTableUpdateImpl::deleteElement", err.what());
 	return void();
 }
 }
 
-void StorageMetaDataTransactionImpl::deleteElements( )
+void StorageMetaDataTableUpdateImpl::deleteElements( )
 {
 try
 {
@@ -9273,15 +9250,15 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTransactionImpl::deleteElements");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTableUpdateImpl::deleteElements");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTransactionImpl::deleteElements", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTableUpdateImpl::deleteElements", err.what());
 	return void();
 }
 }
 
-void StorageMetaDataTransactionImpl::clearElement( const std::string& p1)
+void StorageMetaDataTableUpdateImpl::clearElement( const std::string& p1)
 {
 try
 {
@@ -9292,21 +9269,21 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTransactionImpl::clearElement");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTableUpdateImpl::clearElement");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTransactionImpl::clearElement", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTableUpdateImpl::clearElement", err.what());
 	return void();
 }
 }
 
-bool StorageMetaDataTransactionImpl::commit( )
+bool StorageMetaDataTableUpdateImpl::done( )
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_commit);
+	msg.packByte( Method_done);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -9314,29 +9291,11 @@ try
 	bool p0 = serializedMsg.unpackBool();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTransactionImpl::commit");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTableUpdateImpl::done");
 	return false;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTransactionImpl::commit", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTableUpdateImpl::done", err.what());
 	return false;
-}
-}
-
-void StorageMetaDataTransactionImpl::rollback( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_rollback);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageMetaDataTransactionImpl::rollback");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageMetaDataTransactionImpl::rollback", err.what());
-	return void();
 }
 }
 
@@ -9658,7 +9617,30 @@ try
 }
 }
 
-bool StorageTransactionImpl::commit( )
+StorageMetaDataTableUpdateInterface* StorageTransactionImpl::createMetaDataTableUpdate( )
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createMetaDataTableUpdate);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StorageMetaDataTableUpdate;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	StorageMetaDataTableUpdateInterface* p0 = new StorageMetaDataTableUpdateImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageTransactionImpl::createMetaDataTableUpdate");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageTransactionImpl::createMetaDataTableUpdate", err.what());
+	return 0;
+}
+}
+
+StorageCommitResult StorageTransactionImpl::commit( )
 {
 try
 {
@@ -9669,14 +9651,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
+	StorageCommitResult p0 = serializedMsg.unpackStorageCommitResult();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageTransactionImpl::commit");
-	return false;
+	return StorageCommitResult();
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageTransactionImpl::commit", err.what());
-	return false;
+	return StorageCommitResult();
 }
 }
 
@@ -9695,28 +9677,6 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageTransactionImpl::rollback", err.what());
 	return void();
-}
-}
-
-unsigned int StorageTransactionImpl::nofDocumentsAffected( ) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_nofDocumentsAffected);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	unsigned int p0 = serializedMsg.unpackUint();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageTransactionImpl::nofDocumentsAffected");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageTransactionImpl::nofDocumentsAffected", err.what());
-	return 0;
 }
 }
 

@@ -745,6 +745,12 @@ void RpcSerializer::packQueryResult( const QueryResult& val)
 	}
 }
 
+void RpcSerializer::packStorageCommitResult( const StorageCommitResult& val)
+{
+	packBool( val.success());
+	packIndex( val.nofDocumentsAffected());
+}
+
 void RpcSerializer::packFeatureParameter( const QueryEvalInterface::FeatureParameter& val)
 {
 	packString( val.featureRole());
@@ -1496,6 +1502,13 @@ QueryResult RpcDeserializer::unpackQueryResult()
 		ranks.push_back( unpackResultDocument());
 	}
 	return QueryResult( pass, nofRanked, nofVisited, ranks);
+}
+
+StorageCommitResult RpcDeserializer::unpackStorageCommitResult()
+{
+	bool success = unpackBool();
+	strus::Index nofDocumentsAffected = unpackIndex();
+	return StorageCommitResult( success, nofDocumentsAffected);
 }
 
 QueryEvalInterface::FeatureParameter RpcDeserializer::unpackFeatureParameter()
