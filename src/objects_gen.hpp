@@ -876,7 +876,6 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_Query, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void pushTerm( const std::string& p1, const std::string& p2, const Index& p3);
-	virtual void pushDocField( const std::string& p1, const std::string& p2);
 	virtual void pushExpression( const PostingJoinOperatorInterface* p1, unsigned int p2, int p3, unsigned int p4);
 	virtual void attachVariable( const std::string& p1);
 	virtual void defineFeature( const std::string& p1, double p2);
@@ -1198,7 +1197,6 @@ public:
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3) const;
 	virtual StructIteratorInterface* createStructIterator( const std::string& p1) const;
 	virtual PostingIteratorInterface* createBrowsePostingIterator( const MetaDataRestrictionInterface* p1, const Index& p2) const;
-	virtual PostingIteratorInterface* createFieldPostingIterator( const std::string& p1, const std::string& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;
 	virtual DocumentTermIteratorInterface* createDocumentTermIterator( const std::string& p1) const;
 	virtual InvAclIteratorInterface* createInvAclIterator( const std::string& p1) const;

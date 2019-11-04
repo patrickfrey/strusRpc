@@ -701,7 +701,6 @@ public:
 	{
 		Method_Destructor,
 		Method_pushTerm,
-		Method_pushDocField,
 		Method_pushExpression,
 		Method_attachVariable,
 		Method_defineFeature,
@@ -955,7 +954,6 @@ public:
 		Method_createTermPostingIterator,
 		Method_createStructIterator,
 		Method_createBrowsePostingIterator,
-		Method_createFieldPostingIterator,
 		Method_createForwardIterator,
 		Method_createDocumentTermIterator,
 		Method_createInvAclIterator,
