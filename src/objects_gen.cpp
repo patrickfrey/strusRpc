@@ -1646,6 +1646,50 @@ try
 }
 }
 
+void DocumentAnalyzerInstanceImpl::addSearchIndexField( const std::string& p1, const std::string& p2, const std::string& p3, const std::string& p4)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addSearchIndexField);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packString( p3);
+	msg.packString( p4);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::addSearchIndexField");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::addSearchIndexField", err.what());
+	return void();
+}
+}
+
+void DocumentAnalyzerInstanceImpl::addSearchIndexStructure( const std::string& p1, const std::string& p2, const std::string& p3, const DocumentAnalyzerInstanceInterface::StructureType& p4)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_addSearchIndexStructure);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packString( p3);
+	msg.packDocumentAnalyzerStructureType( p4);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentAnalyzerInstanceImpl::addSearchIndexStructure");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DocumentAnalyzerInstanceImpl::addSearchIndexStructure", err.what());
+	return void();
+}
+}
+
 void DocumentAnalyzerInstanceImpl::defineMetaData( const std::string& p1, const std::string& p2, TokenizerFunctionInstanceInterface* p3, const std::vector<NormalizerFunctionInstanceInterface*>& p4)
 {
 try
@@ -5392,26 +5436,6 @@ try
 }
 }
 
-void QueryImpl::pushDocField( const std::string& p1, const std::string& p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_pushDocField);
-	msg.packString( p1);
-	msg.packString( p2);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryImpl::pushDocField");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryImpl::pushDocField", err.what());
-	return void();
-}
-}
-
 void QueryImpl::pushExpression( const PostingJoinOperatorInterface* p1, unsigned int p2, int p3, unsigned int p4)
 {
 try
@@ -7858,31 +7882,6 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::createBrowsePostingIterator", err.what());
-	return 0;
-}
-}
-
-PostingIteratorInterface* StorageClientImpl::createFieldPostingIterator( const std::string& p1, const std::string& p2) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createFieldPostingIterator);
-	msg.packString( p1);
-	msg.packString( p2);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_PostingIterator;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, ctx(), false, errorhnd());
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageClientImpl::createFieldPostingIterator");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::createFieldPostingIterator", err.what());
 	return 0;
 }
 }

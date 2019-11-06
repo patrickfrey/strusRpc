@@ -294,6 +294,8 @@ public:
 		Method_Destructor,
 		Method_addSearchIndexFeature,
 		Method_addForwardIndexFeature,
+		Method_addSearchIndexField,
+		Method_addSearchIndexStructure,
 		Method_defineMetaData,
 		Method_defineAggregatedMetaData,
 		Method_defineAttribute,

@@ -839,6 +839,10 @@ sub packParameter
 	{
 		$rt .= "msg.packAnalyzerToken( " . $id . ");";
 	}
+	elsif ($type eq "DocumentAnalyzerInstanceInterface::StructureType")
+	{
+		$rt .= "msg.packDocumentAnalyzerStructureType( " . $id . ");";
+	}
 	elsif ($type eq "QueryAnalyzerContextInterface::GroupBy")
 	{
 		$rt .= "msg.packAnalyzerGroupBy( " . $id . ");";
@@ -1193,6 +1197,10 @@ sub unpackParameter
 	elsif ($type eq "analyzer::Token")
 	{
 		$rt .= "$id = serializedMsg.unpackAnalyzerToken();";
+	}
+	elsif ($type eq "DocumentAnalyzerInstanceInterface::StructureType")
+	{
+		$rt .= "$id = serializedMsg.unpackDocumentAnalyzerStructureType();";
 	}
 	elsif ($type eq "QueryAnalyzerContextInterface::GroupBy")
 	{

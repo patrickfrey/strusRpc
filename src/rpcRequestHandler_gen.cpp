@@ -1475,6 +1475,50 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
+		case DocumentAnalyzerInstanceConst::Method_addSearchIndexField:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			std::string p3;
+			std::string p4;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackString();
+			p4 = serializedMsg.unpackString();
+			obj->addSearchIndexField(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case DocumentAnalyzerInstanceConst::Method_addSearchIndexStructure:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			std::string p3;
+			DocumentAnalyzerInstanceInterface::StructureType p4;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackString();
+			p4 = serializedMsg.unpackDocumentAnalyzerStructureType();
+			obj->addSearchIndexStructure(p1,p2,p3,p4);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
 		case DocumentAnalyzerInstanceConst::Method_defineMetaData:
 		{
 			RpcSerializer msg;
@@ -4848,24 +4892,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryConst::Method_pushDocField:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			std::string p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackString();
-			obj->pushDocField(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
 		case QueryConst::Method_pushExpression:
 		{
 			RpcSerializer msg;
@@ -7040,29 +7066,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createBrowsePostingIterator(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-		case StorageClientConst::Method_createFieldPostingIterator:
-		{
-			RpcSerializer msg;
-			PostingIteratorInterface* p0;
-			std::string p1;
-			std::string p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackString();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createFieldPostingIterator(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

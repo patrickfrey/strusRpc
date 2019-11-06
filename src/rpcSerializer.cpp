@@ -636,6 +636,11 @@ void RpcSerializer::packAnalyzerToken( const analyzer::Token& val)
 	packAnalyzerPosition( val.origpos());
 }
 
+void RpcSerializer::packDocumentAnalyzerStructureType( const DocumentAnalyzerInstanceInterface::StructureType& val)
+{
+	packByte( val);
+}
+
 void RpcSerializer::packAnalyzerGroupBy( const QueryAnalyzerContextInterface::GroupBy& val)
 {
 	packByte( val);
@@ -1387,6 +1392,11 @@ analyzer::Token RpcDeserializer::unpackAnalyzerToken()
 	int origsize = unpackUint();
 	analyzer::Position origpos( unpackAnalyzerPosition());
 	return analyzer::Token( ordpos, origpos, origsize);
+}
+
+DocumentAnalyzerInstanceInterface::StructureType RpcDeserializer::unpackDocumentAnalyzerStructureType()
+{
+	return (DocumentAnalyzerInstanceInterface::StructureType)unpackByte();
 }
 
 QueryAnalyzerContextInterface::GroupBy RpcDeserializer::unpackAnalyzerGroupBy()
