@@ -583,6 +583,12 @@ void RpcSerializer::packAnalyzerDocument( const analyzer::Document& val)
 	{
 		packAnalyzerDocumentTerm( *fi);
 	}
+	std::vector<std::string>::const_iterator ri = val.accessList().begin(), re = val.accessList().end();
+	packSize( re-ri);
+	for (; ri != re; ++ri)
+	{
+		packString( *ri);
+	}
 }
 
 void RpcSerializer::packAnalyzerQueryTerm( const analyzer::QueryTerm& val)
@@ -1350,6 +1356,11 @@ analyzer::Document RpcDeserializer::unpackAnalyzerDocument()
 	{
 		analyzer::DocumentTerm term = unpackAnalyzerDocumentTerm();
 		rt.addForwardIndexTerm( term.type(), term.value(), term.pos());
+	}
+	for (ii=0,strsize=unpackSize(); ii<strsize; ++ii)
+	{
+		std::string userRole = unpackString();
+		rt.addAccess( userRole);
 	}
 	return rt;
 }
