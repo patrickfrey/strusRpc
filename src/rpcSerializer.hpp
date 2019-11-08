@@ -90,6 +90,7 @@ public:
 	void packSize( std::size_t size);
 	void packNumericVariant( const NumericVariant& val);
 	void packDocumentClass( const analyzer::DocumentClass& prop);
+	void packAnalyzerPositionRange( const analyzer::DocumentStructure::PositionRange& val);
 	void packTermStatistics( const TermStatistics& stats);
 	void packGlobalStatistics( const GlobalStatistics& stats);
 	void packMetaDataRestrictionCompareOperator( MetaDataRestrictionInterface::CompareOperator val);
@@ -111,6 +112,7 @@ public:
 	void packAnalyzerDocumentAttribute( const analyzer::DocumentAttribute& val);
 	void packAnalyzerDocumentMetaData( const analyzer::DocumentMetaData& val);
 	void packAnalyzerDocumentTerm( const analyzer::DocumentTerm& val);
+	void packAnalyzerDocumentStructure( const analyzer::DocumentStructure& val);
 	void packAnalyzerDocument( const analyzer::Document& val);
 	void packAnalyzerPosition( const analyzer::Position& val);
 	void packAnalyzerToken( const analyzer::Token& val);
@@ -185,6 +187,7 @@ public:
 	std::size_t unpackSize();
 	NumericVariant unpackNumericVariant();
 	analyzer::DocumentClass unpackDocumentClass();
+	analyzer::DocumentStructure::PositionRange unpackAnalyzerPositionRange();
 	TermStatistics unpackTermStatistics();
 	GlobalStatistics unpackGlobalStatistics();
 	MetaDataRestrictionInterface::CompareOperator unpackMetaDataRestrictionCompareOperator();
@@ -205,6 +208,7 @@ public:
 	analyzer::DocumentAttribute unpackAnalyzerDocumentAttribute();
 	analyzer::DocumentMetaData unpackAnalyzerDocumentMetaData();
 	analyzer::DocumentTerm unpackAnalyzerDocumentTerm();
+	analyzer::DocumentStructure unpackAnalyzerDocumentStructure();
 	analyzer::Document unpackAnalyzerDocument();
 	analyzer::Position unpackAnalyzerPosition();
 	analyzer::Token unpackAnalyzerToken();

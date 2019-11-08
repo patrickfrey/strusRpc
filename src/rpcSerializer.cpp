@@ -464,6 +464,12 @@ void RpcSerializer::packDocumentClass( const analyzer::DocumentClass& dclass)
 	packString( dclass.encoding());
 }
 
+void RpcSerializer::packAnalyzerPositionRange( const analyzer::DocumentStructure::PositionRange& val)
+{
+	packInt( val.start());
+	packInt( val.end());
+}
+
 void RpcSerializer::packTermStatistics( const TermStatistics& stats)
 {
 	packGlobalCounter( stats.documentFrequency());
@@ -565,6 +571,12 @@ void RpcSerializer::packAnalyzerDocument( const analyzer::Document& val)
 	{
 		packAnalyzerDocumentTerm( *si);
 	}
+	std::vector<analyzer::DocumentStructure>::const_iterator xi = val.searchIndexStructures().begin(), xe = val.searchIndexStructures().end();
+	packSize( xe-xi);
+	for (; xi != xe; ++xi)
+	{
+		packAnalyzerDocumentStructure( *xi);
+	}
 	std::vector<analyzer::DocumentTerm>::const_iterator fi = val.forwardIndexTerms().begin(), fe = val.forwardIndexTerms().end();
 	packSize( fe-fi);
 	for (; fi != fe; ++fi)
@@ -621,6 +633,13 @@ void RpcSerializer::packAnalyzerDocumentTerm( const analyzer::DocumentTerm& val)
 	packString( val.type());
 	packString( val.value());
 	packIndex( val.pos());
+}
+
+void RpcSerializer::packAnalyzerDocumentStructure( const analyzer::DocumentStructure& val)
+{
+	packString( val.name());
+	packAnalyzerPositionRange( val.source());
+	packAnalyzerPositionRange( val.sink());
 }
 
 void RpcSerializer::packAnalyzerPosition( const analyzer::Position& val)
@@ -1162,6 +1181,13 @@ analyzer::DocumentClass RpcDeserializer::unpackDocumentClass()
 	return rt;
 }
 
+analyzer::DocumentStructure::PositionRange RpcDeserializer::unpackAnalyzerPositionRange()
+{
+	int start = unpackInt();
+	int end = unpackInt();
+	return analyzer::DocumentStructure::PositionRange( start, end);
+}
+
 TermStatistics RpcDeserializer::unpackTermStatistics()
 {
 	TermStatistics rt;
@@ -1317,6 +1343,11 @@ analyzer::Document RpcDeserializer::unpackAnalyzerDocument()
 	}
 	for (ii=0,strsize=unpackSize(); ii<strsize; ++ii)
 	{
+		analyzer::DocumentStructure stu = unpackAnalyzerDocumentStructure();
+		rt.addSearchIndexStructure( stu.name(), stu.source(), stu.sink());
+	}
+	for (ii=0,strsize=unpackSize(); ii<strsize; ++ii)
+	{
 		analyzer::DocumentTerm term = unpackAnalyzerDocumentTerm();
 		rt.addForwardIndexTerm( term.type(), term.value(), term.pos());
 	}
@@ -1378,6 +1409,13 @@ analyzer::DocumentTerm RpcDeserializer::unpackAnalyzerDocumentTerm()
 	return analyzer::DocumentTerm( type, value, pos);
 }
 
+analyzer::DocumentStructure RpcDeserializer::unpackAnalyzerDocumentStructure()
+{
+	std::string name = unpackString();
+	analyzer::DocumentStructure::PositionRange source = unpackAnalyzerPositionRange();
+	analyzer::DocumentStructure::PositionRange sink = unpackAnalyzerPositionRange();
+	return analyzer::DocumentStructure( name, source, sink);
+}
 
 analyzer::Position RpcDeserializer::unpackAnalyzerPosition()
 {
