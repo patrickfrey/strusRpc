@@ -1421,7 +1421,7 @@ public:
 	virtual void addNumericParameter( const std::string& p1, const NumericVariant& p2);
 	virtual void defineResultName( const std::string& p1, const std::string& p2);
 	virtual std::vector<std::string> getVariables( ) const;
-	virtual SummarizerFunctionContextInterface* createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const;
+	virtual SummarizerFunctionContextInterface* createFunctionContext( const StorageClientInterface* p1, const GlobalStatistics& p2) const;
 	virtual const char* name( ) const;
 	virtual StructView view( ) const;
 };
@@ -1667,7 +1667,7 @@ public:
 
 	virtual void addStringParameter( const std::string& p1, const std::string& p2);
 	virtual void addNumericParameter( const std::string& p1, const NumericVariant& p2);
-	virtual WeightingFunctionContextInterface* createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const;
+	virtual WeightingFunctionContextInterface* createFunctionContext( const StorageClientInterface* p1, const GlobalStatistics& p2) const;
 	virtual std::vector<std::string> getVariables( ) const;
 	virtual const char* name( ) const;
 	virtual StructView view( ) const;

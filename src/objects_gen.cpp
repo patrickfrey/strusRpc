@@ -10008,7 +10008,7 @@ try
 }
 }
 
-SummarizerFunctionContextInterface* SummarizerFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const
+SummarizerFunctionContextInterface* SummarizerFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, const GlobalStatistics& p2) const
 {
 try
 {
@@ -10018,10 +10018,7 @@ try
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "StorageClient");
 	msg.packObject( impl_1->classId(), impl_1->objId());
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "MetaDataReader");
-	msg.packObject( impl_2->classId(), impl_2->objId());
-	msg.packGlobalStatistics( p3);
+	msg.packGlobalStatistics( p2);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_SummarizerFunctionContext;
 	msg.packObject( classId_0, objId_0);
@@ -11943,7 +11940,7 @@ try
 }
 }
 
-WeightingFunctionContextInterface* WeightingFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, MetaDataReaderInterface* p2, const GlobalStatistics& p3) const
+WeightingFunctionContextInterface* WeightingFunctionInstanceImpl::createFunctionContext( const StorageClientInterface* p1, const GlobalStatistics& p2) const
 {
 try
 {
@@ -11953,10 +11950,7 @@ try
 	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
 	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "StorageClient");
 	msg.packObject( impl_1->classId(), impl_1->objId());
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "MetaDataReader");
-	msg.packObject( impl_2->classId(), impl_2->objId());
-	msg.packGlobalStatistics( p3);
+	msg.packGlobalStatistics( p2);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_WeightingFunctionContext;
 	msg.packObject( classId_0, objId_0);

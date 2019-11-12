@@ -8941,20 +8941,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			SummarizerFunctionContextInterface* p0;
 			const StorageClientInterface* p1;
-			MetaDataReaderInterface* p2;
-			GlobalStatistics p3;
+			GlobalStatistics p2;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_StorageClient) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getConstObject<StorageClientInterface>( classId_1, objId_1);
-			unsigned char classId_2; unsigned int objId_2;
-			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_MetaDataReader) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p2 = getObject<MetaDataReaderInterface>( classId_2, objId_2);
-			p3 = serializedMsg.unpackGlobalStatistics();
+			p2 = serializedMsg.unpackGlobalStatistics();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createFunctionContext(p1,p2,p3);
+			p0 = obj->createFunctionContext(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -10655,20 +10650,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			WeightingFunctionContextInterface* p0;
 			const StorageClientInterface* p1;
-			MetaDataReaderInterface* p2;
-			GlobalStatistics p3;
+			GlobalStatistics p2;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_StorageClient) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p1 = getConstObject<StorageClientInterface>( classId_1, objId_1);
-			unsigned char classId_2; unsigned int objId_2;
-			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_MetaDataReader) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p2 = getObject<MetaDataReaderInterface>( classId_2, objId_2);
-			p3 = serializedMsg.unpackGlobalStatistics();
+			p2 = serializedMsg.unpackGlobalStatistics();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createFunctionContext(p1,p2,p3);
+			p0 = obj->createFunctionContext(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
