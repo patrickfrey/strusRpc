@@ -930,6 +930,28 @@ try
 }
 }
 
+long DatabaseClientImpl::diskUsage( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_diskUsage);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	long p0 = serializedMsg.unpackInt64();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DatabaseClientImpl::diskUsage");
+	return long();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "DatabaseClientImpl::diskUsage", err.what());
+	return long();
+}
+}
+
 std::string DatabaseClientImpl::config( ) const
 {
 try
@@ -7783,6 +7805,28 @@ try
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::reload", err.what());
 	return false;
+}
+}
+
+long StorageClientImpl::diskUsage( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_diskUsage);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	long p0 = serializedMsg.unpackInt64();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageClientImpl::diskUsage");
+	return long();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::diskUsage", err.what());
+	return long();
 }
 }
 

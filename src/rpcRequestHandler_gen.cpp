@@ -845,6 +845,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case DatabaseClientConst::Method_diskUsage:
+		{
+			RpcSerializer msg;
+			long p0;
+			p0 = obj->diskUsage();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packInt64( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case DatabaseClientConst::Method_config:
 		{
 			RpcSerializer msg;
@@ -6984,6 +7001,23 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StorageClientConst::Method_diskUsage:
+		{
+			RpcSerializer msg;
+			long p0;
+			p0 = obj->diskUsage();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packInt64( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

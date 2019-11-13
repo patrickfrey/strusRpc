@@ -260,6 +260,7 @@ public:
 	virtual void writeImm( const char* p1, std::size_t p2, const char* p3, std::size_t p4);
 	virtual void removeImm( const char* p1, std::size_t p2);
 	virtual bool readValue( const char* p1, std::size_t p2, std::string& p3, const DatabaseOptions& p4) const;
+	virtual long diskUsage( ) const;
 	virtual std::string config( ) const;
 	virtual bool compactDatabase( );
 	virtual void close( );
@@ -1195,6 +1196,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StorageClient, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual bool reload( const std::string& p1);
+	virtual long diskUsage( ) const;
 	virtual std::string config( ) const;
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3) const;
 	virtual StructIteratorInterface* createStructIterator( const std::string& p1) const;

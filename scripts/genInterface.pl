@@ -712,6 +712,14 @@ sub packParameter
 	{
 		$rt .= "msg.packUint( " . $id . ");";
 	}
+	elsif ($type eq "long")
+	{
+		$rt .= "msg.packInt64( " . $id . ");";
+	}
+	elsif ($type eq "unsigned long")
+	{
+		$rt .= "msg.packUInt64( " . $id . ");";
+	}
 	elsif ($type eq "float")
 	{
 		$rt .= "msg.packFloat( " . $id . ");";
@@ -1030,6 +1038,14 @@ sub unpackParameter
 	elsif ($type eq "unsigned int")
 	{
 		$rt .= "$id = serializedMsg.unpackUint();";
+	}
+	elsif ($type eq "long")
+	{
+		$rt .= "$id = serializedMsg.unpackInt64();";
+	}
+	elsif ($type eq "unsigned long")
+	{
+		$rt .= "$id = serializedMsg.unpackUInt64();";
 	}
 	elsif ($type eq "float")
 	{

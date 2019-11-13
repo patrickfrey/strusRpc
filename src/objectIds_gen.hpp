@@ -221,6 +221,7 @@ public:
 		Method_writeImm,
 		Method_removeImm,
 		Method_readValue,
+		Method_diskUsage,
 		Method_config,
 		Method_compactDatabase,
 		Method_close
@@ -952,6 +953,7 @@ public:
 	{
 		Method_Destructor,
 		Method_reload,
+		Method_diskUsage,
 		Method_config,
 		Method_createTermPostingIterator,
 		Method_createStructIterator,
