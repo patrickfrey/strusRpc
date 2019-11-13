@@ -1476,8 +1476,8 @@ analyzer::TokenMarkup RpcDeserializer::unpackAnalyzerTokenMarkup()
 
 analyzer::PatternMatcherResult RpcDeserializer::unpackAnalyzerPatternMatcherResult()
 {
-	const char* name( unpackConstCharp());
-	const char* value( unpackConstCharp());
+	const char* name = unpackConstCharp();
+	const char* value = unpackConstCharp();
 	unsigned int start_ordpos = unpackUint();
 	unsigned int end_ordpos = unpackUint();
 	unsigned int start_origseg = unpackUint();

@@ -860,7 +860,7 @@ public:
 	virtual std::vector<std::string> getRestrictionFeatureSets( ) const;
 	virtual std::vector<std::string> getExclusionFeatureSets( ) const;
 	virtual void addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4);
-	virtual void addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4);
+	virtual void addWeightingFunction( WeightingFunctionInstanceInterface* p1, const std::vector<QueryEvalInterface::FeatureParameter>& p2, const std::string& p3);
 	virtual void defineWeightingFormula( ScalarFunctionInterface* p1);
 	virtual QueryInterface* createQuery( const StorageClientInterface* p1) const;
 	virtual StructView view( ) const;
@@ -1419,7 +1419,6 @@ public:
 
 	virtual void addStringParameter( const std::string& p1, const std::string& p2);
 	virtual void addNumericParameter( const std::string& p1, const NumericVariant& p2);
-	virtual void defineResultName( const std::string& p1, const std::string& p2);
 	virtual std::vector<std::string> getVariables( ) const;
 	virtual SummarizerFunctionContextInterface* createFunctionContext( const StorageClientInterface* p1, const GlobalStatistics& p2) const;
 	virtual const char* name( ) const;

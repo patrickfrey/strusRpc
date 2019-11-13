@@ -4767,23 +4767,21 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryEvalConst::Method_addWeightingFunction:
 		{
 			RpcSerializer msg;
-			std::string p1;
-			WeightingFunctionInstanceInterface* p2;
-			std::vector<QueryEvalInterface::FeatureParameter> p3;
-			std::string p4;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_2; unsigned int objId_2;
-			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_WeightingFunctionInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p2 = getObject<WeightingFunctionInstanceInterface>( classId_2, objId_2);
-			markObjectToRelease( classId_2, objId_2);
-			std::size_t n3 = serializedMsg.unpackSize();
-			for (std::size_t ii=0; ii < n3; ++ii) {
+			WeightingFunctionInstanceInterface* p1;
+			std::vector<QueryEvalInterface::FeatureParameter> p2;
+			std::string p3;
+			unsigned char classId_1; unsigned int objId_1;
+			serializedMsg.unpackObject( classId_1, objId_1);
+			if (classId_1 != ClassId_WeightingFunctionInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p1 = getObject<WeightingFunctionInstanceInterface>( classId_1, objId_1);
+			markObjectToRelease( classId_1, objId_1);
+			std::size_t n2 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n2; ++ii) {
 				QueryEvalInterface::FeatureParameter ee = serializedMsg.unpackFeatureParameter();
-				p3.push_back( ee);
+				p2.push_back( ee);
 			}
-			p4 = serializedMsg.unpackString();
-			obj->addWeightingFunction(p1,p2,p3,p4);
+			p3 = serializedMsg.unpackString();
+			obj->addWeightingFunction(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8888,24 +8886,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackNumericVariant();
 			obj->addNumericParameter(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case SummarizerFunctionInstanceConst::Method_defineResultName:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			std::string p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackString();
-			obj->defineResultName(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

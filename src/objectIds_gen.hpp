@@ -1136,7 +1136,6 @@ public:
 		Method_Destructor,
 		Method_addStringParameter,
 		Method_addNumericParameter,
-		Method_defineResultName,
 		Method_getVariables,
 		Method_createFunctionContext,
 		Method_name,

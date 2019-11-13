@@ -5303,27 +5303,26 @@ try
 }
 }
 
-void QueryEvalImpl::addWeightingFunction( const std::string& p1, WeightingFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4)
+void QueryEvalImpl::addWeightingFunction( WeightingFunctionInstanceInterface* p1, const std::vector<QueryEvalInterface::FeatureParameter>& p2, const std::string& p3)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_addWeightingFunction);
-	msg.packString( p1);
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "WeightingFunctionInstance");
-	msg.packObject( impl_2->classId(), impl_2->objId());
-	msg.packSize( p3.size());
-	for (unsigned int ii=0; ii < p3.size(); ++ii) {
-		msg.packFeatureParameter( p3[ii]);
+	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
+	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "WeightingFunctionInstance");
+	msg.packObject( impl_1->classId(), impl_1->objId());
+	msg.packSize( p2.size());
+	for (unsigned int ii=0; ii < p2.size(); ++ii) {
+		msg.packFeatureParameter( p2[ii]);
 	}
-	msg.packString( p4);
+	msg.packString( p3);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
-	done_2->release();
-	delete p2;
+	RpcInterfaceStub* done_1 = dynamic_cast<RpcInterfaceStub*>(p1);
+	done_1->release();
+	delete p1;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryEvalImpl::addWeightingFunction");
 	return void();
@@ -9957,26 +9956,6 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::addNumericParameter", err.what());
-	return void();
-}
-}
-
-void SummarizerFunctionInstanceImpl::defineResultName( const std::string& p1, const std::string& p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineResultName);
-	msg.packString( p1);
-	msg.packString( p2);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SummarizerFunctionInstanceImpl::defineResultName");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SummarizerFunctionInstanceImpl::defineResultName", err.what());
 	return void();
 }
 }
