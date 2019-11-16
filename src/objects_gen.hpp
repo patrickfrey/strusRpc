@@ -175,7 +175,7 @@ public:
 	AttributeReaderImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_AttributeReader, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual Index elementHandle( const char* p1) const;
+	virtual Index elementHandle( const std::string& p1) const;
 	virtual void skipDoc( const Index& p1);
 	virtual std::string getValue( const Index& p1) const;
 	virtual std::vector<std::string> getNames( ) const;
@@ -1210,6 +1210,7 @@ public:
 	virtual Index maxDocumentNumber( ) const;
 	virtual Index documentNumber( const std::string& p1) const;
 	virtual Index termTypeNumber( const std::string& p1) const;
+	virtual Index termValueNumber( const std::string& p1) const;
 	virtual bool isForwardIndexTerm( const std::string& p1) const;
 	virtual ValueIteratorInterface* createTermTypeIterator( ) const;
 	virtual ValueIteratorInterface* createStructTypeIterator( ) const;

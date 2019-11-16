@@ -967,6 +967,7 @@ public:
 		Method_maxDocumentNumber,
 		Method_documentNumber,
 		Method_termTypeNumber,
+		Method_termValueNumber,
 		Method_isForwardIndexTerm,
 		Method_createTermTypeIterator,
 		Method_createStructTypeIterator,
