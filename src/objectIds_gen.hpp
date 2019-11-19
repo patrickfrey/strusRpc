@@ -692,6 +692,7 @@ public:
 		Method_addSummarizerFunction,
 		Method_addWeightingFunction,
 		Method_defineWeightingFormula,
+		Method_usePositionInformation,
 		Method_createQuery,
 		Method_view
 	};
@@ -956,6 +957,7 @@ public:
 		Method_diskUsage,
 		Method_config,
 		Method_createTermPostingIterator,
+		Method_createFrequencyPostingIterator,
 		Method_createStructIterator,
 		Method_createBrowsePostingIterator,
 		Method_createForwardIterator,

@@ -4137,7 +4137,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case PostingIteratorConst::Method_frequency:
 		{
 			RpcSerializer msg;
-			unsigned int p0;
+			int p0;
 			p0 = obj->frequency();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -4147,7 +4147,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packUint( p0);
+			msg.packInt( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -4830,6 +4830,22 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			releaseObjectsMarked();
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case QueryEvalConst::Method_usePositionInformation:
+		{
+			RpcSerializer msg;
+			bool p1;
+			p1 = serializedMsg.unpackBool();
+			obj->usePositionInformation(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
@@ -7051,6 +7067,29 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createTermPostingIterator(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StorageClientConst::Method_createFrequencyPostingIterator:
+		{
+			RpcSerializer msg;
+			PostingIteratorInterface* p0;
+			std::string p1;
+			std::string p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createFrequencyPostingIterator(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

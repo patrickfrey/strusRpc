@@ -781,7 +781,7 @@ public:
 	virtual Index skipPos( const Index& p1);
 	virtual const char* featureid( ) const;
 	virtual Index documentFrequency( ) const;
-	virtual unsigned int frequency( );
+	virtual int frequency( );
 	virtual Index docno( ) const;
 	virtual Index posno( ) const;
 	virtual Index length( ) const;
@@ -863,6 +863,7 @@ public:
 	virtual void addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4);
 	virtual void addWeightingFunction( WeightingFunctionInstanceInterface* p1, const std::vector<QueryEvalInterface::FeatureParameter>& p2, const std::string& p3);
 	virtual void defineWeightingFormula( ScalarFunctionInterface* p1);
+	virtual void usePositionInformation( bool p1);
 	virtual QueryInterface* createQuery( const StorageClientInterface* p1) const;
 	virtual StructView view( ) const;
 };
@@ -1199,6 +1200,7 @@ public:
 	virtual long diskUsage( ) const;
 	virtual std::string config( ) const;
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3) const;
+	virtual PostingIteratorInterface* createFrequencyPostingIterator( const std::string& p1, const std::string& p2) const;
 	virtual StructIteratorInterface* createStructIterator( const std::string& p1) const;
 	virtual PostingIteratorInterface* createBrowsePostingIterator( const MetaDataRestrictionInterface* p1, const Index& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;

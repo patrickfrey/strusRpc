@@ -4602,7 +4602,7 @@ try
 }
 }
 
-unsigned int PostingIteratorImpl::frequency( )
+int PostingIteratorImpl::frequency( )
 {
 try
 {
@@ -4613,7 +4613,7 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	unsigned int p0 = serializedMsg.unpackUint();;
+	int p0 = serializedMsg.unpackInt();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PostingIteratorImpl::frequency");
@@ -5374,6 +5374,25 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryEvalImpl::defineWeightingFormula", err.what());
+	return void();
+}
+}
+
+void QueryEvalImpl::usePositionInformation( bool p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_usePositionInformation);
+	msg.packBool( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryEvalImpl::usePositionInformation");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryEvalImpl::usePositionInformation", err.what());
 	return void();
 }
 }
@@ -7874,6 +7893,31 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::createTermPostingIterator", err.what());
+	return 0;
+}
+}
+
+PostingIteratorInterface* StorageClientImpl::createFrequencyPostingIterator( const std::string& p1, const std::string& p2) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_createFrequencyPostingIterator);
+	msg.packString( p1);
+	msg.packString( p2);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_PostingIterator;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	PostingIteratorInterface* p0 = new PostingIteratorImpl( objId_0, ctx(), false, errorhnd());
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageClientImpl::createFrequencyPostingIterator");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::createFrequencyPostingIterator", err.what());
 	return 0;
 }
 }
