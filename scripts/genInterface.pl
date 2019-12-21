@@ -692,6 +692,10 @@ sub packParameter
 	{
 		$rt .= "msg.packGlobalStatistics( " . $id . ");";
 	}
+	elsif ($type eq "BlockStatistics")
+	{
+		$rt .= "msg.packBlockStatistics( " . $id . ");";
+	}
 	elsif ($type eq "Index")
 	{
 		$rt .= "msg.packIndex( " . $id . ");";
@@ -1018,6 +1022,10 @@ sub unpackParameter
 	elsif ($type eq "GlobalStatistics")
 	{
 		$rt .= "$id = serializedMsg.unpackGlobalStatistics();";
+	}
+	elsif ($type eq "BlockStatistics")
+	{
+		$rt .= "$id = serializedMsg.unpackBlockStatistics();";
 	}
 	elsif ($type eq "Index")
 	{

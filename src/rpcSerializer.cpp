@@ -480,6 +480,18 @@ void RpcSerializer::packGlobalStatistics( const GlobalStatistics& stats)
 	packGlobalCounter( stats.nofDocumentsInserted());
 }
 
+void RpcSerializer::packBlockStatistics( const BlockStatistics& stats)
+{
+	std::vector<BlockStatistics::Element>::const_iterator
+		ei = stats.elements().begin(), ee = stats.elements().end();
+	packSize( ee-ei);
+	for (; ei != ee; ++ei)
+	{
+		packString( ei->type());
+		packInt64( ei->size());
+	}
+}
+
 void RpcSerializer::packMetaDataRestrictionCompareOperator( MetaDataRestrictionInterface::CompareOperator val)
 {
 	packByte( (unsigned char)val);
@@ -1206,6 +1218,19 @@ GlobalStatistics RpcDeserializer::unpackGlobalStatistics()
 	GlobalStatistics rt;
 	rt.setNofDocumentsInserted( unpackGlobalCounter());
 	return rt;
+}
+
+BlockStatistics RpcDeserializer::unpackBlockStatistics()
+{
+	std::vector<BlockStatistics::Element> elements;
+	std::size_t ei=0, ee=unpackSize();
+	for (; ei != ee; ++ei)
+	{
+		std::string type = unpackString();
+		int64_t sz = unpackInt64();
+		elements.push_back( BlockStatistics::Element( type, sz));
+	}
+	return BlockStatistics( elements);
 }
 
 MetaDataRestrictionInterface::CompareOperator RpcDeserializer::unpackMetaDataRestrictionCompareOperator()

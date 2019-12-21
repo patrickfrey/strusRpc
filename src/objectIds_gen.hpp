@@ -955,6 +955,7 @@ public:
 		Method_Destructor,
 		Method_reload,
 		Method_diskUsage,
+		Method_blockStatistics,
 		Method_config,
 		Method_createTermPostingIterator,
 		Method_createFrequencyPostingIterator,

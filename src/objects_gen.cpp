@@ -7849,6 +7849,28 @@ try
 }
 }
 
+BlockStatistics StorageClientImpl::blockStatistics( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_blockStatistics);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	BlockStatistics p0 = serializedMsg.unpackBlockStatistics();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageClientImpl::blockStatistics");
+	return BlockStatistics();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::blockStatistics", err.what());
+	return BlockStatistics();
+}
+}
+
 std::string StorageClientImpl::config( ) const
 {
 try

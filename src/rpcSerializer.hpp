@@ -21,6 +21,7 @@
 #include "strus/postingIteratorInterface.hpp"
 #include "strus/termStatistics.hpp"
 #include "strus/globalStatistics.hpp"
+#include "strus/blockStatistics.hpp"
 #include "strus/databaseOptions.hpp"
 #include "strus/databaseInterface.hpp"
 #include "strus/databaseCursorInterface.hpp"
@@ -93,6 +94,7 @@ public:
 	void packAnalyzerPositionRange( const analyzer::DocumentStructure::PositionRange& val);
 	void packTermStatistics( const TermStatistics& stats);
 	void packGlobalStatistics( const GlobalStatistics& stats);
+	void packBlockStatistics( const BlockStatistics& stats);
 	void packMetaDataRestrictionCompareOperator( MetaDataRestrictionInterface::CompareOperator val);
 	void packWordVector( const WordVector& val);
 
@@ -190,6 +192,7 @@ public:
 	analyzer::DocumentStructure::PositionRange unpackAnalyzerPositionRange();
 	TermStatistics unpackTermStatistics();
 	GlobalStatistics unpackGlobalStatistics();
+	BlockStatistics unpackBlockStatistics();
 	MetaDataRestrictionInterface::CompareOperator unpackMetaDataRestrictionCompareOperator();
 	WordVector unpackWordVector();
 

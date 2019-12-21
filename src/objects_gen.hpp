@@ -1198,6 +1198,7 @@ public:
 
 	virtual bool reload( const std::string& p1);
 	virtual long diskUsage( ) const;
+	virtual BlockStatistics blockStatistics( ) const;
 	virtual std::string config( ) const;
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3) const;
 	virtual PostingIteratorInterface* createFrequencyPostingIterator( const std::string& p1, const std::string& p2) const;
