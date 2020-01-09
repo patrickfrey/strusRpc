@@ -457,6 +457,23 @@ void RpcSerializer::packWordVector( const WordVector& val)
 	}
 }
 
+void RpcSerializer::packStructureLink( const StructureLink& val)
+{
+	packBool( val.header());
+	packIndex( val.structno());
+	packIndex( val.index());
+}
+
+void RpcSerializer::packStructureLinkArray( const StructureLinkArray& val)
+{
+	int li=0, le=val.nofLinks();
+	packSize( le);
+	for (; li != le; ++li)
+	{
+		packStructureLink( val[ li]);
+	}
+}
+
 void RpcSerializer::packDocumentClass( const analyzer::DocumentClass& dclass)
 {
 	packString( dclass.mimeType());
@@ -1283,7 +1300,29 @@ WordVector RpcDeserializer::unpackWordVector()
 	return rt;
 }
 
-WordVector unpackWordVector();
+StructureLink RpcDeserializer::unpackStructureLink()
+{
+	bool header = unpackBool();
+	strus::Index structno = unpackIndex();
+	int index = unpackIndex();
+	return StructureLink( structno, header, index);
+}
+
+StructureLinkArray RpcDeserializer::unpackStructureLinkArray()
+{
+	int li=0, nofLinks = unpackSize();
+	if (li < 0 || li > StructureLinkArray::MaxNofLinks)
+	{
+		throw std::runtime_error( _TXT("number of links out of range"));
+	}
+	StructureLink lar[ StructureLinkArray::MaxNofLinks];
+	for (; li < nofLinks; ++li)
+	{
+		lar[ li] = unpackStructureLink();
+	}
+	return StructureLinkArray( lar, nofLinks);
+}
+
 
 DatabaseOptions RpcDeserializer::unpackDatabaseOptions()
 {

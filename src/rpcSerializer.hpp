@@ -39,6 +39,7 @@
 #include "strus/weightedDocument.hpp"
 #include "strus/resultDocument.hpp"
 #include "strus/structView.hpp"
+#include "strus/structureLink.hpp"
 #include "strus/metaDataRestrictionInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
 #include "strus/statisticsViewerInterface.hpp"
@@ -97,6 +98,8 @@ public:
 	void packBlockStatistics( const BlockStatistics& stats);
 	void packMetaDataRestrictionCompareOperator( MetaDataRestrictionInterface::CompareOperator val);
 	void packWordVector( const WordVector& val);
+	void packStructureLink( const StructureLink& val);
+	void packStructureLinkArray( const StructureLinkArray& val);
 
 	void packDatabaseOptions( const DatabaseOptions& val);
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
@@ -195,6 +198,8 @@ public:
 	BlockStatistics unpackBlockStatistics();
 	MetaDataRestrictionInterface::CompareOperator unpackMetaDataRestrictionCompareOperator();
 	WordVector unpackWordVector();
+	StructureLink unpackStructureLink();
+	StructureLinkArray unpackStructureLinkArray();
 
 	DatabaseOptions unpackDatabaseOptions();
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();

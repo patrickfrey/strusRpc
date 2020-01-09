@@ -1202,7 +1202,7 @@ public:
 	virtual std::string config( ) const;
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3) const;
 	virtual PostingIteratorInterface* createFrequencyPostingIterator( const std::string& p1, const std::string& p2) const;
-	virtual StructIteratorInterface* createStructIterator( const std::string& p1) const;
+	virtual StructIteratorInterface* createStructIterator( ) const;
 	virtual PostingIteratorInterface* createBrowsePostingIterator( const MetaDataRestrictionInterface* p1, const Index& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;
 	virtual DocumentTermIteratorInterface* createDocumentTermIterator( const std::string& p1) const;
@@ -1212,6 +1212,7 @@ public:
 	virtual Index documentFrequency( const std::string& p1, const std::string& p2) const;
 	virtual Index maxDocumentNumber( ) const;
 	virtual Index documentNumber( const std::string& p1) const;
+	virtual Index structTypeNumber( const std::string& p1) const;
 	virtual Index termTypeNumber( const std::string& p1) const;
 	virtual Index termValueNumber( const std::string& p1) const;
 	virtual bool isForwardIndexTerm( const std::string& p1) const;
@@ -1273,7 +1274,7 @@ public:
 	virtual void addSearchIndexStructure( const std::string& p1, const IndexRange& p2, const IndexRange& p3);
 	virtual void addForwardIndexTerm( const std::string& p1, const std::string& p2, const Index& p3);
 	virtual void clearSearchIndexTerm( const std::string& p1);
-	virtual void clearSearchIndexStructure( const std::string& p1);
+	virtual void clearSearchIndexStructures( );
 	virtual void clearForwardIndexTerm( const std::string& p1);
 	virtual void setMetaData( const std::string& p1, const NumericVariant& p2);
 	virtual void setAttribute( const std::string& p1, const std::string& p2);
@@ -1388,11 +1389,12 @@ public:
 	StructIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_StructIterator, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual Index skipDoc( const Index& p1);
-	virtual IndexRange skipPosSource( const Index& p1);
-	virtual IndexRange skipPosSink( const Index& p1);
-	virtual IndexRange source( ) const;
-	virtual IndexRange sink( ) const;
+	virtual void skipDoc( const Index& p1);
+	virtual int levels( ) const;
+	virtual Index docno( ) const;
+	virtual IndexRange skipPos( int p1, const Index& p2);
+	virtual IndexRange field( int p1) const;
+	virtual StructureLinkArray links( int p1) const;
 };
 
 class SummarizerFunctionContextImpl

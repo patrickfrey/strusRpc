@@ -969,6 +969,7 @@ public:
 		Method_documentFrequency,
 		Method_maxDocumentNumber,
 		Method_documentNumber,
+		Method_structTypeNumber,
 		Method_termTypeNumber,
 		Method_termValueNumber,
 		Method_isForwardIndexTerm,
@@ -1022,7 +1023,7 @@ public:
 		Method_addSearchIndexStructure,
 		Method_addForwardIndexTerm,
 		Method_clearSearchIndexTerm,
-		Method_clearSearchIndexStructure,
+		Method_clearSearchIndexStructures,
 		Method_clearForwardIndexTerm,
 		Method_setMetaData,
 		Method_setAttribute,
@@ -1114,10 +1115,11 @@ public:
 	{
 		Method_Destructor,
 		Method_skipDoc,
-		Method_skipPosSource,
-		Method_skipPosSink,
-		Method_source,
-		Method_sink
+		Method_levels,
+		Method_docno,
+		Method_skipPos,
+		Method_field,
+		Method_links
 	};
 };
 

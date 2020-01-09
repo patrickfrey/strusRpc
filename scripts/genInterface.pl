@@ -959,6 +959,14 @@ sub packParameter
 	{
 		$rt .= "msg.packSentenceGuess( " . $id . ");";
 	}
+	elsif ($type eq "StructureLink")
+	{
+		$rt .= "msg.packStructureLink( " . $id . ");";
+	}
+	elsif ($type eq "StructureLinkArray")
+	{
+		$rt .= "msg.packStructureLinkArray( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -1329,6 +1337,14 @@ sub unpackParameter
 	elsif ($type eq "SentenceGuess")
 	{
 		$rt .= "$id = serializedMsg.unpackSentenceGuess();";
+	}
+	elsif ($type eq "StructureLink")
+	{
+		$rt .= "$id = serializedMsg.unpackStructureLink();";
+	}
+	elsif ($type eq "StructureLinkArray")
+	{
+		$rt .= "$id = serializedMsg.unpackStructureLinkArray();";
 	}
 	else
 	{
