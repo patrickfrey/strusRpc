@@ -188,6 +188,7 @@ $constResetMethodMap{"seekLast"} = 1;
 $constResetMethodMap{"seekNext"} = 1;
 $constResetMethodMap{"seekPrev"} = 1;
 $constResetMethodMap{"nextChunk"} = 1;
+$constResetMethodMap{"call"} = 1;
 
 # List of hacks (client code inserted at the beginning of a method call):
 my %alternativeClientImpl = ();
@@ -609,6 +610,14 @@ sub getMethodParamDeclarationSource
 	return getVariableTypeSource( $paramname, $isconst, $isarray, $indirection, $passbyref, $isreference);
 }
 
+sub getMethodParamValueDeclarationSource
+{
+	my ($classname, $param) = @_;
+	my ($paramname, $isconst, $isarray, $indirection, $passbyref, $isreference) = getParamProperties( $classname, $param);
+	if ($isconst && $passbyref) {$isconst = 0; $passbyref = 0;}
+	return getVariableTypeSource( $paramname, $isconst, $isarray, $indirection, $passbyref, $isreference);
+}
+
 sub getMethodDeclarationHeader
 {
 	my ($classname, $method) = @_;
@@ -882,6 +891,10 @@ sub packParameter
 	elsif ($type eq "PatternMatcherInstanceInterface::JoinOperation")
 	{
 		$rt .= "msg.packByte( " . $id . ");";
+	}
+	elsif ($type eq "WeightedField")
+	{
+		$rt .= "msg.packWeightedField( " . $id . ");";
 	}
 	elsif ($type eq "WeightedDocument")
 	{
@@ -1262,6 +1275,10 @@ sub unpackParameter
 	{
 		$rt .= "$id = (PatternMatcherInstanceInterface::JoinOperation)serializedMsg.unpackByte();";
 	}
+	elsif ($type eq "WeightedField")
+	{
+		$rt .= "$id = serializedMsg.unpackWeightedField();";
+	}
 	elsif ($type eq "WeightedDocument")
 	{
 		$rt .= "$id = serializedMsg.unpackWeightedDocument();";
@@ -1500,23 +1517,28 @@ sub getMethodDeclarationSource
 	$sender_code .= "\n{\n";
 	$receiver_code .= "RpcSerializer msg;\n";
 
-	my $retvalnull_decl = getMethodParamDeclarationSource( $classname, $retval);
+	my $retvaltype_decl = getMethodParamDeclarationSource( $classname, $retval);
+	my $retvalvalue_decl = getMethodParamValueDeclarationSource( $classname, $retval);
 	my $retvalnull_return = "";
-	if ($retvalnull_decl =~ m/^(.*)[\*]$/)
+	if ($retvaltype_decl ne $retvalvalue_decl)
+	{
+		$retvalnull_return = "static const $retvalvalue_decl rt;\n\treturn rt;"
+	}
+	elsif ($retvaltype_decl =~ m/^(.*)[\*]$/)
 	{
 		$retvalnull_return = "return 0;"
 	}
-	elsif ($retvalnull_decl =~ m/^(double|int|float|Index|unsigned int)$/)
+	elsif ($retvaltype_decl =~ m/^(double|int|float|Index|unsigned int)$/)
 	{
 		$retvalnull_return = "return 0;"
 	}
-	elsif ($retvalnull_decl =~ m/^bool$/)
+	elsif ($retvaltype_decl =~ m/^bool$/)
 	{
 		$retvalnull_return = "return false;"
 	}
 	else
 	{
-		$retvalnull_return = "return $retvalnull_decl();";
+		$retvalnull_return = "return $retvaltype_decl();";
 	}
 
 	if ($notImplMethods{$methodname})
@@ -1549,8 +1571,7 @@ sub getMethodDeclarationSource
 		my $retvalassigner = "";
 		if ($retval ne "void")
 		{
-			my $retvaltype_decl = getMethodParamDeclarationSource( $classname, $retval);
-			$receiver_code .= "\t$retvaltype_decl p0;\n";
+			$receiver_code .= "\t$retvalvalue_decl p0;\n";
 			$retvalassigner = "p0 = ";
 		}
 		my $receiver_paramlist = "";
@@ -1672,13 +1693,27 @@ sub getMethodDeclarationSource
 			}
 			elsif ($isarray)
 			{
-				$sender_output .= "\tstd::vector<$retvaltype> p0;\n";
-				$sender_output .= "\tstd::size_t n0 = serializedMsg.unpackSize();\n";
-				$sender_output .= "\tfor (std::size_t ii=0; ii < n0; ++ii) {\n";
-				$sender_output .= "\t\t" . mapIndent( "\t\t", unpackParameter( $retvaltype, "$retvaltype elem_p0", $isconst, $indirection, 0)) . "\n";
-				$sender_output .= "\t\tp0.push_back( elem_p0);\n";
-				$sender_output .= "\t}\n";
+				if ($passbyref)
+				{
+					unless ($isconst) {die "cannot handle return value type $retval as non const reference";}
 
+					$sender_output .= "\tstd::vector<$retvaltype> p0val;\n";
+					$sender_output .= "\tstd::size_t n0 = serializedMsg.unpackSize();\n";
+					$sender_output .= "\tfor (std::size_t ii=0; ii < n0; ++ii) {\n";
+					$sender_output .= "\t\t" . mapIndent( "\t\t", unpackParameter( $retvaltype, "$retvaltype elem_p0", $isconst, $indirection, 0)) . "\n";
+					$sender_output .= "\t\tp0val.push_back( elem_p0);\n";
+					$sender_output .= "\t}\n";
+					$sender_output .= "\tconst std::vector<$retvaltype>& p0 = ctx()->constConstructor()->getArrayRef( p0val);\n";
+				}
+				else
+				{
+					$sender_output .= "\tstd::vector<$retvaltype> p0;\n";
+					$sender_output .= "\tstd::size_t n0 = serializedMsg.unpackSize();\n";
+					$sender_output .= "\tfor (std::size_t ii=0; ii < n0; ++ii) {\n";
+					$sender_output .= "\t\t" . mapIndent( "\t\t", unpackParameter( $retvaltype, "$retvaltype elem_p0", $isconst, $indirection, 0)) . "\n";
+					$sender_output .= "\t\tp0.push_back( elem_p0);\n";
+					$sender_output .= "\t}\n";
+				}
 				$receiver_output .= "\tmsg.packSize( p0.size());\n";
 				$receiver_output .= "\tfor (std::size_t ii=0; ii < p0.size(); ++ii) {\n";
 				$receiver_output .= "\t\t" . mapIndent( "\t\t", packParameter( $retvaltype, "p0[ii]", $isconst, $indirection, 1)) . "\n";

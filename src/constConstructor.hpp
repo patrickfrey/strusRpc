@@ -7,6 +7,7 @@
  */
 #ifndef _STRUS_RPC_CONST_CONSTRUCTOR_HPP_INCLUDED
 #define _STRUS_RPC_CONST_CONSTRUCTOR_HPP_INCLUDED
+#include "strus/base/shared_ptr.hpp"
 #include <cstdlib>
 #include <cstring>
 #include <vector>
@@ -14,78 +15,143 @@
 
 namespace strus {
 
+class ConstObject
+{
+public:
+	virtual ~ConstObject(){}
+};
+
+typedef strus::shared_ptr<ConstObject> ConstObjectRef;
+
+class ConstString
+	:public ConstObject
+{
+public:
+	virtual ~ConstString(){}
+	ConstString( const char* ptr_, std::size_t size_)
+		:m_val(ptr_,size_){}
+	ConstString( const char* ptr_)
+		:m_val(ptr_){}
+	const char* ptr() const {return m_val.c_str();}
+
+private:
+	std::string m_val;
+};
+
+class ConstMem
+	:public ConstObject
+{
+public:
+	virtual ~ConstMem(){}
+	ConstMem( const void* ptr_, std::size_t size_)
+		:m_val((const char*)ptr_,size_){}
+	const void* ptr() const {return (const void*)m_val.c_str();}
+
+private:
+	std::string m_val;
+};
+
+template <typename ELEMTYPE>
+class ConstArray
+	:public ConstObject
+{
+public:
+	virtual ~ConstArray(){}
+	ConstArray( ELEMTYPE const* val_, std::size_t size_)
+		:m_val( size_)
+	{
+		std::size_t ii = 0;
+		for (;ii<size_; ++ii) m_val.push_back( val_[ii]);
+	}
+	ConstArray( const std::vector<ELEMTYPE>& val_)
+		:m_val(val_){}
+	const std::vector<ELEMTYPE>& ref() const	{return m_val;}
+	std::vector<ELEMTYPE>& ref()			{return m_val;}
+	const ELEMTYPE* data() const			{return m_val.data();}
+
+private:
+	std::vector<ELEMTYPE> m_val;
+};
+
+
+
 class ConstConstructor
 {
 public:
 	ConstConstructor(){}
 	~ConstConstructor()
-	{
-		std::vector<Value>::iterator ai = m_longliving_ar.begin(), ae = m_longliving_ar.end();
-		for (; ai != ae; ++ai)
-		{
-			std::free( ai->value);
-		}
-	}
+	{}
 
 	void reset()
 	{
-		std::vector<Value>::iterator ai = m_ar.begin(), ae = m_ar.end();
-		for (; ai != ae; ++ai)
-		{
-			std::free( ai->value);
-		}
 		m_ar.clear();
 	}
 
 	const char* getCharp( const char* ptr)
 	{
-		return (const char*)get( ptr, std::strlen(ptr)+1);
+		m_ar.reserve( m_ar.size()+1);
+		ConstString* obj = new ConstString( ptr);
+		m_ar.push_back( obj);
+		return obj->ptr();
 	}
-	const char** getCharpp( const char** ptr)
+	const char* getCharpLongLiving( const char* ptr)
 	{
-		char const** pp = ptr;
+		m_longliving_ar.reserve( m_longliving_ar.size()+1);
+		ConstString* obj = new ConstString( ptr);
+		m_longliving_ar.push_back( obj);
+		return obj->ptr();
+	}
+
+	typedef ConstArray<char const*> ConstCharpArray;
+
+	const char** getCharpp( char const* const* ptr)
+	{
+		char const* const* pp = ptr;
 		while (*pp)++pp;
-		return (const char**)get( ptr, ((pp-ptr)+1)*sizeof(char*));
+
+		m_ar.reserve( m_ar.size()+1);
+		ConstCharpArray* obj = new ConstCharpArray( ptr, pp-ptr+1);
+		m_ar.push_back( obj);
+		return const_cast<const char**>( obj->data());
+	}
+	const char** getCharppLongLiving( char const* const* ptr)
+	{
+		char const* const* pp = ptr;
+		while (*pp)++pp;
+
+		m_longliving_ar.reserve( m_longliving_ar.size()+1);
+		ConstCharpArray* obj = new ConstCharpArray( ptr, pp-ptr+1);
+		m_longliving_ar.push_back( obj);
+		return const_cast<const char**>( obj->data());
 	}
 
 	const void* get( const void* ptr, std::size_t size)
 	{
-		m_ar.push_back( Value::copy( ptr, size));
-		return m_ar.back().value;
+		m_ar.reserve( m_ar.size()+1);
+		ConstMem* obj = new ConstMem( ptr, size);
+		m_ar.push_back( obj);
+		return obj->ptr();
 	}
 	const void* getLongLiving( const void* ptr, std::size_t size)
 	{
-		m_longliving_ar.push_back( Value::copy( ptr, size));
-		return m_longliving_ar.back().value;
+		m_longliving_ar.reserve( m_longliving_ar.size()+1);
+		ConstMem* obj = new ConstMem( ptr, size);
+		m_longliving_ar.push_back( obj);
+		return obj->ptr();
+	}
+
+	template <typename ELEMTYPE>
+	const std::vector<ELEMTYPE>& getArrayRef( const std::vector<ELEMTYPE>& val)
+	{
+		m_ar.reserve( m_ar.size()+1);
+		ConstArray<ELEMTYPE>* obj = new ConstArray<ELEMTYPE>( val);
+		m_ar.push_back( obj);
+		return obj->ref();
 	}
 
 private:
-	struct Value
-	{
-		void* value;
-		std::size_t size;
-
-		~Value(){}
-
-		Value()
-			:value(0),size(0){}
-		Value( const Value& o)
-			:value(o.value),size(o.size){}
-		Value( void* value_, std::size_t size_)
-			:value(value_),size(size_)
-		{}
-
-		static Value copy( const void* ptr_, std::size_t size_)
-		{
-			void* ptr = std::malloc(size_);
-			if (!ptr) throw std::bad_alloc();
-			std::memcpy( ptr, ptr_, size_);
-			return Value( ptr, size_);
-		}
-	};
-
-	std::vector<Value> m_ar;
-	std::vector<Value> m_longliving_ar;
+	std::vector<ConstObjectRef> m_ar;
+	std::vector<ConstObjectRef> m_longliving_ar;
 };
 
 }//namespace

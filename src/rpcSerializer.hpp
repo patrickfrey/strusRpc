@@ -36,6 +36,7 @@
 #include "strus/queryEvalInterface.hpp"
 #include "strus/queryProcessorInterface.hpp"
 #include "strus/documentTermIteratorInterface.hpp"
+#include "strus/weightedField.hpp"
 #include "strus/weightedDocument.hpp"
 #include "strus/resultDocument.hpp"
 #include "strus/structView.hpp"
@@ -128,6 +129,8 @@ public:
 	void packAnalyzerPatternMatcherResult( const analyzer::PatternMatcherResult& val);
 	void packAnalyzerPatternMatcherStatistics( const analyzer::PatternMatcherStatistics& val);
 	void packSegmenterOptions( const analyzer::SegmenterOptions& opts);
+	void packWeightedField( const WeightedField& val);
+	void packWeightedFieldArray( const std::vector<WeightedField>& val);
 	void packWeightedDocument( const WeightedDocument& val);
 	void packResultDocument( const ResultDocument& val);
 	void packQueryResult( const QueryResult& val);
@@ -227,6 +230,8 @@ public:
 	analyzer::PatternMatcherResult unpackAnalyzerPatternMatcherResult();
 	analyzer::PatternMatcherStatistics unpackAnalyzerPatternMatcherStatistics();
 	analyzer::SegmenterOptions unpackSegmenterOptions();
+	WeightedField unpackWeightedField();
+	std::vector<WeightedField> unpackWeightedFieldArray();
 	WeightedDocument unpackWeightedDocument();
 	ResultDocument unpackResultDocument();
 	QueryResult unpackQueryResult();

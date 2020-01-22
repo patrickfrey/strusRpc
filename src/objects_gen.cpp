@@ -5683,6 +5683,7 @@ try
 	msg.packByte( Method_call);
 	msg.packBufferFloat( p1, p2);
 	msg.packCrc32();
+	ctx()->constConstructor()->reset();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
@@ -9689,14 +9690,14 @@ try
 }
 }
 
-std::vector<SummaryElement> SummarizerFunctionContextImpl::getSummary( const Index& p1)
+std::vector<SummaryElement> SummarizerFunctionContextImpl::getSummary( const WeightedDocument& p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getSummary);
-	msg.packIndex( p1);
+	msg.packWeightedDocument( p1);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -9717,14 +9718,14 @@ try
 }
 }
 
-std::string SummarizerFunctionContextImpl::debugCall( const Index& p1)
+std::string SummarizerFunctionContextImpl::debugCall( const WeightedDocument& p1)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_debugCall);
-	msg.packIndex( p1);
+	msg.packWeightedDocument( p1);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -11653,7 +11654,7 @@ try
 }
 }
 
-double WeightingFunctionContextImpl::call( const Index& p1)
+const std::vector<WeightedField>& WeightingFunctionContextImpl::call( const Index& p1)
 {
 try
 {
@@ -11662,17 +11663,26 @@ try
 	msg.packByte( Method_call);
 	msg.packIndex( p1);
 	msg.packCrc32();
+	ctx()->constConstructor()->reset();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	double p0 = serializedMsg.unpackDouble();;
+	std::vector<WeightedField> p0val;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		WeightedField elem_p0 = serializedMsg.unpackWeightedField();
+		p0val.push_back( elem_p0);
+	}
+	const std::vector<WeightedField>& p0 = ctx()->constConstructor()->getArrayRef( p0val);
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "WeightingFunctionContextImpl::call");
-	return 0;
+	static const std::vector<WeightedField> rt;
+	return rt;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::call", err.what());
-	return 0;
+	static const std::vector<WeightedField> rt;
+	return rt;
 }
 }
 

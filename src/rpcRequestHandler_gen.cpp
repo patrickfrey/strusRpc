@@ -8600,8 +8600,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::vector<SummaryElement> p0;
-			Index p1;
-			p1 = serializedMsg.unpackIndex();
+			WeightedDocument p1;
+			p1 = serializedMsg.unpackWeightedDocument();
 			p0 = obj->getSummary(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -8622,8 +8622,8 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::string p0;
-			Index p1;
-			p1 = serializedMsg.unpackIndex();
+			WeightedDocument p1;
+			p1 = serializedMsg.unpackWeightedDocument();
 			p0 = obj->debugCall(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -10331,7 +10331,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case WeightingFunctionContextConst::Method_call:
 		{
 			RpcSerializer msg;
-			double p0;
+			std::vector<WeightedField> p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
 			p0 = obj->call(p1);
@@ -10343,7 +10343,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packDouble( p0);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packWeightedField( p0[ii]);
+			}
 			msg.packCrc32();
 			return msg.content();
 		}

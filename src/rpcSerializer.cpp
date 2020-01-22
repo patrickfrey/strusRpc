@@ -771,9 +771,27 @@ void RpcSerializer::packSegmenterOptions( const analyzer::SegmenterOptions& opts
 	}
 }
 
+void RpcSerializer::packWeightedField( const WeightedField& val)
+{
+	packIndexRange( val.field());
+	packDouble( val.weight());
+}
+
+void RpcSerializer::packWeightedFieldArray( const std::vector<WeightedField>& val)
+{
+	std::vector<WeightedField>::const_iterator
+		fi = val.begin(), fe = val.end();
+	packSize( fe-fi);
+	for (; fi != fe; ++fi)
+	{
+		packWeightedField( *fi);
+	}
+}
+
 void RpcSerializer::packWeightedDocument( const WeightedDocument& val)
 {
 	packIndex( val.docno());
+	packIndexRange( val.field());
 	packDouble( val.weight());
 }
 
@@ -1594,11 +1612,30 @@ analyzer::SegmenterOptions RpcDeserializer::unpackSegmenterOptions()
 	return rt;
 }
 
+WeightedField RpcDeserializer::unpackWeightedField()
+{
+	IndexRange field = unpackIndexRange();
+	float weight = unpackDouble();
+	return WeightedField( field, weight);
+}
+
+std::vector<WeightedField> RpcDeserializer::unpackWeightedFieldArray()
+{
+	std::vector<WeightedField> rt;
+	std::size_t ii = 0, ie = unpackSize();
+	for (; ii < ie; ++ii)
+	{
+		rt.push_back( WeightedField());
+	}
+	return rt;
+}
+
 WeightedDocument RpcDeserializer::unpackWeightedDocument()
 {
 	Index docno = unpackIndex();
+	IndexRange field = unpackIndexRange();
 	float weight = unpackDouble();
-	return WeightedDocument( docno, weight);
+	return WeightedDocument( docno, field, weight);
 }
 
 ResultDocument RpcDeserializer::unpackResultDocument()
