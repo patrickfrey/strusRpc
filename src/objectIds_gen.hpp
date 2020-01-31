@@ -1108,7 +1108,8 @@ public:
 		Method_docno,
 		Method_skipPos,
 		Method_field,
-		Method_links
+		Method_links,
+		Method_headerField
 	};
 };
 

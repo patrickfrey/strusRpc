@@ -1384,6 +1384,7 @@ public:
 	virtual IndexRange skipPos( int p1, const Index& p2);
 	virtual IndexRange field( int p1) const;
 	virtual StructureLinkArray links( int p1) const;
+	virtual IndexRange headerField( int p1) const;
 };
 
 class SummarizerFunctionContextImpl

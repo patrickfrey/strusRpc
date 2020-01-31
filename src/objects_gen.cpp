@@ -9632,6 +9632,29 @@ try
 }
 }
 
+IndexRange StructIteratorImpl::headerField( int p1) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_headerField);
+	msg.packInt( p1);
+	msg.packCrc32();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	IndexRange p0 = serializedMsg.unpackIndexRange();;
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::headerField");
+	return IndexRange();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::headerField", err.what());
+	return IndexRange();
+}
+}
+
 SummarizerFunctionContextImpl::~SummarizerFunctionContextImpl()
 {
 	if (isConst()) return;
