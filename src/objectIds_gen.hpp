@@ -703,7 +703,6 @@ public:
 		Method_addDocumentEvaluationSet,
 		Method_addAccess,
 		Method_setWeightingVariableValue,
-		Method_setDebugMode,
 		Method_evaluate,
 		Method_view
 	};
@@ -1121,8 +1120,7 @@ public:
 		Method_Destructor,
 		Method_addSummarizationFeature,
 		Method_setVariableValue,
-		Method_getSummary,
-		Method_debugCall
+		Method_getSummary
 	};
 };
 
@@ -1316,8 +1314,7 @@ public:
 		Method_Destructor,
 		Method_addWeightingFeature,
 		Method_setVariableValue,
-		Method_call,
-		Method_debugCall
+		Method_call
 	};
 };
 

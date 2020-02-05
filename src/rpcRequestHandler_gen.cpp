@@ -4742,22 +4742,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case QueryConst::Method_setDebugMode:
-		{
-			RpcSerializer msg;
-			bool p1;
-			p1 = serializedMsg.unpackBool();
-			obj->setDebugMode(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
 		case QueryConst::Method_evaluate:
 		{
 			RpcSerializer msg;
@@ -8637,25 +8621,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case SummarizerFunctionContextConst::Method_debugCall:
-		{
-			RpcSerializer msg;
-			std::string p0;
-			WeightedDocument p1;
-			p1 = serializedMsg.unpackWeightedDocument();
-			p0 = obj->debugCall(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packString( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
 	}
 	break;
 	}
@@ -10366,25 +10331,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
 				msg.packWeightedField( p0[ii]);
 			}
-			msg.packCrc32();
-			return msg.content();
-		}
-		case WeightingFunctionContextConst::Method_debugCall:
-		{
-			RpcSerializer msg;
-			std::string p0;
-			Index p1;
-			p1 = serializedMsg.unpackIndex();
-			p0 = obj->debugCall(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packString( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

@@ -5318,25 +5318,6 @@ try
 }
 }
 
-void QueryImpl::setDebugMode( bool p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_setDebugMode);
-	msg.packBool( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryImpl::setDebugMode");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryImpl::setDebugMode", err.what());
-	return void();
-}
-}
-
 QueryResult QueryImpl::evaluate( int p1, int p2) const
 {
 try
@@ -9741,29 +9722,6 @@ try
 }
 }
 
-std::string SummarizerFunctionContextImpl::debugCall( const WeightedDocument& p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_debugCall);
-	msg.packWeightedDocument( p1);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::string p0 = serializedMsg.unpackString();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SummarizerFunctionContextImpl::debugCall");
-	return std::string();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SummarizerFunctionContextImpl::debugCall", err.what());
-	return std::string();
-}
-}
-
 SummarizerFunctionInstanceImpl::~SummarizerFunctionInstanceImpl()
 {
 	if (isConst()) return;
@@ -11706,29 +11664,6 @@ try
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::call", err.what());
 	static const std::vector<WeightedField> rt;
 	return rt;
-}
-}
-
-std::string WeightingFunctionContextImpl::debugCall( const Index& p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_debugCall);
-	msg.packIndex( p1);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::string p0 = serializedMsg.unpackString();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "WeightingFunctionContextImpl::debugCall");
-	return std::string();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "WeightingFunctionContextImpl::debugCall", err.what());
-	return std::string();
 }
 }
 
