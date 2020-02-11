@@ -82,7 +82,7 @@
 #include "strus/storageMetaDataTableUpdateInterface.hpp"
 #include "strus/storageObjectBuilderInterface.hpp"
 #include "strus/storageTransactionInterface.hpp"
-#include "strus/structIteratorInterface.hpp"
+#include "strus/structureIteratorInterface.hpp"
 #include "strus/summarizerFunctionContextInterface.hpp"
 #include "strus/summarizerFunctionInstanceInterface.hpp"
 #include "strus/summarizerFunctionInterface.hpp"
@@ -852,7 +852,7 @@ public:
 	virtual void addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4);
 	virtual void addWeightingFunction( WeightingFunctionInstanceInterface* p1, const std::vector<QueryEvalInterface::FeatureParameter>& p2, const std::string& p3);
 	virtual void defineWeightingFormula( ScalarFunctionInterface* p1);
-	virtual void usePositionInformation( bool p1);
+	virtual void usePositionInformation( const std::string& p1, bool p2);
 	virtual QueryInterface* createQuery( const StorageClientInterface* p1) const;
 	virtual StructView view( ) const;
 };
@@ -868,12 +868,12 @@ public:
 	QueryImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_Query, objId_, ctx_, isConst_, errorhnd_){}
 
+	virtual void defineTermStatistics( const std::string& p1, const std::string& p2, const TermStatistics& p3);
+	virtual void defineGlobalStatistics( const GlobalStatistics& p1);
 	virtual void pushTerm( const std::string& p1, const std::string& p2, const Index& p3);
 	virtual void pushExpression( const PostingJoinOperatorInterface* p1, unsigned int p2, int p3, unsigned int p4);
 	virtual void attachVariable( const std::string& p1);
 	virtual void defineFeature( const std::string& p1, double p2);
-	virtual void defineTermStatistics( const std::string& p1, const std::string& p2, const TermStatistics& p3);
-	virtual void defineGlobalStatistics( const GlobalStatistics& p1);
 	virtual void addMetaDataRestrictionCondition( const MetaDataRestrictionInterface::CompareOperator& p1, const std::string& p2, const NumericVariant& p3, bool p4);
 	virtual void addDocumentEvaluationSet( const std::vector<Index>& p1);
 	virtual void addAccess( const std::string& p1);
@@ -1190,7 +1190,7 @@ public:
 	virtual std::string config( ) const;
 	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3) const;
 	virtual PostingIteratorInterface* createFrequencyPostingIterator( const std::string& p1, const std::string& p2) const;
-	virtual StructIteratorInterface* createStructIterator( ) const;
+	virtual StructureIteratorInterface* createStructureIterator( ) const;
 	virtual PostingIteratorInterface* createBrowsePostingIterator( const MetaDataRestrictionInterface* p1, const Index& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;
 	virtual DocumentTermIteratorInterface* createDocumentTermIterator( const std::string& p1) const;
@@ -1366,16 +1366,16 @@ public:
 	virtual void rollback( );
 };
 
-class StructIteratorImpl
+class StructureIteratorImpl
 		:public RpcInterfaceStub
-		,public strus::StructIteratorInterface
-		,public strus::StructIteratorConst
+		,public strus::StructureIteratorInterface
+		,public strus::StructureIteratorConst
 {
 public:
-	virtual ~StructIteratorImpl();
+	virtual ~StructureIteratorImpl();
 
-	StructIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_StructIterator, objId_, ctx_, isConst_, errorhnd_){}
+	StructureIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StructureIterator, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void skipDoc( const Index& p1);
 	virtual int levels( ) const;
@@ -1383,7 +1383,7 @@ public:
 	virtual IndexRange skipPos( int p1, const Index& p2);
 	virtual IndexRange field( int p1) const;
 	virtual StructureLinkArray links( int p1) const;
-	virtual IndexRange headerField( int p1) const;
+	virtual StructureHeaderField headerField( int p1) const;
 };
 
 class SummarizerFunctionContextImpl

@@ -474,6 +474,12 @@ void RpcSerializer::packStructureLinkArray( const StructureLinkArray& val)
 	}
 }
 
+void RpcSerializer::packStructureHeaderField( const StructureHeaderField& val)
+{
+	packIndexRange( val.field());
+	packIndex( val.hierarchy());
+}
+
 void RpcSerializer::packDocumentClass( const analyzer::DocumentClass& dclass)
 {
 	packString( dclass.mimeType());
@@ -1341,6 +1347,12 @@ StructureLinkArray RpcDeserializer::unpackStructureLinkArray()
 	return StructureLinkArray( lar, nofLinks);
 }
 
+StructureHeaderField RpcDeserializer::unpackStructureHeaderField()
+{
+	strus::IndexRange field = unpackIndexRange();
+	strus::Index hierarchy = unpackIndex();
+	return StructureHeaderField( field, hierarchy);
+}
 
 DatabaseOptions RpcDeserializer::unpackDatabaseOptions()
 {

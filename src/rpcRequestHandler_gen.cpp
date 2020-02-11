@@ -4484,9 +4484,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryEvalConst::Method_usePositionInformation:
 		{
 			RpcSerializer msg;
-			bool p1;
-			p1 = serializedMsg.unpackBool();
-			obj->usePositionInformation(p1);
+			std::string p1;
+			bool p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackBool();
+			obj->usePositionInformation(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -4549,6 +4551,42 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case QueryConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
+			return std::string();
+		}
+		case QueryConst::Method_defineTermStatistics:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			std::string p2;
+			TermStatistics p3;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackTermStatistics();
+			obj->defineTermStatistics(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case QueryConst::Method_defineGlobalStatistics:
+		{
+			RpcSerializer msg;
+			GlobalStatistics p1;
+			p1 = serializedMsg.unpackGlobalStatistics();
+			obj->defineGlobalStatistics(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
 		case QueryConst::Method_pushTerm:
@@ -4620,42 +4658,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackDouble();
 			obj->defineFeature(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case QueryConst::Method_defineTermStatistics:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			std::string p2;
-			TermStatistics p3;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackString();
-			p3 = serializedMsg.unpackTermStatistics();
-			obj->defineTermStatistics(p1,p2,p3);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case QueryConst::Method_defineGlobalStatistics:
-		{
-			RpcSerializer msg;
-			GlobalStatistics p1;
-			p1 = serializedMsg.unpackGlobalStatistics();
-			obj->defineGlobalStatistics(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6751,13 +6753,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case StorageClientConst::Method_createStructIterator:
+		case StorageClientConst::Method_createStructureIterator:
 		{
 			RpcSerializer msg;
-			StructIteratorInterface* p0;
+			StructureIteratorInterface* p0;
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createStructIterator();
+			p0 = obj->createStructureIterator();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8394,17 +8396,17 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_StructIterator:
+	case ClassId_StructureIterator:
 	{
-	StructIteratorInterface* obj = getObject<StructIteratorInterface>( classId, objId);
-	switch( (StructIteratorConst::MethodId)methodId)
+	StructureIteratorInterface* obj = getObject<StructureIteratorInterface>( classId, objId);
+	switch( (StructureIteratorConst::MethodId)methodId)
 	{
-		case StructIteratorConst::Method_Destructor:
+		case StructureIteratorConst::Method_Destructor:
 		{
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case StructIteratorConst::Method_skipDoc:
+		case StructureIteratorConst::Method_skipDoc:
 		{
 			RpcSerializer msg;
 			Index p1;
@@ -8420,7 +8422,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case StructIteratorConst::Method_levels:
+		case StructureIteratorConst::Method_levels:
 		{
 			RpcSerializer msg;
 			int p0;
@@ -8437,7 +8439,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case StructIteratorConst::Method_docno:
+		case StructureIteratorConst::Method_docno:
 		{
 			RpcSerializer msg;
 			Index p0;
@@ -8454,7 +8456,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case StructIteratorConst::Method_skipPos:
+		case StructureIteratorConst::Method_skipPos:
 		{
 			RpcSerializer msg;
 			IndexRange p0;
@@ -8475,7 +8477,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case StructIteratorConst::Method_field:
+		case StructureIteratorConst::Method_field:
 		{
 			RpcSerializer msg;
 			IndexRange p0;
@@ -8494,7 +8496,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case StructIteratorConst::Method_links:
+		case StructureIteratorConst::Method_links:
 		{
 			RpcSerializer msg;
 			StructureLinkArray p0;
@@ -8513,10 +8515,10 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case StructIteratorConst::Method_headerField:
+		case StructureIteratorConst::Method_headerField:
 		{
 			RpcSerializer msg;
-			IndexRange p0;
+			StructureHeaderField p0;
 			int p1;
 			p1 = serializedMsg.unpackInt();
 			p0 = obj->headerField(p1);
@@ -8528,7 +8530,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packIndexRange( p0);
+			msg.packStructureHeaderField( p0);
 			msg.packCrc32();
 			return msg.content();
 		}

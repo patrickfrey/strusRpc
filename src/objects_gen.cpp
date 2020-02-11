@@ -5034,14 +5034,15 @@ try
 }
 }
 
-void QueryEvalImpl::usePositionInformation( bool p1)
+void QueryEvalImpl::usePositionInformation( const std::string& p1, bool p2)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_usePositionInformation);
-	msg.packBool( p1);
+	msg.packString( p1);
+	msg.packBool( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -5109,6 +5110,46 @@ QueryImpl::~QueryImpl()
 	msg.packByte( Method_Destructor);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
+}
+
+void QueryImpl::defineTermStatistics( const std::string& p1, const std::string& p2, const TermStatistics& p3)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineTermStatistics);
+	msg.packString( p1);
+	msg.packString( p2);
+	msg.packTermStatistics( p3);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryImpl::defineTermStatistics");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryImpl::defineTermStatistics", err.what());
+	return void();
+}
+}
+
+void QueryImpl::defineGlobalStatistics( const GlobalStatistics& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineGlobalStatistics);
+	msg.packGlobalStatistics( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryImpl::defineGlobalStatistics");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryImpl::defineGlobalStatistics", err.what());
+	return void();
+}
 }
 
 void QueryImpl::pushTerm( const std::string& p1, const std::string& p2, const Index& p3)
@@ -5191,46 +5232,6 @@ try
 	return void();
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryImpl::defineFeature", err.what());
-	return void();
-}
-}
-
-void QueryImpl::defineTermStatistics( const std::string& p1, const std::string& p2, const TermStatistics& p3)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineTermStatistics);
-	msg.packString( p1);
-	msg.packString( p2);
-	msg.packTermStatistics( p3);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryImpl::defineTermStatistics");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryImpl::defineTermStatistics", err.what());
-	return void();
-}
-}
-
-void QueryImpl::defineGlobalStatistics( const GlobalStatistics& p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineGlobalStatistics);
-	msg.packGlobalStatistics( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "QueryImpl::defineGlobalStatistics");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "QueryImpl::defineGlobalStatistics", err.what());
 	return void();
 }
 }
@@ -7582,25 +7583,25 @@ try
 }
 }
 
-StructIteratorInterface* StorageClientImpl::createStructIterator( ) const
+StructureIteratorInterface* StorageClientImpl::createStructureIterator( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_createStructIterator);
+	msg.packByte( Method_createStructureIterator);
 	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_StructIterator;
+	unsigned char classId_0 = (unsigned char)ClassId_StructureIterator;
 	msg.packObject( classId_0, objId_0);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
-	StructIteratorInterface* p0 = new StructIteratorImpl( objId_0, ctx(), false, errorhnd());
+	StructureIteratorInterface* p0 = new StructureIteratorImpl( objId_0, ctx(), false, errorhnd());
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageClientImpl::createStructIterator");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageClientImpl::createStructureIterator");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::createStructIterator", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageClientImpl::createStructureIterator", err.what());
 	return 0;
 }
 }
@@ -9470,7 +9471,7 @@ try
 }
 }
 
-StructIteratorImpl::~StructIteratorImpl()
+StructureIteratorImpl::~StructureIteratorImpl()
 {
 	if (isConst()) return;
 	RpcSerializer msg;
@@ -9480,7 +9481,7 @@ StructIteratorImpl::~StructIteratorImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void StructIteratorImpl::skipDoc( const Index& p1)
+void StructureIteratorImpl::skipDoc( const Index& p1)
 {
 try
 {
@@ -9491,15 +9492,15 @@ try
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::skipDoc");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructureIteratorImpl::skipDoc");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::skipDoc", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructureIteratorImpl::skipDoc", err.what());
 	return void();
 }
 }
 
-int StructIteratorImpl::levels( ) const
+int StructureIteratorImpl::levels( ) const
 {
 try
 {
@@ -9513,15 +9514,15 @@ try
 	int p0 = serializedMsg.unpackInt();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::levels");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructureIteratorImpl::levels");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::levels", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructureIteratorImpl::levels", err.what());
 	return 0;
 }
 }
 
-Index StructIteratorImpl::docno( ) const
+Index StructureIteratorImpl::docno( ) const
 {
 try
 {
@@ -9535,15 +9536,15 @@ try
 	Index p0 = serializedMsg.unpackIndex();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::docno");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructureIteratorImpl::docno");
 	return 0;
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::docno", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructureIteratorImpl::docno", err.what());
 	return 0;
 }
 }
 
-IndexRange StructIteratorImpl::skipPos( int p1, const Index& p2)
+IndexRange StructureIteratorImpl::skipPos( int p1, const Index& p2)
 {
 try
 {
@@ -9559,15 +9560,15 @@ try
 	IndexRange p0 = serializedMsg.unpackIndexRange();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::skipPos");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructureIteratorImpl::skipPos");
 	return IndexRange();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::skipPos", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructureIteratorImpl::skipPos", err.what());
 	return IndexRange();
 }
 }
 
-IndexRange StructIteratorImpl::field( int p1) const
+IndexRange StructureIteratorImpl::field( int p1) const
 {
 try
 {
@@ -9582,15 +9583,15 @@ try
 	IndexRange p0 = serializedMsg.unpackIndexRange();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::field");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructureIteratorImpl::field");
 	return IndexRange();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::field", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructureIteratorImpl::field", err.what());
 	return IndexRange();
 }
 }
 
-StructureLinkArray StructIteratorImpl::links( int p1) const
+StructureLinkArray StructureIteratorImpl::links( int p1) const
 {
 try
 {
@@ -9605,15 +9606,15 @@ try
 	StructureLinkArray p0 = serializedMsg.unpackStructureLinkArray();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::links");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructureIteratorImpl::links");
 	return StructureLinkArray();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::links", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructureIteratorImpl::links", err.what());
 	return StructureLinkArray();
 }
 }
 
-IndexRange StructIteratorImpl::headerField( int p1) const
+StructureHeaderField StructureIteratorImpl::headerField( int p1) const
 {
 try
 {
@@ -9625,14 +9626,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	IndexRange p0 = serializedMsg.unpackIndexRange();;
+	StructureHeaderField p0 = serializedMsg.unpackStructureHeaderField();;
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructIteratorImpl::headerField");
-	return IndexRange();
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StructureIteratorImpl::headerField");
+	return StructureHeaderField();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructIteratorImpl::headerField", err.what());
-	return IndexRange();
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StructureIteratorImpl::headerField", err.what());
+	return StructureHeaderField();
 }
 }
 

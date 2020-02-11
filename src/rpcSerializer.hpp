@@ -41,6 +41,7 @@
 #include "strus/resultDocument.hpp"
 #include "strus/structView.hpp"
 #include "strus/structureLink.hpp"
+#include "strus/structureHeaderField.hpp"
 #include "strus/metaDataRestrictionInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
 #include "strus/statisticsViewerInterface.hpp"
@@ -101,6 +102,7 @@ public:
 	void packWordVector( const WordVector& val);
 	void packStructureLink( const StructureLink& val);
 	void packStructureLinkArray( const StructureLinkArray& val);
+	void packStructureHeaderField( const StructureHeaderField& val);
 
 	void packDatabaseOptions( const DatabaseOptions& val);
 	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
@@ -203,6 +205,7 @@ public:
 	WordVector unpackWordVector();
 	StructureLink unpackStructureLink();
 	StructureLinkArray unpackStructureLinkArray();
+	StructureHeaderField unpackStructureHeaderField();
 
 	DatabaseOptions unpackDatabaseOptions();
 	DatabaseInterface::ConfigType unpackDatabaseConfigType();

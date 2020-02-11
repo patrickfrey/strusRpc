@@ -80,7 +80,7 @@ enum ClassId
 	ClassId_StorageMetaDataTableUpdate,
 	ClassId_StorageObjectBuilder,
 	ClassId_StorageTransaction,
-	ClassId_StructIterator,
+	ClassId_StructureIterator,
 	ClassId_SummarizerFunctionContext,
 	ClassId_SummarizerFunctionInstance,
 	ClassId_SummarizerFunction,
@@ -693,12 +693,12 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
+		Method_defineTermStatistics,
+		Method_defineGlobalStatistics,
 		Method_pushTerm,
 		Method_pushExpression,
 		Method_attachVariable,
 		Method_defineFeature,
-		Method_defineTermStatistics,
-		Method_defineGlobalStatistics,
 		Method_addMetaDataRestrictionCondition,
 		Method_addDocumentEvaluationSet,
 		Method_addAccess,
@@ -947,7 +947,7 @@ public:
 		Method_config,
 		Method_createTermPostingIterator,
 		Method_createFrequencyPostingIterator,
-		Method_createStructIterator,
+		Method_createStructureIterator,
 		Method_createBrowsePostingIterator,
 		Method_createForwardIterator,
 		Method_createDocumentTermIterator,
@@ -1096,7 +1096,7 @@ public:
 	};
 };
 
-class StructIteratorConst
+class StructureIteratorConst
 {
 public:
 	enum MethodId

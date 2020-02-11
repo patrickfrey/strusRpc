@@ -980,6 +980,10 @@ sub packParameter
 	{
 		$rt .= "msg.packStructureLinkArray( " . $id . ");";
 	}
+	elsif ($type eq "StructureHeaderField")
+	{
+		$rt .= "msg.packStructureHeaderField( " . $id . ");";
+	}
 	else
 	{
 		die "no serialization defined for type \"$type\"";
@@ -1362,6 +1366,10 @@ sub unpackParameter
 	elsif ($type eq "StructureLinkArray")
 	{
 		$rt .= "$id = serializedMsg.unpackStructureLinkArray();";
+	}
+	elsif ($type eq "StructureHeaderField")
+	{
+		$rt .= "$id = serializedMsg.unpackStructureHeaderField();";
 	}
 	else
 	{
