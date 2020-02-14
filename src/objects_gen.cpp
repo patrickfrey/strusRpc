@@ -4951,7 +4951,7 @@ try
 }
 }
 
-void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4)
+void QueryEvalImpl::addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3)
 {
 try
 {
@@ -4966,7 +4966,6 @@ try
 	for (unsigned int ii=0; ii < p3.size(); ++ii) {
 		msg.packFeatureParameter( p3[ii]);
 	}
-	msg.packString( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	RpcInterfaceStub* done_2 = dynamic_cast<RpcInterfaceStub*>(p2);
@@ -4981,7 +4980,7 @@ try
 }
 }
 
-void QueryEvalImpl::addWeightingFunction( WeightingFunctionInstanceInterface* p1, const std::vector<QueryEvalInterface::FeatureParameter>& p2, const std::string& p3)
+void QueryEvalImpl::addWeightingFunction( WeightingFunctionInstanceInterface* p1, const std::vector<QueryEvalInterface::FeatureParameter>& p2)
 {
 try
 {
@@ -4995,7 +4994,6 @@ try
 	for (unsigned int ii=0; ii < p2.size(); ++ii) {
 		msg.packFeatureParameter( p2[ii]);
 	}
-	msg.packString( p3);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 	RpcInterfaceStub* done_1 = dynamic_cast<RpcInterfaceStub*>(p1);

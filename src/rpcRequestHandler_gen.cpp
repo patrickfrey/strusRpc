@@ -4403,7 +4403,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			SummarizerFunctionInstanceInterface* p2;
 			std::vector<QueryEvalInterface::FeatureParameter> p3;
-			std::string p4;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
@@ -4415,8 +4414,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				QueryEvalInterface::FeatureParameter ee = serializedMsg.unpackFeatureParameter();
 				p3.push_back( ee);
 			}
-			p4 = serializedMsg.unpackString();
-			obj->addSummarizerFunction(p1,p2,p3,p4);
+			obj->addSummarizerFunction(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -4434,7 +4432,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			RpcSerializer msg;
 			WeightingFunctionInstanceInterface* p1;
 			std::vector<QueryEvalInterface::FeatureParameter> p2;
-			std::string p3;
 			unsigned char classId_1; unsigned int objId_1;
 			serializedMsg.unpackObject( classId_1, objId_1);
 			if (classId_1 != ClassId_WeightingFunctionInstance) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
@@ -4445,8 +4442,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				QueryEvalInterface::FeatureParameter ee = serializedMsg.unpackFeatureParameter();
 				p2.push_back( ee);
 			}
-			p3 = serializedMsg.unpackString();
-			obj->addWeightingFunction(p1,p2,p3);
+			obj->addWeightingFunction(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

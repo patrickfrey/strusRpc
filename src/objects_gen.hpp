@@ -849,8 +849,8 @@ public:
 	virtual std::vector<std::string> getSelectionFeatureSets( ) const;
 	virtual std::vector<std::string> getRestrictionFeatureSets( ) const;
 	virtual std::vector<std::string> getExclusionFeatureSets( ) const;
-	virtual void addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3, const std::string& p4);
-	virtual void addWeightingFunction( WeightingFunctionInstanceInterface* p1, const std::vector<QueryEvalInterface::FeatureParameter>& p2, const std::string& p3);
+	virtual void addSummarizerFunction( const std::string& p1, SummarizerFunctionInstanceInterface* p2, const std::vector<QueryEvalInterface::FeatureParameter>& p3);
+	virtual void addWeightingFunction( WeightingFunctionInstanceInterface* p1, const std::vector<QueryEvalInterface::FeatureParameter>& p2);
 	virtual void defineWeightingFormula( ScalarFunctionInterface* p1);
 	virtual void usePositionInformation( const std::string& p1, bool p2);
 	virtual QueryInterface* createQuery( const StorageClientInterface* p1) const;
