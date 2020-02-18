@@ -10,6 +10,7 @@
 #include "strus/base/shared_ptr.hpp"
 #include <cstdlib>
 #include <cstring>
+#include <string>
 #include <vector>
 #include <stdexcept>
 
