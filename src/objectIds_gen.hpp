@@ -1134,6 +1134,7 @@ public:
 		Method_addNumericParameter,
 		Method_getVariables,
 		Method_createFunctionContext,
+		Method_doPopulate,
 		Method_name,
 		Method_view
 	};

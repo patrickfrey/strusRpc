@@ -1417,6 +1417,7 @@ public:
 	virtual void addNumericParameter( const std::string& p1, const NumericVariant& p2);
 	virtual std::vector<std::string> getVariables( ) const;
 	virtual SummarizerFunctionContextInterface* createFunctionContext( const StorageClientInterface* p1, const GlobalStatistics& p2) const;
+	virtual bool doPopulate( ) const;
 	virtual const char* name( ) const;
 	virtual StructView view( ) const;
 };

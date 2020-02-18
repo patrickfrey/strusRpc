@@ -826,6 +826,13 @@ void RpcSerializer::packQueryResult( const QueryResult& val)
 	{
 		packResultDocument( *ri);
 	}
+	std::vector<SummaryElement>::const_iterator
+		ai = val.summaryElements().begin(), ae = val.summaryElements().end();
+	packSize( ae-ai);
+	for (; ai != ae; ++ai)
+	{
+		packSummaryElement( *ai);
+	}
 }
 
 void RpcSerializer::packStorageCommitResult( const StorageCommitResult& val)
@@ -1673,7 +1680,13 @@ QueryResult RpcDeserializer::unpackQueryResult()
 	{
 		ranks.push_back( unpackResultDocument());
 	}
-	return QueryResult( pass, nofRanked, nofVisited, ranks);
+	std::vector<SummaryElement> summaryElements;
+	ii=0,strsize=unpackSize();
+	for (; ii<strsize; ++ii)
+	{
+		summaryElements.push_back( unpackSummaryElement());
+	}
+	return QueryResult( pass, nofRanked, nofVisited, ranks, summaryElements);
 }
 
 StorageCommitResult RpcDeserializer::unpackStorageCommitResult()
