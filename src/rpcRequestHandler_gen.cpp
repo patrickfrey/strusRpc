@@ -5769,100 +5769,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case SentenceAnalyzerInstanceConst::Method_pushTerm:
+		case SentenceAnalyzerInstanceConst::Method_defineType:
 		{
 			RpcSerializer msg;
 			std::string p1;
-			std::string p2;
-			float p3;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackString();
-			p3 = serializedMsg.unpackFloat();
-			obj->pushTerm(p1,p2,p3);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case SentenceAnalyzerInstanceConst::Method_pushNone:
-		{
-			RpcSerializer msg;
-			float p1;
-			p1 = serializedMsg.unpackFloat();
-			obj->pushNone(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case SentenceAnalyzerInstanceConst::Method_pushAlt:
-		{
-			RpcSerializer msg;
-			int p1;
-			p1 = serializedMsg.unpackInt();
-			obj->pushAlt(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case SentenceAnalyzerInstanceConst::Method_pushSequenceImm:
-		{
-			RpcSerializer msg;
-			int p1;
-			p1 = serializedMsg.unpackInt();
-			obj->pushSequenceImm(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case SentenceAnalyzerInstanceConst::Method_pushRepeat:
-		{
-			RpcSerializer msg;
-			int p1;
 			int p2;
-			p1 = serializedMsg.unpackInt();
-			p2 = serializedMsg.unpackInt();
-			obj->pushRepeat(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case SentenceAnalyzerInstanceConst::Method_defineSentence:
-		{
-			RpcSerializer msg;
-			std::string p1;
-			float p2;
 			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackFloat();
-			obj->defineSentence(p1,p2);
+			p2 = serializedMsg.unpackInt();
+			obj->defineType(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5872,23 +5786,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
-		}
-		case SentenceAnalyzerInstanceConst::Method_compile:
-		{
-			RpcSerializer msg;
-			bool p0;
-			p0 = obj->compile();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packCrc32();
-			return msg.content();
 		}
 		case SentenceAnalyzerInstanceConst::Method_analyzeSentence:
 		{

@@ -6464,143 +6464,23 @@ SentenceAnalyzerInstanceImpl::~SentenceAnalyzerInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void SentenceAnalyzerInstanceImpl::pushTerm( const std::string& p1, const std::string& p2, float p3)
+void SentenceAnalyzerInstanceImpl::defineType( const std::string& p1, int p2)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_pushTerm);
+	msg.packByte( Method_defineType);
 	msg.packString( p1);
-	msg.packString( p2);
-	msg.packFloat( p3);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::pushTerm");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::pushTerm", err.what());
-	return void();
-}
-}
-
-void SentenceAnalyzerInstanceImpl::pushNone( float p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_pushNone);
-	msg.packFloat( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::pushNone");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::pushNone", err.what());
-	return void();
-}
-}
-
-void SentenceAnalyzerInstanceImpl::pushAlt( int p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_pushAlt);
-	msg.packInt( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::pushAlt");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::pushAlt", err.what());
-	return void();
-}
-}
-
-void SentenceAnalyzerInstanceImpl::pushSequenceImm( int p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_pushSequenceImm);
-	msg.packInt( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::pushSequenceImm");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::pushSequenceImm", err.what());
-	return void();
-}
-}
-
-void SentenceAnalyzerInstanceImpl::pushRepeat( int p1, int p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_pushRepeat);
-	msg.packInt( p1);
 	msg.packInt( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::pushRepeat");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::defineType");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::pushRepeat", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::defineType", err.what());
 	return void();
-}
-}
-
-void SentenceAnalyzerInstanceImpl::defineSentence( const std::string& p1, float p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineSentence);
-	msg.packString( p1);
-	msg.packFloat( p2);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::defineSentence");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::defineSentence", err.what());
-	return void();
-}
-}
-
-bool SentenceAnalyzerInstanceImpl::compile( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_compile);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::compile");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::compile", err.what());
-	return false;
 }
 }
 

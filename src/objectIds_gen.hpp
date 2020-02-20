@@ -829,13 +829,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_pushTerm,
-		Method_pushNone,
-		Method_pushAlt,
-		Method_pushSequenceImm,
-		Method_pushRepeat,
-		Method_defineSentence,
-		Method_compile,
+		Method_defineType,
 		Method_analyzeSentence
 	};
 };

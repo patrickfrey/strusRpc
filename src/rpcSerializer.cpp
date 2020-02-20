@@ -934,7 +934,6 @@ void RpcSerializer::packSentenceTermList( const SentenceTermList& val)
 
 void RpcSerializer::packSentenceGuess( const SentenceGuess& val)
 {
-	packString( val.classname());
 	packSentenceTermList( val.terms());
 	packDouble( val.weight());
 }
@@ -1791,11 +1790,10 @@ SentenceTermList RpcDeserializer::unpackSentenceTermList()
 
 SentenceGuess RpcDeserializer::unpackSentenceGuess()
 {
-	std::string classname( unpackString());
 	std::vector<SentenceTerm> terms( unpackSentenceTermList());
 	double weight = unpackDouble();
 
-	return SentenceGuess( classname, terms, weight);
+	return SentenceGuess( terms, weight);
 }
 
 analyzer::ContentStatisticsItem RpcDeserializer::unpackAnalyzerContentStatisticsItem()
