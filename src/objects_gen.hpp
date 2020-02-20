@@ -1040,7 +1040,7 @@ public:
 	SentenceAnalyzerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SentenceAnalyzerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void defineType( const std::string& p1, int p2);
+	virtual void defineWordType( const std::string& p1, int p2);
 	virtual std::vector<SentenceGuess> analyzeSentence( const SentenceLexerInstanceInterface* p1, const std::string& p2, int p3, double p4) const;
 };
 

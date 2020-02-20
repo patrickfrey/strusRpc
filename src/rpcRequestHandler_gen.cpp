@@ -5769,14 +5769,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			deleteObject( classId, objId);
 			return std::string();
 		}
-		case SentenceAnalyzerInstanceConst::Method_defineType:
+		case SentenceAnalyzerInstanceConst::Method_defineWordType:
 		{
 			RpcSerializer msg;
 			std::string p1;
 			int p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackInt();
-			obj->defineType(p1,p2);
+			obj->defineWordType(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

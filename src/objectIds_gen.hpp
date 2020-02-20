@@ -829,7 +829,7 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_defineType,
+		Method_defineWordType,
 		Method_analyzeSentence
 	};
 };

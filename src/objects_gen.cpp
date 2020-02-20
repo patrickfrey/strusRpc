@@ -6464,22 +6464,22 @@ SentenceAnalyzerInstanceImpl::~SentenceAnalyzerInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void SentenceAnalyzerInstanceImpl::defineType( const std::string& p1, int p2)
+void SentenceAnalyzerInstanceImpl::defineWordType( const std::string& p1, int p2)
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineType);
+	msg.packByte( Method_defineWordType);
 	msg.packString( p1);
 	msg.packInt( p2);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::defineType");
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::defineWordType");
 	return void();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::defineType", err.what());
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::defineWordType", err.what());
 	return void();
 }
 }
