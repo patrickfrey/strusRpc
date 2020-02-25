@@ -6454,228 +6454,6 @@ try
 }
 }
 
-SentenceAnalyzerInstanceImpl::~SentenceAnalyzerInstanceImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-void SentenceAnalyzerInstanceImpl::defineWordType( const std::string& p1, int p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineWordType);
-	msg.packString( p1);
-	msg.packInt( p2);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::defineWordType");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::defineWordType", err.what());
-	return void();
-}
-}
-
-std::vector<SentenceGuess> SentenceAnalyzerInstanceImpl::analyzeSentence( const SentenceLexerInstanceInterface* p1, const std::string& p2, int p3, double p4) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_analyzeSentence);
-	const RpcInterfaceStub* impl_1 = dynamic_cast<const RpcInterfaceStub*>(p1);
-	if (!impl_1) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "SentenceLexerInstance");
-	msg.packObject( impl_1->classId(), impl_1->objId());
-	msg.packString( p2);
-	msg.packInt( p3);
-	msg.packDouble( p4);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<SentenceGuess> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		SentenceGuess elem_p0 = serializedMsg.unpackSentenceGuess();
-		p0.push_back( elem_p0);
-	}
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceAnalyzerInstanceImpl::analyzeSentence");
-	return std::vector<SentenceGuess>();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceAnalyzerInstanceImpl::analyzeSentence", err.what());
-	return std::vector<SentenceGuess>();
-}
-}
-
-SentenceLexerContextImpl::~SentenceLexerContextImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-bool SentenceLexerContextImpl::fetchFirstSplit( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_fetchFirstSplit);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::fetchFirstSplit");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::fetchFirstSplit", err.what());
-	return false;
-}
-}
-
-bool SentenceLexerContextImpl::fetchNextSplit( )
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_fetchNextSplit);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::fetchNextSplit");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::fetchNextSplit", err.what());
-	return false;
-}
-}
-
-int SentenceLexerContextImpl::nofTokens( ) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_nofTokens);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	int p0 = serializedMsg.unpackInt();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::nofTokens");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::nofTokens", err.what());
-	return 0;
-}
-}
-
-std::string SentenceLexerContextImpl::featureValue( int p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_featureValue);
-	msg.packInt( p1);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::string p0 = serializedMsg.unpackString();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::featureValue");
-	return std::string();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::featureValue", err.what());
-	return std::string();
-}
-}
-
-std::vector<std::string> SentenceLexerContextImpl::featureTypes( int p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_featureTypes);
-	msg.packInt( p1);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<std::string> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		std::string elem_p0 = serializedMsg.unpackString();
-		p0.push_back( elem_p0);
-	}
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::featureTypes");
-	return std::vector<std::string>();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::featureTypes", err.what());
-	return std::vector<std::string>();
-}
-}
-
-std::vector<SentenceGuess> SentenceLexerContextImpl::rankSentences( const std::vector<SentenceGuess>& p1, int p2) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_rankSentences);
-	msg.packSize( p1.size());
-	for (unsigned int ii=0; ii < p1.size(); ++ii) {
-		msg.packSentenceGuess( p1[ii]);
-	}
-	msg.packInt( p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<SentenceGuess> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		SentenceGuess elem_p0 = serializedMsg.unpackSentenceGuess();
-		p0.push_back( elem_p0);
-	}
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerContextImpl::rankSentences");
-	return std::vector<SentenceGuess>();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerContextImpl::rankSentences", err.what());
-	return std::vector<SentenceGuess>();
-}
-}
-
 SentenceLexerInstanceImpl::~SentenceLexerInstanceImpl()
 {
 	if (isConst()) return;
@@ -6686,104 +6464,33 @@ SentenceLexerInstanceImpl::~SentenceLexerInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void SentenceLexerInstanceImpl::addSeparator( int p1)
+std::vector<SentenceGuess> SentenceLexerInstanceImpl::call( const std::string& p1, int p2) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
-	msg.packByte( Method_addSeparator);
-	msg.packInt( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::addSeparator");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::addSeparator", err.what());
-	return void();
-}
-}
-
-void SentenceLexerInstanceImpl::addSpace( int p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_addSpace);
-	msg.packInt( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::addSpace");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::addSpace", err.what());
-	return void();
-}
-}
-
-void SentenceLexerInstanceImpl::addLink( int p1, char p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_addLink);
-	msg.packInt( p1);
-	msg.packByte( p2);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::addLink");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::addLink", err.what());
-	return void();
-}
-}
-
-void SentenceLexerInstanceImpl::defineGroupSimilarityDistance( double p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_defineGroupSimilarityDistance);
-	msg.packDouble( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::defineGroupSimilarityDistance");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::defineGroupSimilarityDistance", err.what());
-	return void();
-}
-}
-
-SentenceLexerContextInterface* SentenceLexerInstanceImpl::createContext( const std::string& p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createContext);
+	msg.packByte( Method_call);
 	msg.packString( p1);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_SentenceLexerContext;
-	msg.packObject( classId_0, objId_0);
+	msg.packInt( p2);
 	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	SentenceLexerContextInterface* p0 = new SentenceLexerContextImpl( objId_0, ctx(), false, errorhnd());
+	ctx()->constConstructor()->reset();
+	std::string answer = ctx()->rpc_sendRequest( msg.content());
+	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
+	serializedMsg.unpackByte();
+	std::vector<SentenceGuess> p0;
+	std::size_t n0 = serializedMsg.unpackSize();
+	for (std::size_t ii=0; ii < n0; ++ii) {
+		SentenceGuess elem_p0 = serializedMsg.unpackSentenceGuess();
+		p0.push_back( elem_p0);
+	}
 	return p0;
 } catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::createContext");
-	return 0;
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::call");
+	return std::vector<SentenceGuess>();
 } catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::createContext", err.what());
-	return 0;
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::call", err.what());
+	return std::vector<SentenceGuess>();
 }
 }
 
@@ -9120,30 +8827,6 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::createQueryEval", err.what());
-	return 0;
-}
-}
-
-SentenceAnalyzerInstanceInterface* StorageObjectBuilderImpl::createSentenceAnalyzer( const std::string& p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createSentenceAnalyzer);
-	msg.packString( p1);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_SentenceAnalyzerInstance;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	SentenceAnalyzerInstanceInterface* p0 = new SentenceAnalyzerInstanceImpl( objId_0, ctx(), false, errorhnd());
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::createSentenceAnalyzer");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::createSentenceAnalyzer", err.what());
 	return 0;
 }
 }
