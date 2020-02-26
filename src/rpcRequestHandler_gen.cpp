@@ -5775,9 +5775,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::vector<SentenceGuess> p0;
 			std::string p1;
 			int p2;
+			double p3;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackInt();
-			p0 = obj->call(p1,p2);
+			p3 = serializedMsg.unpackDouble();
+			p0 = obj->call(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

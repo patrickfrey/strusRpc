@@ -6464,7 +6464,7 @@ SentenceLexerInstanceImpl::~SentenceLexerInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::vector<SentenceGuess> SentenceLexerInstanceImpl::call( const std::string& p1, int p2) const
+std::vector<SentenceGuess> SentenceLexerInstanceImpl::call( const std::string& p1, int p2, double p3) const
 {
 try
 {
@@ -6473,6 +6473,7 @@ try
 	msg.packByte( Method_call);
 	msg.packString( p1);
 	msg.packInt( p2);
+	msg.packDouble( p3);
 	msg.packCrc32();
 	ctx()->constConstructor()->reset();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
