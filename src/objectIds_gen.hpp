@@ -1261,6 +1261,7 @@ public:
 	{
 		Method_Destructor,
 		Method_defineVector,
+		Method_defineFeatureType,
 		Method_defineFeature,
 		Method_clear,
 		Method_commit,

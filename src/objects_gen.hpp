@@ -1580,6 +1580,7 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageTransaction, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual void defineVector( const std::string& p1, const std::string& p2, const WordVector& p3);
+	virtual void defineFeatureType( const std::string& p1);
 	virtual void defineFeature( const std::string& p1, const std::string& p2);
 	virtual void clear( );
 	virtual bool commit( );

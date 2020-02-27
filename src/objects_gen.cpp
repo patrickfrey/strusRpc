@@ -11088,6 +11088,25 @@ try
 }
 }
 
+void VectorStorageTransactionImpl::defineFeatureType( const std::string& p1)
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_defineFeatureType);
+	msg.packString( p1);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "VectorStorageTransactionImpl::defineFeatureType");
+	return void();
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "VectorStorageTransactionImpl::defineFeatureType", err.what());
+	return void();
+}
+}
+
 void VectorStorageTransactionImpl::defineFeature( const std::string& p1, const std::string& p2)
 {
 try
