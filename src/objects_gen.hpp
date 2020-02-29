@@ -1038,7 +1038,7 @@ public:
 	SentenceLexerInstanceImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SentenceLexerInstance, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual std::vector<SentenceGuess> call( const std::string& p1, int p2, double p3) const;
+	virtual std::vector<SentenceGuess> call( const std::vector<std::string>& p1, int p2, double p3) const;
 };
 
 class StatisticsBuilderImpl

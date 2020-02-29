@@ -6464,14 +6464,17 @@ SentenceLexerInstanceImpl::~SentenceLexerInstanceImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-std::vector<SentenceGuess> SentenceLexerInstanceImpl::call( const std::string& p1, int p2, double p3) const
+std::vector<SentenceGuess> SentenceLexerInstanceImpl::call( const std::vector<std::string>& p1, int p2, double p3) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_call);
-	msg.packString( p1);
+	msg.packSize( p1.size());
+	for (unsigned int ii=0; ii < p1.size(); ++ii) {
+		msg.packString( p1[ii]);
+	}
 	msg.packInt( p2);
 	msg.packDouble( p3);
 	msg.packCrc32();

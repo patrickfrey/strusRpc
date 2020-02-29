@@ -5773,10 +5773,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			std::vector<SentenceGuess> p0;
-			std::string p1;
+			std::vector<std::string> p1;
 			int p2;
 			double p3;
-			p1 = serializedMsg.unpackString();
+			std::size_t n1 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n1; ++ii) {
+				std::string ee = serializedMsg.unpackString();
+				p1.push_back( ee);
+			}
 			p2 = serializedMsg.unpackInt();
 			p3 = serializedMsg.unpackDouble();
 			p0 = obj->call(p1,p2,p3);
