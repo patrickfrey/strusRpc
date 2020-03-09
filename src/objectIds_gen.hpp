@@ -827,7 +827,8 @@ public:
 	enum MethodId
 	{
 		Method_Destructor,
-		Method_call
+		Method_call,
+		Method_similarTerms
 	};
 };
 

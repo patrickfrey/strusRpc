@@ -5799,6 +5799,40 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case SentenceLexerInstanceConst::Method_similarTerms:
+		{
+			RpcSerializer msg;
+			std::vector<SentenceTerm> p0;
+			std::string p1;
+			std::vector<SentenceTerm> p2;
+			double p3;
+			int p4;
+			double p5;
+			p1 = serializedMsg.unpackString();
+			std::size_t n2 = serializedMsg.unpackSize();
+			for (std::size_t ii=0; ii < n2; ++ii) {
+				SentenceTerm ee = serializedMsg.unpackSentenceTerm();
+				p2.push_back( ee);
+			}
+			p3 = serializedMsg.unpackDouble();
+			p4 = serializedMsg.unpackInt();
+			p5 = serializedMsg.unpackDouble();
+			p0 = obj->similarTerms(p1,p2,p3,p4,p5);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packSentenceTerm( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
+		}
 	}
 	break;
 	}
