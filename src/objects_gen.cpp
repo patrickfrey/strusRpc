@@ -10549,7 +10549,7 @@ VectorStorageClientImpl::~VectorStorageClientImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void VectorStorageClientImpl::prepareSearch( const std::string& p1)
+void VectorStorageClientImpl::prepareSearch( const std::string& p1) const
 {
 try
 {

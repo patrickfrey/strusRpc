@@ -1519,7 +1519,7 @@ public:
 	VectorStorageClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_VectorStorageClient, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void prepareSearch( const std::string& p1);
+	virtual void prepareSearch( const std::string& p1) const;
 	virtual std::vector<VectorQueryResult> findSimilar( const std::string& p1, const WordVector& p2, int p3, double p4, double p5, bool p6) const;
 	virtual VectorStorageTransactionInterface* createTransaction( );
 	virtual std::vector<std::string> types( ) const;
