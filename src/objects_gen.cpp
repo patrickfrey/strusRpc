@@ -2216,7 +2216,7 @@ try
 }
 }
 
-unsigned int DocumentTermIteratorImpl::termDocumentFrequency( const Index& p1) const
+int DocumentTermIteratorImpl::termDocumentFrequency( const Index& p1) const
 {
 try
 {
@@ -2228,7 +2228,7 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	unsigned int p0 = serializedMsg.unpackUint();;
+	int p0 = serializedMsg.unpackInt();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "DocumentTermIteratorImpl::termDocumentFrequency");
@@ -4360,7 +4360,7 @@ try
 }
 }
 
-Index PostingIteratorImpl::documentFrequency( ) const
+GlobalCounter PostingIteratorImpl::documentFrequency( ) const
 {
 try
 {
@@ -4371,14 +4371,14 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	Index p0 = serializedMsg.unpackIndex();;
+	GlobalCounter p0 = serializedMsg.unpackGlobalCounter();;
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "PostingIteratorImpl::documentFrequency");
-	return 0;
+	return GlobalCounter();
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "PostingIteratorImpl::documentFrequency", err.what());
-	return 0;
+	return GlobalCounter();
 }
 }
 
@@ -7156,7 +7156,7 @@ try
 }
 }
 
-PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3) const
+PostingIteratorInterface* StorageClientImpl::createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3, const TermStatistics& p4) const
 {
 try
 {
@@ -7166,6 +7166,7 @@ try
 	msg.packString( p1);
 	msg.packString( p2);
 	msg.packIndex( p3);
+	msg.packTermStatistics( p4);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_PostingIterator;
 	msg.packObject( classId_0, objId_0);
@@ -7182,7 +7183,7 @@ try
 }
 }
 
-PostingIteratorInterface* StorageClientImpl::createFrequencyPostingIterator( const std::string& p1, const std::string& p2) const
+PostingIteratorInterface* StorageClientImpl::createFrequencyPostingIterator( const std::string& p1, const std::string& p2, const TermStatistics& p3) const
 {
 try
 {
@@ -7191,6 +7192,7 @@ try
 	msg.packByte( Method_createFrequencyPostingIterator);
 	msg.packString( p1);
 	msg.packString( p2);
+	msg.packTermStatistics( p3);
 	unsigned int objId_0 = ctx()->newObjId();
 	unsigned char classId_0 = (unsigned char)ClassId_PostingIterator;
 	msg.packObject( classId_0, objId_0);
@@ -9247,7 +9249,7 @@ SummarizerFunctionContextImpl::~SummarizerFunctionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, double p4, const TermStatistics& p5)
+void SummarizerFunctionContextImpl::addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, double p4)
 {
 try
 {
@@ -9263,7 +9265,6 @@ try
 		msg.packSummarizationVariable( p3[ii]);
 	}
 	msg.packDouble( p4);
-	msg.packTermStatistics( p5);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {
@@ -11233,7 +11234,7 @@ WeightingFunctionContextImpl::~WeightingFunctionContextImpl()
 	ctx()->rpc_sendMessage( msg.content());
 }
 
-void WeightingFunctionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, double p3, const TermStatistics& p4)
+void WeightingFunctionContextImpl::addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, double p3)
 {
 try
 {
@@ -11245,7 +11246,6 @@ try
 	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "PostingIterator");
 	msg.packObject( impl_2->classId(), impl_2->objId());
 	msg.packDouble( p3);
-	msg.packTermStatistics( p4);
 	msg.packCrc32();
 	ctx()->rpc_sendMessage( msg.content());
 } catch (const std::bad_alloc&) {

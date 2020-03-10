@@ -412,7 +412,7 @@ public:
 
 	virtual Index skipDoc( const Index& p1);
 	virtual bool nextTerm( DocumentTermIteratorInterface::Term& p1);
-	virtual unsigned int termDocumentFrequency( const Index& p1) const;
+	virtual int termDocumentFrequency( const Index& p1) const;
 	virtual std::string termValue( const Index& p1) const;
 };
 
@@ -771,7 +771,7 @@ public:
 	virtual Index skipDocCandidate( const Index& p1);
 	virtual Index skipPos( const Index& p1);
 	virtual const char* featureid( ) const;
-	virtual Index documentFrequency( ) const;
+	virtual GlobalCounter documentFrequency( ) const;
 	virtual int frequency( );
 	virtual Index docno( ) const;
 	virtual Index posno( ) const;
@@ -1143,8 +1143,8 @@ public:
 	virtual long diskUsage( ) const;
 	virtual BlockStatistics blockStatistics( ) const;
 	virtual std::string config( ) const;
-	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3) const;
-	virtual PostingIteratorInterface* createFrequencyPostingIterator( const std::string& p1, const std::string& p2) const;
+	virtual PostingIteratorInterface* createTermPostingIterator( const std::string& p1, const std::string& p2, const Index& p3, const TermStatistics& p4) const;
+	virtual PostingIteratorInterface* createFrequencyPostingIterator( const std::string& p1, const std::string& p2, const TermStatistics& p3) const;
 	virtual StructureIteratorInterface* createStructureIterator( ) const;
 	virtual PostingIteratorInterface* createBrowsePostingIterator( const MetaDataRestrictionInterface* p1, const Index& p2) const;
 	virtual ForwardIteratorInterface* createForwardIterator( const std::string& p1) const;
@@ -1351,7 +1351,7 @@ public:
 	SummarizerFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_SummarizerFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, double p4, const TermStatistics& p5);
+	virtual void addSummarizationFeature( const std::string& p1, PostingIteratorInterface* p2, const std::vector<SummarizationVariable>& p3, double p4);
 	virtual void setVariableValue( const std::string& p1, double p2);
 	virtual std::vector<SummaryElement> getSummary( const WeightedDocument& p1);
 };
@@ -1599,7 +1599,7 @@ public:
 	WeightingFunctionContextImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
 		:RpcInterfaceStub( (unsigned char)ClassId_WeightingFunctionContext, objId_, ctx_, isConst_, errorhnd_){}
 
-	virtual void addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, double p3, const TermStatistics& p4);
+	virtual void addWeightingFeature( const std::string& p1, PostingIteratorInterface* p2, double p3);
 	virtual void setVariableValue( const std::string& p1, double p2);
 	virtual const std::vector<WeightedField>& call( const Index& p1);
 };

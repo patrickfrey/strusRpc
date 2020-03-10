@@ -2006,7 +2006,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case DocumentTermIteratorConst::Method_termDocumentFrequency:
 		{
 			RpcSerializer msg;
-			unsigned int p0;
+			int p0;
 			Index p1;
 			p1 = serializedMsg.unpackIndex();
 			p0 = obj->termDocumentFrequency(p1);
@@ -2018,7 +2018,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packUint( p0);
+			msg.packInt( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -3896,7 +3896,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case PostingIteratorConst::Method_documentFrequency:
 		{
 			RpcSerializer msg;
-			Index p0;
+			GlobalCounter p0;
 			p0 = obj->documentFrequency();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
@@ -3906,7 +3906,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			msg.packIndex( p0);
+			msg.packGlobalCounter( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -6387,12 +6387,14 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			std::string p2;
 			Index p3;
+			TermStatistics p4;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
 			p3 = serializedMsg.unpackIndex();
+			p4 = serializedMsg.unpackTermStatistics();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createTermPostingIterator(p1,p2,p3);
+			p0 = obj->createTermPostingIterator(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6411,11 +6413,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			PostingIteratorInterface* p0;
 			std::string p1;
 			std::string p2;
+			TermStatistics p3;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackString();
+			p3 = serializedMsg.unpackTermStatistics();
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createFrequencyPostingIterator(p1,p2);
+			p0 = obj->createFrequencyPostingIterator(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8208,7 +8212,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			PostingIteratorInterface* p2;
 			std::vector<SummarizationVariable> p3;
 			double p4;
-			TermStatistics p5;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
@@ -8225,8 +8228,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				p3.push_back( ee);
 			}
 			p4 = serializedMsg.unpackDouble();
-			p5 = serializedMsg.unpackTermStatistics();
-			obj->addSummarizationFeature(p1,p2,p3,p4,p5);
+			obj->addSummarizationFeature(p1,p2,p3,p4);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -9964,15 +9966,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			std::string p1;
 			PostingIteratorInterface* p2;
 			double p3;
-			TermStatistics p4;
 			p1 = serializedMsg.unpackString();
 			unsigned char classId_2; unsigned int objId_2;
 			serializedMsg.unpackObject( classId_2, objId_2);
 			if (classId_2 != ClassId_PostingIterator) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
 			p2 = getObject<PostingIteratorInterface>( classId_2, objId_2);
 			p3 = serializedMsg.unpackDouble();
-			p4 = serializedMsg.unpackTermStatistics();
-			obj->addWeightingFeature(p1,p2,p3,p4);
+			obj->addWeightingFeature(p1,p2,p3);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
