@@ -6498,7 +6498,7 @@ try
 }
 }
 
-std::vector<SentenceTerm> SentenceLexerInstanceImpl::similarTerms( const std::string& p1, const std::vector<SentenceTerm>& p2, double p3, int p4, double p5) const
+std::vector<WeightedSentenceTerm> SentenceLexerInstanceImpl::similarTerms( const std::string& p1, const std::vector<WeightedSentenceTerm>& p2, double p3, int p4, double p5) const
 {
 try
 {
@@ -6508,7 +6508,7 @@ try
 	msg.packString( p1);
 	msg.packSize( p2.size());
 	for (unsigned int ii=0; ii < p2.size(); ++ii) {
-		msg.packSentenceTerm( p2[ii]);
+		msg.packWeightedSentenceTerm( p2[ii]);
 	}
 	msg.packDouble( p3);
 	msg.packInt( p4);
@@ -6517,19 +6517,19 @@ try
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
 	serializedMsg.unpackByte();
-	std::vector<SentenceTerm> p0;
+	std::vector<WeightedSentenceTerm> p0;
 	std::size_t n0 = serializedMsg.unpackSize();
 	for (std::size_t ii=0; ii < n0; ++ii) {
-		SentenceTerm elem_p0 = serializedMsg.unpackSentenceTerm();
+		WeightedSentenceTerm elem_p0 = serializedMsg.unpackWeightedSentenceTerm();
 		p0.push_back( elem_p0);
 	}
 	return p0;
 } catch (const std::bad_alloc&) {
 	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "SentenceLexerInstanceImpl::similarTerms");
-	return std::vector<SentenceTerm>();
+	return std::vector<WeightedSentenceTerm>();
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "SentenceLexerInstanceImpl::similarTerms", err.what());
-	return std::vector<SentenceTerm>();
+	return std::vector<WeightedSentenceTerm>();
 }
 }
 

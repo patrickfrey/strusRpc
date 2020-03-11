@@ -5802,16 +5802,16 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		case SentenceLexerInstanceConst::Method_similarTerms:
 		{
 			RpcSerializer msg;
-			std::vector<SentenceTerm> p0;
+			std::vector<WeightedSentenceTerm> p0;
 			std::string p1;
-			std::vector<SentenceTerm> p2;
+			std::vector<WeightedSentenceTerm> p2;
 			double p3;
 			int p4;
 			double p5;
 			p1 = serializedMsg.unpackString();
 			std::size_t n2 = serializedMsg.unpackSize();
 			for (std::size_t ii=0; ii < n2; ++ii) {
-				SentenceTerm ee = serializedMsg.unpackSentenceTerm();
+				WeightedSentenceTerm ee = serializedMsg.unpackWeightedSentenceTerm();
 				p2.push_back( ee);
 			}
 			p3 = serializedMsg.unpackDouble();
@@ -5828,7 +5828,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			msg.packSize( p0.size());
 			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packSentenceTerm( p0[ii]);
+				msg.packWeightedSentenceTerm( p0[ii]);
 			}
 			msg.packCrc32();
 			return msg.content();

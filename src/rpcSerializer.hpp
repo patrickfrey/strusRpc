@@ -144,6 +144,7 @@ public:
 	void packTextProcessorFunctionType( const TextProcessorInterface::FunctionType& val);
 	void packStructView( const StructView& val);
 	void packVectorQueryResult( const VectorQueryResult& val);
+	void packWeightedSentenceTerm( const WeightedSentenceTerm& val);
 	void packSentenceTerm( const SentenceTerm& val);
 	void packSentenceTermList( const SentenceTermList& val);
 	void packSentenceGuess( const SentenceGuess& val);
@@ -246,6 +247,7 @@ public:
 	TextProcessorInterface::FunctionType unpackTextProcessorFunctionType();
 	StructView unpackStructView();
 	VectorQueryResult unpackVectorQueryResult();
+	WeightedSentenceTerm unpackWeightedSentenceTerm();
 	SentenceTerm unpackSentenceTerm();
 	SentenceTermList unpackSentenceTermList();
 	SentenceGuess unpackSentenceGuess();

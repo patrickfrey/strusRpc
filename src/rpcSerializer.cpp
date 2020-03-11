@@ -916,6 +916,13 @@ void RpcSerializer::packVectorQueryResult( const VectorQueryResult& val)
 	packDouble( val.weight());
 }
 
+void RpcSerializer::packWeightedSentenceTerm( const WeightedSentenceTerm& val)
+{
+	packString( val.type());
+	packString( val.value());
+	packDouble( val.weight());
+}
+
 void RpcSerializer::packSentenceTerm( const SentenceTerm& val)
 {
 	packString( val.type());
@@ -1767,6 +1774,14 @@ VectorQueryResult RpcDeserializer::unpackVectorQueryResult()
 	std::string value = unpackString();
 	double weight = unpackDouble();
 	return VectorQueryResult( value, weight);
+}
+
+WeightedSentenceTerm RpcDeserializer::unpackWeightedSentenceTerm()
+{
+	std::string type = unpackString();
+	std::string value = unpackString();
+	double weight = unpackDouble();
+	return WeightedSentenceTerm( type, value, weight);
 }
 
 SentenceTerm RpcDeserializer::unpackSentenceTerm()

@@ -960,6 +960,10 @@ sub packParameter
 	{
 		$rt .= "msg.packWordVector( " . $id . ");";
 	}
+	elsif ($type eq "WeightedSentenceTerm")
+	{
+		$rt .= "msg.packWeightedSentenceTerm( " . $id . ");";
+	}
 	elsif ($type eq "SentenceTerm")
 	{
 		$rt .= "msg.packSentenceTerm( " . $id . ");";
@@ -1346,6 +1350,10 @@ sub unpackParameter
 	elsif ($type eq "WordVector")
 	{
 		$rt .= "$id = serializedMsg.unpackWordVector();";
+	}
+	elsif ($type eq "WeightedSentenceTerm")
+	{
+		$rt .= "$id = serializedMsg.unpackWeightedSentenceTerm();";
 	}
 	elsif ($type eq "SentenceTerm")
 	{
