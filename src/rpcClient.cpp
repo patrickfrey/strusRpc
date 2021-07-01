@@ -15,6 +15,7 @@
 #include "private/internationalization.hpp"
 
 using namespace strus;
+using namespace strus::rpc;
 
 static bool g_intl_initialized = false;
 

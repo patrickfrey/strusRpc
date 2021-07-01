@@ -12,6 +12,7 @@
 #include "private/internationalization.hpp"
 #include <iostream>
 using namespace strus;
+using namespace strus::rpc;
 
 AclReaderImpl::~AclReaderImpl()
 {

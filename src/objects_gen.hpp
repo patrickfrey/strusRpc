@@ -94,6 +94,7 @@
 #include "strus/weightingFunctionInterface.hpp"
 
 namespace strus {
+namespace rpc {
 
 class AclReaderImpl
 		:public RpcInterfaceStub
@@ -1638,5 +1639,5 @@ public:
 	virtual const char* name( ) const;
 	virtual StructView view( ) const;
 };
-} //namespace
+}} //namespace
 #endif

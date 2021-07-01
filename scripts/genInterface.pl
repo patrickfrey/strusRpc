@@ -318,7 +318,7 @@ sub parseInterface
 			{
 				prevToken();
 				my $returntype = parseType();
-				
+
 				my $methodname = nextToken();
 				my @paramlist = ();
 
@@ -1143,7 +1143,7 @@ sub unpackParameter
 	elsif ($type eq "MetaDataRestrictionInterface::CompareOperator")
 	{
 		$rt .= "$id = serializedMsg.unpackMetaDataRestrictionCompareOperator();";
-	}	
+	}
 	elsif ($type eq "std::string")
 	{
 		$rt .= "$id = serializedMsg.unpackString();";
@@ -1775,7 +1775,7 @@ sub getMethodDeclarationSource
 				my $bpvar = "bp" . ($pi+1);
 				$sender_output .= "\tstd::vector<double> buf_$bpvar;\n";
 				$sender_output .= "\tconst double* $bpvar;\n";
-				
+
 				$sender_output .= "\tbuf_$bpvar = serializedMsg.unpackBufferFloat();\n";
 				$sender_output .= "\t$bpvar = buf_$bpvar.data();\n";
 				$sender_output .= "\tp" . ($pi+2) . "= buf_$bpvar.size();\n";
@@ -1877,7 +1877,7 @@ sub getClassMethodEnumSource
 {
 	my $rt = "";
 	my $ii = 0;
-	
+
 	foreach (@interfaceClasses)
 	{
 		my $interfacename = getInterfaceName($_);
@@ -1905,7 +1905,7 @@ sub getClassHeaderSource
 {
 	my $rt = "";
 	my $ii = 0;
-	
+
 	foreach (@interfaceClasses)
 	{
 		my $interfacename = getInterfaceName($_);
@@ -2065,11 +2065,12 @@ foreach $inputfile( @inputfiles)
 }
 print HDRFILE "\n";
 print HDRFILE "namespace strus {\n";
+print HDRFILE "namespace rpc {\n";
 
 print HDRFILE getClassHeaderSource();
 
 print HDRFILE <<EOF;
-} //namespace
+}} //namespace
 #endif
 EOF
 close HDRFILE;
@@ -2093,6 +2094,7 @@ print SRCFILE <<EOF;
 #include "private/internationalization.hpp"
 #include <iostream>
 using namespace strus;
+using namespace strus::rpc;
 EOF
 
 my ($sender_code,$receiver_code) = getClassImplementationSource();
