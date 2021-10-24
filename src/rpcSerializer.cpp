@@ -151,7 +151,7 @@ void pack<8>( std::string& buf, const void* ptr)
 {
 	uint32_t vhi = htonl( *((const uint64_t*)ptr) >> 32);
 	uint32_t vlo = htonl( *((const uint64_t*)ptr) & 0xffFFffFFUL);
-	
+
 	buf.append( (const char*)&vhi, 4);
 	buf.append( (const char*)&vlo, 4);
 }
@@ -247,7 +247,7 @@ void RpcSerializer::packString( const std::string& str)
 	if (str.size() > std::numeric_limits<uint32_t>::max()) throw std::runtime_error( _TXT("string size out of range"));
 	packScalar( m_content, (uint32_t)str.size());
 	m_content.append( str);
-	
+
 }
 
 void RpcSerializer::packCharp( const char* buf)
@@ -575,8 +575,7 @@ void RpcSerializer::packSlice( const DatabaseCursorInterface::Slice& val)
 
 void RpcSerializer::packTimeStamp( const TimeStamp& val)
 {
-	packInt( (Index)val.unixtime());
-	packInt( (Index)val.counter());
+	packInt64( val);
 }
 
 void RpcSerializer::packStatisticsMessage( const StatisticsMessage& val)
@@ -907,7 +906,7 @@ void RpcSerializer::packStructView( const StructView& val)
 			break;
 		}
 	}
-	
+
 }
 
 void RpcSerializer::packVectorQueryResult( const VectorQueryResult& val)
@@ -1294,7 +1293,7 @@ MetaDataRestrictionInterface::CompareOperator RpcDeserializer::unpackMetaDataRes
 
 bool RpcDeserializer::unpackCrc32()
 {
-#if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM	
+#if STRUS_RPC_PROTOCOL_WITH_CRC32_CHECKSUM
 	uint32_t strsize = (m_end - m_start) - 4;
 #ifdef STRUS_ALTERNATIVE_CHECK_SUM
 	uint32_t crc = calcAlternativeCheckSum( m_start, strsize);
@@ -1420,9 +1419,7 @@ DatabaseCursorInterface::Slice RpcDeserializer::unpackSlice()
 
 TimeStamp RpcDeserializer::unpackTimeStamp()
 {
-	int unixtime = unpackInt();
-	int counter = unpackInt();
-	return TimeStamp( unixtime, counter);
+	return unpackInt64();
 }
 
 StatisticsMessage RpcDeserializer::unpackStatisticsMessage()
