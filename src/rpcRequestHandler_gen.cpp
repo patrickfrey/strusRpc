@@ -1195,9 +1195,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			const char* p0;
-			DatabaseInterface::ConfigType p1;
-			p1 = serializedMsg.unpackDatabaseConfigType();
-			p0 = obj->getConfigDescription(p1);
+			p0 = obj->getConfigDescription();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -1214,9 +1212,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			const char** p0;
-			DatabaseInterface::ConfigType p1;
-			p1 = serializedMsg.unpackDatabaseConfigType();
-			p0 = obj->getConfigParameters(p1);
+			p0 = obj->getConfigParameters();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5882,13 +5878,11 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
 		}
-		case StatisticsBuilderConst::Method_createIteratorAndRollback:
+		case StatisticsBuilderConst::Method_getMessages:
 		{
 			RpcSerializer msg;
-			StatisticsIteratorInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createIteratorAndRollback();
+			std::vector<StatisticsMessage> p0;
+			p0 = obj->getMessages();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -5897,9 +5891,12 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packStatisticsMessage( p0[ii]);
+			}
+			msg.packCrc32();
+			return msg.content();
 		}
 		case StatisticsBuilderConst::Method_commit:
 		{
@@ -5931,52 +5928,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			return std::string();
-		}
-		case StatisticsBuilderConst::Method_releaseStatistics:
-		{
-			RpcSerializer msg;
-			TimeStamp p1;
-			p1 = serializedMsg.unpackTimeStamp();
-			obj->releaseStatistics(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-	}
-	break;
-	}
-	case ClassId_StatisticsIterator:
-	{
-	StatisticsIteratorInterface* obj = getObject<StatisticsIteratorInterface>( classId, objId);
-	switch( (StatisticsIteratorConst::MethodId)methodId)
-	{
-		case StatisticsIteratorConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case StatisticsIteratorConst::Method_getNext:
-		{
-			RpcSerializer msg;
-			StatisticsMessage p0;
-			p0 = obj->getNext();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packStatisticsMessage( p0);
-			msg.packCrc32();
-			return msg.content();
 		}
 	}
 	break;
@@ -6140,17 +6091,15 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case StatisticsProcessorConst::Method_createIterator:
+		case StatisticsProcessorConst::Method_getUpperBoundTimeStamp:
 		{
 			RpcSerializer msg;
-			StatisticsIteratorInterface* p0;
+			TimeStamp p0;
 			std::string p1;
 			TimeStamp p2;
 			p1 = serializedMsg.unpackString();
 			p2 = serializedMsg.unpackTimeStamp();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createIterator(p1,p2);
+			p0 = obj->getUpperBoundTimeStamp(p1,p2);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6159,29 +6108,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-		case StatisticsProcessorConst::Method_getChangeTimeStamps:
-		{
-			RpcSerializer msg;
-			std::vector<TimeStamp> p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			p0 = obj->getChangeTimeStamps(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packTimeStamp( p0[ii]);
-			}
+			msg.packTimeStamp( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -6247,6 +6174,334 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			defineObject( classId_0, objId_0, p0);
 			
 			return std::string();
+		}
+		case StatisticsProcessorConst::Method_releaseStatistics:
+		{
+			RpcSerializer msg;
+			std::string p1;
+			TimeStamp p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackTimeStamp();
+			obj->releaseStatistics(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_StatisticsStorageClient:
+	{
+	StatisticsStorageClientInterface* obj = getObject<StatisticsStorageClientInterface>( classId, objId);
+	switch( (StatisticsStorageClientConst::MethodId)methodId)
+	{
+		case StatisticsStorageClientConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case StatisticsStorageClientConst::Method_reload:
+		{
+			RpcSerializer msg;
+			bool p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->reload(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StatisticsStorageClientConst::Method_diskUsage:
+		{
+			RpcSerializer msg;
+			long p0;
+			p0 = obj->diskUsage();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packInt64( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StatisticsStorageClientConst::Method_getConfigParameters:
+		{
+			RpcSerializer msg;
+			const char** p0;
+			p0 = obj->getConfigParameters();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharpp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StatisticsStorageClientConst::Method_config:
+		{
+			RpcSerializer msg;
+			std::string p0;
+			p0 = obj->config();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packString( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StatisticsStorageClientConst::Method_nofDocuments:
+		{
+			RpcSerializer msg;
+			GlobalCounter p0;
+			p0 = obj->nofDocuments();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packGlobalCounter( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StatisticsStorageClientConst::Method_documentFrequency:
+		{
+			RpcSerializer msg;
+			GlobalCounter p0;
+			std::string p1;
+			std::string p2;
+			p1 = serializedMsg.unpackString();
+			p2 = serializedMsg.unpackString();
+			p0 = obj->documentFrequency(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packGlobalCounter( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StatisticsStorageClientConst::Method_storageTimeStamp:
+		{
+			RpcSerializer msg;
+			TimeStamp p0;
+			std::string p1;
+			p1 = serializedMsg.unpackString();
+			p0 = obj->storageTimeStamp(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packTimeStamp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StatisticsStorageClientConst::Method_putStatisticsMessage:
+		{
+			RpcSerializer msg;
+			bool p0;
+			StatisticsMessage p1;
+			std::string p2;
+			p1 = serializedMsg.unpackStatisticsMessage();
+			p2 = serializedMsg.unpackString();
+			p0 = obj->putStatisticsMessage(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StatisticsStorageClientConst::Method_getStatisticsProcessor:
+		{
+			RpcSerializer msg;
+			const StatisticsProcessorInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->getStatisticsProcessor();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StatisticsStorageClientConst::Method_close:
+		{
+			RpcSerializer msg;
+			obj->close();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+		case StatisticsStorageClientConst::Method_compaction:
+		{
+			RpcSerializer msg;
+			obj->compaction();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			return std::string();
+		}
+	}
+	break;
+	}
+	case ClassId_StatisticsStorage:
+	{
+	StatisticsStorageInterface* obj = getObject<StatisticsStorageInterface>( classId, objId);
+	switch( (StatisticsStorageConst::MethodId)methodId)
+	{
+		case StatisticsStorageConst::Method_Destructor:
+		{
+			deleteObject( classId, objId);
+			return std::string();
+		}
+		case StatisticsStorageConst::Method_createClient:
+		{
+			RpcSerializer msg;
+			StatisticsStorageClientInterface* p0;
+			std::string p1;
+			const DatabaseInterface* p2;
+			const StatisticsProcessorInterface* p3;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_2; unsigned int objId_2;
+			serializedMsg.unpackObject( classId_2, objId_2);
+			if (classId_2 != ClassId_Database) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
+			unsigned char classId_3; unsigned int objId_3;
+			serializedMsg.unpackObject( classId_3, objId_3);
+			if (classId_3 != ClassId_StatisticsProcessor) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p3 = getConstObject<StatisticsProcessorInterface>( classId_3, objId_3);
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->createClient(p1,p2,p3);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StatisticsStorageConst::Method_createStorage:
+		{
+			RpcSerializer msg;
+			bool p0;
+			std::string p1;
+			const DatabaseInterface* p2;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_2; unsigned int objId_2;
+			serializedMsg.unpackObject( classId_2, objId_2);
+			if (classId_2 != ClassId_Database) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
+			p0 = obj->createStorage(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StatisticsStorageConst::Method_getConfigDescription:
+		{
+			RpcSerializer msg;
+			const char* p0;
+			p0 = obj->getConfigDescription();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharp( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StatisticsStorageConst::Method_getConfigParameters:
+		{
+			RpcSerializer msg;
+			const char** p0;
+			p0 = obj->getConfigParameters();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packCharpp( p0);
+			msg.packCrc32();
+			return msg.content();
 		}
 	}
 	break;
@@ -6903,34 +7158,13 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			
 			return std::string();
 		}
-		case StorageClientConst::Method_createAllStatisticsIterator:
+		case StorageClientConst::Method_getNextChangeStatisticsTimeStamp:
 		{
 			RpcSerializer msg;
-			StatisticsIteratorInterface* p0;
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createAllStatisticsIterator();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-		case StorageClientConst::Method_createChangeStatisticsIterator:
-		{
-			RpcSerializer msg;
-			StatisticsIteratorInterface* p0;
+			TimeStamp p0;
 			TimeStamp p1;
 			p1 = serializedMsg.unpackTimeStamp();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createChangeStatisticsIterator(p1);
+			p0 = obj->getNextChangeStatisticsTimeStamp(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -6939,27 +7173,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 				return msg.content();
 			}
 			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-		case StorageClientConst::Method_getChangeStatisticTimeStamps:
-		{
-			RpcSerializer msg;
-			std::vector<TimeStamp> p0;
-			p0 = obj->getChangeStatisticTimeStamps();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packTimeStamp( p0[ii]);
-			}
+			msg.packTimeStamp( p0);
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -6979,6 +7193,26 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			}
 			msg.packByte( MsgTypeAnswer);
 			msg.packStatisticsMessage( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
+		case StorageClientConst::Method_loadInitStatisticsMessages:
+		{
+			RpcSerializer msg;
+			std::vector<StatisticsMessage> p0;
+			p0 = obj->loadInitStatisticsMessages();
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packSize( p0.size());
+			for (std::size_t ii=0; ii < p0.size(); ++ii) {
+				msg.packStatisticsMessage( p0[ii]);
+			}
 			msg.packCrc32();
 			return msg.content();
 		}
@@ -7569,13 +7803,35 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
+		case StorageConst::Method_destroyStorage:
+		{
+			RpcSerializer msg;
+			bool p0;
+			std::string p1;
+			const DatabaseInterface* p2;
+			p1 = serializedMsg.unpackString();
+			unsigned char classId_2; unsigned int objId_2;
+			serializedMsg.unpackObject( classId_2, objId_2);
+			if (classId_2 != ClassId_Database) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
+			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
+			p0 = obj->destroyStorage(p1,p2);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			msg.packBool( p0);
+			msg.packCrc32();
+			return msg.content();
+		}
 		case StorageConst::Method_getConfigDescription:
 		{
 			RpcSerializer msg;
 			const char* p0;
-			StorageInterface::ConfigType p1;
-			p1 = serializedMsg.unpackStorageConfigType();
-			p0 = obj->getConfigDescription(p1);
+			p0 = obj->getConfigDescription();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -7592,9 +7848,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			const char** p0;
-			StorageInterface::ConfigType p1;
-			p1 = serializedMsg.unpackStorageConfigType();
-			p0 = obj->getConfigParameters(p1);
+			p0 = obj->getConfigParameters();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

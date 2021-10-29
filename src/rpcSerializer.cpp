@@ -525,16 +525,6 @@ void RpcSerializer::packDatabaseOptions( const DatabaseOptions& val)
 	packUint( val.opt());
 }
 
-void RpcSerializer::packDatabaseConfigType( const DatabaseInterface::ConfigType& val)
-{
-	packByte( (unsigned char)val);
-}
-
-void RpcSerializer::packStorageConfigType( const StorageInterface::ConfigType& val)
-{
-	packByte( (unsigned char)val);
-}
-
 void RpcSerializer::packVectorStorageConfigType( const VectorStorageInterface::ConfigType& val)
 {
 	packByte( (unsigned char)val);
@@ -853,8 +843,8 @@ void RpcSerializer::packDocumentStatisticsType( const StorageClientInterface::Do
 
 void RpcSerializer::packTermStatisticsChange( const TermStatisticsChange& val)
 {
-	packCharp( val.type());
-	packCharp( val.value());
+	packString( val.type());
+	packString( val.value());
 	packInt( val.increment());
 }
 
@@ -1371,16 +1361,6 @@ DatabaseOptions RpcDeserializer::unpackDatabaseOptions()
 	return DatabaseOptions( unpackUint());
 }
 
-DatabaseInterface::ConfigType RpcDeserializer::unpackDatabaseConfigType()
-{
-	return DatabaseInterface::ConfigType( unpackByte());
-}
-
-StorageInterface::ConfigType RpcDeserializer::unpackStorageConfigType()
-{
-	return StorageInterface::ConfigType( unpackByte());
-}
-
 VectorStorageInterface::ConfigType RpcDeserializer::unpackVectorStorageConfigType()
 {
 	return VectorStorageInterface::ConfigType( unpackByte());
@@ -1713,8 +1693,8 @@ StorageClientInterface::DocumentStatisticsType RpcDeserializer::unpackDocumentSt
 
 TermStatisticsChange RpcDeserializer::unpackTermStatisticsChange()
 {
-	const char* type = unpackConstCharp();
-	const char* value = unpackConstCharp();
+	std::string type = unpackString();
+	std::string value = unpackString();
 	int increment = unpackInt();
 	return TermStatisticsChange( type, value, increment);
 }

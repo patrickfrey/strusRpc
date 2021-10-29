@@ -66,9 +66,10 @@ enum ClassId
 	ClassId_SegmenterMarkupContext,
 	ClassId_SentenceLexerInstance,
 	ClassId_StatisticsBuilder,
-	ClassId_StatisticsIterator,
 	ClassId_StatisticsMap,
 	ClassId_StatisticsProcessor,
+	ClassId_StatisticsStorageClient,
+	ClassId_StatisticsStorage,
 	ClassId_StatisticsViewer,
 	ClassId_StorageClient,
 	ClassId_StorageDocument,
@@ -840,20 +841,9 @@ public:
 		Method_Destructor,
 		Method_addNofDocumentsInsertedChange,
 		Method_addDfChange,
-		Method_createIteratorAndRollback,
+		Method_getMessages,
 		Method_commit,
-		Method_rollback,
-		Method_releaseStatistics
-	};
-};
-
-class StatisticsIteratorConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_getNext
+		Method_rollback
 	};
 };
 
@@ -879,11 +869,44 @@ public:
 	{
 		Method_Destructor,
 		Method_createViewer,
-		Method_createIterator,
-		Method_getChangeTimeStamps,
+		Method_getUpperBoundTimeStamp,
 		Method_loadChangeMessage,
 		Method_createBuilder,
-		Method_createMap
+		Method_createMap,
+		Method_releaseStatistics
+	};
+};
+
+class StatisticsStorageClientConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_reload,
+		Method_diskUsage,
+		Method_getConfigParameters,
+		Method_config,
+		Method_nofDocuments,
+		Method_documentFrequency,
+		Method_storageTimeStamp,
+		Method_putStatisticsMessage,
+		Method_getStatisticsProcessor,
+		Method_close,
+		Method_compaction
+	};
+};
+
+class StatisticsStorageConst
+{
+public:
+	enum MethodId
+	{
+		Method_Destructor,
+		Method_createClient,
+		Method_createStorage,
+		Method_getConfigDescription,
+		Method_getConfigParameters
 	};
 };
 
@@ -934,10 +957,9 @@ public:
 		Method_createMetaDataRestriction,
 		Method_createAttributeReader,
 		Method_createTransaction,
-		Method_createAllStatisticsIterator,
-		Method_createChangeStatisticsIterator,
-		Method_getChangeStatisticTimeStamps,
+		Method_getNextChangeStatisticsTimeStamp,
 		Method_loadChangeStatisticsMessage,
+		Method_loadInitStatisticsMessages,
 		Method_getStatisticsProcessor,
 		Method_createDocumentChecker,
 		Method_createDump,
@@ -1004,6 +1026,7 @@ public:
 		Method_Destructor,
 		Method_createClient,
 		Method_createStorage,
+		Method_destroyStorage,
 		Method_getConfigDescription,
 		Method_getConfigParameters
 	};

@@ -105,8 +105,6 @@ public:
 	void packStructureHeaderField( const StructureHeaderField& val);
 
 	void packDatabaseOptions( const DatabaseOptions& val);
-	void packDatabaseConfigType( const DatabaseInterface::ConfigType& val);
-	void packStorageConfigType( const StorageInterface::ConfigType& val);
 	void packVectorStorageConfigType( const VectorStorageInterface::ConfigType& val);
 	void packFeatureOptions( const analyzer::FeatureOptions& val);
 	void packSummaryElement( const SummaryElement& val);
@@ -209,8 +207,6 @@ public:
 	StructureHeaderField unpackStructureHeaderField();
 
 	DatabaseOptions unpackDatabaseOptions();
-	DatabaseInterface::ConfigType unpackDatabaseConfigType();
-	StorageInterface::ConfigType unpackStorageConfigType();
 	VectorStorageInterface::ConfigType unpackVectorStorageConfigType();
 	analyzer::FeatureOptions unpackFeatureOptions();
 	SummaryElement unpackSummaryElement();

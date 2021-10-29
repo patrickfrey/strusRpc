@@ -68,9 +68,10 @@
 #include "strus/scalarFunctionParserInterface.hpp"
 #include "strus/sentenceLexerInstanceInterface.hpp"
 #include "strus/statisticsBuilderInterface.hpp"
-#include "strus/statisticsIteratorInterface.hpp"
 #include "strus/statisticsMapInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
+#include "strus/statisticsStorageClientInterface.hpp"
+#include "strus/statisticsStorageInterface.hpp"
 #include "strus/statisticsViewerInterface.hpp"
 #include "strus/storageClientInterface.hpp"
 #include "strus/storageDocumentInterface.hpp"
@@ -302,8 +303,8 @@ public:
 	virtual bool createDatabase( const std::string& p1) const;
 	virtual bool restoreDatabase( const std::string& p1, DatabaseBackupCursorInterface* p2) const;
 	virtual bool destroyDatabase( const std::string& p1) const;
-	virtual const char* getConfigDescription( const DatabaseInterface::ConfigType& p1) const;
-	virtual const char** getConfigParameters( const DatabaseInterface::ConfigType& p1) const;
+	virtual const char* getConfigDescription( ) const;
+	virtual const char** getConfigParameters( ) const;
 };
 
 class DatabaseTransactionImpl
@@ -1056,24 +1057,9 @@ public:
 
 	virtual void addNofDocumentsInsertedChange( int p1);
 	virtual void addDfChange( const char* p1, const char* p2, int p3);
-	virtual StatisticsIteratorInterface* createIteratorAndRollback( );
+	virtual std::vector<StatisticsMessage> getMessages( ) const;
 	virtual bool commit( );
 	virtual void rollback( );
-	virtual void releaseStatistics( const TimeStamp& p1);
-};
-
-class StatisticsIteratorImpl
-		:public RpcInterfaceStub
-		,public strus::StatisticsIteratorInterface
-		,public strus::StatisticsIteratorConst
-{
-public:
-	virtual ~StatisticsIteratorImpl();
-
-	StatisticsIteratorImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsIterator, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual StatisticsMessage getNext( );
 };
 
 class StatisticsMapImpl
@@ -1107,11 +1093,52 @@ public:
 		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsProcessor, objId_, ctx_, isConst_, errorhnd_){}
 
 	virtual StatisticsViewerInterface* createViewer( const void* p1, std::size_t p2) const;
-	virtual StatisticsIteratorInterface* createIterator( const std::string& p1, const TimeStamp& p2) const;
-	virtual std::vector<TimeStamp> getChangeTimeStamps( const std::string& p1) const;
-	virtual StatisticsMessage loadChangeMessage( const std::string& p1, const TimeStamp& p2) const;
+	virtual TimeStamp getUpperBoundTimeStamp( const std::string& p1, TimeStamp p2) const;
+	virtual StatisticsMessage loadChangeMessage( const std::string& p1, TimeStamp p2) const;
 	virtual StatisticsBuilderInterface* createBuilder( const std::string& p1) const;
 	virtual StatisticsMapInterface* createMap( const std::string& p1) const;
+	virtual void releaseStatistics( const std::string& p1, TimeStamp p2) const;
+};
+
+class StatisticsStorageClientImpl
+		:public RpcInterfaceStub
+		,public strus::StatisticsStorageClientInterface
+		,public strus::StatisticsStorageClientConst
+{
+public:
+	virtual ~StatisticsStorageClientImpl();
+
+	StatisticsStorageClientImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsStorageClient, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual bool reload( const std::string& p1);
+	virtual long diskUsage( ) const;
+	virtual const char** getConfigParameters( ) const;
+	virtual std::string config( ) const;
+	virtual GlobalCounter nofDocuments( ) const;
+	virtual GlobalCounter documentFrequency( const std::string& p1, const std::string& p2) const;
+	virtual TimeStamp storageTimeStamp( const std::string& p1) const;
+	virtual bool putStatisticsMessage( const StatisticsMessage& p1, const std::string& p2);
+	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
+	virtual void close( );
+	virtual void compaction( );
+};
+
+class StatisticsStorageImpl
+		:public RpcInterfaceStub
+		,public strus::StatisticsStorageInterface
+		,public strus::StatisticsStorageConst
+{
+public:
+	virtual ~StatisticsStorageImpl();
+
+	StatisticsStorageImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
+		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsStorage, objId_, ctx_, isConst_, errorhnd_){}
+
+	virtual StatisticsStorageClientInterface* createClient( const std::string& p1, const DatabaseInterface* p2, const StatisticsProcessorInterface* p3) const;
+	virtual bool createStorage( const std::string& p1, const DatabaseInterface* p2) const;
+	virtual const char* getConfigDescription( ) const;
+	virtual const char** getConfigParameters( ) const;
 };
 
 class StatisticsViewerImpl
@@ -1170,10 +1197,9 @@ public:
 	virtual MetaDataRestrictionInterface* createMetaDataRestriction( ) const;
 	virtual AttributeReaderInterface* createAttributeReader( ) const;
 	virtual StorageTransactionInterface* createTransaction( );
-	virtual StatisticsIteratorInterface* createAllStatisticsIterator( ) const;
-	virtual StatisticsIteratorInterface* createChangeStatisticsIterator( const TimeStamp& p1) const;
-	virtual std::vector<TimeStamp> getChangeStatisticTimeStamps( ) const;
-	virtual StatisticsMessage loadChangeStatisticsMessage( const TimeStamp& p1) const;
+	virtual TimeStamp getNextChangeStatisticsTimeStamp( TimeStamp p1) const;
+	virtual StatisticsMessage loadChangeStatisticsMessage( TimeStamp p1) const;
+	virtual std::vector<StatisticsMessage> loadInitStatisticsMessages( ) const;
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( ) const;
 	virtual StorageDocumentInterface* createDocumentChecker( const std::string& p1, const std::string& p2) const;
 	virtual StorageDumpInterface* createDump( const std::string& p1) const;
@@ -1256,8 +1282,9 @@ public:
 
 	virtual StorageClientInterface* createClient( const std::string& p1, const DatabaseInterface* p2, const StatisticsProcessorInterface* p3) const;
 	virtual bool createStorage( const std::string& p1, const DatabaseInterface* p2) const;
-	virtual const char* getConfigDescription( const StorageInterface::ConfigType& p1) const;
-	virtual const char** getConfigParameters( const StorageInterface::ConfigType& p1) const;
+	virtual bool destroyStorage( const std::string& p1, const DatabaseInterface* p2) const;
+	virtual const char* getConfigDescription( ) const;
+	virtual const char** getConfigParameters( ) const;
 };
 
 class StorageMetaDataTableUpdateImpl
