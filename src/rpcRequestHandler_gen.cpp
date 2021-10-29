@@ -10055,9 +10055,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			const char* p0;
-			VectorStorageInterface::ConfigType p1;
-			p1 = serializedMsg.unpackVectorStorageConfigType();
-			p0 = obj->getConfigDescription(p1);
+			p0 = obj->getConfigDescription();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -10074,9 +10072,7 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 		{
 			RpcSerializer msg;
 			const char** p0;
-			VectorStorageInterface::ConfigType p1;
-			p1 = serializedMsg.unpackVectorStorageConfigType();
-			p0 = obj->getConfigParameters(p1);
+			p0 = obj->getConfigParameters();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{

@@ -11355,14 +11355,13 @@ try
 }
 }
 
-const char* VectorStorageImpl::getConfigDescription( const VectorStorageInterface::ConfigType& p1) const
+const char* VectorStorageImpl::getConfigDescription( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigDescription);
-	msg.packVectorStorageConfigType( p1);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
@@ -11378,14 +11377,13 @@ try
 }
 }
 
-const char** VectorStorageImpl::getConfigParameters( const VectorStorageInterface::ConfigType& p1) const
+const char** VectorStorageImpl::getConfigParameters( ) const
 {
 try
 {
 	RpcSerializer msg;
 	msg.packObject( classId(), objId());
 	msg.packByte( Method_getConfigParameters);
-	msg.packVectorStorageConfigType( p1);
 	msg.packCrc32();
 	std::string answer = ctx()->rpc_sendRequest( msg.content());
 	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
