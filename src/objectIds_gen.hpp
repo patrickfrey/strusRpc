@@ -1026,7 +1026,6 @@ public:
 		Method_Destructor,
 		Method_createClient,
 		Method_createStorage,
-		Method_destroyStorage,
 		Method_getConfigDescription,
 		Method_getConfigParameters
 	};

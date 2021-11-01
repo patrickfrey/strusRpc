@@ -8802,32 +8802,6 @@ try
 }
 }
 
-bool StorageImpl::destroyStorage( const std::string& p1, const DatabaseInterface* p2) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_destroyStorage);
-	msg.packString( p1);
-	const RpcInterfaceStub* impl_2 = dynamic_cast<const RpcInterfaceStub*>(p2);
-	if (!impl_2) throw strus::runtime_error( _TXT("passing non RPC interface object in RPC call (%s)"), "Database");
-	msg.packObject( impl_2->classId(), impl_2->objId());
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageImpl::destroyStorage");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageImpl::destroyStorage", err.what());
-	return false;
-}
-}
-
 const char* StorageImpl::getConfigDescription( ) const
 {
 try

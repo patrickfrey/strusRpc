@@ -7803,30 +7803,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			msg.packCrc32();
 			return msg.content();
 		}
-		case StorageConst::Method_destroyStorage:
-		{
-			RpcSerializer msg;
-			bool p0;
-			std::string p1;
-			const DatabaseInterface* p2;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_2; unsigned int objId_2;
-			serializedMsg.unpackObject( classId_2, objId_2);
-			if (classId_2 != ClassId_Database) throw strus::runtime_error( "%s", _TXT("error in RPC serialzed message: output parameter object type mismatch"));
-			p2 = getConstObject<DatabaseInterface>( classId_2, objId_2);
-			p0 = obj->destroyStorage(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
 		case StorageConst::Method_getConfigDescription:
 		{
 			RpcSerializer msg;
