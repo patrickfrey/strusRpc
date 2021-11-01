@@ -66,7 +66,6 @@ enum ClassId
 	ClassId_SegmenterMarkupContext,
 	ClassId_SentenceLexerInstance,
 	ClassId_StatisticsBuilder,
-	ClassId_StatisticsMap,
 	ClassId_StatisticsProcessor,
 	ClassId_StatisticsStorageClient,
 	ClassId_StatisticsStorage,
@@ -847,21 +846,6 @@ public:
 	};
 };
 
-class StatisticsMapConst
-{
-public:
-	enum MethodId
-	{
-		Method_Destructor,
-		Method_addNofDocumentsInsertedChange,
-		Method_addDfChange,
-		Method_processStatisticsMessage,
-		Method_nofDocuments,
-		Method_df,
-		Method_types
-	};
-};
-
 class StatisticsProcessorConst
 {
 public:
@@ -872,7 +856,6 @@ public:
 		Method_getUpperBoundTimeStamp,
 		Method_loadChangeMessage,
 		Method_createBuilder,
-		Method_createMap,
 		Method_releaseStatistics
 	};
 };
@@ -1055,6 +1038,7 @@ public:
 		Method_Destructor,
 		Method_getStorage,
 		Method_getDatabase,
+		Method_getStatisticsStorage,
 		Method_getQueryProcessor,
 		Method_getStatisticsProcessor,
 		Method_getVectorStorage,

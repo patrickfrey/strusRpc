@@ -6649,152 +6649,6 @@ try
 }
 }
 
-StatisticsMapImpl::~StatisticsMapImpl()
-{
-	if (isConst()) return;
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_Destructor);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-}
-
-void StatisticsMapImpl::addNofDocumentsInsertedChange( int p1)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_addNofDocumentsInsertedChange);
-	msg.packInt( p1);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::addNofDocumentsInsertedChange");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::addNofDocumentsInsertedChange", err.what());
-	return void();
-}
-}
-
-void StatisticsMapImpl::addDfChange( const char* p1, const char* p2, int p3)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_addDfChange);
-	msg.packCharp( p1);
-	msg.packCharp( p2);
-	msg.packInt( p3);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::addDfChange");
-	return void();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::addDfChange", err.what());
-	return void();
-}
-}
-
-bool StatisticsMapImpl::processStatisticsMessage( const void* p1, std::size_t p2)
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_processStatisticsMessage);
-	msg.packBuffer( (const char*)p1, p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	bool p0 = serializedMsg.unpackBool();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::processStatisticsMessage");
-	return false;
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::processStatisticsMessage", err.what());
-	return false;
-}
-}
-
-GlobalCounter StatisticsMapImpl::nofDocuments( ) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_nofDocuments);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	GlobalCounter p0 = serializedMsg.unpackGlobalCounter();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::nofDocuments");
-	return GlobalCounter();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::nofDocuments", err.what());
-	return GlobalCounter();
-}
-}
-
-GlobalCounter StatisticsMapImpl::df( const std::string& p1, const std::string& p2) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_df);
-	msg.packString( p1);
-	msg.packString( p2);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	GlobalCounter p0 = serializedMsg.unpackGlobalCounter();;
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::df");
-	return GlobalCounter();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::df", err.what());
-	return GlobalCounter();
-}
-}
-
-std::vector<std::string> StatisticsMapImpl::types( ) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_types);
-	msg.packCrc32();
-	std::string answer = ctx()->rpc_sendRequest( msg.content());
-	RpcDeserializer serializedMsg( answer.c_str(), answer.size());
-	serializedMsg.unpackByte();
-	std::vector<std::string> p0;
-	std::size_t n0 = serializedMsg.unpackSize();
-	for (std::size_t ii=0; ii < n0; ++ii) {
-		std::string elem_p0 = serializedMsg.unpackString();
-		p0.push_back( elem_p0);
-	}
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsMapImpl::types");
-	return std::vector<std::string>();
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsMapImpl::types", err.what());
-	return std::vector<std::string>();
-}
-}
-
 StatisticsProcessorImpl::~StatisticsProcessorImpl()
 {
 	if (isConst()) return;
@@ -6897,30 +6751,6 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsProcessorImpl::createBuilder", err.what());
-	return 0;
-}
-}
-
-StatisticsMapInterface* StatisticsProcessorImpl::createMap( const std::string& p1) const
-{
-try
-{
-	RpcSerializer msg;
-	msg.packObject( classId(), objId());
-	msg.packByte( Method_createMap);
-	msg.packString( p1);
-	unsigned int objId_0 = ctx()->newObjId();
-	unsigned char classId_0 = (unsigned char)ClassId_StatisticsMap;
-	msg.packObject( classId_0, objId_0);
-	msg.packCrc32();
-	ctx()->rpc_sendMessage( msg.content());
-	StatisticsMapInterface* p0 = new StatisticsMapImpl( objId_0, ctx(), false, errorhnd());
-	return p0;
-} catch (const std::bad_alloc&) {
-	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StatisticsProcessorImpl::createMap");
-	return 0;
-} catch (const std::exception& err) {
-	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StatisticsProcessorImpl::createMap", err.what());
 	return 0;
 }
 }
@@ -9050,6 +8880,30 @@ try
 	return 0;
 } catch (const std::exception& err) {
 	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getDatabase", err.what());
+	return 0;
+}
+}
+
+const StatisticsStorageInterface* StorageObjectBuilderImpl::getStatisticsStorage( ) const
+{
+try
+{
+	RpcSerializer msg;
+	msg.packObject( classId(), objId());
+	msg.packByte( Method_getStatisticsStorage);
+	unsigned int objId_0 = ctx()->newObjId();
+	unsigned char classId_0 = (unsigned char)ClassId_StatisticsStorage;
+	msg.packObject( classId_0, objId_0);
+	msg.packCrc32();
+	ctx()->rpc_sendMessage( msg.content());
+	StatisticsStorageImpl const_0( objId_0, ctx(), true, errorhnd());
+	const StatisticsStorageInterface* p0 = (const StatisticsStorageImpl*)ctx()->constConstructor()->getLongLiving( &const_0, sizeof(const_0));
+	return p0;
+} catch (const std::bad_alloc&) {
+	errorhnd()->report( ErrorCodeOutOfMem, _TXT("out of memory calling method '%s'"), "StorageObjectBuilderImpl::getStatisticsStorage");
+	return 0;
+} catch (const std::exception& err) {
+	errorhnd()->report( ErrorCodeRuntimeError, _TXT("error calling method '%s': %s"), "StorageObjectBuilderImpl::getStatisticsStorage", err.what());
 	return 0;
 }
 }

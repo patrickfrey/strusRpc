@@ -68,7 +68,6 @@
 #include "strus/scalarFunctionParserInterface.hpp"
 #include "strus/sentenceLexerInstanceInterface.hpp"
 #include "strus/statisticsBuilderInterface.hpp"
-#include "strus/statisticsMapInterface.hpp"
 #include "strus/statisticsProcessorInterface.hpp"
 #include "strus/statisticsStorageClientInterface.hpp"
 #include "strus/statisticsStorageInterface.hpp"
@@ -1062,25 +1061,6 @@ public:
 	virtual void rollback( );
 };
 
-class StatisticsMapImpl
-		:public RpcInterfaceStub
-		,public strus::StatisticsMapInterface
-		,public strus::StatisticsMapConst
-{
-public:
-	virtual ~StatisticsMapImpl();
-
-	StatisticsMapImpl( unsigned int objId_, const Reference<RpcClientContext>& ctx_, bool isConst_, ErrorBufferInterface* errorhnd_)
-		:RpcInterfaceStub( (unsigned char)ClassId_StatisticsMap, objId_, ctx_, isConst_, errorhnd_){}
-
-	virtual void addNofDocumentsInsertedChange( int p1);
-	virtual void addDfChange( const char* p1, const char* p2, int p3);
-	virtual bool processStatisticsMessage( const void* p1, std::size_t p2);
-	virtual GlobalCounter nofDocuments( ) const;
-	virtual GlobalCounter df( const std::string& p1, const std::string& p2) const;
-	virtual std::vector<std::string> types( ) const;
-};
-
 class StatisticsProcessorImpl
 		:public RpcInterfaceStub
 		,public strus::StatisticsProcessorInterface
@@ -1096,7 +1076,6 @@ public:
 	virtual TimeStamp getUpperBoundTimeStamp( const std::string& p1, TimeStamp p2) const;
 	virtual StatisticsMessage loadChangeMessage( const std::string& p1, TimeStamp p2) const;
 	virtual StatisticsBuilderInterface* createBuilder( const std::string& p1) const;
-	virtual StatisticsMapInterface* createMap( const std::string& p1) const;
 	virtual void releaseStatistics( const std::string& p1, TimeStamp p2) const;
 };
 
@@ -1319,6 +1298,7 @@ public:
 
 	virtual const StorageInterface* getStorage( ) const;
 	virtual const DatabaseInterface* getDatabase( const std::string& p1) const;
+	virtual const StatisticsStorageInterface* getStatisticsStorage( ) const;
 	virtual const QueryProcessorInterface* getQueryProcessor( ) const;
 	virtual const StatisticsProcessorInterface* getStatisticsProcessor( const std::string& p1) const;
 	virtual const VectorStorageInterface* getVectorStorage( const std::string& p1) const;

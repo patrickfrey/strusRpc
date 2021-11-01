@@ -5932,133 +5932,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 	}
 	break;
 	}
-	case ClassId_StatisticsMap:
-	{
-	StatisticsMapInterface* obj = getObject<StatisticsMapInterface>( classId, objId);
-	switch( (StatisticsMapConst::MethodId)methodId)
-	{
-		case StatisticsMapConst::Method_Destructor:
-		{
-			deleteObject( classId, objId);
-			return std::string();
-		}
-		case StatisticsMapConst::Method_addNofDocumentsInsertedChange:
-		{
-			RpcSerializer msg;
-			int p1;
-			p1 = serializedMsg.unpackInt();
-			obj->addNofDocumentsInsertedChange(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case StatisticsMapConst::Method_addDfChange:
-		{
-			RpcSerializer msg;
-			const char* p1;
-			const char* p2;
-			int p3;
-			p1 = serializedMsg.unpackConstCharp();
-			p2 = serializedMsg.unpackConstCharp();
-			p3 = serializedMsg.unpackInt();
-			obj->addDfChange(p1,p2,p3);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			return std::string();
-		}
-		case StatisticsMapConst::Method_processStatisticsMessage:
-		{
-			RpcSerializer msg;
-			bool p0;
-			const void* p1;
-			std::size_t p2;
-			serializedMsg.unpackBuffer( p1, p2);
-			p0 = obj->processStatisticsMessage(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packBool( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case StatisticsMapConst::Method_nofDocuments:
-		{
-			RpcSerializer msg;
-			GlobalCounter p0;
-			p0 = obj->nofDocuments();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packGlobalCounter( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case StatisticsMapConst::Method_df:
-		{
-			RpcSerializer msg;
-			GlobalCounter p0;
-			std::string p1;
-			std::string p2;
-			p1 = serializedMsg.unpackString();
-			p2 = serializedMsg.unpackString();
-			p0 = obj->df(p1,p2);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packGlobalCounter( p0);
-			msg.packCrc32();
-			return msg.content();
-		}
-		case StatisticsMapConst::Method_types:
-		{
-			RpcSerializer msg;
-			std::vector<std::string> p0;
-			p0 = obj->types();
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			msg.packSize( p0.size());
-			for (std::size_t ii=0; ii < p0.size(); ++ii) {
-				msg.packString( p0[ii]);
-			}
-			msg.packCrc32();
-			return msg.content();
-		}
-	}
-	break;
-	}
 	case ClassId_StatisticsProcessor:
 	{
 	StatisticsProcessorInterface* obj = getObject<StatisticsProcessorInterface>( classId, objId);
@@ -6142,27 +6015,6 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->createBuilder(p1);
-			const char* err = m_errorhnd->fetchError();
-			if (err)
-			{
-				msg.packByte( MsgTypeError);
-				msg.packCharp( err);
-				return msg.content();
-			}
-			msg.packByte( MsgTypeAnswer);
-			defineObject( classId_0, objId_0, p0);
-			
-			return std::string();
-		}
-		case StatisticsProcessorConst::Method_createMap:
-		{
-			RpcSerializer msg;
-			StatisticsMapInterface* p0;
-			std::string p1;
-			p1 = serializedMsg.unpackString();
-			unsigned char classId_0; unsigned int objId_0;
-			serializedMsg.unpackObject( classId_0, objId_0);
-			p0 = obj->createMap(p1);
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
@@ -8012,6 +7864,25 @@ std::string RpcRequestHandler::handleRequest( const char* src, std::size_t srcsi
 			unsigned char classId_0; unsigned int objId_0;
 			serializedMsg.unpackObject( classId_0, objId_0);
 			p0 = obj->getDatabase(p1);
+			const char* err = m_errorhnd->fetchError();
+			if (err)
+			{
+				msg.packByte( MsgTypeError);
+				msg.packCharp( err);
+				return msg.content();
+			}
+			msg.packByte( MsgTypeAnswer);
+			defineConstObject( classId_0, objId_0, p0);
+			
+			return std::string();
+		}
+		case StorageObjectBuilderConst::Method_getStatisticsStorage:
+		{
+			RpcSerializer msg;
+			const StatisticsStorageInterface* p0;
+			unsigned char classId_0; unsigned int objId_0;
+			serializedMsg.unpackObject( classId_0, objId_0);
+			p0 = obj->getStatisticsStorage();
 			const char* err = m_errorhnd->fetchError();
 			if (err)
 			{
